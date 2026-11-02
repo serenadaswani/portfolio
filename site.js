@@ -1,6 +1,6 @@
 // Edit this block to make the site yours.
 const SITE = {
-  name: "Anoushka Ghosh",
+  name: "Serena Daswani",
   timezone: "America/Los_Angeles",
   nav: [
     { label: "Work", href: "index.html" },
@@ -9,11 +9,10 @@ const SITE = {
     { label: "About", href: "about.html" },
   ],
   socials: [
-    { label: "LinkedIn", href: "https://www.linkedin.com/in/anoushkaghosh/" },
-    { label: "Behance", href: "https://www.behance.net/Anoushka-Ghosh" },
-    { label: "GitHub", href: "https://github.com/ghoshanoushka" },
-    { label: "Resume", href: "https://drive.google.com/file/d/1x3pUb8lTMzYpkzIJ6nRIZ6F23U4mlWyp/view" },
-    { label: "Let's Chat", href: "https://calendly.com/noushka-umich/30min" },
+    { label: "LinkedIn", href: "https://www.linkedin.com/in/serena-daswani" },
+    { label: "GitHub", href: "https://github.com/serenadaswani" },
+    { label: "Portfolio", href: "https://serenadaswani.framer.website/" },
+    { label: "Resume" }, // add an href here once the resume is ready
   ],
   // `media` can be an image or .mp4 path (e.g. "media/project.mp4").
   // Without media, a gradient placeholder is drawn from `colors`.
@@ -85,6 +84,7 @@ function renderChrome() {
       <div class="status"><div class="dot"></div><p class="clock" aria-live="polite"></p></div>
       <div class="links">${SITE.socials
         .map(({ label, href }) => {
+          if (!href) return `<span>${label}</span>`;
           const ext = href.startsWith("http") ? ' target="_blank" rel="noopener noreferrer"' : "";
           return `<a href="${href}"${ext}>${label}</a>`;
         })

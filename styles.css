@@ -318,7 +318,7 @@ footer {
 footer .status { display: flex; align-items: center; gap: 8px; color: var(--ink-40); font-variant-numeric: tabular-nums; }
 footer .dot { width: 4px; height: 4px; background: var(--primary); }
 footer .links { display: flex; gap: 24px; flex-wrap: wrap; justify-content: flex-end; }
-footer .links a { color: var(--ink-40); transition: color .2s; }
+footer .links a, footer .links span { color: var(--ink-40); transition: color .2s; }
 footer .links a:hover { color: var(--primary); }
 
 @media (min-width: 640px) {
