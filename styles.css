@@ -576,7 +576,7 @@ footer .links a:hover { color: var(--primary); }
     width: calc((100% - 48px - 88px) / 3 + 16px);
     border: 1.5px solid var(--primary);
     border-radius: 8px;
-    background: color-mix(in srgb, var(--primary) 8%, #fff);
+    background: color-mix(in srgb, var(--primary) 16%, #fff);
     box-shadow: 0 6px 20px rgba(230, 95, 46, .12);
     pointer-events: none;
   }
