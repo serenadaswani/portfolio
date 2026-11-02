@@ -19,7 +19,7 @@
             <div class="project-hero" style="background:linear-gradient(135deg, #2b3a67, #7aaee9)"><span class="asset-note on-dark">Hero GIF: a chart being built in Guided Setup</span></div>
 
             <div class="project-measure">
-              <h1 class="project-title">Putting the analyst's checklist inside Mensio</h1>
+              <h1 class="project-title">Redesigning Mensio's Data Explorer for self-serve analysis</h1>
               <div class="project-meta">
                 <div><p class="project-meta-label">Collaborators</p><p class="project-meta-value">Enterprise Analytics team</p><p class="project-meta-value">Frontend &amp; backend engineers</p></div>
                 <div><p class="project-meta-label">Timeline</p><p class="project-meta-value">June – September 2026</p></div>
@@ -32,7 +32,7 @@
               <section id="overview" data-toc="Overview" class="project-content-grid">
                 <div class="project-content-text"><div class="divider"></div></div>
                 <p class="project-section-label project-content-text">Overview</p>
-                <div class="project-content-text"><h2>Mensio sees everything…</h2></div>
+                <div class="project-content-text"><h2>Mensio tracks brand exposure across TV and social.</h2></div>
                 <div class="project-content-text"><p>Mensio is sponsorship and ad intelligence for brands, teams and networks. It watches every second of 185 TV networks and 2,000+ social handles, catching 13,000+ brand logos at 99%+ accuracy.</p></div>
                 <div class="project-content-media">
                   <div class="panel" style="background:#2b3a6722">
@@ -40,19 +40,19 @@
                     <div class="panel-card"><span class="asset-note">Screenshot: the old Data Explorer</span></div>
                   </div>
                 </div>
-                <div class="project-content-text"><h2>…but almost no one could get the data out.</h2></div>
-                <div class="project-content-text"><p>The nuance and options that make Mensio powerful also make it complex. Customers didn't know how to get the data they wanted. They wanted something simple and streamlined.</p></div>
+                <div class="project-content-text"><h2>Customers couldn't get the data out on their own.</h2></div>
+                <div class="project-content-text"><p>Data Explorer showed every metric, grouping and filter at once. Customers didn't know which combination answered their question, and asked for a simpler way to get it.</p><p>We redesigned chart building into Guided Setup, a step-by-step wizard with presets, and shipped it in 14 weeks.</p></div>
               </section>
 
               <section id="research" data-toc="Initial research" class="project-content-grid">
                 <div class="project-content-text"><div class="divider"></div></div>
                 <p class="project-section-label project-content-text">Initial research</p>
-                <div class="project-content-text"><h2>We went looking for customer pain points, and found analysts instead.</h2></div>
-                <div class="project-content-text"><p>To make Mensio simpler for customers, we started by mapping who they were and where they struggled.</p></div>
+                <div class="project-content-text"><h2>Our primary users weren't customers. They were analysts.</h2></div>
+                <div class="project-content-text"><p>We mapped Mensio's user groups to find where customers struggled.</p></div>
 
                 <div id="users" data-toc="Who our users are" class="project-subsection project-content-text">
                   <p class="project-subsection-label">Who our users are</p>
-                  <h2>Four kinds of users, four levels of trust.</h2>
+                  <h2>Four user groups, from daily experts to occasional requesters.</h2>
                 </div>
                 <div class="project-content-media">
                   <div class="panel" style="background:#2b3a6722">
@@ -70,17 +70,17 @@
                 </div>
                 <div class="project-content-text">
                   <div class="takeaways">
-                    <div><p>What was missing</p><p>Customer pain points. Customers weren't really using Mensio. For now, our analysts were its primary users.</p></div>
-                    <div><p>Our goal</p><p>Shift usage back to customers and make Mensio self-serve, so analysts could support customers instead of standing in for them.</p></div>
+                    <div><p>Finding</p><p>Customers rarely used Mensio directly, so their pain points were hard to see. Analysts were doing the work for them.</p></div>
+                    <div><p>Goal</p><p>Make Mensio self-serve, so customers pull their own data and analysts support them instead of doing it for them.</p></div>
                   </div>
                 </div>
               </section>
 
-              <section id="problem" data-toc="The real problem" class="project-content-grid">
+              <section id="problem" data-toc="The problem" class="project-content-grid">
                 <div class="project-content-text"><div class="divider"></div></div>
-                <p class="project-section-label project-content-text">The real problem</p>
-                <div class="project-content-text"><h2>One bottleneck, two victims.</h2></div>
-                <div class="project-content-text"><p>Customers asked. Analysts did everything else.</p></div>
+                <p class="project-section-label project-content-text">The problem</p>
+                <div class="project-content-text"><h2>Every custom chart went through an analyst.</h2></div>
+                <div class="project-content-text"><p>A one-line customer email became an eight-step process across two people and three tools.</p></div>
                 <div class="project-content-media">
                   <div class="panel" style="background:#2b3a6722">
                     <p class="panel-label">A custom request: 8 steps, 2 people, 3 tools</p>
@@ -94,9 +94,9 @@
                 </div>
                 <div class="project-content-media"><div class="figure-grid cols-2"><figure><div class="figure-media" style="aspect-ratio:4 / 3"><span class="asset-note">Collage of anonymized customer emails</span></div><figcaption>Customer emails asking for one-off pulls</figcaption></figure><figure><div class="figure-media" style="aspect-ratio:4 / 3"><span class="asset-note">Anonymized session clip</span></div><figcaption>A frustrated session in the old explorer</figcaption></figure></div></div>
 
-                <div id="analysts" data-toc="Analysts became the product" class="project-subsection project-content-text">
-                  <p class="project-subsection-label">Analysts became the product</p>
-                  <h2>Customer usage dropped while analysts were buried in requests.</h2>
+                <div id="analysts" data-toc="Impact on analysts" class="project-subsection project-content-text">
+                  <p class="project-subsection-label">Impact on analysts</p>
+                  <h2>Analysts spent most of their day fulfilling requests.</h2>
                 </div>
                 <div class="project-content-text">
                   <div class="stats">
@@ -106,15 +106,15 @@
                   </div>
                 </div>
 
-                <div id="renewal" data-toc="The cost at renewal" class="project-subsection project-content-text">
-                  <p class="project-subsection-label">The cost at renewal</p>
-                  <h2>Mensio's value was locked behind its analysts.</h2>
+                <div id="renewal" data-toc="Impact on the business" class="project-subsection project-content-text">
+                  <p class="project-subsection-label">Impact on the business</p>
+                  <h2>Customers who didn't use Mensio couldn't justify renewing it.</h2>
                 </div>
                 <div class="project-content-text">
                   <dl class="defs">
-                    <div><dt>Customers felt powerless</dt><dd>They either stopped using Mensio or leaned on analysts.</dd></div>
-                    <div><dt>Demos didn't become usage</dt><dd>The people sold on Mensio never used it, so they couldn't vouch for it at renewal.</dd></div>
-                    <div><dt>Analysts held the keys</dt><dd>Mensio's full potential depended on the people answering emails.</dd></div>
+                    <div><dt>Low adoption</dt><dd>Customers stopped using Mensio or relied on analysts.</dd></div>
+                    <div><dt>Weak renewals</dt><dd>Buyers rarely used the product after the demo, so they couldn't speak to its value at renewal.</dd></div>
+                    <div><dt>Capped value</dt><dd>Mensio's full value was only reachable through the analytics team.</dd></div>
                   </dl>
                 </div>
               </section>
@@ -122,16 +122,16 @@
               <section id="insight" data-toc="The insight" class="project-content-grid">
                 <div class="project-content-text"><div class="divider"></div></div>
                 <p class="project-section-label project-content-text">The insight</p>
-                <div class="project-content-text"><h2>There was no checklist.</h2></div>
-                <div class="project-content-text"><p>The right filters and exclusions lived in analysts' heads. Add teams, and you also need home, neutral and non-game filters, or games between two selected teams get double-counted. Nobody wrote that down.</p></div>
-                <div class="project-content-text"><p class="mission"><span>Our mission</span>Make the product ask the questions the analyst would.</p></div>
+                <div class="project-content-text"><h2>The process lived in analysts' heads.</h2></div>
+                <div class="project-content-text"><p>Accurate pulls depend on knowing which filters and exclusions go together. Adding teams, for example, requires home, neutral and non-game filters to avoid double-counting. None of it was documented.</p></div>
+                <div class="project-content-text"><p class="mission"><span>Design goal</span>Have the product ask the questions an analyst would.</p></div>
               </section>
 
               <section id="interviews" data-toc="Analyst interviews" class="project-content-grid">
                 <div class="project-content-text"><div class="divider"></div></div>
                 <p class="project-section-label project-content-text">Analyst interviews</p>
-                <div class="project-content-text"><h2>To simplify the analysts' work, we had to learn it first.</h2></div>
-                <div class="project-content-text"><p>We became power users ourselves and interviewed the media analysts who fielded customer requests. The goal: emulate their process, then simplify it for customers.</p></div>
+                <div class="project-content-text"><h2>We studied the analyst workflow to rebuild it for customers.</h2></div>
+                <div class="project-content-text"><p>We used Mensio daily and interviewed the media analysts who handled customer requests.</p></div>
                 <div class="project-content-media">
                   <div class="panel" style="background:#2b3a6722">
                     <p class="panel-label">What analysts told us</p>
@@ -140,21 +140,21 @@
                 </div>
                 <div class="project-content-text">
                   <ol class="numbered">
-                    <li><p>The follow-ups never changed</p><p>Date range, live vs. replay, competitors, asset breakdown. Customers just never knew to say them.</p></li>
-                    <li><p>Fear meant over-pulling</p><p>Analysts were “afraid to miss something,” so they pulled extra and trimmed it in Excel.</p></li>
-                    <li><p>Mistakes surfaced a month later</p><p>Tracking down a missing filter took about an hour, plus explaining to the customer why the data changed.</p></li>
-                    <li><p>Customers didn't speak the data model</p><p>Groupings and filters, like programs vs. episodes, caused the most confusion.</p></li>
+                    <li><p>Follow-up questions were consistent</p><p>Date range, live vs. replay, competitors, asset breakdown. Customers rarely specified these upfront.</p></li>
+                    <li><p>Analysts over-pulled data</p><p>To avoid missing something, they pulled extra and filtered it in Excel.</p></li>
+                    <li><p>Errors surfaced a month later</p><p>Finding a missing filter took about an hour, plus explaining the change to the customer.</p></li>
+                    <li><p>Customers didn't understand the data model</p><p>Groupings and filters, such as programs vs. episodes, caused the most confusion.</p></li>
                   </ol>
                 </div>
                 <div class="project-content-text"><blockquote>“There is no checklist, so you are trying to remember off the top of your head…”</blockquote></div>
-                <div class="project-content-text"><p>Their follow-up emails were the wizard, written out by hand.</p></div>
+                <div class="project-content-text"><p>The analysts' follow-up questions became the structure of the wizard.</p></div>
               </section>
 
               <section id="roadmap" data-toc="Wishlist to roadmap" class="project-content-grid">
                 <div class="project-content-text"><div class="divider"></div></div>
                 <p class="project-section-label project-content-text">Wishlist to roadmap</p>
-                <div class="project-content-text"><h2>We brought a problem. Stakeholders brought a wishlist.</h2></div>
-                <div class="project-content-text"><p>We wanted to solve the problems we'd found and still deliver the functionality stakeholders expected. So we combined both into a product roadmap.</p></div>
+                <div class="project-content-text"><h2>We merged stakeholder requests and research findings into one roadmap.</h2></div>
+                <div class="project-content-text"><p>Stakeholders brought a wishlist, led by a left-to-right flow. We validated each item against the interviews and prioritized what to build.</p></div>
                 <div class="project-content-media">
                   <div class="panel" style="background:#2b3a6722">
                     <p class="panel-label">The stakeholders' left-to-right vision</p>
@@ -201,15 +201,15 @@
                   </div>
                 </div>
                 <div class="project-content-text"><p class="roadmap-later"><span>Parked for later</span> Live preview, one-click PowerPoint reports, a unified homepage</p></div>
-                <div class="project-content-text"><p>Every wish pointed the same way: ask the analyst's questions, in order, so customers don't have to know them. We started with a wizard as our vehicle, in line with the stakeholders' left-to-right vision. The open question was its structure.</p></div>
+                <div class="project-content-text"><p>We chose a wizard as the core pattern. It matched the stakeholders' left-to-right vision and mirrored how analysts already worked.</p></div>
 
               </section>
 
               <section id="exploration" data-toc="Navigating the mess" class="project-content-grid">
                 <div class="project-content-text"><div class="divider"></div></div>
                 <p class="project-section-label project-content-text">Navigating the mess</p>
-                <div class="project-content-text"><h2>I explored three structures before landing on Guided Setup.</h2></div>
-                <div class="project-content-text"><p>Each one taught us something about the analytics team, the backend or the customer, and changed the next version.</p></div>
+                <div class="project-content-text"><h2>We tested three structures before landing on Guided Setup.</h2></div>
+                <div class="project-content-text"><p>Feedback from analysts, engineers and stakeholders shaped each version.</p></div>
                 <div class="project-content-media">
                   <div class="explore-row">
                     <div class="panel explore-panel">
@@ -217,8 +217,8 @@
                       <div class="panel-card"><span class="asset-note">Discarded design: three entry points</span></div>
                     </div>
                     <div class="explore-caption">
-                      <p>Three flows became two doors</p>
-                      <p>Presets, Guided and Custom confused even the analytics team. Custom folded into Guided Setup as “Frequently Selected Options.”</p>
+                      <p>Three entry points became two</p>
+                      <p>Presets, Guided and Custom confused the analytics team. We folded Custom into Guided Setup as “Frequently Selected Options.”</p>
                     </div>
                   </div>
                 </div>
@@ -230,7 +230,7 @@
                     </div>
                     <div class="explore-caption">
                       <p>A full-page wizard became a modal</p>
-                      <p>Backend constraints forced it, so we redesigned the micro-interactions and avoided modal-on-modal.</p>
+                      <p>Backend constraints required a modal, so we redesigned the micro-interactions to avoid modal-on-modal.</p>
                     </div>
                   </div>
                 </div>
@@ -242,7 +242,7 @@
                     </div>
                     <div class="explore-caption">
                       <p>Six steps became five</p>
-                      <p>Scheduling moved out of the modal into the nav bar, keeping the focus on building a chart.</p>
+                      <p>We moved scheduling to the nav bar to keep the modal focused on building a chart.</p>
                     </div>
                   </div>
                 </div>
@@ -251,7 +251,7 @@
               <section id="solution" data-toc="The solution" class="project-content-grid">
                 <div class="project-content-text"><div class="divider"></div></div>
                 <p class="project-section-label project-content-text">The solution</p>
-                <div class="project-content-text"><h2>Guided Setup, in six parts</h2></div>
+                <div class="project-content-text"><h2>Guided Setup, built on six design decisions</h2></div>
                 <div class="project-content-media">
                   <div class="panel" style="background:#7aaee933">
                     <p class="panel-label">After: the customer builds it</p>
@@ -266,22 +266,22 @@
                 </div>
                 <div class="project-content-text">
                   <ol class="numbered">
-                    <li><p>Two doors</p><p>Six presets for common questions; Guided Setup for everything else.</p></li>
-                    <li><p>One direction</p><p>Metrics → Date range → Grouping → Filters → Review, showing only options that fit.</p></li>
-                    <li><p>Defaults over freedom</p><p>Picking a metric group pre-selects the usual metrics.</p></li>
-                    <li><p>Guardrails in the copy</p><p>Tooltips explain exclusion and double-counting rules; invalid combinations are blocked.</p></li>
-                    <li><p>Hidden power, surfaced</p><p>Multiple date ranges, a Seasons date picker, scatterplot and heatmap presets.</p></li>
-                    <li><p>Experts weren't left behind</p><p>Duplicate Chart, Add to Dashboard and Pin cut down the repeated work of power users.</p></li>
+                    <li><p>Two entry points</p><p>Six presets for common questions; Guided Setup for everything else.</p></li>
+                    <li><p>A linear flow</p><p>Metrics → Date range → Grouping → Filters → Review, showing only options that fit.</p></li>
+                    <li><p>Smart defaults</p><p>Picking a metric group pre-selects the usual metrics.</p></li>
+                    <li><p>Built-in guardrails</p><p>Tooltips explain exclusion and double-counting rules; invalid combinations are blocked.</p></li>
+                    <li><p>Advanced features, surfaced</p><p>Multiple date ranges, a Seasons date picker, scatterplot and heatmap presets.</p></li>
+                    <li><p>Shortcuts for power users</p><p>Duplicate Chart, Add to Dashboard and Pin cut repeated work.</p></li>
                   </ol>
                 </div>
-                <div class="project-content-media"><div class="figure-grid cols-2"><figure><div class="figure-media" style="aspect-ratio:4 / 3"><span class="asset-note">Presets and the Guided Setup entry point</span></div><figcaption>01 / Two doors</figcaption></figure><figure><div class="figure-media" style="aspect-ratio:4 / 3"><span class="asset-note">The five-step modal</span></div><figcaption>02 / One direction</figcaption></figure><figure><div class="figure-media" style="aspect-ratio:4 / 3"><span class="asset-note">Metric group with pre-selected metrics</span></div><figcaption>03 / Defaults over freedom</figcaption></figure><figure><div class="figure-media" style="aspect-ratio:4 / 3"><span class="asset-note">Annotated tooltips and a blocked combination</span></div><figcaption>04 / Guardrails in the copy</figcaption></figure><figure><div class="figure-media" style="aspect-ratio:4 / 3"><span class="asset-note">Multiple date ranges and the Seasons picker</span></div><figcaption>05 / Hidden power, surfaced</figcaption></figure><figure><div class="figure-media" style="aspect-ratio:4 / 3"><span class="asset-note">Duplicate Chart, Add to Dashboard and Pin</span></div><figcaption>06 / Experts weren't left behind</figcaption></figure></div></div>
+                <div class="project-content-media"><div class="figure-grid cols-2"><figure><div class="figure-media" style="aspect-ratio:4 / 3"><span class="asset-note">Presets and the Guided Setup entry point</span></div><figcaption>01 / Two entry points</figcaption></figure><figure><div class="figure-media" style="aspect-ratio:4 / 3"><span class="asset-note">The five-step modal</span></div><figcaption>02 / A linear flow</figcaption></figure><figure><div class="figure-media" style="aspect-ratio:4 / 3"><span class="asset-note">Metric group with pre-selected metrics</span></div><figcaption>03 / Smart defaults</figcaption></figure><figure><div class="figure-media" style="aspect-ratio:4 / 3"><span class="asset-note">Annotated tooltips and a blocked combination</span></div><figcaption>04 / Built-in guardrails</figcaption></figure><figure><div class="figure-media" style="aspect-ratio:4 / 3"><span class="asset-note">Multiple date ranges and the Seasons picker</span></div><figcaption>05 / Advanced features, surfaced</figcaption></figure><figure><div class="figure-media" style="aspect-ratio:4 / 3"><span class="asset-note">Duplicate Chart, Add to Dashboard and Pin</span></div><figcaption>06 / Shortcuts for power users</figcaption></figure></div></div>
               </section>
 
               <section id="engineering" data-toc="Design x Engineering" class="project-content-grid">
                 <div class="project-content-text"><div class="divider"></div></div>
                 <p class="project-section-label project-content-text">Design x Engineering</p>
                 <div class="project-content-text"><h2>Designing within the backend's rules</h2></div>
-                <div class="project-content-text"><p>We acted as our own PMs, worked within the rules for valid chart combinations, asked for a Seasons API, and triaged QA by priority across a 14-week build.</p><p>The surprise: some capabilities, like multiple date ranges, weren't known to the analytics team or the engineers. Digging turned them into features.</p></div>
+                <div class="project-content-text"><p>We acted as our own PMs, worked within the rules for valid chart combinations, asked for a Seasons API, and triaged QA by priority across a 14-week build.</p><p>Along the way, we found capabilities, like multiple date ranges, that neither the analytics team nor the engineers knew existed, and turned them into features.</p></div>
                 <div class="project-content-media">
                   <div class="panel" style="background:color-mix(in srgb, var(--foreground) 6%, transparent)">
                     <p class="panel-label">Design QA, triaged P0–P4</p>
@@ -293,7 +293,7 @@
               <section id="reflection" data-toc="Impact &amp; reflection" class="project-content-grid">
                 <div class="project-content-text"><div class="divider"></div></div>
                 <p class="project-section-label project-content-text">Impact &amp; reflection</p>
-                <div class="project-content-text"><h2>From an analyst-run service to self-serve</h2></div>
+                <div class="project-content-text"><h2>Customers now build their own charts.</h2></div>
                 <div class="project-content-text">
                   <ul class="bullets">
                     <li>Clients now use scatterplots and heatmaps the team never built for them before.</li>
@@ -304,8 +304,8 @@
                 <div class="project-content-media"><div class="figure-grid cols-2"><figure><div class="figure-media" style="aspect-ratio:4 / 3"><span class="asset-note">Customer-built scatterplot</span></div><figcaption>Scatterplot preset</figcaption></figure><figure><div class="figure-media" style="aspect-ratio:4 / 3"><span class="asset-note">Customer-built heatmap</span></div><figcaption>Heatmap preset</figcaption></figure></div></div>
                 <div class="project-content-text">
                   <div class="takeaways">
-                    <div><p>The best guidance is an expert's checklist made visible</p><p>Presets, defaults and tooltips encode what analysts used to ask over email.</p></div>
-                    <div><p>Constraints shaped the flow</p><p>We designed around the backend's limits, not against them.</p></div>
+                    <div><p>Encode expert knowledge into the product</p><p>Presets, defaults and tooltips now ask what analysts used to ask over email.</p></div>
+                    <div><p>Design with constraints, not against them</p><p>Working within the backend's rules shaped a simpler flow.</p></div>
                   </div>
                 </div>
               </section>
