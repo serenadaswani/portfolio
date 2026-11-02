@@ -18,18 +18,7 @@ const SITE = {
   // Without media, a gradient placeholder is drawn from `colors`.
   // `cursor` is the label that follows the mouse: "View project", "Visit site", "Coming soon".
   // `ratio` is the thumbnail aspect ratio (width / height).
-  projects: [
-    { title: "Mensio", sub: "Shipped 2026", href: "projects/mensio.html", cursor: "View project", ratio: 16 / 9, colors: ["#2b3a67", "#7aaee9"] },
-    { title: "Project One", sub: "Concept 2025", href: "projects/project-one.html", cursor: "View project", ratio: 16 / 9, colors: ["#e98d34", "#d0a8d8"] },
-    { title: "Project Two", sub: "Shipped 2026", href: "projects/project-two.html", cursor: "View project", ratio: 16 / 9, colors: ["#8fb8a8", "#e8f0ee"] },
-    { title: "Project Three", sub: "Contract 2026", href: "https://example.com", external: true, cursor: "Visit site", ratio: 4 / 3, colors: ["#007fff", "#7aaee9"] },
-    { title: "Project Four", sub: "Shipping 2026", cursor: "Coming soon", ratio: 16 / 9, colors: ["#c9c4bc", "#f3f2f0"] },
-    { title: "Project Five", sub: "Concept 2025", href: "projects/project-five.html", cursor: "View project", ratio: 16 / 9, colors: ["#b8bec6", "#e6e8eb"] },
-    { title: "Project Six", sub: "Contract 2025", href: "projects/project-six.html", cursor: "View overview", ratio: 16 / 9, colors: ["#001445", "#3b5a9a"] },
-    { title: "Project Seven", sub: "Shipped 2025", href: "projects/project-seven.html", cursor: "View project", ratio: 16 / 9, colors: ["#1a316e", "#4a68b0"] },
-    { title: "Project Eight", sub: "Shipped 2023", href: "projects/project-eight.html", cursor: "View project", ratio: 5 / 4, colors: ["#ddd0fc", "#b9a6ec"] },
-    { title: "Project Nine", sub: "Shipped 2023", href: "projects/project-nine.html", cursor: "View project", ratio: 5 / 4, colors: ["#7aaee9", "#cfe2f7"] },
-  ],
+  projects: [],
 };
 
 // Pages in subfolders (e.g. projects/) set <body data-root="../"> so shared links resolve.
