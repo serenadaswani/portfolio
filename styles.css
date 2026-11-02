@@ -487,6 +487,7 @@ footer .links a:hover { color: var(--primary); }
 .timeline a { width: fit-content; color: var(--ink-80); transition: color .2s; }
 .timeline a:hover { color: var(--primary); }
 .timeline div p { color: var(--ink-55); }
+.timeline .org { color: var(--ink-80); }
 
 /* ---------- Case-study text blocks ---------- */
 
