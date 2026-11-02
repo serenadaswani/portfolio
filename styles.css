@@ -549,3 +549,4 @@ footer .links a:hover { color: var(--primary); }
 }
 .roadmap-later { font-size: 14px; }
 .roadmap-later span { color: var(--ink-100); margin-right: 8px; }
+@media (min-width: 768px) { .flow.cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); } }

@@ -47,16 +47,46 @@
               <section id="problem" data-toc="The problem" class="project-content-grid">
                 <div class="project-content-text"><div class="divider"></div></div>
                 <p class="project-section-label project-content-text">The problem</p>
-                <div class="project-content-text"><h2>One bottleneck, two victims</h2></div>
-
-                <div id="customers" data-toc="Customers" class="project-subsection project-content-text">
-                  <p class="project-subsection-label">Customers</p>
-                  <h2>Customers asked in one sentence. Analysts answered in eight steps.</h2>
+                <div class="project-content-text"><h2>Losing a customer exposed a bigger problem.</h2></div>
+                <div class="project-content-text"><p>When a long-time customer churned, the Mensio team looked hard at how the product was really used. The answer: mostly by their own analysts.</p></div>
+                <div class="project-content-text">
+                  <dl class="defs">
+                    <div><dt>Analysts were buried</dt><dd>Every custom request ran through them, and there weren't enough hands to keep up.</dd></div>
+                    <div><dt>Growth hit a ceiling</dt><dd>Each new customer meant more analyst hours, so Mensio couldn't take on more.</dd></div>
+                    <div><dt>Renewals were at risk</dt><dd>The budget owners who sign renewals were the least able to use the tool.</dd></div>
+                  </dl>
                 </div>
-                <div class="project-content-text"><p>A client emails "metric + brand." Analysts follow up on date range, live vs. replay, competitors and more — then build, review, export, clean in Excel, send and revise.</p></div>
+
+                <div id="plan" data-toc="The plan" class="project-subsection project-content-text">
+                  <p class="project-subsection-label">The plan</p>
+                  <h2>Their fix: a left-to-right flow.</h2>
+                </div>
+                <div class="project-content-text"><p>The team had already mapped the steps of building a chart, in order. They brought us in to make it real.</p></div>
                 <div class="project-content-media">
                   <div class="panel" style="background:#2b3a6722">
-                    <p class="panel-label">Before: 8 steps, 2 people, 3 tools</p>
+                    <p class="panel-label">The team's original left-to-right flow</p>
+                    <div class="panel-card">
+                      <ol class="flow cols-3">
+                        <li>Data type</li><li>Visualization</li><li>Metrics</li><li>Groupings</li><li>Filters</li><li>Date range</li>
+                      </ol>
+                    </div>
+                  </div>
+                </div>
+              </section>
+
+              <section id="homework" data-toc="Doing our homework" class="project-content-grid">
+                <div class="project-content-text"><div class="divider"></div></div>
+                <p class="project-section-label project-content-text">Doing our homework</p>
+                <div class="project-content-text"><h2>We'd never used Mensio, so we became its power users.</h2></div>
+                <div class="project-content-text"><p>Before designing anything, we built charts ourselves, logged every quirk and question, and interviewed the media analysts who fielded customer requests.</p></div>
+
+                <div id="interviews" data-toc="Analyst interviews" class="project-subsection project-content-text">
+                  <p class="project-subsection-label">Analyst interviews</p>
+                  <h2>Customers asked in one sentence. Analysts answered in eight steps.</h2>
+                </div>
+                <div class="project-content-media">
+                  <div class="panel" style="background:#2b3a6722">
+                    <p class="panel-label">A custom request: 8 steps, 2 people, 3 tools</p>
                     <div class="panel-card">
                       <ol class="flow">
                         <li>Client emails one line</li><li>Analyst follows up</li><li>Call if too complex</li><li>Analyst builds the pull</li>
@@ -65,39 +95,35 @@
                     </div>
                   </div>
                 </div>
-
-                <div class="project-content-media">
-                  <div class="panel" style="background:#7aaee933">
-                    <p class="panel-label">After: the customer builds it</p>
-                    <div class="panel-card"><span class="asset-note">Diagram: preset or Guided Setup → 5 steps with defaults → Save &amp; Fetch</span></div>
-                  </div>
-                </div>
                 <div class="project-content-media"><div class="figure-grid cols-2"><figure><div class="figure-media" style="aspect-ratio:4 / 3"><span class="asset-note">Collage of anonymized customer emails</span></div><figcaption>Customer emails asking for one-off pulls</figcaption></figure><figure><div class="figure-media" style="aspect-ratio:4 / 3"><span class="asset-note">Anonymized session clip</span></div><figcaption>A frustrated session in the old explorer</figcaption></figure></div></div>
-
-                <div id="analysts" data-toc="Analysts" class="project-subsection project-content-text">
-                  <p class="project-subsection-label">Analysts</p>
-                  <h2>The analysts became the product.</h2>
-                </div>
                 <div class="project-content-text">
                   <div class="stats">
                     <div><p class="stat">~1 day</p><p>end-to-end per request</p></div>
                     <div><p class="stat">85%</p><p>of an analyst's day on requests, exports and cleanup</p></div>
-                    <div><p class="stat">3–5</p><p>versions of a pull to get it right</p></div>
+                    <div><p class="stat">1 in 3</p><p>requests came back for rework</p></div>
                   </div>
                 </div>
-                <div class="project-content-text"><p>And even experts got it wrong: experienced clients pulled data that didn't match what they meant. The goal was accuracy as much as confidence.</p></div>
+                <div class="project-content-text">
+                  <ol class="numbered">
+                    <li><p>The follow-ups never changed</p><p>Date range, live vs. replay, competitors, asset breakdown. Customers just never knew to say them.</p></li>
+                    <li><p>The rules lived in analysts' heads</p><p>Add teams, and you also need home, neutral and non-game filters, or games get double-counted. None of it was written down.</p></li>
+                    <li><p>Fear meant over-pulling</p><p>Analysts were “afraid to miss something,” so they pulled extra and trimmed it in Excel.</p></li>
+                    <li><p>Customers didn't speak the data model</p><p>Groupings and filters, like programs vs. episodes, caused the most confusion.</p></li>
+                  </ol>
+                </div>
+                <div class="project-content-text"><blockquote>“There is no checklist, so you are trying to remember off the top of your head…”</blockquote></div>
+                <div class="project-content-text"><p>The analysts' follow-up emails were the wizard, written out by hand. Our mission: make the product ask the questions the analyst would.</p></div>
               </section>
 
-              <section id="insight" data-toc="The insight" class="project-content-grid">
+              <section id="roadmap" data-toc="Wishlist to roadmap" class="project-content-grid">
                 <div class="project-content-text"><div class="divider"></div></div>
-                <p class="project-section-label project-content-text">The insight</p>
-                <div class="project-content-text"><h2>There was no checklist.</h2></div>
-                <div class="project-content-text"><p>The right filters and exclusions lived in analysts' heads. Add teams, and you also need home, neutral and non-game filters — or games between two selected teams get double-counted. Nobody wrote that down.</p></div>
-                <div class="project-content-text"><blockquote>Mission: make the product ask the questions the analyst would.</blockquote></div>
+                <p class="project-section-label project-content-text">Wishlist to roadmap</p>
+                <div class="project-content-text"><h2>We turned their wishlist into our roadmap.</h2></div>
+                <div class="project-content-text"><p>With the interviews in hand, we sat down with stakeholders to ask what they needed from Data Explorer, and for whom.</p></div>
 
                 <div id="users" data-toc="Who we designed for" class="project-subsection project-content-text">
                   <p class="project-subsection-label">Who we designed for</p>
-                  <h2>The people who renew are the least able to use the tool.</h2>
+                  <h2>Four kinds of users, four levels of trust.</h2>
                 </div>
                 <div class="project-content-media">
                   <div class="panel" style="background:#2b3a6722">
@@ -110,42 +136,14 @@
                     <div><dt>Super users</dt><dd>Live in Data Explorer, still make mistakes they don't know about</dd></div>
                     <div><dt>Power users</dt><dd>Tweak custom dashboards, wouldn't build from scratch</dd></div>
                     <div><dt>High-involvement users</dt><dd>Settle for core modules, email the team every couple of weeks</dd></div>
-                    <div><dt>New users &amp; requesters</dt><dd>Need the most guidance — and are often the budget owners</dd></div>
+                    <div><dt>New users &amp; requesters</dt><dd>Need the most guidance, and are often the budget owners</dd></div>
                   </dl>
                 </div>
-              </section>
 
-              <section id="exploration" data-toc="Navigating the mess" class="project-content-grid">
-                <div class="project-content-text"><div class="divider"></div></div>
-                <p class="project-section-label project-content-text">Navigating the mess</p>
-                <div class="project-content-text"><h2>Analysts showed us the questions. Stakeholders gave us the order.</h2></div>
-
-                <div id="interviews" data-toc="Analyst interviews" class="project-subsection project-content-text">
-                  <p class="project-subsection-label">Analyst interviews</p>
-                  <h2>Their follow-up emails were the wizard, written out by hand.</h2>
+                <div id="wishlist" data-toc="The wishlist" class="project-subsection project-content-text">
+                  <p class="project-subsection-label">The wishlist</p>
+                  <h2>Every wish, checked against the evidence.</h2>
                 </div>
-                <div class="project-content-text"><p>We interviewed the media analysts who fielded every custom request.</p></div>
-                <div class="project-content-media">
-                  <div class="panel" style="background:#2b3a6722">
-                    <p class="panel-label">What analysts told us</p>
-                    <div class="panel-card"><span class="asset-note">Interview synthesis: affinity map or key quotes</span></div>
-                  </div>
-                </div>
-                <div class="project-content-text">
-                  <ol class="numbered">
-                    <li><p>The follow-ups never changed</p><p>Date range, live vs. replay, competitors, asset breakdown. Customers just never knew to say them.</p></li>
-                    <li><p>Fear meant over-pulling</p><p>Analysts pulled extra data and trimmed it by hand in Excel.</p></li>
-                    <li><p>Mistakes surfaced a month later</p><p>One in three requests came back, and tracking down the missing filter took about an hour.</p></li>
-                    <li><p>Customers didn't speak the data model</p><p>Groupings and filters, like programs vs. episodes, caused the most confusion.</p></li>
-                  </ol>
-                </div>
-                <div class="project-content-text"><blockquote>“We are afraid to miss something, and then it is so time consuming to recreate.”</blockquote></div>
-
-                <div id="roadmap" data-toc="Wishlist to roadmap" class="project-subsection project-content-text">
-                  <p class="project-subsection-label">Wishlist to roadmap</p>
-                  <h2>The stakeholders' wishlist became our roadmap.</h2>
-                </div>
-                <div class="project-content-text"><p>Stakeholders had two goals: less analyst servicing, and customers confident enough to renew. Their headline ask was a left-to-right flow. We checked every wish against the interviews.</p></div>
                 <div class="project-content-media">
                   <div class="roadmap">
                     <div class="roadmap-row roadmap-head"><p>Stakeholder wish</p><p>Interview evidence</p><p>What we built</p></div>
@@ -184,10 +182,13 @@
                 <div class="project-content-text"><p class="roadmap-later"><span>Parked for later</span> Live preview, one-click PowerPoint reports, a unified homepage</p></div>
                 <div class="project-content-text"><p>Every wish pointed the same way: ask the analyst's questions, in order, so the customer doesn't have to know them. A wizard was the vehicle. The open question was its structure.</p></div>
 
-                <div id="structures" data-toc="Three structures" class="project-subsection project-content-text">
-                  <p class="project-subsection-label">Three structures</p>
-                  <h2>I explored three structures before landing on Guided Setup.</h2>
-                </div>
+              </section>
+
+              <section id="exploration" data-toc="Navigating the mess" class="project-content-grid">
+                <div class="project-content-text"><div class="divider"></div></div>
+                <p class="project-section-label project-content-text">Navigating the mess</p>
+                <div class="project-content-text"><h2>I explored three structures before landing on Guided Setup.</h2></div>
+                <div class="project-content-text"><p>Each one taught us something about the analytics team, the backend or the customer, and changed the next version.</p></div>
                 <div class="project-content-media">
                   <div class="explore-row">
                     <div class="panel explore-panel">
@@ -230,6 +231,12 @@
                 <div class="project-content-text"><div class="divider"></div></div>
                 <p class="project-section-label project-content-text">The solution</p>
                 <div class="project-content-text"><h2>Guided Setup, in six parts</h2></div>
+                <div class="project-content-media">
+                  <div class="panel" style="background:#7aaee933">
+                    <p class="panel-label">After: the customer builds it</p>
+                    <div class="panel-card"><span class="asset-note">Diagram: preset or Guided Setup → 5 steps with defaults → Save &amp; Fetch</span></div>
+                  </div>
+                </div>
                 <div class="project-content-media">
                   <div class="panel" style="background:#7aaee933">
                     <p class="panel-label">Building a chart with Guided Setup</p>
