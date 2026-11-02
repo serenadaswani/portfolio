@@ -18,7 +18,9 @@ const SITE = {
   // Without media, a gradient placeholder is drawn from `colors`.
   // `cursor` is the label that follows the mouse: "View project", "Visit site", "Coming soon".
   // `ratio` is the thumbnail aspect ratio (width / height).
-  projects: [],
+  projects: [
+    { title: "Mensio", sub: "Shipped 2026", href: "projects/mensio.html", cursor: "View project", ratio: 16 / 9, colors: ["#2b3a67", "#7aaee9"] },
+  ],
 };
 
 // Pages in subfolders (e.g. projects/) set <body data-root="../"> so shared links resolve.
