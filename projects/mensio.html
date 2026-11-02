@@ -44,34 +44,15 @@
                 <div class="project-content-text"><p>Data Explorer showed every metric, grouping and filter at once. Customers didn't know which combination answered their question, and asked for a simpler way to get it.</p><p>We redesigned chart building into Guided Setup, a step-by-step wizard with presets, and shipped it in 14 weeks.</p></div>
               </section>
 
-              <section id="research" data-toc="Initial research" class="project-content-grid">
+              <section id="assumption" data-toc="Starting assumption" class="project-content-grid">
                 <div class="project-content-text"><div class="divider"></div></div>
-                <p class="project-section-label project-content-text">Initial research</p>
-                <div class="project-content-text"><h2>Our primary users weren't customers. They were analysts.</h2></div>
-                <div class="project-content-text"><p>We mapped Mensio's user groups to find where customers struggled.</p></div>
-
-                <div id="users" data-toc="Who our users are" class="project-subsection project-content-text">
-                  <p class="project-subsection-label">Who our users are</p>
-                  <h2>Four user groups, from daily experts to occasional requesters.</h2>
-                </div>
-                <div class="project-content-media">
-                  <div class="panel" style="background:#2b3a6722">
-                    <p class="panel-label">How often they use Mensio vs. how much they trust themselves</p>
-                    <div class="panel-card"><span class="asset-note">Persona map: four user groups plotted on a 2×2</span></div>
-                  </div>
-                </div>
-                <div class="project-content-text">
-                  <dl class="defs">
-                    <div><dt>Super users</dt><dd>Live in Data Explorer, still make mistakes they don't know about</dd></div>
-                    <div><dt>Power users</dt><dd>Tweak custom dashboards, wouldn't build from scratch</dd></div>
-                    <div><dt>High-involvement users</dt><dd>Settle for core modules, email the team every couple of weeks</dd></div>
-                    <div><dt>New users &amp; requesters</dt><dd>Need the most guidance, and are often the budget owners</dd></div>
-                  </dl>
-                </div>
+                <p class="project-section-label project-content-text">Starting assumption</p>
+                <div class="project-content-text"><h2>We assumed customers were our primary users. We were wrong.</h2></div>
+                <div class="project-content-text"><p>New to Mensio, we planned to start with customer pain points. Our first stakeholder conversations changed that.</p></div>
                 <div class="project-content-text">
                   <div class="takeaways">
-                    <div><p>Finding</p><p>Customers rarely used Mensio directly, so their pain points were hard to see. Analysts were doing the work for them.</p></div>
-                    <div><p>Goal</p><p>Make Mensio self-serve, so customers pull their own data and analysts support them instead of doing it for them.</p></div>
+                    <div><p>What we assumed</p><p>Customers built their own charts, and their pain points would show us what to fix.</p></div>
+                    <div><p>What we found</p><p>There were no documented customer pain points. Analysts were doing the work, so their workflow was what we needed to study.</p></div>
                   </div>
                 </div>
               </section>
@@ -131,7 +112,7 @@
                 <div class="project-content-text"><div class="divider"></div></div>
                 <p class="project-section-label project-content-text">Analyst interviews</p>
                 <div class="project-content-text"><h2>We studied the analyst workflow to rebuild it for customers.</h2></div>
-                <div class="project-content-text"><p>We used Mensio daily and interviewed the media analysts who handled customer requests.</p></div>
+                <div class="project-content-text"><p>Since analysts were doing the work, we studied their workflow to understand what customers actually received. We used Mensio daily and interviewed the media analysts who handled customer requests.</p></div>
                 <div class="project-content-media">
                   <div class="panel" style="background:#2b3a6722">
                     <p class="panel-label">What analysts told us</p>
@@ -202,6 +183,27 @@
                 </div>
                 <div class="project-content-text"><p class="roadmap-later"><span>Parked for later</span> Live preview, one-click PowerPoint reports, a unified homepage</p></div>
                 <div class="project-content-text"><p>We chose a wizard as the core pattern. It matched the stakeholders' left-to-right vision and mirrored how analysts already worked.</p></div>
+
+                <div id="customers" data-toc="Customer groups" class="project-subsection project-content-text">
+                  <p class="project-subsection-label">Customer groups</p>
+                  <h2>Customer groups decided how people enter the wizard.</h2>
+                </div>
+                <div class="project-content-text"><p>Usage and common requests varied by group. That led to two entry points: presets for recurring questions, and Guided Setup for everything else.</p>
+                </div>
+                <div class="project-content-media">
+                  <div class="panel" style="background:#2b3a6722">
+                    <p class="panel-label">How often they use Mensio vs. how much they trust themselves</p>
+                    <div class="panel-card"><span class="asset-note">Customer map: four groups plotted on a 2×2</span></div>
+                  </div>
+                </div>
+                <div class="project-content-text">
+                  <dl class="defs">
+                    <div><dt>Super users</dt><dd>Live in Data Explorer, still make mistakes they don't know about</dd></div>
+                    <div><dt>Power users</dt><dd>Tweak custom dashboards, wouldn't build from scratch</dd></div>
+                    <div><dt>High-involvement users</dt><dd>Settle for core modules, email the team every couple of weeks</dd></div>
+                    <div><dt>New users &amp; requesters</dt><dd>Need the most guidance, and are often the budget owners</dd></div>
+                  </dl>
+                </div>
 
               </section>
 
