@@ -588,3 +588,8 @@ footer .links a:hover { color: var(--primary); }
 .mission { display: flex; flex-direction: column; gap: 8px; padding: 28px 28px 32px; margin-top: 8px; background: color-mix(in srgb, var(--primary) 9%, var(--background)); border-left: 3px solid var(--primary); }
 .project-content-text p.mission { font-family: var(--font-serif); font-size: 1.5rem; line-height: 1.3; letter-spacing: -0.01em; color: var(--ink-100); }
 .mission span { font-family: var(--font-sans); font-size: 14px; letter-spacing: 0; color: var(--primary); }
+
+/* Temporary variants for comparison */
+.variant-label { font-size: 12px; letter-spacing: .04em; text-transform: uppercase; color: var(--ink-45); }
+.roadmap--no-border .roadmap-row > p:nth-of-type(n) { border-color: transparent; }
+.roadmap--no-shadow .roadmap-row > p:nth-of-type(n) { box-shadow: none; }
