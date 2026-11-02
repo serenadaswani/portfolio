@@ -119,7 +119,40 @@
                 <div class="project-content-text"><div class="divider"></div></div>
                 <p class="project-section-label project-content-text">Navigating the mess</p>
                 <div class="project-content-text"><h2>I explored three structures before landing on Guided Setup.</h2></div>
-                <div class="project-content-text"><p>Each one taught us something about the analytics team, the backend or the customer — and changed the next version.</p></div>
+
+                <div id="interviews" data-toc="Stakeholder interviews" class="project-subsection project-content-text">
+                  <p class="project-subsection-label">Stakeholder interviews</p>
+                  <h2>Stakeholders didn't want more options. They wanted an order of operations.</h2>
+                </div>
+                <div class="project-content-text">
+                  <p>In our conversations with stakeholders, one theme kept coming up: building a chart in Data Explorer should feel like a logical, step-by-step process. That pointed us to a wizard. Our job was to map those steps out, using the wizard as the vehicle.</p>
+                  <p>From there, we needed to understand the nuances and requirements of each chart type, find the most common use cases and configurations, and organize the data selections so they guided people to the data they were looking for.</p>
+                </div>
+                <div class="project-content-text">
+                  <p>We worked closely with stakeholders to understand:</p>
+                  <ul class="bullets">
+                    <li>The four buckets of users, and how much guidance each one needs</li>
+                    <li>The most common use cases behind customer requests</li>
+                    <li>How analysts work through creating a chart today</li>
+                    <li>How we could emulate that process, and simplify it</li>
+                  </ul>
+                </div>
+                <div class="project-content-media">
+                  <div class="panel" style="background:#2b3a6722">
+                    <p class="panel-label">Mapping how an analyst builds a chart today</p>
+                    <div class="panel-card"><span class="asset-note">Interview synthesis or analyst workflow map</span></div>
+                  </div>
+                </div>
+                <div class="project-content-text">
+                  <p>A few insights shaped everything that followed:</p>
+                  <ol class="numbered">
+                    <li><p>Analysts already follow a sequence</p><p>Every request moved through the same questions in the same order: metric, date range, grouping, then filters. The wizard just had to make that order visible.</p></li>
+                    <li><p>A handful of configurations cover most requests</p><p>Most asks were variations on a few common charts, which made a case for presets alongside a guided flow.</p></li>
+                    <li><p>The rules change with the chart</p><p>Each chart type came with its own required filters and exclusions. The flow had to show only the options that fit.</p></li>
+                    <li><p>One flow had to serve every bucket</p><p>Super users wanted speed; new users and requesters needed hand-holding. The structure had to work for both.</p></li>
+                  </ol>
+                </div>
+                <div class="project-content-text"><p>A wizard was the right vehicle. The open question was how to structure it. We tried three approaches, and each one taught us something about the analytics team, the backend or the customer that changed the next version.</p></div>
                 <div class="project-content-media">
                   <div class="explore-row">
                     <div class="panel explore-panel">
