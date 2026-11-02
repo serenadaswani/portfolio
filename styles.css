@@ -534,39 +534,49 @@ footer .links a:hover { color: var(--primary); }
 .explore-caption p:last-child { color: var(--ink-55); }
 
 /* Wishlist → roadmap table: wish → evidence → build, read left to right */
-.roadmap { display: flex; flex-direction: column; gap: 28px; }
-@media (min-width: 768px) { .roadmap { gap: 12px; } }
-.roadmap-row { display: grid; grid-template-columns: 1fr; gap: 6px; }
+.roadmap { position: relative; display: flex; flex-direction: column; gap: 28px; }
+.roadmap-row { position: relative; z-index: 1; display: grid; grid-template-columns: 1fr; gap: 6px; }
 .roadmap-row > p {
   margin: 0;
-  padding: 12px 14px;
+  padding: 14px 16px;
   border: 1px solid color-mix(in srgb, var(--foreground) 12%, transparent);
   border-radius: 4px;
   background: #fff;
   box-shadow: 0 1px 2px rgba(50, 64, 79, .06), 0 4px 12px rgba(50, 64, 79, .06);
   font-size: 14px;
-  line-height: 1.4;
+  line-height: 1.45;
 }
 .roadmap-row > p:nth-of-type(1) { color: var(--ink-100); }
 .roadmap-row > p:nth-of-type(2) { color: var(--ink-55); }
-.roadmap-row > p:nth-of-type(3) {
-  color: var(--primary);
-  border-color: color-mix(in srgb, var(--primary) 55%, transparent);
-  box-shadow: 0 1px 2px rgba(230, 95, 46, .10), 0 4px 14px rgba(230, 95, 46, .14);
-}
+.roadmap-row > p:nth-of-type(3) { color: var(--ink-100); border-color: color-mix(in srgb, var(--primary) 55%, transparent); }
 .roadmap-row > p[data-col]::before { content: attr(data-col); display: block; font-size: 12px; color: var(--ink-45); margin-bottom: 2px; }
+.roadmap-row > p[data-col="What we built"]::before { color: var(--primary); }
 .roadmap-arrow { display: grid; place-items: center; color: var(--ink-40); }
 .roadmap-arrow svg { transform: rotate(90deg); }
 .roadmap-head { display: none; }
 @media (min-width: 768px) {
-  .roadmap-row { grid-template-columns: minmax(0, 1fr) 28px minmax(0, 1fr) 28px minmax(0, 1fr); gap: 0; align-items: stretch; }
+  .roadmap { gap: 12px; }
+  .roadmap-row { grid-template-columns: minmax(0, 1fr) 32px minmax(0, 1fr) 32px minmax(0, 1fr); gap: 0; align-items: stretch; }
   .roadmap-arrow svg { transform: none; }
   .roadmap-row > p[data-col]::before { content: none; }
-  .roadmap-head { display: grid; margin-bottom: -4px; }
-  .roadmap-head { margin-bottom: 0; }
-  .roadmap-head > p:nth-of-type(n) { display: flex; align-items: center; gap: 8px; border: 0; padding: 0 2px; background: none; box-shadow: none; font-size: 13px; color: var(--ink-80); }
-  .roadmap-head svg { flex: none; color: var(--ink-45); }
-  .roadmap-head > p:nth-of-type(3) svg { color: var(--primary); }
+  .roadmap-row > p:nth-of-type(3) { border-color: color-mix(in srgb, var(--foreground) 12%, transparent); }
+  .roadmap-head { display: grid; }
+  .roadmap-head > p:nth-of-type(n) { border: 0; padding: 0 2px; background: none; box-shadow: none; font-size: 13px; color: var(--ink-55); }
+  .roadmap-head > p:nth-of-type(3) { color: var(--primary); }
+  /* Orange outline around the whole "What we built" column */
+  .roadmap::after {
+    content: "";
+    position: absolute;
+    top: -10px;
+    bottom: -10px;
+    right: -8px;
+    width: calc((100% - 64px) / 3 + 16px);
+    border: 1.5px solid var(--primary);
+    border-radius: 8px;
+    background: color-mix(in srgb, var(--primary) 6%, transparent);
+    box-shadow: 0 6px 20px rgba(230, 95, 46, .12);
+    pointer-events: none;
+  }
 }
 .roadmap-later { font-size: 14px; }
 .roadmap-later span { color: var(--ink-100); margin-right: 8px; }
