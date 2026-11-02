@@ -534,7 +534,7 @@ footer .links a:hover { color: var(--primary); }
 .explore-caption p:last-child { color: var(--ink-55); }
 
 /* Wishlist → roadmap table: wish → evidence → build, read left to right */
-.roadmap { position: relative; display: flex; flex-direction: column; gap: 28px; }
+.roadmap { position: relative; display: flex; flex-direction: column; gap: 28px; padding: 16px; border-radius: 8px; background: color-mix(in srgb, #7aaee9 16%, #fff); }
 .roadmap-row { position: relative; z-index: 1; display: grid; grid-template-columns: 1fr; gap: 6px; }
 .roadmap-row > p {
   margin: 0;
@@ -546,7 +546,7 @@ footer .links a:hover { color: var(--primary); }
   font-size: 14px;
   line-height: 1.45;
 }
-.roadmap-row > p:nth-of-type(1) { color: #2b3a67; background: color-mix(in srgb, #7aaee9 14%, #fff); border-color: color-mix(in srgb, #7aaee9 45%, transparent); }
+.roadmap-row > p:nth-of-type(1) { color: var(--ink-100); }
 .roadmap-row > p:nth-of-type(2) { color: var(--ink-55); }
 .roadmap-row > p:nth-of-type(3) { color: var(--ink-100); border-color: color-mix(in srgb, var(--primary) 55%, transparent); }
 .roadmap-row > p[data-col]::before { content: attr(data-col); display: block; font-size: 12px; color: var(--ink-45); margin-bottom: 2px; }
@@ -557,7 +557,7 @@ footer .links a:hover { color: var(--primary); }
 .roadmap-arrow svg { transform: rotate(90deg); }
 .roadmap-head { display: none; }
 @media (min-width: 768px) {
-  .roadmap { gap: 12px; }
+  .roadmap { gap: 12px; padding: 28px 24px; }
   .roadmap-row { grid-template-columns: minmax(0, 1fr) 44px minmax(0, 1fr) 44px minmax(0, 1fr); gap: 0; align-items: stretch; }
   .roadmap-arrow svg { transform: none; }
   .roadmap-row > p[data-col]::before { content: none; }
@@ -570,13 +570,12 @@ footer .links a:hover { color: var(--primary); }
   .roadmap::after {
     content: "";
     position: absolute;
-    top: -10px;
-    bottom: -10px;
-    right: -8px;
-    width: calc((100% - 88px) / 3 + 16px);
+    top: 18px;
+    bottom: 18px;
+    right: 16px;
+    width: calc((100% - 48px - 88px) / 3 + 16px);
     border: 1.5px solid var(--primary);
     border-radius: 8px;
-    background: color-mix(in srgb, var(--primary) 6%, transparent);
     box-shadow: 0 6px 20px rgba(230, 95, 46, .12);
     pointer-events: none;
   }
