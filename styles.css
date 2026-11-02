@@ -551,6 +551,6 @@ footer .links a:hover { color: var(--primary); }
 .roadmap-later span { color: var(--ink-100); margin-right: 8px; }
 @media (min-width: 768px) { .flow.cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
 
-.mission { display: flex; flex-direction: column; gap: 6px; padding: 20px 0 4px; border-top: 1px solid var(--border); }
-.project-content-text p.mission { font-family: var(--font-serif); font-size: 1.375rem; line-height: 1.3; letter-spacing: -0.01em; color: var(--ink-100); }
+.mission { display: flex; flex-direction: column; gap: 8px; padding: 28px 28px 32px; margin-top: 8px; background: color-mix(in srgb, var(--primary) 9%, var(--background)); border-left: 3px solid var(--primary); }
+.project-content-text p.mission { font-family: var(--font-serif); font-size: 1.5rem; line-height: 1.3; letter-spacing: -0.01em; color: var(--ink-100); }
 .mission span { font-family: var(--font-sans); font-size: 14px; letter-spacing: 0; color: var(--primary); }
