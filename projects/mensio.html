@@ -118,41 +118,76 @@
               <section id="exploration" data-toc="Navigating the mess" class="project-content-grid">
                 <div class="project-content-text"><div class="divider"></div></div>
                 <p class="project-section-label project-content-text">Navigating the mess</p>
-                <div class="project-content-text"><h2>I explored three structures before landing on Guided Setup.</h2></div>
+                <div class="project-content-text"><h2>Analysts showed us the questions. Stakeholders gave us the order.</h2></div>
 
-                <div id="interviews" data-toc="Stakeholder interviews" class="project-subsection project-content-text">
-                  <p class="project-subsection-label">Stakeholder interviews</p>
-                  <h2>Stakeholders didn't want more options. They wanted an order of operations.</h2>
+                <div id="interviews" data-toc="Analyst interviews" class="project-subsection project-content-text">
+                  <p class="project-subsection-label">Analyst interviews</p>
+                  <h2>Their follow-up emails were the wizard, written out by hand.</h2>
                 </div>
-                <div class="project-content-text">
-                  <p>In our conversations with stakeholders, one theme kept coming up: building a chart in Data Explorer should feel like a logical, step-by-step process. That pointed us to a wizard. Our job was to map those steps out, using the wizard as the vehicle.</p>
-                  <p>From there, we needed to understand the nuances and requirements of each chart type, find the most common use cases and configurations, and organize the data selections so they guided people to the data they were looking for.</p>
-                </div>
-                <div class="project-content-text">
-                  <p>We worked closely with stakeholders to understand:</p>
-                  <ul class="bullets">
-                    <li>The four buckets of users, and how much guidance each one needs</li>
-                    <li>The most common use cases behind customer requests</li>
-                    <li>How analysts work through creating a chart today</li>
-                    <li>How we could emulate that process, and simplify it</li>
-                  </ul>
-                </div>
+                <div class="project-content-text"><p>We interviewed the media analysts who fielded every custom request.</p></div>
                 <div class="project-content-media">
                   <div class="panel" style="background:#2b3a6722">
-                    <p class="panel-label">Mapping how an analyst builds a chart today</p>
-                    <div class="panel-card"><span class="asset-note">Interview synthesis or analyst workflow map</span></div>
+                    <p class="panel-label">What analysts told us</p>
+                    <div class="panel-card"><span class="asset-note">Interview synthesis: affinity map or key quotes</span></div>
                   </div>
                 </div>
                 <div class="project-content-text">
-                  <p>A few insights shaped everything that followed:</p>
                   <ol class="numbered">
-                    <li><p>Analysts already follow a sequence</p><p>Every request moved through the same questions in the same order: metric, date range, grouping, then filters. The wizard just had to make that order visible.</p></li>
-                    <li><p>A handful of configurations cover most requests</p><p>Most asks were variations on a few common charts, which made a case for presets alongside a guided flow.</p></li>
-                    <li><p>The rules change with the chart</p><p>Each chart type came with its own required filters and exclusions. The flow had to show only the options that fit.</p></li>
-                    <li><p>One flow had to serve every bucket</p><p>Super users wanted speed; new users and requesters needed hand-holding. The structure had to work for both.</p></li>
+                    <li><p>The follow-ups never changed</p><p>Date range, live vs. replay, competitors, asset breakdown. Customers just never knew to say them.</p></li>
+                    <li><p>Fear meant over-pulling</p><p>Analysts pulled extra data and trimmed it by hand in Excel.</p></li>
+                    <li><p>Mistakes surfaced a month later</p><p>One in three requests came back, and tracking down the missing filter took about an hour.</p></li>
+                    <li><p>Customers didn't speak the data model</p><p>Groupings and filters, like programs vs. episodes, caused the most confusion.</p></li>
                   </ol>
                 </div>
-                <div class="project-content-text"><p>A wizard was the right vehicle. The open question was how to structure it. We tried three approaches, and each one taught us something about the analytics team, the backend or the customer that changed the next version.</p></div>
+                <div class="project-content-text"><blockquote>“We are afraid to miss something, and then it is so time consuming to recreate.”</blockquote></div>
+
+                <div id="roadmap" data-toc="Wishlist to roadmap" class="project-subsection project-content-text">
+                  <p class="project-subsection-label">Wishlist to roadmap</p>
+                  <h2>The stakeholders' wishlist became our roadmap.</h2>
+                </div>
+                <div class="project-content-text"><p>Stakeholders had two goals: less analyst servicing, and customers confident enough to renew. Their headline ask was a left-to-right flow. We checked every wish against the interviews.</p></div>
+                <div class="project-content-media">
+                  <div class="roadmap">
+                    <div class="roadmap-row roadmap-head"><p>Stakeholder wish</p><p>Interview evidence</p><p>What we built</p></div>
+                    <div class="roadmap-row">
+                      <p data-col="Stakeholder wish">A left-to-right flow</p>
+                      <p data-col="Interview evidence">Analysts asked the same follow-ups on every request</p>
+                      <p data-col="What we built">Guided Setup: five steps, one direction</p>
+                    </div>
+                    <div class="roadmap-row">
+                      <p data-col="Stakeholder wish">Show only what's relevant</p>
+                      <p data-col="Interview evidence">Customers got lost in groupings and filters</p>
+                      <p data-col="What we built">Each step shows only the options that fit</p>
+                    </div>
+                    <div class="roadmap-row">
+                      <p data-col="Stakeholder wish">Guidance for “I know my data, not the filters”</p>
+                      <p data-col="Interview evidence">One in three requests needed rework, often over a missed filter</p>
+                      <p data-col="What we built">Plain-language tooltips and blocked combinations</p>
+                    </div>
+                    <div class="roadmap-row">
+                      <p data-col="Stakeholder wish">Pre-set views for common questions</p>
+                      <p data-col="Interview evidence">Most requests were a metric plus a brand or program</p>
+                      <p data-col="What we built">Six presets</p>
+                    </div>
+                    <div class="roadmap-row">
+                      <p data-col="Stakeholder wish">Season filter, prior-year compare</p>
+                      <p data-col="Interview evidence">35% of an analyst's day went to Excel cleanup</p>
+                      <p data-col="What we built">Seasons picker and multiple date ranges</p>
+                    </div>
+                    <div class="roadmap-row">
+                      <p data-col="Stakeholder wish">Copy charts, save to dashboards</p>
+                      <p data-col="Interview evidence">Experts' top pain: copying charts and adding them one at a time</p>
+                      <p data-col="What we built">Duplicate Chart, Add to Dashboard, Pin</p>
+                    </div>
+                  </div>
+                </div>
+                <div class="project-content-text"><p class="roadmap-later"><span>Parked for later</span> Live preview, one-click PowerPoint reports, a unified homepage</p></div>
+                <div class="project-content-text"><p>Every wish pointed the same way: ask the analyst's questions, in order, so the customer doesn't have to know them. A wizard was the vehicle. The open question was its structure.</p></div>
+
+                <div id="structures" data-toc="Three structures" class="project-subsection project-content-text">
+                  <p class="project-subsection-label">Three structures</p>
+                  <h2>I explored three structures before landing on Guided Setup.</h2>
+                </div>
                 <div class="project-content-media">
                   <div class="explore-row">
                     <div class="panel explore-panel">
