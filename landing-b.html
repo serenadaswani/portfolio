@@ -6,222 +6,234 @@
   <title>Serena Daswani</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg: #ffffff;
-      --fg: #0f0f12;
-      --muted: #6b6b76;
-      --soft: #f3f3f5;
-      --line: rgba(0, 0, 0, .08);
+      --bg: #26242b;
+      --fg: #ffffff;
+      --muted: rgba(255, 255, 255, .62);
+      --surface: rgba(255, 255, 255, .08);
+      --surface-2: rgba(255, 255, 255, .14);
+      --frame: rgba(255, 255, 255, .12);
+      --rail: rgba(236, 235, 240, .92);
+      --rail-icon: #8e8c96;
       --accent: #e65f2e;
-      --radius-lg: 24px;
-      --radius: 16px;
-      --gutter: 16px;
+      --content-left: 16px;
+      --content-right: 16px;
     }
-    @media (min-width: 768px) { :root { --gutter: 32px; } }
+    @media (min-width: 900px) { :root { --content-left: 160px; --content-right: 72px; } }
     * { box-sizing: border-box; }
     html, body { margin: 0; }
-    body { background: var(--bg); color: var(--fg); font-family: "Inter", system-ui, sans-serif; font-size: 15px; line-height: 1.45; -webkit-font-smoothing: antialiased; padding-bottom: 120px; }
+    body { background: var(--bg); color: var(--fg); font-family: "Inter", system-ui, sans-serif; font-size: 15px; line-height: 1.45; -webkit-font-smoothing: antialiased; padding-bottom: 140px; }
     a { color: inherit; text-decoration: none; }
     p, h1, h2, h3 { margin: 0; }
-    button { font: inherit; }
-    .wrap { max-width: 1120px; margin: 0 auto; padding: 0 var(--gutter); }
+    button { font: inherit; color: inherit; }
+    svg.i { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex: none; }
+
+    /* ---------- Full-bleed hero background (animation placeholder) ---------- */
+    .hero-bg { position: absolute; inset: 0 0 auto; height: 980px; overflow: hidden; z-index: 0; }
+    .hero-bg .mesh { position: absolute; inset: -25%; background:
+        radial-gradient(30% 40% at 25% 35%, #4a3a52 0%, transparent 70%),
+        radial-gradient(35% 45% at 75% 25%, #2b3a67 0%, transparent 70%),
+        radial-gradient(25% 35% at 55% 55%, rgba(230, 95, 46, .55) 0%, transparent 70%),
+        radial-gradient(40% 50% at 15% 80%, #1e2a4a 0%, transparent 70%),
+        #1b1a20;
+      filter: blur(40px); animation: drift 26s ease-in-out infinite alternate; }
+    @keyframes drift { to { transform: translate(4%, -3%) rotate(8deg) scale(1.08); } }
+    .hero-bg::after { content: ""; position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(38,36,43,.15) 0%, rgba(38,36,43,.35) 45%, var(--bg) 100%); }
+    .placeholder-tag { display: inline-block; margin-top: 40px; padding: 5px 10px; border-radius: 999px; font-size: 11px; color: var(--muted); background: rgba(255,255,255,.08); }
+
+    /* ---------- Left rail ---------- */
+    .rail { position: fixed; left: 24px; top: 24px; bottom: 24px; z-index: 40; display: none; flex-direction: column; align-items: center; justify-content: space-between; width: 64px; pointer-events: none; }
+    @media (min-width: 900px) { .rail { display: flex; } }
+    .rail > * { pointer-events: auto; }
+    .logo { width: 64px; height: 64px; border-radius: 50%; display: grid; place-items: center; background: #fff; box-shadow: 0 6px 20px rgba(0,0,0,.25); font-family: "Instrument Serif", serif; font-style: italic; font-size: 26px; color: var(--accent); }
+    .rail-group { display: flex; flex-direction: column; gap: 6px; padding: 10px 8px; border-radius: 999px; background: var(--rail); box-shadow: 0 6px 20px rgba(0,0,0,.2); }
+    .rail-group a { width: 48px; height: 48px; border-radius: 50%; display: grid; place-items: center; color: var(--rail-icon); transition: background .2s, color .2s; }
+    .rail-group a:hover, .rail-group a.active { background: #fff; color: #26242b; }
+    .rail-group a span { position: absolute; left: 80px; padding: 4px 8px; border-radius: 6px; background: #111; color: #fff; font-size: 12px; white-space: nowrap; opacity: 0; transform: translateX(-4px); transition: opacity .2s, transform .2s; pointer-events: none; }
+    .rail-group a:hover span { opacity: 1; transform: none; }
+    .rail-bottom a { flex-direction: column; height: auto; padding: 10px 0; gap: 4px; font-size: 11px; border-radius: 999px; }
 
     /* ---------- Top bar ---------- */
-    .topbar .wrap { display: flex; align-items: center; justify-content: space-between; height: 64px; }
-    .mark { font-weight: 700; letter-spacing: -.02em; font-size: 18px; }
-    .topbar nav { display: flex; gap: 8px; }
-    .ghost { padding: 8px 14px; border-radius: 999px; font-size: 14px; font-weight: 500; background: var(--soft); transition: background .2s; }
-    .ghost:hover { background: #e7e7ea; }
+    .topbar { position: relative; z-index: 10; display: flex; align-items: center; gap: 12px; padding: 24px var(--content-right) 0 var(--content-left); }
+    .who { display: flex; align-items: center; gap: 6px; padding: 4px 12px 4px 4px; border-radius: 999px; background: rgba(255,255,255,.12); backdrop-filter: blur(12px); }
+    .who b { width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center; background: #fff; color: #26242b; font-size: 13px; font-weight: 600; }
+    .search { display: flex; align-items: center; gap: 10px; width: min(320px, 100%); padding: 11px 16px; border-radius: 999px; background: rgba(255,255,255,.12); backdrop-filter: blur(12px); color: var(--muted); }
+    .search input { flex: 1; min-width: 0; border: 0; outline: 0; background: none; color: #fff; font: inherit; }
+    .search input::placeholder { color: var(--muted); }
+    .connect { margin-left: auto; padding: 10px 18px; border-radius: 999px; background: rgba(255,255,255,.14); backdrop-filter: blur(12px); font-weight: 600; transition: background .2s; }
+    .connect:hover { background: rgba(255,255,255,.24); }
+    @media (max-width: 640px) { .search { display: none; } }
 
-    /* ---------- Hero banner ---------- */
-    .banner { position: relative; height: clamp(220px, 38vw, 400px); border-radius: var(--radius-lg); overflow: hidden; background: #1a1a22; }
-    .banner .mesh { position: absolute; inset: -30%; background:
-        radial-gradient(40% 50% at 20% 30%, #e65f2e 0%, transparent 70%),
-        radial-gradient(45% 55% at 80% 20%, #7aaee9 0%, transparent 70%),
-        radial-gradient(50% 60% at 60% 90%, #2b3a67 0%, transparent 70%),
-        radial-gradient(35% 45% at 10% 90%, #f3b18f 0%, transparent 70%);
-      filter: blur(30px); animation: swirl 24s linear infinite; }
-    @keyframes swirl { to { transform: rotate(360deg) scale(1.1); } }
-    .banner .placeholder-tag { position: absolute; top: 16px; right: 16px; padding: 6px 10px; border-radius: 999px; font-size: 12px; color: #fff; background: rgba(255,255,255,.16); backdrop-filter: blur(10px); }
+    /* ---------- Hero title ---------- */
+    .hero { position: relative; z-index: 1; text-align: center; padding: 110px var(--content-right) 0 var(--content-left); }
+    .hero h1 { font-family: "Instrument Serif", Georgia, serif; font-style: italic; font-weight: 400; font-size: clamp(64px, 11vw, 150px); line-height: .95; letter-spacing: -.02em; }
+    .hero p { margin-top: 18px; font-size: 14px; font-weight: 500; }
+    .hero p span { color: var(--muted); }
 
-    /* ---------- Profile row ---------- */
-    .profile { position: relative; display: flex; flex-wrap: wrap; align-items: flex-start; gap: 12px 20px; padding: 0 8px; }
-    .avatar { width: 96px; height: 96px; border-radius: 24px; display: grid; place-items: center; background: var(--fg); color: #fff; font-weight: 700; font-size: 32px; letter-spacing: -.03em; border: 4px solid var(--bg); box-shadow: 0 8px 24px rgba(0,0,0,.12); margin-top: -48px; flex: none; }
-    .profile-text { flex: 1; min-width: 220px; padding-top: 14px; }
-    .profile h1 { font-size: clamp(28px, 4vw, 40px); font-weight: 700; letter-spacing: -.03em; line-height: 1.1; }
-    .profile .sub { margin-top: 4px; color: var(--muted); }
-    .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
-    .chip { padding: 5px 12px; border-radius: 999px; background: var(--soft); font-size: 13px; color: #3a3a42; }
-    .profile-actions { display: flex; gap: 8px; padding-top: 18px; }
-    .btn { padding: 11px 20px; border-radius: 999px; font-weight: 600; font-size: 14px; transition: transform .2s cubic-bezier(.2,.8,.2,1.4), background .2s; }
-    .btn:active { transform: scale(.96); }
-    .btn-primary { background: var(--fg); color: #fff; }
-    .btn-primary:hover { background: #2a2a30; }
+    /* ---------- Collections row ---------- */
+    main { position: relative; z-index: 1; padding: 0 var(--content-right) 0 var(--content-left); }
+    .collections { margin-top: 64px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px 20px; }
+    @media (min-width: 900px) { .collections { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+    .collection { display: block; }
+    .frame { padding: 5px; border-radius: 18px; background: var(--frame); border: 1px solid rgba(255,255,255,.08); }
+    .frame-art { position: relative; aspect-ratio: 16 / 9; border-radius: 13px; overflow: hidden; display: grid; place-items: center; font-size: 12px; color: rgba(255,255,255,.75); text-align: center; padding: 12px; }
+    .collection p { margin-top: 12px; font-weight: 500; }
+    .collection small { display: block; color: var(--muted); font-size: 13px; }
+    .center { display: flex; justify-content: center; margin-top: 28px; }
+    .soft-btn { padding: 8px 16px; border-radius: 999px; background: var(--surface-2); font-weight: 500; font-size: 14px; border: 0; cursor: pointer; transition: background .2s; }
+    .soft-btn:hover { background: rgba(255,255,255,.22); }
 
-    /* ---------- Tabs ---------- */
-    .tabs { display: flex; gap: 6px; margin: 28px 0 8px; padding: 4px; border-radius: 999px; background: var(--soft); width: fit-content; }
-    .tabs a { padding: 8px 16px; border-radius: 999px; font-size: 14px; font-weight: 500; color: var(--muted); transition: background .2s, color .2s; }
-    .tabs a.active, .tabs a:hover { background: #fff; color: var(--fg); box-shadow: 0 1px 3px rgba(0,0,0,.08); }
-
-    section { padding-top: 28px; scroll-margin-top: 16px; }
-    .section-head { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 14px; }
-    .section-head h2 { font-size: 20px; font-weight: 700; letter-spacing: -.02em; }
-
-    /* ---------- Featured card ---------- */
-    .featured { display: grid; grid-template-columns: 1fr; border-radius: var(--radius-lg); overflow: hidden; background: var(--soft); transition: transform .4s cubic-bezier(.2,.8,.2,1), box-shadow .4s; }
-    @media (min-width: 768px) { .featured { grid-template-columns: 3fr 2fr; } }
-    .featured:hover { transform: translateY(-4px); box-shadow: 0 24px 48px rgba(0,0,0,.12); }
-    .featured-art { position: relative; min-height: 260px; background: linear-gradient(135deg, #2b3a67, #7aaee9); overflow: hidden; }
-    .featured-art img, .featured-art .art-note { position: absolute; inset: 0; }
-    .featured-art .art-note { display: grid; place-items: center; color: rgba(255,255,255,.8); font-size: 13px; }
-    .featured-art .shine { position: absolute; inset: 0; background: linear-gradient(110deg, transparent 30%, rgba(255,255,255,.25) 50%, transparent 70%); transform: translateX(-100%); }
-    .featured:hover .shine { transform: translateX(100%); transition: transform .9s ease; }
-    .featured-body { padding: 24px; display: flex; flex-direction: column; justify-content: space-between; gap: 20px; }
-    .badge { display: inline-block; padding: 4px 10px; border-radius: 999px; background: var(--accent); color: #fff; font-size: 12px; font-weight: 600; }
-    .featured-body h3 { margin-top: 12px; font-size: 26px; font-weight: 700; letter-spacing: -.02em; line-height: 1.15; }
-    .featured-body p { margin-top: 8px; color: var(--muted); }
-    .featured-cta { display: inline-flex; align-items: center; gap: 8px; font-weight: 600; }
-    .featured-cta svg { transition: transform .25s; }
-    .featured:hover .featured-cta svg { transform: translateX(4px); }
-
-    /* ---------- Work grid (product cards) ---------- */
-    .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+    /* ---------- Work grid + filters ---------- */
+    .work { padding-top: 64px; scroll-margin-top: 24px; }
+    .work h2 { font-size: 22px; font-weight: 600; letter-spacing: -.01em; }
+    .filters { display: flex; flex-wrap: wrap; gap: 10px; margin: 18px 0 24px; }
+    .filters button { display: inline-flex; align-items: center; gap: 6px; height: 44px; padding: 0 16px; border-radius: 999px; border: 0; background: var(--surface-2); font-weight: 500; cursor: pointer; transition: background .2s, color .2s; }
+    .filters button.icon-only { width: 44px; padding: 0; justify-content: center; }
+    .filters button:hover { background: rgba(255,255,255,.22); }
+    .filters button.active { background: #fff; color: #26242b; }
+    .filters svg.i { width: 16px; height: 16px; }
+    .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px 20px; }
     @media (min-width: 900px) { .grid { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
-    .card-art { position: relative; aspect-ratio: 4 / 5; border-radius: var(--radius); overflow: hidden; transition: transform .35s cubic-bezier(.2,.8,.2,1.2); }
-    .card:hover .card-art { transform: scale(1.03) rotate(-.6deg); }
-    .card-art .soon { position: absolute; left: 10px; top: 10px; padding: 4px 9px; border-radius: 999px; background: rgba(255,255,255,.85); font-size: 11px; font-weight: 600; color: var(--fg); }
-    .card b { display: block; margin-top: 10px; font-weight: 600; font-size: 14px; }
-    .card small { color: var(--muted); font-size: 13px; }
+    .item[hidden] { display: none; }
+    .item-art { position: relative; aspect-ratio: 4 / 5; border-radius: 16px; overflow: hidden; display: grid; place-items: center; font-size: 12px; color: rgba(255,255,255,.75); text-align: center; padding: 12px; }
+    .item-art .tag { position: absolute; left: 10px; top: 10px; padding: 4px 9px; border-radius: 999px; background: rgba(0,0,0,.45); backdrop-filter: blur(8px); font-size: 11px; font-weight: 600; color: #fff; }
+    .item p { margin-top: 10px; font-weight: 500; font-size: 14px; }
+    .item small { color: var(--muted); font-size: 13px; }
 
     /* ---------- About ---------- */
-    .about { display: grid; grid-template-columns: 1fr; gap: 20px; padding: 24px; border-radius: var(--radius-lg); background: var(--soft); }
-    @media (min-width: 768px) { .about { grid-template-columns: 3fr 2fr; } }
-    .about p { color: #3a3a42; font-size: 16px; }
+    .about { margin-top: 64px; display: grid; grid-template-columns: 1fr; gap: 20px; padding: 28px; border-radius: 24px; background: var(--surface); scroll-margin-top: 24px; }
+    @media (min-width: 900px) { .about { grid-template-columns: 3fr 2fr; } }
+    .about h2 { font-size: 22px; font-weight: 600; margin-bottom: 10px; }
+    .about p { color: rgba(255,255,255,.82); font-size: 16px; }
     .about p + p { margin-top: 10px; }
-    .about dl { margin: 0; display: grid; gap: 12px; }
-    .about dt { font-size: 12px; font-weight: 600; color: var(--muted); }
+    .about dl { margin: 0; display: grid; gap: 12px; align-content: start; }
+    .about dt { font-size: 12px; color: var(--muted); }
     .about dd { margin: 2px 0 0; }
 
     /* ---------- Docked assistant ---------- */
-    .dock { position: fixed; left: 50%; bottom: 20px; z-index: 50; width: min(640px, calc(100% - 24px)); transform: translateX(-50%); }
-    .panel {
-      display: flex; flex-direction: column; max-height: 0; overflow: hidden; opacity: 0; margin-bottom: 10px;
-      border-radius: 22px; background: rgba(255,255,255,.92); backdrop-filter: blur(20px); box-shadow: 0 20px 60px rgba(0,0,0,.18);
-      transition: max-height .45s cubic-bezier(.2,.8,.2,1), opacity .3s;
-    }
+    .dock { position: fixed; left: 50%; bottom: 24px; z-index: 50; width: min(600px, calc(100% - 24px)); transform: translateX(-50%); }
+    .panel { display: flex; flex-direction: column; max-height: 0; overflow: hidden; opacity: 0; margin-bottom: 10px; border-radius: 24px; background: rgba(40, 38, 46, .92); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,.08); box-shadow: 0 20px 60px rgba(0,0,0,.4); transition: max-height .45s cubic-bezier(.2,.8,.2,1), opacity .3s; }
     .dock.open .panel { max-height: 60vh; opacity: 1; }
-    .panel-head { display: flex; align-items: center; justify-content: space-between; padding: 14px 16px 6px; font-size: 13px; color: var(--muted); }
-    .panel-head button { border: 0; background: none; cursor: pointer; color: var(--muted); padding: 4px; }
+    .panel-head { display: flex; align-items: center; justify-content: space-between; padding: 14px 16px 6px; font-size: 12px; color: var(--muted); }
+    .panel-head button { border: 0; background: none; cursor: pointer; color: var(--muted); padding: 4px; display: grid; }
     .messages { flex: 1; overflow-y: auto; padding: 6px 16px 12px; display: flex; flex-direction: column; gap: 10px; }
-    .msg { max-width: 85%; padding: 10px 14px; border-radius: 18px; font-size: 14px; line-height: 1.45; animation: pop .3s cubic-bezier(.2,.8,.2,1.2); }
-    .msg.bot { background: var(--soft); border-bottom-left-radius: 6px; }
-    .msg.me { align-self: flex-end; background: var(--fg); color: #fff; border-bottom-right-radius: 6px; }
+    .msg { max-width: 85%; padding: 10px 14px; border-radius: 18px; font-size: 14px; animation: pop .3s cubic-bezier(.2,.8,.2,1.2); }
+    .msg.bot { background: rgba(255,255,255,.1); border-bottom-left-radius: 6px; }
+    .msg.me { align-self: flex-end; background: #fff; color: #26242b; border-bottom-right-radius: 6px; }
     .msg a { text-decoration: underline; }
     @keyframes pop { from { opacity: 0; transform: translateY(6px) scale(.98); } }
-    .suggestions { display: flex; gap: 8px; overflow-x: auto; padding: 0 16px 12px; scrollbar-width: none; }
-    .suggestions button { flex: none; padding: 7px 12px; border-radius: 999px; border: 1px solid var(--line); background: #fff; font-size: 13px; cursor: pointer; transition: background .2s; }
-    .suggestions button:hover { background: var(--soft); }
-    .ask { display: flex; align-items: center; gap: 10px; padding: 8px 8px 8px 18px; border-radius: 999px; background: var(--fg); color: #fff; box-shadow: 0 12px 32px rgba(0,0,0,.25); }
-    .ask svg.spark { flex: none; color: #f3b18f; }
-    .ask input { flex: 1; min-width: 0; border: 0; outline: 0; background: none; color: #fff; font: inherit; font-size: 15px; padding: 8px 0; }
-    .ask input::placeholder { color: rgba(255,255,255,.6); }
-    .ask button { flex: none; width: 38px; height: 38px; border-radius: 50%; border: 0; background: #fff; color: var(--fg); display: grid; place-items: center; cursor: pointer; transition: transform .2s; }
-    .ask button:hover { transform: scale(1.06); }
+    .suggestions { display: flex; gap: 8px; overflow-x: auto; padding: 0 16px 14px; scrollbar-width: none; }
+    .suggestions button { flex: none; padding: 7px 12px; border-radius: 999px; border: 1px solid rgba(255,255,255,.14); background: none; font-size: 13px; cursor: pointer; }
+    .suggestions button:hover { background: rgba(255,255,255,.08); }
+    .ask { display: flex; align-items: center; gap: 10px; padding: 8px 8px 8px 24px; border-radius: 999px; background: #cfced3; color: #26242b; box-shadow: 0 12px 32px rgba(0,0,0,.35); }
+    .ask input { flex: 1; min-width: 0; border: 0; outline: 0; background: none; color: #26242b; font: inherit; font-size: 16px; padding: 12px 0; }
+    .ask input::placeholder { color: #6e6c75; }
+    .ask button { flex: none; width: 44px; height: 44px; border-radius: 50%; border: 0; background: rgba(0,0,0,.06); color: #26242b; display: grid; place-items: center; cursor: pointer; transition: background .2s; }
+    .ask button:hover { background: rgba(0,0,0,.12); }
 
-    footer { padding: 48px 0 0; color: var(--muted); font-size: 14px; }
-    footer .wrap { display: flex; flex-wrap: wrap; gap: 20px; justify-content: space-between; }
+    /* ---------- Corner card ---------- */
+    .corner { position: fixed; right: 24px; bottom: 24px; z-index: 45; width: 260px; padding: 18px; border-radius: 22px; background: #0f0f12; box-shadow: 0 20px 50px rgba(0,0,0,.4); display: none; }
+    @media (min-width: 1200px) { .corner { display: block; } }
+    .corner.closed { display: none; }
+    .corner-close { position: absolute; right: 12px; top: 12px; border: 0; background: none; cursor: pointer; color: var(--muted); display: grid; padding: 4px; }
+    .corner-art { width: 112px; height: 112px; border-radius: 14px; display: grid; place-items: center; background: linear-gradient(135deg, var(--accent), #f3b18f); font-family: "Instrument Serif", serif; font-style: italic; font-size: 44px; }
+    .corner b { display: block; margin-top: 16px; font-size: 18px; font-weight: 600; }
+    .corner p { margin-top: 4px; color: var(--muted); font-size: 13px; }
+    .corner a.link { display: inline-flex; align-items: center; gap: 6px; margin-top: 12px; font-size: 13px; font-weight: 600; }
+    .corner a.link svg.i { width: 14px; height: 14px; }
+
+    footer { position: relative; z-index: 1; padding: 64px var(--content-right) 0 var(--content-left); color: var(--muted); font-size: 13px; display: flex; flex-wrap: wrap; gap: 16px; justify-content: space-between; }
     footer nav { display: flex; gap: 18px; }
-    footer a:hover { color: var(--fg); }
+    footer a:hover { color: #fff; }
 
-    .reveal { opacity: 0; transform: translateY(16px); transition: opacity .7s ease, transform .7s cubic-bezier(.2,.8,.2,1); }
-    .reveal.in { opacity: 1; transform: none; }
-    @media (prefers-reduced-motion: reduce) {
-      .banner .mesh, .msg { animation: none; }
-      .reveal { opacity: 1; transform: none; transition: none; }
-    }
+    @media (prefers-reduced-motion: reduce) { .hero-bg .mesh, .msg { animation: none; } }
   </style>
 </head>
 <body>
-  <header class="topbar">
-    <div class="wrap">
-      <a class="mark" href="landing-b.html">SD</a>
-      <nav><a class="ghost" href="about.html">About</a><a class="ghost" href="index.html">Current site</a></nav>
-    </div>
+  <div class="hero-bg" aria-hidden="true"><div class="mesh"></div></div>
+
+  <!-- Left rail -->
+  <aside class="rail" aria-label="Site navigation">
+    <a class="logo" href="landing-b.html" aria-label="Home">sd</a>
+    <nav class="rail-group">
+      <a class="active" href="#top"><i data-icon="house"></i><span>Home</span></a>
+      <a href="#work"><i data-icon="layout-grid"></i><span>Work</span></a>
+      <a href="#about"><i data-icon="user"></i><span>About</span></a>
+      <a href="index.html"><i data-icon="file-text"></i><span>Current site</span></a>
+    </nav>
+    <nav class="rail-group rail-bottom">
+      <a href="https://www.linkedin.com/in/serena-daswani" target="_blank" rel="noopener noreferrer"><i data-icon="linkedin"></i>Connect</a>
+    </nav>
+  </aside>
+
+  <header class="topbar" id="top">
+    <a class="who" href="#about"><b>SD</b><i data-icon="menu"></i></a>
+    <label class="search"><i data-icon="search"></i><input id="search" type="search" placeholder="Search Serena's work…" aria-label="Search work"></label>
+    <a class="connect" href="https://www.linkedin.com/in/serena-daswani" target="_blank" rel="noopener noreferrer">Connect</a>
   </header>
 
-  <main class="wrap">
-    <div class="banner">
-      <div class="mesh" aria-hidden="true"></div>
-      <span class="placeholder-tag">Hero animation placeholder</span>
+  <section class="hero">
+    <h1>Serena Daswani</h1>
+    <p>Product designer <span>·</span> Designing @ Deploy</p>
+    <span class="placeholder-tag">Hero animation placeholder</span>
+  </section>
+
+  <main>
+    <!-- Collections -->
+    <div class="collections">
+      <a class="collection" href="projects/mensio.html"><div class="frame"><div class="frame-art" style="background:linear-gradient(135deg,#2b3a67,#7aaee9)">Mensio hero GIF</div></div><p>Deploy</p><small>Mensio Data Explorer</small></a>
+      <a class="collection" href="#work"><div class="frame"><div class="frame-art" style="background:linear-gradient(135deg,#1d1d1f,#5a5a63)">Coming soon</div></div><p>Apple</p><small>Internal QA reporting tool</small></a>
+      <a class="collection" href="#work"><div class="frame"><div class="frame-art" style="background:linear-gradient(135deg,#5a6b8c,#cfd8e8)">Coming soon</div></div><p>OmniSynkAI</p><small>AI Autofill for listings</small></a>
+      <a class="collection" href="#work"><div class="frame"><div class="frame-art" style="background:linear-gradient(135deg,#3a4a7a,#8a9bc8)">Coming soon</div></div><p>Procense</p><small>Homepage redesign</small></a>
     </div>
+    <div class="center"><a class="soft-btn" href="#work">View all work</a></div>
 
-    <div class="profile">
-      <div class="avatar" aria-hidden="true">SD</div>
-      <div class="profile-text">
-        <h1>Serena Daswani</h1>
-        <p class="sub">Product designer · Designing @ Deploy</p>
-        <div class="chips"><span class="chip">Data-heavy tools</span><span class="chip">Ex-Apple contract</span><span class="chip">UC Davis Design</span></div>
+    <!-- Work -->
+    <section class="work" id="work">
+      <h2>Work</h2>
+      <div class="filters" role="toolbar" aria-label="Filter work">
+        <button class="icon-only" aria-label="Filters"><i data-icon="sliders-horizontal"></i></button>
+        <button data-filter="all" class="active">All</button>
+        <button data-filter="case">Case studies</button>
+        <button data-filter="shipped">Shipped</button>
+        <button data-filter="soon">Coming soon</button>
       </div>
-      <div class="profile-actions">
-        <a class="btn btn-primary" href="https://www.linkedin.com/in/serena-daswani" target="_blank" rel="noopener noreferrer">Connect</a>
-      </div>
-    </div>
-
-    <nav class="tabs" aria-label="Sections"><a class="active" href="#featured">Featured</a><a href="#work">All work</a><a href="#about">About</a></nav>
-
-    <section id="featured" class="reveal">
-      <a class="featured" href="projects/mensio.html">
-        <div class="featured-art"><span class="art-note">Hero GIF: a chart being built in Guided Setup</span><span class="shine"></span></div>
-        <div class="featured-body">
-          <div>
-            <span class="badge">New</span>
-            <h3>Mensio Data Explorer</h3>
-            <p>Redesigning chart building so customers can self-serve, instead of relying on analysts. Shipped in 14 weeks.</p>
-          </div>
-          <span class="featured-cta">View case study <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></span>
-        </div>
-      </a>
-    </section>
-
-    <section id="work" class="reveal">
-      <div class="section-head"><h2>All work</h2></div>
-      <div class="grid">
-        <div class="card"><div class="card-art" style="background:linear-gradient(160deg,#1d1d1f,#5a5a63)"><span class="soon">Coming soon</span></div><b>Internal QA reporting tool</b><small>Apple · 2024–25</small></div>
-        <div class="card"><div class="card-art" style="background:linear-gradient(160deg,#5a6b8c,#cfd8e8)"><span class="soon">Coming soon</span></div><b>AI Autofill for listings</b><small>OmniSynkAI · 2024</small></div>
-        <div class="card"><div class="card-art" style="background:linear-gradient(160deg,#8fb8a8,#e8f0ee)"><span class="soon">Coming soon</span></div><b>Gen AI web &amp; mobile app</b><small>Stealth startup · 2024</small></div>
-        <div class="card"><div class="card-art" style="background:linear-gradient(160deg,#2b3a67,#7a8bb8)"><span class="soon">Coming soon</span></div><b>Homepage redesign</b><small>Procense · 2022–24</small></div>
+      <div class="grid" id="grid">
+        <a class="item" href="projects/mensio.html" data-tags="case shipped" data-search="mensio deploy data explorer guided setup"><div class="item-art" style="background:linear-gradient(160deg,#2b3a67,#7aaee9)"><span class="tag">Case study</span>Mensio hero GIF</div><p>Mensio Data Explorer</p><small>Deploy · 2026</small></a>
+        <div class="item" data-tags="soon" data-search="apple qa reporting tool"><div class="item-art" style="background:linear-gradient(160deg,#1d1d1f,#5a5a63)"><span class="tag">Coming soon</span></div><p>Internal QA reporting tool</p><small>Apple · 2024–25</small></div>
+        <div class="item" data-tags="soon" data-search="omnisynkai ai autofill listings"><div class="item-art" style="background:linear-gradient(160deg,#5a6b8c,#cfd8e8)"><span class="tag">Coming soon</span></div><p>AI Autofill for listings</p><small>OmniSynkAI · 2024</small></div>
+        <div class="item" data-tags="soon" data-search="bitcot web ios client"><div class="item-art" style="background:linear-gradient(160deg,#7aaee9,#e8f1fb)"><span class="tag">Coming soon</span></div><p>Web &amp; iOS client work</p><small>Bitcot · 2024</small></div>
+        <div class="item" data-tags="soon" data-search="stealth gen ai app mobile"><div class="item-art" style="background:linear-gradient(160deg,#8fb8a8,#e8f0ee)"><span class="tag">Coming soon</span></div><p>Gen AI web &amp; mobile app</p><small>Stealth startup · 2024</small></div>
+        <div class="item" data-tags="soon" data-search="procense homepage redesign"><div class="item-art" style="background:linear-gradient(160deg,#3a4a7a,#8a9bc8)"><span class="tag">Coming soon</span></div><p>Homepage redesign</p><small>Procense · 2022–24</small></div>
       </div>
     </section>
 
-    <section id="about" class="reveal">
-      <div class="section-head"><h2>About</h2></div>
-      <div class="about">
-        <div>
-          <p>I'm a UI/UX designer with a background in illustration, psychology, and visual design.</p>
-          <p>I like building intuitive, user-centered tools on top of complex data systems.</p>
-        </div>
-        <dl>
-          <div><dt>Currently</dt><dd>Designing @ Deploy</dd></div>
-          <div><dt>Previously</dt><dd>Apple, Procense, OmniSynkAI, Bitcot</dd></div>
-          <div><dt>Education</dt><dd>UC Davis, B.A. Design, Minor in Psychology</dd></div>
-        </dl>
+    <!-- About -->
+    <section class="about" id="about">
+      <div>
+        <h2>About</h2>
+        <p>I'm a UI/UX designer with a background in illustration, psychology, and visual design.</p>
+        <p>I like building intuitive, user-centered tools on top of complex data systems.</p>
       </div>
+      <dl>
+        <div><dt>Currently</dt><dd>Designing @ Deploy</dd></div>
+        <div><dt>Previously</dt><dd>Apple, Procense, OmniSynkAI, Bitcot</dd></div>
+        <div><dt>Education</dt><dd>UC Davis, B.A. Design, Minor in Psychology</dd></div>
+      </dl>
     </section>
   </main>
 
   <footer>
-    <div class="wrap">
-      <span>© 2026 Serena Daswani</span>
-      <nav><a href="https://www.linkedin.com/in/serena-daswani" target="_blank" rel="noopener noreferrer">LinkedIn</a><a href="https://github.com/serenadaswani" target="_blank" rel="noopener noreferrer">GitHub</a></nav>
-    </div>
+    <span>© 2026 Serena Daswani</span>
+    <nav><a href="https://www.linkedin.com/in/serena-daswani" target="_blank" rel="noopener noreferrer">LinkedIn</a><a href="https://github.com/serenadaswani" target="_blank" rel="noopener noreferrer">GitHub</a></nav>
   </footer>
 
   <!-- Docked assistant (prototype: pre-written answers, no live model) -->
   <div class="dock" id="dock">
     <div class="panel" role="dialog" aria-label="Ask about Serena">
-      <div class="panel-head"><span>Ask about Serena · prototype with pre-written answers</span><button id="close" aria-label="Close"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button></div>
+      <div class="panel-head"><span>Prototype · pre-written answers</span><button id="close" aria-label="Close"><i data-icon="x"></i></button></div>
       <div class="messages" id="messages" aria-live="polite">
         <div class="msg bot">Hi! I can tell you about Serena's work, experience, and process. What would you like to know?</div>
       </div>
@@ -233,38 +245,81 @@
       </div>
     </div>
     <form class="ask" id="ask">
-      <svg class="spark" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z"/></svg>
-      <input id="q" type="text" placeholder="Ask about Serena's work…" autocomplete="off" aria-label="Ask a question">
-      <button type="submit" aria-label="Send"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 7-7 7 7"/><path d="M12 19V5"/></svg></button>
+      <input id="q" type="text" placeholder="What would you like to know about Serena?" autocomplete="off" aria-label="Ask a question">
+      <button type="submit" aria-label="Send"><i data-icon="arrow-right"></i></button>
     </form>
   </div>
 
-  <script>
-    const io = new IntersectionObserver((entries) => entries.forEach((e) => { if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); } }), { threshold: 0.12 });
-    document.querySelectorAll(".reveal").forEach((el) => io.observe(el));
+  <!-- Corner card -->
+  <aside class="corner" id="corner">
+    <button class="corner-close" id="corner-close" aria-label="Dismiss"><i data-icon="x"></i></button>
+    <div class="corner-art" aria-hidden="true">sd</div>
+    <b>Let's chat</b>
+    <p>Open to conversations about product design and data-heavy tools.</p>
+    <a class="link" href="https://www.linkedin.com/in/serena-daswani" target="_blank" rel="noopener noreferrer">Connect on LinkedIn <i data-icon="arrow-right"></i></a>
+  </aside>
 
-    // Tabs follow scroll position
-    const tabs = [...document.querySelectorAll(".tabs a")];
-    const spy = () => {
-      let current = tabs[0];
-      for (const t of tabs) if (document.querySelector(t.getAttribute("href")).getBoundingClientRect().top < innerHeight * 0.4) current = t;
-      tabs.forEach((t) => t.classList.toggle("active", t === current));
+  <script>
+    // Lucide icons (v0.460, ISC), inlined so the page loads nothing extra.
+    const ICONS = {
+      "house": '<path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/><path d="M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>',
+      "layout-grid": '<rect width="7" height="7" x="3" y="3" rx="1"/><rect width="7" height="7" x="14" y="3" rx="1"/><rect width="7" height="7" x="14" y="14" rx="1"/><rect width="7" height="7" x="3" y="14" rx="1"/>',
+      "user": '<path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>',
+      "file-text": '<path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/>',
+      "linkedin": '<path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect width="4" height="12" x="2" y="9"/><circle cx="4" cy="4" r="2"/>',
+      "search": '<circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>',
+      "menu": '<line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/>',
+      "sliders-horizontal": '<line x1="21" x2="14" y1="4" y2="4"/><line x1="10" x2="3" y1="4" y2="4"/><line x1="21" x2="12" y1="12" y2="12"/><line x1="8" x2="3" y1="12" y2="12"/><line x1="21" x2="16" y1="20" y2="20"/><line x1="12" x2="3" y1="20" y2="20"/><line x1="14" x2="14" y1="2" y2="6"/><line x1="8" x2="8" y1="10" y2="14"/><line x1="16" x2="16" y1="18" y2="22"/>',
+      "arrow-right": '<path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>',
+      "x": '<path d="M18 6 6 18"/><path d="m6 6 12 12"/>',
     };
-    addEventListener("scroll", spy, { passive: true });
+    document.querySelectorAll("i[data-icon]").forEach((el) => {
+      el.outerHTML = `<svg class="i" viewBox="0 0 24 24" aria-hidden="true">${ICONS[el.dataset.icon]}</svg>`;
+    });
+
+    // Rail highlights the section in view
+    const railLinks = [...document.querySelectorAll(".rail-group:not(.rail-bottom) a[href^='#']")];
+    addEventListener("scroll", () => {
+      let current = railLinks[0];
+      for (const l of railLinks) { const t = document.querySelector(l.getAttribute("href")); if (t && t.getBoundingClientRect().top < innerHeight * 0.4) current = l; }
+      railLinks.forEach((l) => l.classList.toggle("active", l === current));
+    }, { passive: true });
+
+    // Filters + search
+    const items = [...document.querySelectorAll("#grid .item")];
+    let filter = "all", term = "";
+    const apply = () => items.forEach((it) => {
+      const okFilter = filter === "all" || it.dataset.tags.split(" ").includes(filter);
+      const okTerm = !term || (it.dataset.search + " " + it.textContent).toLowerCase().includes(term);
+      it.hidden = !(okFilter && okTerm);
+    });
+    document.querySelectorAll(".filters [data-filter]").forEach((b) => b.addEventListener("click", () => {
+      filter = b.dataset.filter;
+      document.querySelectorAll(".filters [data-filter]").forEach((x) => x.classList.toggle("active", x === b));
+      apply();
+    }));
+    document.getElementById("search").addEventListener("input", (e) => {
+      term = e.target.value.trim().toLowerCase();
+      apply();
+      if (term) document.getElementById("work").scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+
+    // Corner card
+    document.getElementById("corner-close").addEventListener("click", () => document.getElementById("corner").classList.add("closed"));
 
     // Docked assistant with pre-written answers
     const dock = document.getElementById("dock"), form = document.getElementById("ask"), input = document.getElementById("q"), log = document.getElementById("messages");
     const answers = [
       { keys: ["mensio", "ship", "latest", "data explorer", "case"], text: 'At Mensio, Serena redesigned Data Explorer into Guided Setup: a step-by-step wizard with presets, so customers can build charts without an analyst. It shipped in 14 weeks. <a href="projects/mensio.html">Read the case study</a>.' },
       { keys: ["work", "experience", "company", "companies", "job", "apple", "deploy", "where"], text: "She's a UX/UI designer at Deploy. Before that: Apple (contract, 2024–25), OmniSynkAI, Bitcot, a Gen AI stealth startup, and Procense (2022–24)." },
-      { keys: ["process", "approach", "how does she", "research", "method"], text: "She starts with the people doing the work today. On Mensio, that meant interviewing the analysts behind every request, then turning their follow-up questions into the wizard's steps." },
+      { keys: ["process", "approach", "research", "method"], text: "She starts with the people doing the work today. On Mensio, that meant interviewing the analysts behind every request, then turning their follow-up questions into the wizard's steps." },
       { keys: ["contact", "reach", "email", "hire", "linkedin", "connect"], text: 'The best way to reach her is <a href="https://www.linkedin.com/in/serena-daswani" target="_blank" rel="noopener noreferrer">LinkedIn</a>.' },
       { keys: ["school", "education", "study", "degree", "davis"], text: "She studied Design, with a minor in Psychology, at UC Davis." },
     ];
     const reply = (q) => {
       const s = q.toLowerCase();
       const hit = answers.find((a) => a.keys.some((k) => s.includes(k)));
-      return hit ? hit.text : 'I only have pre-written answers for now. Try asking about Mensio, her experience, her process, or how to contact her.';
+      return hit ? hit.text : "I only have pre-written answers for now. Try asking about Mensio, her experience, her process, or how to contact her.";
     };
     const add = (html, who) => { const m = document.createElement("div"); m.className = `msg ${who}`; m.innerHTML = html; log.appendChild(m); log.scrollTop = log.scrollHeight; };
     const ask = (q) => {
