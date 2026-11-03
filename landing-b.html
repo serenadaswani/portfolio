@@ -18,19 +18,28 @@
       --rail: rgba(236, 235, 240, .92);
       --rail-icon: #8e8c96;
       --accent: #e65f2e;
+      --ease: cubic-bezier(.2, .8, .2, 1);
+      --spring: cubic-bezier(.34, 1.4, .64, 1);
       --content-left: 16px;
       --content-right: 16px;
     }
     @media (min-width: 900px) { :root { --content-left: 160px; --content-right: 72px; } }
     * { box-sizing: border-box; }
     html, body { margin: 0; }
+    html { scroll-behavior: smooth; }
     body { background: var(--bg); color: var(--fg); font-family: "Inter", system-ui, sans-serif; font-size: 15px; line-height: 1.45; -webkit-font-smoothing: antialiased; padding-bottom: 140px; }
+    body.locked { overflow: hidden; }
     a { color: inherit; text-decoration: none; }
     p, h1, h2, h3 { margin: 0; }
     button { font: inherit; color: inherit; }
     svg.i { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex: none; }
+    :focus-visible { outline: 2px solid #fff; outline-offset: 3px; }
 
-    /* ---------- Full-bleed hero background (animation placeholder) ---------- */
+    /* ---------- Entrance: staggered fade-up on load ---------- */
+    .enter { opacity: 0; transform: translateY(18px); }
+    .loaded .enter { opacity: 1; transform: none; transition: opacity .8s var(--ease), transform .8s var(--ease); transition-delay: calc(var(--d, 0) * 80ms); }
+
+    /* ---------- Full-bleed hero background (parallax) ---------- */
     .hero-bg { position: absolute; inset: 0 0 auto; height: 980px; overflow: hidden; z-index: 0; }
     .hero-bg .mesh { position: absolute; inset: -25%; background:
         radial-gradient(30% 40% at 25% 35%, #4a3a52 0%, transparent 70%),
@@ -39,35 +48,48 @@
         radial-gradient(40% 50% at 15% 80%, #1e2a4a 0%, transparent 70%),
         #1b1a20;
       filter: blur(40px); animation: drift 26s ease-in-out infinite alternate; }
+    .hero-bg .parallax { position: absolute; inset: 0; will-change: transform; }
     @keyframes drift { to { transform: translate(4%, -3%) rotate(8deg) scale(1.08); } }
     .hero-bg::after { content: ""; position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(38,36,43,.15) 0%, rgba(38,36,43,.35) 45%, var(--bg) 100%); }
     .placeholder-tag { display: inline-block; margin-top: 40px; padding: 5px 10px; border-radius: 999px; font-size: 11px; color: var(--muted); background: rgba(255,255,255,.08); }
 
-    /* ---------- Left rail ---------- */
+    /* ---------- Left rail with sliding active indicator ---------- */
     .rail { position: fixed; left: 24px; top: 24px; bottom: 24px; z-index: 40; display: none; flex-direction: column; align-items: center; justify-content: space-between; width: 64px; pointer-events: none; }
     @media (min-width: 900px) { .rail { display: flex; } }
     .rail > * { pointer-events: auto; }
-    .logo { width: 64px; height: 64px; border-radius: 50%; display: grid; place-items: center; background: #fff; box-shadow: 0 6px 20px rgba(0,0,0,.25); font-family: "Instrument Serif", serif; font-style: italic; font-size: 26px; color: var(--accent); }
-    .rail-group { display: flex; flex-direction: column; gap: 6px; padding: 10px 8px; border-radius: 999px; background: var(--rail); box-shadow: 0 6px 20px rgba(0,0,0,.2); }
-    .rail-group a { width: 48px; height: 48px; border-radius: 50%; display: grid; place-items: center; color: var(--rail-icon); transition: background .2s, color .2s; }
-    .rail-group a:hover, .rail-group a.active { background: #fff; color: #26242b; }
-    .rail-group a span { position: absolute; left: 80px; padding: 4px 8px; border-radius: 6px; background: #111; color: #fff; font-size: 12px; white-space: nowrap; opacity: 0; transform: translateX(-4px); transition: opacity .2s, transform .2s; pointer-events: none; }
-    .rail-group a:hover span { opacity: 1; transform: none; }
+    .logo { width: 64px; height: 64px; border-radius: 50%; display: grid; place-items: center; background: #fff; box-shadow: 0 6px 20px rgba(0,0,0,.25); font-family: "Instrument Serif", serif; font-style: italic; font-size: 26px; color: var(--accent); transition: transform .4s var(--spring); }
+    .logo:hover { transform: rotate(-8deg) scale(1.06); }
+    .rail-group { position: relative; display: flex; flex-direction: column; gap: 6px; padding: 10px 8px; border-radius: 999px; background: var(--rail); box-shadow: 0 6px 20px rgba(0,0,0,.2); }
+    .rail-indicator { position: absolute; left: 8px; top: 10px; width: 48px; height: 48px; border-radius: 50%; background: #fff; box-shadow: 0 2px 8px rgba(0,0,0,.08); transition: transform .45s var(--spring); }
+    .rail-group a { position: relative; z-index: 1; width: 48px; height: 48px; border-radius: 50%; display: grid; place-items: center; color: var(--rail-icon); transition: color .2s; }
+    .rail-group a:hover, .rail-group a.active { color: #26242b; }
+    .rail-group a:active svg { transform: scale(.88); }
+    .rail-group a svg { transition: transform .2s var(--spring); }
+    .tip { position: absolute; left: 64px; top: 50%; padding: 5px 9px; border-radius: 8px; background: #111; color: #fff; font-size: 12px; white-space: nowrap; opacity: 0; transform: translate(-6px, -50%); transition: opacity .2s, transform .25s var(--ease); pointer-events: none; }
+    .rail-group a:hover .tip { opacity: 1; transform: translate(0, -50%); }
     .rail-bottom a { flex-direction: column; height: auto; padding: 10px 0; gap: 4px; font-size: 11px; border-radius: 999px; }
+    .rail-bottom a:hover { background: #fff; }
 
-    /* ---------- Top bar ---------- */
-    .topbar { position: relative; z-index: 10; display: flex; align-items: center; gap: 12px; padding: 24px var(--content-right) 0 var(--content-left); }
-    .who { display: flex; align-items: center; gap: 6px; padding: 4px 12px 4px 4px; border-radius: 999px; background: rgba(255,255,255,.12); backdrop-filter: blur(12px); }
+    /* ---------- Sticky top bar: transparent over hero, frosted after scroll ---------- */
+    .topbar { position: sticky; top: 0; z-index: 30; display: flex; align-items: center; gap: 12px; padding: 20px var(--content-right) 12px var(--content-left); transition: background .3s, backdrop-filter .3s, box-shadow .3s; }
+    .topbar.scrolled { background: rgba(38, 36, 43, .72); backdrop-filter: blur(18px) saturate(1.3); box-shadow: 0 1px 0 rgba(255,255,255,.06); }
+    .who { display: flex; align-items: center; gap: 6px; padding: 4px 12px 4px 4px; border-radius: 999px; background: rgba(255,255,255,.12); backdrop-filter: blur(12px); transition: background .2s; }
+    .who:hover { background: rgba(255,255,255,.2); }
     .who b { width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center; background: #fff; color: #26242b; font-size: 13px; font-weight: 600; }
-    .search { display: flex; align-items: center; gap: 10px; width: min(320px, 100%); padding: 11px 16px; border-radius: 999px; background: rgba(255,255,255,.12); backdrop-filter: blur(12px); color: var(--muted); }
+    .search { display: flex; align-items: center; gap: 10px; width: min(320px, 100%); padding: 11px 16px; border-radius: 999px; background: rgba(255,255,255,.12); backdrop-filter: blur(12px); color: var(--muted); transition: width .4s var(--ease), background .2s, box-shadow .2s; }
+    .search:focus-within { width: min(440px, 100%); background: rgba(255,255,255,.18); box-shadow: 0 0 0 2px rgba(255,255,255,.18); }
     .search input { flex: 1; min-width: 0; border: 0; outline: 0; background: none; color: #fff; font: inherit; }
     .search input::placeholder { color: var(--muted); }
-    .connect { margin-left: auto; padding: 10px 18px; border-radius: 999px; background: rgba(255,255,255,.14); backdrop-filter: blur(12px); font-weight: 600; transition: background .2s; }
-    .connect:hover { background: rgba(255,255,255,.24); }
-    @media (max-width: 640px) { .search { display: none; } }
+    .compact-name { font-family: "Instrument Serif", serif; font-style: italic; font-size: 22px; opacity: 0; transform: translateY(6px); transition: opacity .3s, transform .3s var(--ease); pointer-events: none; }
+    .topbar.scrolled .compact-name { opacity: 1; transform: none; }
+    .connect { margin-left: auto; padding: 10px 18px; border-radius: 999px; background: rgba(255,255,255,.14); backdrop-filter: blur(12px); font-weight: 600; transition: background .2s, transform .3s var(--spring); }
+    .connect:hover { background: #fff; color: #26242b; }
+    .connect:active { transform: scale(.95); }
+    @media (max-width: 640px) { .search, .compact-name { display: none; } }
 
-    /* ---------- Hero title ---------- */
-    .hero { position: relative; z-index: 1; text-align: center; padding: 110px var(--content-right) 0 var(--content-left); }
+    /* ---------- Hero title (shrinks + fades on scroll) ---------- */
+    .hero { position: relative; z-index: 1; text-align: center; padding: 90px var(--content-right) 0 var(--content-left); }
+    .hero-title { will-change: transform, opacity; }
     .hero h1 { font-family: "Instrument Serif", Georgia, serif; font-style: italic; font-weight: 400; font-size: clamp(64px, 11vw, 150px); line-height: .95; letter-spacing: -.02em; }
     .hero p { margin-top: 18px; font-size: 14px; font-weight: 500; }
     .hero p span { color: var(--muted); }
@@ -77,33 +99,93 @@
     .collections { margin-top: 64px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px 20px; }
     @media (min-width: 900px) { .collections { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
     .collection { display: block; }
-    .frame { padding: 5px; border-radius: 18px; background: var(--frame); border: 1px solid rgba(255,255,255,.08); }
-    .frame-art { position: relative; aspect-ratio: 16 / 9; border-radius: 13px; overflow: hidden; display: grid; place-items: center; font-size: 12px; color: rgba(255,255,255,.75); text-align: center; padding: 12px; }
-    .collection p { margin-top: 12px; font-weight: 500; }
+    .frame { padding: 5px; border-radius: 18px; background: var(--frame); border: 1px solid rgba(255,255,255,.08); transition: transform .45s var(--spring), border-color .3s, background .3s, box-shadow .4s; }
+    .frame-art { position: relative; aspect-ratio: 16 / 9; border-radius: 13px; overflow: hidden; }
+    .frame-art .art { position: absolute; inset: 0; display: grid; place-items: center; font-size: 12px; color: rgba(255,255,255,.75); text-align: center; padding: 12px; transition: transform .6s var(--ease); }
+    .collection:hover .frame { transform: translateY(-6px); border-color: rgba(255,255,255,.22); background: rgba(255,255,255,.18); box-shadow: 0 20px 40px rgba(0,0,0,.35); }
+    .collection:hover .art { transform: scale(1.06); }
+    .collection:active .frame { transform: translateY(-2px) scale(.98); }
+    .collection-label { display: flex; align-items: center; gap: 6px; margin-top: 12px; font-weight: 500; }
+    .collection-label svg.i { width: 16px; height: 16px; opacity: 0; transform: translate(-4px, 4px); transition: opacity .25s, transform .3s var(--ease); }
+    .collection:hover .collection-label svg.i { opacity: 1; transform: none; }
     .collection small { display: block; color: var(--muted); font-size: 13px; }
     .center { display: flex; justify-content: center; margin-top: 28px; }
-    .soft-btn { padding: 8px 16px; border-radius: 999px; background: var(--surface-2); font-weight: 500; font-size: 14px; border: 0; cursor: pointer; transition: background .2s; }
-    .soft-btn:hover { background: rgba(255,255,255,.22); }
+    .soft-btn { padding: 8px 16px; border-radius: 999px; background: var(--surface-2); font-weight: 500; font-size: 14px; border: 0; cursor: pointer; transition: background .2s, transform .3s var(--spring); }
+    .soft-btn:hover { background: rgba(255,255,255,.24); }
+    .soft-btn:active { transform: scale(.95); }
 
     /* ---------- Work grid + filters ---------- */
-    .work { padding-top: 64px; scroll-margin-top: 24px; }
+    .work { padding-top: 64px; scroll-margin-top: 80px; }
+    .work-head { display: flex; align-items: baseline; gap: 10px; }
     .work h2 { font-size: 22px; font-weight: 600; letter-spacing: -.01em; }
+    .count { color: var(--muted); font-size: 14px; }
     .filters { display: flex; flex-wrap: wrap; gap: 10px; margin: 18px 0 24px; }
-    .filters button { display: inline-flex; align-items: center; gap: 6px; height: 44px; padding: 0 16px; border-radius: 999px; border: 0; background: var(--surface-2); font-weight: 500; cursor: pointer; transition: background .2s, color .2s; }
-    .filters button.icon-only { width: 44px; padding: 0; justify-content: center; }
-    .filters button:hover { background: rgba(255,255,255,.22); }
-    .filters button.active { background: #fff; color: #26242b; }
-    .filters svg.i { width: 16px; height: 16px; }
+    .pill { position: relative; display: inline-flex; align-items: center; gap: 6px; height: 44px; padding: 0 16px; border-radius: 999px; border: 0; background: var(--surface-2); font-weight: 500; cursor: pointer; transition: background .2s, color .2s, transform .3s var(--spring); }
+    .pill:hover { background: rgba(255,255,255,.22); }
+    .pill:active { transform: scale(.95); }
+    .pill.active { background: #fff; color: #26242b; }
+    .pill.icon-only { width: 44px; padding: 0; justify-content: center; }
+    .pill svg.i { width: 16px; height: 16px; transition: transform .3s var(--ease); }
+    .pill[aria-expanded="true"] svg.chev { transform: rotate(180deg); }
+    .menu { position: absolute; left: 0; top: calc(100% + 8px); z-index: 20; min-width: 180px; padding: 6px; border-radius: 16px; background: #34313a; box-shadow: 0 16px 40px rgba(0,0,0,.4); opacity: 0; transform: translateY(-6px) scale(.98); transform-origin: top left; pointer-events: none; transition: opacity .2s, transform .25s var(--ease); }
+    .menu.open { opacity: 1; transform: none; pointer-events: auto; }
+    .menu button { display: flex; align-items: center; justify-content: space-between; width: 100%; padding: 10px 12px; border: 0; border-radius: 10px; background: none; text-align: left; cursor: pointer; font-weight: 500; color: #fff; }
+    .menu button:hover { background: rgba(255,255,255,.08); }
+    .menu button svg.i { width: 16px; height: 16px; opacity: 0; }
+    .menu button.selected svg.i { opacity: 1; }
+    .sort-wrap { position: relative; }
+
     .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px 20px; }
     @media (min-width: 900px) { .grid { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
-    .item[hidden] { display: none; }
-    .item-art { position: relative; aspect-ratio: 4 / 5; border-radius: 16px; overflow: hidden; display: grid; place-items: center; font-size: 12px; color: rgba(255,255,255,.75); text-align: center; padding: 12px; }
-    .item-art .tag { position: absolute; left: 10px; top: 10px; padding: 4px 9px; border-radius: 999px; background: rgba(0,0,0,.45); backdrop-filter: blur(8px); font-size: 11px; font-weight: 600; color: #fff; }
+    .item { display: block; cursor: pointer; border: 0; padding: 0; background: none; text-align: left; animation: cardIn .5s var(--ease) both; animation-delay: calc(var(--i, 0) * 50ms); }
+    @keyframes cardIn { from { opacity: 0; transform: translateY(12px) scale(.98); } }
+    .item-art { position: relative; aspect-ratio: 4 / 5; border-radius: 16px; overflow: hidden; transition: transform .45s var(--spring), box-shadow .4s; }
+    .item-art .art { position: absolute; inset: 0; display: grid; place-items: center; font-size: 12px; color: rgba(255,255,255,.75); text-align: center; padding: 12px; transition: transform .7s var(--ease); }
+    .item:hover .item-art { transform: translateY(-4px); box-shadow: 0 20px 40px rgba(0,0,0,.35); }
+    .item:hover .art { transform: scale(1.05); }
+    .item:active .item-art { transform: scale(.98); }
+    .tag { position: absolute; left: 10px; top: 10px; z-index: 1; padding: 4px 9px; border-radius: 999px; background: rgba(0,0,0,.45); backdrop-filter: blur(8px); font-size: 11px; font-weight: 600; color: #fff; }
+    .save { position: absolute; right: 10px; top: 10px; z-index: 2; width: 34px; height: 34px; border-radius: 50%; border: 0; display: grid; place-items: center; background: rgba(0,0,0,.45); backdrop-filter: blur(8px); color: #fff; cursor: pointer; opacity: 0; transform: scale(.8); transition: opacity .2s, transform .3s var(--spring), background .2s; }
+    .item:hover .save, .save.on, .item:focus-within .save { opacity: 1; transform: none; }
+    .save svg.i { width: 16px; height: 16px; }
+    .save.on { background: #fff; color: #26242b; }
+    .save.on svg.i { fill: currentColor; }
+    .save.pop { animation: pop .4s var(--spring); }
+    .quick { position: absolute; left: 10px; right: 10px; bottom: 10px; z-index: 1; display: flex; align-items: center; justify-content: center; gap: 6px; padding: 10px; border-radius: 999px; background: rgba(255,255,255,.92); color: #26242b; font-size: 13px; font-weight: 600; opacity: 0; transform: translateY(12px); transition: opacity .25s, transform .35s var(--spring); }
+    .quick svg.i { width: 15px; height: 15px; }
+    .item:hover .quick, .item:focus-visible .quick { opacity: 1; transform: none; }
+    @media (hover: none) { .quick { display: none; } .save { opacity: 1; transform: none; } }
     .item p { margin-top: 10px; font-weight: 500; font-size: 14px; }
     .item small { color: var(--muted); font-size: 13px; }
+    .empty { grid-column: 1 / -1; padding: 40px 0; color: var(--muted); text-align: center; }
+
+    /* ---------- Quick view sheet ---------- */
+    .scrim { position: fixed; inset: 0; z-index: 60; background: rgba(10, 10, 14, .55); backdrop-filter: blur(4px); opacity: 0; pointer-events: none; transition: opacity .3s; }
+    .scrim.open { opacity: 1; pointer-events: auto; }
+    .sheet { position: fixed; z-index: 61; left: 50%; bottom: 0; width: min(880px, 100%); max-height: 88vh; overflow: auto; border-radius: 28px 28px 0 0; background: #2f2c35; box-shadow: 0 -20px 60px rgba(0,0,0,.4); transform: translate(-50%, 100%); transition: transform .5s var(--ease); }
+    .sheet.open { transform: translate(-50%, 0); }
+    @media (min-width: 900px) { .sheet { bottom: auto; top: 50%; border-radius: 28px; transform: translate(-50%, -46%) scale(.96); opacity: 0; pointer-events: none; transition: transform .45s var(--spring), opacity .25s; } .sheet.open { transform: translate(-50%, -50%); opacity: 1; pointer-events: auto; } }
+    .sheet-grid { display: grid; grid-template-columns: 1fr; }
+    @media (min-width: 900px) { .sheet-grid { grid-template-columns: 1fr 1fr; } }
+    .sheet-art { min-height: 260px; display: grid; place-items: center; font-size: 13px; color: rgba(255,255,255,.75); }
+    .sheet-body { padding: 28px; display: flex; flex-direction: column; gap: 14px; }
+    .sheet-body .eyebrow { font-size: 12px; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; color: var(--muted); }
+    .sheet-body h3 { font-size: 28px; font-weight: 600; letter-spacing: -.02em; line-height: 1.15; }
+    .sheet-body p { color: rgba(255,255,255,.8); }
+    .sheet-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+    .sheet-tags span { padding: 5px 10px; border-radius: 999px; background: var(--surface-2); font-size: 12px; }
+    .sheet-actions { display: flex; gap: 10px; margin-top: auto; padding-top: 8px; }
+    .btn { display: inline-flex; align-items: center; gap: 8px; padding: 12px 20px; border-radius: 999px; font-weight: 600; border: 0; cursor: pointer; transition: transform .3s var(--spring), background .2s; }
+    .btn:active { transform: scale(.96); }
+    .btn-primary { background: #fff; color: #26242b; }
+    .btn-primary[aria-disabled="true"] { background: var(--surface-2); color: var(--muted); cursor: default; }
+    .btn-ghost { background: var(--surface-2); }
+    .sheet-close { position: absolute; right: 14px; top: 14px; z-index: 2; width: 36px; height: 36px; border-radius: 50%; border: 0; display: grid; place-items: center; background: rgba(0,0,0,.4); color: #fff; cursor: pointer; }
+    .grabber { width: 40px; height: 5px; border-radius: 3px; background: rgba(255,255,255,.3); margin: 10px auto 0; }
+    @media (min-width: 900px) { .grabber { display: none; } }
 
     /* ---------- About ---------- */
-    .about { margin-top: 64px; display: grid; grid-template-columns: 1fr; gap: 20px; padding: 28px; border-radius: 24px; background: var(--surface); scroll-margin-top: 24px; }
+    .about { margin-top: 64px; display: grid; grid-template-columns: 1fr; gap: 20px; padding: 28px; border-radius: 24px; background: var(--surface); scroll-margin-top: 80px; }
     @media (min-width: 900px) { .about { grid-template-columns: 3fr 2fr; } }
     .about h2 { font-size: 22px; font-weight: 600; margin-bottom: 10px; }
     .about p { color: rgba(255,255,255,.82); font-size: 16px; }
@@ -111,107 +193,128 @@
     .about dl { margin: 0; display: grid; gap: 12px; align-content: start; }
     .about dt { font-size: 12px; color: var(--muted); }
     .about dd { margin: 2px 0 0; }
+    .reveal { opacity: 0; transform: translateY(20px); transition: opacity .7s var(--ease), transform .7s var(--ease); }
+    .reveal.in { opacity: 1; transform: none; }
 
     /* ---------- Docked assistant ---------- */
-    .dock { position: fixed; left: 50%; bottom: 24px; z-index: 50; width: min(600px, calc(100% - 24px)); transform: translateX(-50%); }
-    .panel { display: flex; flex-direction: column; max-height: 0; overflow: hidden; opacity: 0; margin-bottom: 10px; border-radius: 24px; background: rgba(40, 38, 46, .92); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,.08); box-shadow: 0 20px 60px rgba(0,0,0,.4); transition: max-height .45s cubic-bezier(.2,.8,.2,1), opacity .3s; }
-    .dock.open .panel { max-height: 60vh; opacity: 1; }
+    .dock { position: fixed; left: 50%; bottom: 24px; z-index: 50; width: min(560px, calc(100% - 24px)); transform: translateX(-50%); transition: width .45s var(--ease), bottom .3s; }
+    .dock.open { width: min(680px, calc(100% - 24px)); }
+    .panel { display: flex; flex-direction: column; max-height: 0; overflow: hidden; opacity: 0; margin-bottom: 10px; border-radius: 24px; background: rgba(40, 38, 46, .94); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,.08); box-shadow: 0 20px 60px rgba(0,0,0,.4); transform: translateY(10px); transition: max-height .5s var(--ease), opacity .3s, transform .45s var(--ease); }
+    .dock.open .panel { max-height: 60vh; opacity: 1; transform: none; }
     .panel-head { display: flex; align-items: center; justify-content: space-between; padding: 14px 16px 6px; font-size: 12px; color: var(--muted); }
     .panel-head button { border: 0; background: none; cursor: pointer; color: var(--muted); padding: 4px; display: grid; }
     .messages { flex: 1; overflow-y: auto; padding: 6px 16px 12px; display: flex; flex-direction: column; gap: 10px; }
-    .msg { max-width: 85%; padding: 10px 14px; border-radius: 18px; font-size: 14px; animation: pop .3s cubic-bezier(.2,.8,.2,1.2); }
+    .msg { max-width: 85%; padding: 10px 14px; border-radius: 18px; font-size: 14px; animation: pop .35s var(--spring); }
     .msg.bot { background: rgba(255,255,255,.1); border-bottom-left-radius: 6px; }
     .msg.me { align-self: flex-end; background: #fff; color: #26242b; border-bottom-right-radius: 6px; }
     .msg a { text-decoration: underline; }
-    @keyframes pop { from { opacity: 0; transform: translateY(6px) scale(.98); } }
+    .typing { display: inline-flex; gap: 4px; padding: 14px; }
+    .typing i { width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,.6); animation: blink 1s infinite; }
+    .typing i:nth-child(2) { animation-delay: .15s; } .typing i:nth-child(3) { animation-delay: .3s; }
+    @keyframes blink { 0%, 80%, 100% { opacity: .3; transform: translateY(0); } 40% { opacity: 1; transform: translateY(-3px); } }
+    @keyframes pop { from { opacity: 0; transform: translateY(6px) scale(.96); } }
     .suggestions { display: flex; gap: 8px; overflow-x: auto; padding: 0 16px 14px; scrollbar-width: none; }
-    .suggestions button { flex: none; padding: 7px 12px; border-radius: 999px; border: 1px solid rgba(255,255,255,.14); background: none; font-size: 13px; cursor: pointer; }
+    .suggestions button { flex: none; padding: 7px 12px; border-radius: 999px; border: 1px solid rgba(255,255,255,.14); background: none; font-size: 13px; cursor: pointer; transition: background .2s, transform .3s var(--spring); }
     .suggestions button:hover { background: rgba(255,255,255,.08); }
-    .ask { display: flex; align-items: center; gap: 10px; padding: 8px 8px 8px 24px; border-radius: 999px; background: #cfced3; color: #26242b; box-shadow: 0 12px 32px rgba(0,0,0,.35); }
+    .suggestions button:active { transform: scale(.95); }
+    .ask { display: flex; align-items: center; gap: 10px; padding: 8px 8px 8px 24px; border-radius: 999px; background: #cfced3; color: #26242b; box-shadow: 0 12px 32px rgba(0,0,0,.35); transition: background .3s, box-shadow .3s; }
+    .dock.open .ask { background: #e6e5ea; box-shadow: 0 16px 40px rgba(0,0,0,.45); }
     .ask input { flex: 1; min-width: 0; border: 0; outline: 0; background: none; color: #26242b; font: inherit; font-size: 16px; padding: 12px 0; }
-    .ask input::placeholder { color: #6e6c75; }
-    .ask button { flex: none; width: 44px; height: 44px; border-radius: 50%; border: 0; background: rgba(0,0,0,.06); color: #26242b; display: grid; place-items: center; cursor: pointer; transition: background .2s; }
-    .ask button:hover { background: rgba(0,0,0,.12); }
+    .ask input::placeholder { color: #6e6c75; transition: opacity .3s; }
+    .ask button { flex: none; width: 44px; height: 44px; border-radius: 50%; border: 0; background: rgba(0,0,0,.06); color: #26242b; display: grid; place-items: center; cursor: pointer; transition: background .2s, transform .3s var(--spring); }
+    .ask input:not(:placeholder-shown) + button { background: #26242b; color: #fff; }
+    .ask button:active { transform: scale(.9); }
 
-    /* ---------- Corner card ---------- */
-    .corner { position: fixed; right: 24px; bottom: 24px; z-index: 45; width: 260px; padding: 18px; border-radius: 22px; background: #0f0f12; box-shadow: 0 20px 50px rgba(0,0,0,.4); display: none; }
+    /* ---------- Corner card (slides in, dismissible) ---------- */
+    .corner { position: fixed; right: 24px; bottom: 24px; z-index: 45; width: 260px; padding: 18px; border-radius: 22px; background: #0f0f12; box-shadow: 0 20px 50px rgba(0,0,0,.4); display: none; transform: translateY(24px); opacity: 0; transition: transform .6s var(--spring), opacity .4s; }
     @media (min-width: 1200px) { .corner { display: block; } }
-    .corner.closed { display: none; }
-    .corner-close { position: absolute; right: 12px; top: 12px; border: 0; background: none; cursor: pointer; color: var(--muted); display: grid; padding: 4px; }
-    .corner-art { width: 112px; height: 112px; border-radius: 14px; display: grid; place-items: center; background: linear-gradient(135deg, var(--accent), #f3b18f); font-family: "Instrument Serif", serif; font-style: italic; font-size: 44px; }
+    .corner.show { transform: none; opacity: 1; }
+    .corner.closed { transform: translateY(24px) scale(.96); opacity: 0; pointer-events: none; }
+    .corner-close { position: absolute; right: 12px; top: 12px; border: 0; background: none; cursor: pointer; color: var(--muted); display: grid; padding: 4px; border-radius: 50%; transition: background .2s, color .2s; }
+    .corner-close:hover { background: rgba(255,255,255,.1); color: #fff; }
+    .corner-art { width: 112px; height: 112px; border-radius: 14px; display: grid; place-items: center; background: linear-gradient(135deg, var(--accent), #f3b18f); font-family: "Instrument Serif", serif; font-style: italic; font-size: 44px; transition: transform .5s var(--spring); }
+    .corner:hover .corner-art { transform: rotate(-4deg) scale(1.04); }
     .corner b { display: block; margin-top: 16px; font-size: 18px; font-weight: 600; }
     .corner p { margin-top: 4px; color: var(--muted); font-size: 13px; }
     .corner a.link { display: inline-flex; align-items: center; gap: 6px; margin-top: 12px; font-size: 13px; font-weight: 600; }
-    .corner a.link svg.i { width: 14px; height: 14px; }
+    .corner a.link svg.i { width: 14px; height: 14px; transition: transform .25s var(--ease); }
+    .corner a.link:hover svg.i { transform: translateX(3px); }
 
     footer { position: relative; z-index: 1; padding: 64px var(--content-right) 0 var(--content-left); color: var(--muted); font-size: 13px; display: flex; flex-wrap: wrap; gap: 16px; justify-content: space-between; }
     footer nav { display: flex; gap: 18px; }
     footer a:hover { color: #fff; }
 
-    @media (prefers-reduced-motion: reduce) { .hero-bg .mesh, .msg { animation: none; } }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation: none !important; transition: none !important; }
+      .enter, .reveal { opacity: 1; transform: none; }
+    }
   </style>
 </head>
 <body>
-  <div class="hero-bg" aria-hidden="true"><div class="mesh"></div></div>
+  <div class="hero-bg" aria-hidden="true"><div class="parallax" id="parallax"><div class="mesh"></div></div></div>
 
   <!-- Left rail -->
   <aside class="rail" aria-label="Site navigation">
-    <a class="logo" href="landing-b.html" aria-label="Home">sd</a>
-    <nav class="rail-group">
-      <a class="active" href="#top"><i data-icon="house"></i><span>Home</span></a>
-      <a href="#work"><i data-icon="layout-grid"></i><span>Work</span></a>
-      <a href="#about"><i data-icon="user"></i><span>About</span></a>
-      <a href="index.html"><i data-icon="file-text"></i><span>Current site</span></a>
+    <a class="logo enter" style="--d:0" href="landing-b.html" aria-label="Home">sd</a>
+    <nav class="rail-group enter" style="--d:1" id="rail">
+      <span class="rail-indicator" id="rail-indicator" aria-hidden="true"></span>
+      <a class="active" href="#top"><i data-icon="house"></i><span class="tip">Home</span></a>
+      <a href="#work"><i data-icon="layout-grid"></i><span class="tip">Work</span></a>
+      <a href="#about"><i data-icon="user"></i><span class="tip">About</span></a>
+      <a href="index.html" data-external><i data-icon="file-text"></i><span class="tip">Current site</span></a>
     </nav>
-    <nav class="rail-group rail-bottom">
+    <nav class="rail-group rail-bottom enter" style="--d:2">
       <a href="https://www.linkedin.com/in/serena-daswani" target="_blank" rel="noopener noreferrer"><i data-icon="linkedin"></i>Connect</a>
     </nav>
   </aside>
 
-  <header class="topbar" id="top">
-    <a class="who" href="#about"><b>SD</b><i data-icon="menu"></i></a>
-    <label class="search"><i data-icon="search"></i><input id="search" type="search" placeholder="Search Serena's work…" aria-label="Search work"></label>
-    <a class="connect" href="https://www.linkedin.com/in/serena-daswani" target="_blank" rel="noopener noreferrer">Connect</a>
+  <header class="topbar" id="topbar">
+    <a class="who enter" style="--d:1" href="#about"><b>SD</b><i data-icon="menu"></i></a>
+    <label class="search enter" style="--d:2"><i data-icon="search"></i><input id="search" type="search" placeholder="Search Serena's work…" aria-label="Search work"></label>
+    <span class="compact-name" aria-hidden="true">Serena Daswani</span>
+    <a class="connect enter" style="--d:3" href="https://www.linkedin.com/in/serena-daswani" target="_blank" rel="noopener noreferrer">Connect</a>
   </header>
 
-  <section class="hero">
-    <h1>Serena Daswani</h1>
-    <p>Product designer <span>·</span> Designing @ Deploy</p>
-    <span class="placeholder-tag">Hero animation placeholder</span>
+  <section class="hero" id="top">
+    <div class="hero-title" id="hero-title">
+      <h1 class="enter" style="--d:2">Serena Daswani</h1>
+      <p class="enter" style="--d:4">Product designer <span>·</span> Designing @ Deploy</p>
+      <span class="placeholder-tag enter" style="--d:5">Hero animation placeholder</span>
+    </div>
   </section>
 
   <main>
     <!-- Collections -->
     <div class="collections">
-      <a class="collection" href="projects/mensio.html"><div class="frame"><div class="frame-art" style="background:linear-gradient(135deg,#2b3a67,#7aaee9)">Mensio hero GIF</div></div><p>Deploy</p><small>Mensio Data Explorer</small></a>
-      <a class="collection" href="#work"><div class="frame"><div class="frame-art" style="background:linear-gradient(135deg,#1d1d1f,#5a5a63)">Coming soon</div></div><p>Apple</p><small>Internal QA reporting tool</small></a>
-      <a class="collection" href="#work"><div class="frame"><div class="frame-art" style="background:linear-gradient(135deg,#5a6b8c,#cfd8e8)">Coming soon</div></div><p>OmniSynkAI</p><small>AI Autofill for listings</small></a>
-      <a class="collection" href="#work"><div class="frame"><div class="frame-art" style="background:linear-gradient(135deg,#3a4a7a,#8a9bc8)">Coming soon</div></div><p>Procense</p><small>Homepage redesign</small></a>
+      <a class="collection enter" style="--d:6" href="projects/mensio.html"><div class="frame"><div class="frame-art"><div class="art" style="background:linear-gradient(135deg,#2b3a67,#7aaee9)">Mensio hero GIF</div></div></div><p class="collection-label">Deploy <i data-icon="arrow-up-right"></i></p><small>Mensio Data Explorer</small></a>
+      <a class="collection enter" style="--d:7" href="#" data-open="apple"><div class="frame"><div class="frame-art"><div class="art" style="background:linear-gradient(135deg,#1d1d1f,#5a5a63)">Coming soon</div></div></div><p class="collection-label">Apple <i data-icon="arrow-up-right"></i></p><small>Internal QA reporting tool</small></a>
+      <a class="collection enter" style="--d:8" href="#" data-open="omnisynk"><div class="frame"><div class="frame-art"><div class="art" style="background:linear-gradient(135deg,#5a6b8c,#cfd8e8)">Coming soon</div></div></div><p class="collection-label">OmniSynkAI <i data-icon="arrow-up-right"></i></p><small>AI Autofill for listings</small></a>
+      <a class="collection enter" style="--d:9" href="#" data-open="procense"><div class="frame"><div class="frame-art"><div class="art" style="background:linear-gradient(135deg,#3a4a7a,#8a9bc8)">Coming soon</div></div></div><p class="collection-label">Procense <i data-icon="arrow-up-right"></i></p><small>Homepage redesign</small></a>
     </div>
-    <div class="center"><a class="soft-btn" href="#work">View all work</a></div>
+    <div class="center enter" style="--d:10"><a class="soft-btn" href="#work">View all work</a></div>
 
     <!-- Work -->
-    <section class="work" id="work">
-      <h2>Work</h2>
+    <section class="work reveal" id="work">
+      <div class="work-head"><h2>Work</h2><span class="count" id="count"></span></div>
       <div class="filters" role="toolbar" aria-label="Filter work">
-        <button class="icon-only" aria-label="Filters"><i data-icon="sliders-horizontal"></i></button>
-        <button data-filter="all" class="active">All</button>
-        <button data-filter="case">Case studies</button>
-        <button data-filter="shipped">Shipped</button>
-        <button data-filter="soon">Coming soon</button>
+        <button class="pill icon-only" aria-label="Clear filters" id="reset"><i data-icon="sliders-horizontal"></i></button>
+        <div class="sort-wrap">
+          <button class="pill" id="sort-btn" aria-haspopup="true" aria-expanded="false">Sort by <i data-icon="chevron-down" class="chev"></i></button>
+          <div class="menu" id="sort-menu" role="menu">
+            <button role="menuitemradio" data-sort="newest" class="selected">Newest <i data-icon="check"></i></button>
+            <button role="menuitemradio" data-sort="oldest">Oldest <i data-icon="check"></i></button>
+            <button role="menuitemradio" data-sort="az">A–Z <i data-icon="check"></i></button>
+          </div>
+        </div>
+        <button class="pill active" data-filter="all">All</button>
+        <button class="pill" data-filter="case">Case studies</button>
+        <button class="pill" data-filter="saved">Saved</button>
       </div>
-      <div class="grid" id="grid">
-        <a class="item" href="projects/mensio.html" data-tags="case shipped" data-search="mensio deploy data explorer guided setup"><div class="item-art" style="background:linear-gradient(160deg,#2b3a67,#7aaee9)"><span class="tag">Case study</span>Mensio hero GIF</div><p>Mensio Data Explorer</p><small>Deploy · 2026</small></a>
-        <div class="item" data-tags="soon" data-search="apple qa reporting tool"><div class="item-art" style="background:linear-gradient(160deg,#1d1d1f,#5a5a63)"><span class="tag">Coming soon</span></div><p>Internal QA reporting tool</p><small>Apple · 2024–25</small></div>
-        <div class="item" data-tags="soon" data-search="omnisynkai ai autofill listings"><div class="item-art" style="background:linear-gradient(160deg,#5a6b8c,#cfd8e8)"><span class="tag">Coming soon</span></div><p>AI Autofill for listings</p><small>OmniSynkAI · 2024</small></div>
-        <div class="item" data-tags="soon" data-search="bitcot web ios client"><div class="item-art" style="background:linear-gradient(160deg,#7aaee9,#e8f1fb)"><span class="tag">Coming soon</span></div><p>Web &amp; iOS client work</p><small>Bitcot · 2024</small></div>
-        <div class="item" data-tags="soon" data-search="stealth gen ai app mobile"><div class="item-art" style="background:linear-gradient(160deg,#8fb8a8,#e8f0ee)"><span class="tag">Coming soon</span></div><p>Gen AI web &amp; mobile app</p><small>Stealth startup · 2024</small></div>
-        <div class="item" data-tags="soon" data-search="procense homepage redesign"><div class="item-art" style="background:linear-gradient(160deg,#3a4a7a,#8a9bc8)"><span class="tag">Coming soon</span></div><p>Homepage redesign</p><small>Procense · 2022–24</small></div>
-      </div>
+      <div class="grid" id="grid"></div>
     </section>
 
     <!-- About -->
-    <section class="about" id="about">
+    <section class="about reveal" id="about">
       <div>
         <h2>About</h2>
         <p>I'm a UI/UX designer with a background in illustration, psychology, and visual design.</p>
@@ -229,6 +332,23 @@
     <span>© 2026 Serena Daswani</span>
     <nav><a href="https://www.linkedin.com/in/serena-daswani" target="_blank" rel="noopener noreferrer">LinkedIn</a><a href="https://github.com/serenadaswani" target="_blank" rel="noopener noreferrer">GitHub</a></nav>
   </footer>
+
+  <!-- Quick view -->
+  <div class="scrim" id="scrim"></div>
+  <div class="sheet" id="sheet" role="dialog" aria-modal="true" aria-labelledby="sheet-title">
+    <div class="grabber"></div>
+    <button class="sheet-close" id="sheet-close" aria-label="Close"><i data-icon="x"></i></button>
+    <div class="sheet-grid">
+      <div class="sheet-art" id="sheet-art"></div>
+      <div class="sheet-body">
+        <p class="eyebrow" id="sheet-eyebrow"></p>
+        <h3 id="sheet-title"></h3>
+        <p id="sheet-text"></p>
+        <div class="sheet-tags" id="sheet-tags"></div>
+        <div class="sheet-actions" id="sheet-actions"></div>
+      </div>
+    </div>
+  </div>
 
   <!-- Docked assistant (prototype: pre-written answers, no live model) -->
   <div class="dock" id="dock">
@@ -260,7 +380,7 @@
   </aside>
 
   <script>
-    // Lucide icons (v0.460, ISC), inlined so the page loads nothing extra.
+    // ---------- Lucide icons (v0.460, ISC), inlined ----------
     const ICONS = {
       "house": '<path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/><path d="M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>',
       "layout-grid": '<rect width="7" height="7" x="3" y="3" rx="1"/><rect width="7" height="7" x="14" y="3" rx="1"/><rect width="7" height="7" x="14" y="14" rx="1"/><rect width="7" height="7" x="3" y="14" rx="1"/>',
@@ -271,43 +391,170 @@
       "menu": '<line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/>',
       "sliders-horizontal": '<line x1="21" x2="14" y1="4" y2="4"/><line x1="10" x2="3" y1="4" y2="4"/><line x1="21" x2="12" y1="12" y2="12"/><line x1="8" x2="3" y1="12" y2="12"/><line x1="21" x2="16" y1="20" y2="20"/><line x1="12" x2="3" y1="20" y2="20"/><line x1="14" x2="14" y1="2" y2="6"/><line x1="8" x2="8" y1="10" y2="14"/><line x1="16" x2="16" y1="18" y2="22"/>',
       "arrow-right": '<path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>',
+      "arrow-up-right": '<path d="M7 7h10v10"/><path d="M7 17 17 7"/>',
       "x": '<path d="M18 6 6 18"/><path d="m6 6 12 12"/>',
+      "bookmark": '<path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z"/>',
+      "plus": '<path d="M5 12h14"/><path d="M12 5v14"/>',
+      "chevron-down": '<path d="m6 9 6 6 6-6"/>',
+      "check": '<path d="M20 6 9 17l-5-5"/>',
     };
-    document.querySelectorAll("i[data-icon]").forEach((el) => {
-      el.outerHTML = `<svg class="i" viewBox="0 0 24 24" aria-hidden="true">${ICONS[el.dataset.icon]}</svg>`;
-    });
+    const icon = (name, cls = "") => `<svg class="i ${cls}" viewBox="0 0 24 24" aria-hidden="true">${ICONS[name]}</svg>`;
+    const hydrateIcons = (root = document) => root.querySelectorAll("i[data-icon]").forEach((el) => (el.outerHTML = icon(el.dataset.icon, el.className)));
+    hydrateIcons();
 
-    // Rail highlights the section in view
-    const railLinks = [...document.querySelectorAll(".rail-group:not(.rail-bottom) a[href^='#']")];
-    addEventListener("scroll", () => {
-      let current = railLinks[0];
-      for (const l of railLinks) { const t = document.querySelector(l.getAttribute("href")); if (t && t.getBoundingClientRect().top < innerHeight * 0.4) current = l; }
-      railLinks.forEach((l) => l.classList.toggle("active", l === current));
-    }, { passive: true });
+    const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    requestAnimationFrame(() => document.body.classList.add("loaded"));
 
-    // Filters + search
-    const items = [...document.querySelectorAll("#grid .item")];
-    let filter = "all", term = "";
-    const apply = () => items.forEach((it) => {
-      const okFilter = filter === "all" || it.dataset.tags.split(" ").includes(filter);
-      const okTerm = !term || (it.dataset.search + " " + it.textContent).toLowerCase().includes(term);
-      it.hidden = !(okFilter && okTerm);
+    // ---------- Work data (from resume; case studies marked) ----------
+    const WORK = [
+      { id: "mensio", title: "Mensio Data Explorer", org: "Deploy", year: 2026, years: "2026", type: "case", href: "projects/mensio.html", bg: "linear-gradient(160deg,#2b3a67,#7aaee9)", art: "Mensio hero GIF",
+        text: "Redesigned Data Explorer into Guided Setup, a step-by-step wizard with presets, so customers can build charts without an analyst. Shipped in 14 weeks.", tags: ["User research", "Product design", "Design QA"] },
+      { id: "apple", title: "Internal QA reporting tool", org: "Apple", year: 2025, years: "2024–25", type: "soon", bg: "linear-gradient(160deg,#1d1d1f,#5a5a63)",
+        text: "Sole UI/UX designer for an internal QA reporting tool. Led design reviews and beta testing, and visualized end-to-end experiences for key features.", tags: ["Contract", "Data systems", "Beta testing"] },
+      { id: "omnisynk", title: "AI Autofill for listings", org: "OmniSynkAI", year: 2024.7, years: "2024", type: "soon", bg: "linear-gradient(160deg,#5a6b8c,#cfd8e8)",
+        text: "Led the design of an AI Autofill feature that writes SEO-optimized product listings across channels, cutting manual input by 50% for 1,000+ businesses.", tags: ["Internship", "AI", "Prototyping"] },
+      { id: "bitcot", title: "Web & iOS client work", org: "Bitcot", year: 2024.4, years: "2024", type: "soon", bg: "linear-gradient(160deg,#7aaee9,#e8f1fb)",
+        text: "Designed web pages and marketing content that lifted customer engagement by 30%, plus interactive mockups for iOS and web apps.", tags: ["Contract", "iOS", "Web"] },
+      { id: "stealth", title: "Gen AI web & mobile app", org: "Stealth startup", year: 2024.1, years: "2024", type: "soon", bg: "linear-gradient(160deg,#8fb8a8,#e8f0ee)",
+        text: "Consulted on alpha and beta iterations, cutting user-reported issues by 50%, and designed web and mobile interfaces in Figma.", tags: ["Internship", "Gen AI", "Mobile"] },
+      { id: "procense", title: "Homepage redesign", org: "Procense", year: 2023, years: "2022–24", type: "soon", bg: "linear-gradient(160deg,#3a4a7a,#8a9bc8)",
+        text: "Sole product designer for a B2B platform. Prototypes cut design approval times by 20%, and a homepage redesign lifted site traffic by 15%.", tags: ["Contract", "B2B", "Web"] },
+    ];
+    const saved = new Set();
+    let filter = "all", sort = "newest", term = "";
+
+    const grid = document.getElementById("grid"), count = document.getElementById("count");
+    const render = () => {
+      let list = WORK.filter((w) =>
+        (filter === "all" || (filter === "saved" ? saved.has(w.id) : w.type === filter)) &&
+        (!term || `${w.title} ${w.org} ${w.text} ${w.tags.join(" ")}`.toLowerCase().includes(term)));
+      list.sort((a, b) => sort === "oldest" ? a.year - b.year : sort === "az" ? a.title.localeCompare(b.title) : b.year - a.year);
+      count.textContent = `${list.length} ${list.length === 1 ? "project" : "projects"}`;
+      grid.innerHTML = list.length ? list.map((w, i) => `
+        <div class="item" role="button" tabindex="0" data-id="${w.id}" style="--i:${i}" aria-label="Quick view: ${w.title}">
+          <div class="item-art">
+            <div class="art" style="background:${w.bg}">${w.art || ""}</div>
+            <span class="tag">${w.type === "case" ? "Case study" : "Coming soon"}</span>
+            <button class="save ${saved.has(w.id) ? "on" : ""}" data-save="${w.id}" aria-pressed="${saved.has(w.id)}" aria-label="Save ${w.title}">${icon("bookmark")}</button>
+            <span class="quick">${icon("plus")} Quick view</span>
+          </div>
+          <p>${w.title}</p><small>${w.org} · ${w.years}</small>
+        </div>`).join("") : `<p class="empty">${filter === "saved" ? "Nothing saved yet. Tap the bookmark on any project." : "No projects match that search."}</p>`;
+    };
+    render();
+
+    grid.addEventListener("click", (e) => {
+      const save = e.target.closest("[data-save]");
+      if (save) {
+        e.stopPropagation();
+        const id = save.dataset.save;
+        saved.has(id) ? saved.delete(id) : saved.add(id);
+        save.classList.toggle("on", saved.has(id));
+        save.setAttribute("aria-pressed", saved.has(id));
+        save.classList.remove("pop"); void save.offsetWidth; save.classList.add("pop");
+        if (filter === "saved") render();
+        return;
+      }
+      const item = e.target.closest(".item");
+      if (item) openSheet(item.dataset.id);
     });
-    document.querySelectorAll(".filters [data-filter]").forEach((b) => b.addEventListener("click", () => {
+    grid.addEventListener("keydown", (e) => { const item = e.target.closest(".item"); if (item && (e.key === "Enter" || e.key === " ") && e.target === item) { e.preventDefault(); openSheet(item.dataset.id); } });
+
+    // Filters
+    document.querySelectorAll("[data-filter]").forEach((b) => b.addEventListener("click", () => {
       filter = b.dataset.filter;
-      document.querySelectorAll(".filters [data-filter]").forEach((x) => x.classList.toggle("active", x === b));
-      apply();
+      document.querySelectorAll("[data-filter]").forEach((x) => x.classList.toggle("active", x === b));
+      render();
     }));
+    document.getElementById("reset").addEventListener("click", () => {
+      filter = "all"; sort = "newest"; term = ""; document.getElementById("search").value = "";
+      document.querySelectorAll("[data-filter]").forEach((x) => x.classList.toggle("active", x.dataset.filter === "all"));
+      document.querySelectorAll("[data-sort]").forEach((x) => x.classList.toggle("selected", x.dataset.sort === "newest"));
+      render();
+    });
+
+    // Sort dropdown
+    const sortBtn = document.getElementById("sort-btn"), sortMenu = document.getElementById("sort-menu");
+    const setMenu = (open) => { sortMenu.classList.toggle("open", open); sortBtn.setAttribute("aria-expanded", open); };
+    sortBtn.addEventListener("click", (e) => { e.stopPropagation(); setMenu(!sortMenu.classList.contains("open")); });
+    sortMenu.addEventListener("click", (e) => {
+      const b = e.target.closest("[data-sort]"); if (!b) return;
+      sort = b.dataset.sort;
+      sortMenu.querySelectorAll("[data-sort]").forEach((x) => x.classList.toggle("selected", x === b));
+      setMenu(false); render();
+    });
+    document.addEventListener("click", () => setMenu(false));
+
+    // Search
     document.getElementById("search").addEventListener("input", (e) => {
       term = e.target.value.trim().toLowerCase();
-      apply();
-      if (term) document.getElementById("work").scrollIntoView({ behavior: "smooth", block: "start" });
+      render();
+      if (term) document.getElementById("work").scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "start" });
     });
 
-    // Corner card
-    document.getElementById("corner-close").addEventListener("click", () => document.getElementById("corner").classList.add("closed"));
+    // ---------- Quick view sheet ----------
+    const sheet = document.getElementById("sheet"), scrim = document.getElementById("scrim");
+    let lastFocus = null;
+    function openSheet(id) {
+      const w = WORK.find((x) => x.id === id); if (!w) return;
+      lastFocus = document.activeElement;
+      document.getElementById("sheet-art").style.background = w.bg;
+      document.getElementById("sheet-art").textContent = w.art || "";
+      document.getElementById("sheet-eyebrow").textContent = `${w.org} · ${w.years}`;
+      document.getElementById("sheet-title").textContent = w.title;
+      document.getElementById("sheet-text").textContent = w.text;
+      document.getElementById("sheet-tags").innerHTML = w.tags.map((t) => `<span>${t}</span>`).join("");
+      document.getElementById("sheet-actions").innerHTML = w.href
+        ? `<a class="btn btn-primary" href="${w.href}">View case study ${icon("arrow-right")}</a>`
+        : `<span class="btn btn-primary" aria-disabled="true">Case study coming soon</span><a class="btn btn-ghost" href="https://www.linkedin.com/in/serena-daswani" target="_blank" rel="noopener noreferrer">Ask about it</a>`;
+      sheet.classList.add("open"); scrim.classList.add("open"); document.body.classList.add("locked");
+      document.getElementById("sheet-close").focus();
+    }
+    function closeSheet() {
+      sheet.classList.remove("open"); scrim.classList.remove("open"); document.body.classList.remove("locked");
+      if (lastFocus) lastFocus.focus();
+    }
+    document.getElementById("sheet-close").addEventListener("click", closeSheet);
+    scrim.addEventListener("click", closeSheet);
+    document.querySelectorAll("[data-open]").forEach((a) => a.addEventListener("click", (e) => { e.preventDefault(); openSheet(a.dataset.open); }));
 
-    // Docked assistant with pre-written answers
+    // ---------- Scroll: parallax, hero shrink, frosted top bar, rail indicator ----------
+    const parallax = document.getElementById("parallax"), heroTitle = document.getElementById("hero-title"), topbar = document.getElementById("topbar");
+    const rail = document.getElementById("rail"), indicator = document.getElementById("rail-indicator");
+    const railLinks = [...rail.querySelectorAll("a[href^='#']")];
+    const moveIndicator = (link) => { indicator.style.transform = `translateY(${link.offsetTop - 10}px)`; };
+    rail.querySelectorAll("a").forEach((a) => a.addEventListener("mouseenter", () => moveIndicator(a)));
+    rail.addEventListener("mouseleave", () => moveIndicator(rail.querySelector("a.active")));
+    let ticking = false;
+    const onScroll = () => {
+      const y = scrollY;
+      if (!reduce) {
+        parallax.style.transform = `translateY(${y * 0.35}px)`;
+        const t = Math.min(y / 420, 1);
+        heroTitle.style.transform = `translateY(${y * 0.15}px) scale(${1 - t * 0.12})`;
+        heroTitle.style.opacity = 1 - t * 0.9;
+      }
+      topbar.classList.toggle("scrolled", y > 260);
+      let current = railLinks[0];
+      for (const l of railLinks) { const s = document.querySelector(l.getAttribute("href")); if (s && s.getBoundingClientRect().top < innerHeight * 0.4) current = l; }
+      if (!current.classList.contains("active")) {
+        railLinks.forEach((l) => l.classList.toggle("active", l === current));
+        if (!rail.matches(":hover")) moveIndicator(current);
+      }
+      ticking = false;
+    };
+    addEventListener("scroll", () => { if (!ticking) { requestAnimationFrame(onScroll); ticking = true; } }, { passive: true });
+
+    // Reveal on scroll
+    const io = new IntersectionObserver((entries) => entries.forEach((e) => { if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); } }), { threshold: 0.1 });
+    document.querySelectorAll(".reveal").forEach((el) => io.observe(el));
+
+    // ---------- Corner card ----------
+    const corner = document.getElementById("corner");
+    setTimeout(() => corner.classList.add("show"), 1600);
+    document.getElementById("corner-close").addEventListener("click", () => corner.classList.add("closed"));
+
+    // ---------- Docked assistant (pre-written answers) ----------
     const dock = document.getElementById("dock"), form = document.getElementById("ask"), input = document.getElementById("q"), log = document.getElementById("messages");
     const answers = [
       { keys: ["mensio", "ship", "latest", "data explorer", "case"], text: 'At Mensio, Serena redesigned Data Explorer into Guided Setup: a step-by-step wizard with presets, so customers can build charts without an analyst. It shipped in 14 weeks. <a href="projects/mensio.html">Read the case study</a>.' },
@@ -321,19 +568,20 @@
       const hit = answers.find((a) => a.keys.some((k) => s.includes(k)));
       return hit ? hit.text : "I only have pre-written answers for now. Try asking about Mensio, her experience, her process, or how to contact her.";
     };
-    const add = (html, who) => { const m = document.createElement("div"); m.className = `msg ${who}`; m.innerHTML = html; log.appendChild(m); log.scrollTop = log.scrollHeight; };
     const ask = (q) => {
       if (!q.trim()) return;
       dock.classList.add("open");
-      const m = document.createElement("div"); m.className = "msg me"; m.textContent = q; log.appendChild(m);
-      setTimeout(() => add(reply(q), "bot"), 450);
+      const me = document.createElement("div"); me.className = "msg me"; me.textContent = q; log.appendChild(me);
+      const typing = document.createElement("div"); typing.className = "msg bot typing"; typing.innerHTML = "<i></i><i></i><i></i>"; log.appendChild(typing);
+      log.scrollTop = log.scrollHeight;
       input.value = "";
+      setTimeout(() => { typing.className = "msg bot"; typing.innerHTML = reply(q); log.scrollTop = log.scrollHeight; }, reduce ? 0 : 900);
     };
     input.addEventListener("focus", () => dock.classList.add("open"));
     form.addEventListener("submit", (e) => { e.preventDefault(); ask(input.value); });
     document.getElementById("suggestions").addEventListener("click", (e) => { if (e.target.tagName === "BUTTON") ask(e.target.textContent); });
     document.getElementById("close").addEventListener("click", () => dock.classList.remove("open"));
-    addEventListener("keydown", (e) => { if (e.key === "Escape") dock.classList.remove("open"); });
+    addEventListener("keydown", (e) => { if (e.key === "Escape") { if (sheet.classList.contains("open")) closeSheet(); else dock.classList.remove("open"); setMenu(false); } });
   </script>
 </body>
 </html>
