@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Serena Daswani</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #ffffff;
+      --fg: #1d1d1f;
+      --muted: #6e6e73;
+      --line: rgba(0, 0, 0, .08);
+      --card: #f5f5f7;
+      --accent: #e65f2e;
+      --radius: 14px;
+      --gutter: 16px;
+    }
+    @media (min-width: 768px) { :root { --gutter: 40px; } }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; }
+    body { background: var(--bg); color: var(--fg); font-family: "Inter", system-ui, sans-serif; font-size: 15px; line-height: 1.45; -webkit-font-smoothing: antialiased; }
+    a { color: inherit; text-decoration: none; }
+    p, h1, h2, h3 { margin: 0; }
+    .wrap { max-width: 1280px; margin: 0 auto; padding-inline: var(--gutter); }
+
+    /* ---------- Top bar ---------- */
+    .topbar { position: absolute; inset: 0 0 auto; z-index: 5; }
+    .topbar .wrap { display: flex; align-items: center; justify-content: space-between; height: 64px; color: #fff; }
+    .topbar nav { display: flex; gap: 24px; font-size: 14px; }
+    .topbar nav a { opacity: .8; transition: opacity .2s; }
+    .topbar nav a:hover { opacity: 1; }
+    .mark { font-weight: 600; letter-spacing: -.01em; }
+
+    /* ---------- Hero (animation placeholder) ---------- */
+    .hero { position: relative; height: min(78vh, 720px); min-height: 460px; overflow: hidden; background: #14141a; color: #fff; }
+    .blobs { position: absolute; inset: -20%; filter: blur(60px) saturate(1.2); }
+    .blob { position: absolute; border-radius: 50%; opacity: .85; mix-blend-mode: screen; }
+    .b1 { width: 55%; height: 60%; left: 5%; top: 10%; background: #2b3a67; animation: drift1 18s ease-in-out infinite alternate; }
+    .b2 { width: 45%; height: 50%; right: 5%; top: 5%; background: #e65f2e; animation: drift2 22s ease-in-out infinite alternate; }
+    .b3 { width: 50%; height: 55%; left: 30%; bottom: 0; background: #7aaee9; animation: drift3 20s ease-in-out infinite alternate; }
+    @keyframes drift1 { to { transform: translate(18%, 12%) scale(1.15); } }
+    @keyframes drift2 { to { transform: translate(-22%, 18%) scale(.9); } }
+    @keyframes drift3 { to { transform: translate(-10%, -20%) scale(1.2); } }
+    .hero::after { content: ""; position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(0,0,0,.25) 0%, transparent 30%, transparent 45%, rgba(0,0,0,.65) 100%); }
+    .placeholder-tag { position: absolute; top: 80px; right: var(--gutter); z-index: 2; padding: 6px 10px; border-radius: 999px; font-size: 12px; background: rgba(255,255,255,.14); backdrop-filter: blur(10px); }
+    .hero-content { position: absolute; inset: auto 0 0; z-index: 2; padding-bottom: 40px; }
+    .hero-content .wrap { display: flex; align-items: flex-end; gap: 20px; }
+    .play {
+      flex: none; width: 56px; height: 56px; border-radius: 50%; border: 0; display: grid; place-items: center;
+      background: var(--accent); color: #fff; cursor: pointer; transition: transform .25s cubic-bezier(.2,.8,.2,1.4), box-shadow .25s;
+      box-shadow: 0 8px 24px rgba(230,95,46,.4);
+    }
+    .play:hover { transform: scale(1.08); }
+    .hero h1 { font-size: clamp(40px, 7vw, 84px); font-weight: 700; letter-spacing: -.035em; line-height: 1; }
+    .hero .role { margin-top: 8px; font-size: 17px; opacity: .85; }
+    .hero-actions { margin-left: auto; display: flex; gap: 10px; }
+    .pill-btn { padding: 9px 18px; border-radius: 999px; font-size: 14px; font-weight: 500; background: rgba(255,255,255,.16); backdrop-filter: blur(12px); transition: background .2s; }
+    .pill-btn:hover { background: rgba(255,255,255,.28); }
+    @media (max-width: 640px) { .hero-actions { display: none; } }
+
+    /* ---------- Sections ---------- */
+    section { padding-block: 48px 8px; }
+    .section-head { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 16px; }
+    .section-head h2 { font-size: 22px; font-weight: 700; letter-spacing: -.02em; }
+    .section-head a { font-size: 14px; color: var(--accent); }
+
+    /* Latest work + experience (two columns on desktop) */
+    .split { display: grid; grid-template-columns: 1fr; gap: 40px; }
+    @media (min-width: 1024px) { .split { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); } }
+
+    .latest { display: block; border-radius: var(--radius); overflow: hidden; background: var(--card); transform-style: preserve-3d; transition: transform .35s cubic-bezier(.2,.8,.2,1), box-shadow .35s; will-change: transform; }
+    .latest:hover { box-shadow: 0 24px 48px rgba(0,0,0,.14); }
+    .latest-art { position: relative; aspect-ratio: 16 / 10; background: linear-gradient(135deg, #2b3a67, #7aaee9); overflow: hidden; }
+    .latest-art span { position: absolute; inset: 0; display: grid; place-items: center; color: rgba(255,255,255,.8); font-size: 13px; }
+    .latest-art::after { content: ""; position: absolute; inset: 0; background: radial-gradient(600px circle at var(--mx, 50%) var(--my, 50%), rgba(255,255,255,.22), transparent 40%); opacity: 0; transition: opacity .3s; }
+    .latest:hover .latest-art::after { opacity: 1; }
+    .latest-body { padding: 18px 20px 22px; }
+    .eyebrow { font-size: 12px; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; color: var(--muted); }
+    .latest-body h3 { margin-top: 6px; font-size: 22px; font-weight: 700; letter-spacing: -.02em; }
+    .latest-body p { margin-top: 6px; color: var(--muted); }
+    .tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 14px; }
+    .tags span { padding: 4px 10px; border-radius: 999px; background: #fff; font-size: 12px; color: var(--muted); }
+
+    .tracks { display: grid; grid-template-columns: 1fr; column-gap: 32px; }
+    @media (min-width: 640px) { .tracks { grid-template-columns: 1fr 1fr; } }
+    .track { display: grid; grid-template-columns: 48px 1fr auto; align-items: center; gap: 14px; padding: 10px 0; border-bottom: 1px solid var(--line); border-radius: 8px; transition: background .2s; }
+    .track:hover { background: var(--card); }
+    .tile { width: 48px; height: 48px; border-radius: 8px; display: grid; place-items: center; color: #fff; font-weight: 600; font-size: 15px; }
+    .track b { display: block; font-weight: 500; }
+    .track small { color: var(--muted); font-size: 13px; }
+    .track time { color: var(--muted); font-size: 13px; padding-right: 8px; }
+
+    /* Past work: horizontal shelf */
+    .shelf-wrap { position: relative; }
+    .shelf { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(180px, 1fr); gap: 20px; overflow-x: auto; scroll-snap-type: x mandatory; padding-bottom: 12px; scrollbar-width: none; }
+    .shelf::-webkit-scrollbar { display: none; }
+    @media (min-width: 1024px) { .shelf { grid-auto-columns: calc((100% - 4 * 20px) / 5); } }
+    .album { scroll-snap-align: start; }
+    .album-art { position: relative; aspect-ratio: 1; border-radius: 10px; overflow: hidden; transition: transform .3s cubic-bezier(.2,.8,.2,1), box-shadow .3s; }
+    .album:hover .album-art { transform: translateY(-4px) scale(1.02); box-shadow: 0 16px 32px rgba(0,0,0,.16); }
+    .album-art span { position: absolute; left: 12px; bottom: 10px; font-size: 12px; color: rgba(255,255,255,.85); }
+    .album b { display: block; margin-top: 10px; font-weight: 500; font-size: 14px; }
+    .album small { color: var(--muted); font-size: 13px; }
+    .shelf-btn { position: absolute; top: calc(50% - 40px); width: 36px; height: 36px; border-radius: 50%; border: 0; background: rgba(255,255,255,.9); box-shadow: 0 2px 10px rgba(0,0,0,.15); cursor: pointer; display: none; place-items: center; color: var(--fg); }
+    .shelf-btn.prev { left: -14px; } .shelf-btn.next { right: -14px; }
+    @media (hover: hover) and (min-width: 768px) { .shelf-btn { display: grid; } }
+
+    /* About card */
+    .about { display: grid; grid-template-columns: 1fr; gap: 24px; padding: 28px; border-radius: var(--radius); background: var(--card); }
+    @media (min-width: 768px) { .about { grid-template-columns: minmax(0, 3fr) minmax(0, 2fr); } }
+    .about p { color: #3a3a3c; font-size: 16px; }
+    .about p + p { margin-top: 12px; }
+    .facts { display: grid; gap: 14px; align-content: start; }
+    .facts dt { font-size: 12px; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; color: var(--muted); }
+    .facts dd { margin: 2px 0 0; }
+
+    footer { padding: 48px 0 40px; color: var(--muted); font-size: 14px; }
+    footer .wrap { display: flex; flex-wrap: wrap; gap: 24px; justify-content: space-between; }
+    footer nav { display: flex; gap: 20px; }
+    footer a:hover { color: var(--accent); }
+
+    /* Scroll reveal */
+    .reveal { opacity: 0; transform: translateY(16px); transition: opacity .7s ease, transform .7s cubic-bezier(.2,.8,.2,1); }
+    .reveal.in { opacity: 1; transform: none; }
+    @media (prefers-reduced-motion: reduce) {
+      .blob { animation: none; }
+      .reveal { opacity: 1; transform: none; transition: none; }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="wrap">
+      <a class="mark" href="landing-a.html">Serena Daswani</a>
+      <nav><a href="#work">Work</a><a href="#about">About</a><a href="https://www.linkedin.com/in/serena-daswani" target="_blank" rel="noopener noreferrer">LinkedIn</a></nav>
+    </div>
+  </header>
+
+  <div class="hero">
+    <div class="blobs" aria-hidden="true"><div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div></div>
+    <span class="placeholder-tag">Hero animation placeholder</span>
+    <div class="hero-content">
+      <div class="wrap">
+        <a class="play" href="projects/mensio.html" aria-label="View latest work">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.5v13a1 1 0 0 0 1.5.86l10.5-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5z"/></svg>
+        </a>
+        <div>
+          <h1>Serena Daswani</h1>
+          <p class="role">Product designer · Designing @ Deploy</p>
+        </div>
+        <div class="hero-actions">
+          <a class="pill-btn" href="https://www.linkedin.com/in/serena-daswani" target="_blank" rel="noopener noreferrer">Connect</a>
+          <a class="pill-btn" href="#about">About</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <main id="work">
+    <section class="wrap">
+      <div class="split">
+        <div class="reveal">
+          <div class="section-head"><h2>Latest work</h2></div>
+          <a class="latest" href="projects/mensio.html" data-tilt>
+            <div class="latest-art"><span>Hero GIF: a chart being built in Guided Setup</span></div>
+            <div class="latest-body">
+              <p class="eyebrow">Case study · 2026</p>
+              <h3>Mensio Data Explorer</h3>
+              <p>Redesigning chart building so customers can self-serve, instead of relying on analysts.</p>
+              <div class="tags"><span>User research</span><span>Product design</span><span>Design QA</span></div>
+            </div>
+          </a>
+        </div>
+
+        <div class="reveal">
+          <div class="section-head"><h2>Experience</h2><a href="about.html">See all</a></div>
+          <div class="tracks">
+            <div class="track"><div class="tile" style="background:#e65f2e">D</div><div><b>UX / UI Designer</b><small>Deploy</small></div><time>Now</time></div>
+            <div class="track"><div class="tile" style="background:#1d1d1f">A</div><div><b>UI / UX Designer</b><small>Apple · Contract</small></div><time>2024–25</time></div>
+            <div class="track"><div class="tile" style="background:#5a6b8c">O</div><div><b>Product Design Intern</b><small>OmniSynkAI</small></div><time>2024</time></div>
+            <div class="track"><div class="tile" style="background:#7aaee9">B</div><div><b>UI Designer</b><small>Bitcot · Contract</small></div><time>2024</time></div>
+            <div class="track"><div class="tile" style="background:#8fb8a8">S</div><div><b>Product Design Intern</b><small>Stealth startup (Gen AI)</small></div><time>2024</time></div>
+            <div class="track"><div class="tile" style="background:#2b3a67">P</div><div><b>Product Designer</b><small>Procense · Contract</small></div><time>2022–24</time></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="wrap reveal">
+      <div class="section-head"><h2>Past work</h2></div>
+      <div class="shelf-wrap">
+        <button class="shelf-btn prev" aria-label="Scroll left"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg></button>
+        <div class="shelf">
+          <div class="album"><div class="album-art" style="background:linear-gradient(135deg,#1d1d1f,#5a5a63)"><span>Coming soon</span></div><b>Internal QA reporting tool</b><small>Apple · 2024–25</small></div>
+          <div class="album"><div class="album-art" style="background:linear-gradient(135deg,#5a6b8c,#cfd8e8)"><span>Coming soon</span></div><b>AI Autofill for listings</b><small>OmniSynkAI · 2024</small></div>
+          <div class="album"><div class="album-art" style="background:linear-gradient(135deg,#7aaee9,#e8f1fb)"><span>Coming soon</span></div><b>Web &amp; iOS client work</b><small>Bitcot · 2024</small></div>
+          <div class="album"><div class="album-art" style="background:linear-gradient(135deg,#8fb8a8,#e8f0ee)"><span>Coming soon</span></div><b>Gen AI web &amp; mobile app</b><small>Stealth startup · 2024</small></div>
+          <div class="album"><div class="album-art" style="background:linear-gradient(135deg,#2b3a67,#7a8bb8)"><span>Coming soon</span></div><b>Homepage redesign</b><small>Procense · 2022–24</small></div>
+        </div>
+        <button class="shelf-btn next" aria-label="Scroll right"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></button>
+      </div>
+    </section>
+
+    <section class="wrap reveal" id="about">
+      <div class="section-head"><h2>About Serena</h2></div>
+      <div class="about">
+        <div>
+          <p>I'm a UI/UX designer with a background in illustration, psychology, and visual design.</p>
+          <p>I like building intuitive, user-centered tools on top of complex data systems.</p>
+        </div>
+        <dl class="facts">
+          <div><dt>Currently</dt><dd>Designing @ Deploy</dd></div>
+          <div><dt>Education</dt><dd>UC Davis, B.A. Design, Minor in Psychology</dd></div>
+          <div><dt>Focus</dt><dd>Data-heavy tools, workflows and dashboards</dd></div>
+        </dl>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap">
+      <span>© 2026 Serena Daswani</span>
+      <nav><a href="https://www.linkedin.com/in/serena-daswani" target="_blank" rel="noopener noreferrer">LinkedIn</a><a href="https://github.com/serenadaswani" target="_blank" rel="noopener noreferrer">GitHub</a><a href="index.html">Current site</a></nav>
+    </div>
+  </footer>
+
+  <script>
+    // Scroll reveal
+    const io = new IntersectionObserver((entries) => entries.forEach((e) => { if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); } }), { threshold: 0.12 });
+    document.querySelectorAll(".reveal").forEach((el) => io.observe(el));
+
+    // Tilt + light-follow on the latest-work card
+    const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    document.querySelectorAll("[data-tilt]").forEach((card) => {
+      if (reduce || !matchMedia("(hover: hover)").matches) return;
+      const art = card.querySelector(".latest-art");
+      card.addEventListener("mousemove", (e) => {
+        const r = card.getBoundingClientRect();
+        const x = (e.clientX - r.left) / r.width, y = (e.clientY - r.top) / r.height;
+        card.style.transform = `perspective(900px) rotateX(${(0.5 - y) * 6}deg) rotateY(${(x - 0.5) * 8}deg) translateY(-4px)`;
+        art.style.setProperty("--mx", `${x * 100}%`);
+        art.style.setProperty("--my", `${y * 100}%`);
+      });
+      card.addEventListener("mouseleave", () => (card.style.transform = ""));
+    });
+
+    // Shelf arrows
+    const shelf = document.querySelector(".shelf");
+    document.querySelector(".shelf-btn.prev").addEventListener("click", () => shelf.scrollBy({ left: -shelf.clientWidth * 0.8, behavior: "smooth" }));
+    document.querySelector(".shelf-btn.next").addEventListener("click", () => shelf.scrollBy({ left: shelf.clientWidth * 0.8, behavior: "smooth" }));
+  </script>
+</body>
+</html>
