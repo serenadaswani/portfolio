@@ -262,12 +262,15 @@ page = f'''<title>Serena Daswani Portfolio</title>
   themeBtn.addEventListener('click', function () {{ root.setAttribute('data-theme', isDark() ? 'light' : 'dark'); sync(); }});
   sync();
 
-  // Timeline: animate bottom to top once it is in view (skipped with reduced motion)
+  // Timeline: play bottom to top each time it comes into view; reset once it has fully left the screen,
+  // so the next visit replays it. Not tied to scroll position. Skipped with reduced motion.
   var tl = document.querySelector('.lp-tl');
   if (tl && 'IntersectionObserver' in window && !matchMedia('(prefers-reduced-motion: reduce)').matches) {{
     document.documentElement.classList.add('lp-anim');
-    var io = new IntersectionObserver(function (es) {{ es.forEach(function (e) {{ if (e.isIntersecting) {{ tl.classList.add('is-in'); io.disconnect(); }} }}); }}, {{ threshold: 0.35 }});
-    io.observe(tl);
+    new IntersectionObserver(function (es) {{ es.forEach(function (e) {{
+      if (e.intersectionRatio >= 0.35) tl.classList.add('is-in');
+      else if (!e.isIntersecting) tl.classList.remove('is-in');
+    }}); }}, {{ threshold: [0, 0.35] }}).observe(tl);
   }}
 
   // Scroll-spy: mark the section in view with aria-current="location"
