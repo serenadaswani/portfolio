@@ -57,7 +57,8 @@ def role(m, org, r, yrs, now, scope=''):
 
 def sec_head(n, label, hid, title, sub):
     """Section header (after ericsin.com): microcopy, then the heading with a quiet second line."""
-    return (f'<div class="lp-sec__head"><p class="lp-sec__micro pm-meta-text">{n:02d} · {label}</p>'
+    # No numbered microcopy: it repeated the sidebar nav and the heading. n and label are kept for the call sites.
+    return (f'<div class="lp-sec__head">'
             f'<h2 class="lp-sec__h" id="{hid}">{title}<span>{sub}</span></h2></div>')
 
 def date_nb(yrs):
@@ -101,7 +102,6 @@ body { background: var(--color-bg-canvas); }
   .lp-sec__full { grid-column: 1 / -1; }
 }
 .lp-sec__head { display: grid; gap: var(--space-3); align-content: start; }
-.lp-sec__micro { margin: 0; }
 /* Heading pair (after ericsin.com): same size and weight, primary vs a lighter grey.
    h3 is 24px from 768px up, which is WCAG large text, so there the sub-line may use the 3:1 grey
    (color-border-strong: 3.77:1 light, 3.67:1 dark). Below 768px h3 is 23px, so it stays tertiary (4.5:1+).
@@ -111,8 +111,7 @@ body { background: var(--color-bg-canvas); }
 @media (min-width: 768px) and (prefers-contrast: no-preference) { .lp-sec__h span { color: var(--color-border-strong); } }
 .lp-sec__body { container: lp-body / inline-size; min-width: 0; }
 .lp-sec__intro { margin: 0; max-width: 48ch; font-size: var(--type-body-md); line-height: var(--line-body-md); color: var(--color-text-secondary); text-wrap: pretty; }
-/* Right-hand content starts level with the heading, not the microcopy above it */
-@container (min-width: 768px) { .lp-sec__body { padding-top: calc(var(--type-label) * var(--line-label) + var(--space-3)); } }
+
 
 /* Timeline: dates · rail with one dot per role · logo with the role underneath, each row centred.
    The rail and soft dots use color-border-default (decorative); the current role's dot is the selection colour.
