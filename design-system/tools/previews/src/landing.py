@@ -44,7 +44,7 @@ def card(p):
 
 # Company logos (official artwork, saved in assets/logos/). Text parts use currentColor so they flip with the theme;
 # brand accents keep their colour. Heights are optically balanced: all-caps and wide wordmarks sit smaller.
-LOGO_H = {'Deploy': 22, 'Apple': 20, 'OmniSynkAI': 17, 'Procense': 13}
+LOGO_H = {'Deploy': 22, 'Apple': 24, 'OmniSynkAI': 17, 'Procense': 13}
 def logo(org):
     svg = open(os.path.join(REPO, 'assets', 'logos', org.lower() + '.svg')).read().strip()
     return svg.replace('<svg ', f'<svg class="lp-logo" style="height:{LOGO_H[org]}px" aria-hidden="true" focusable="false" ', 1)
@@ -52,7 +52,7 @@ def logo(org):
 def role(m, org, r, yrs, now, scope=''):
     dot = '<span class="pm-hero__dot" aria-hidden="true"></span>' if now else ''
     return (f'<li class="pm-experience__item">'
-            f'<div class="pm-experience__head"><h3 class="pm-experience__org">{logo(org)}' + (f'<span class="lp-logo-word">{org}</span>' if org == 'Apple' else f'<span class="pm-sr">{org}</span>') + f'</h3><span class="pm-experience__role">{r}</span></div>'
+            f'<div class="pm-experience__head"><h3 class="pm-experience__org">{logo(org)}' + f'<span class="pm-sr">{org}</span>' + f'</h3><span class="pm-experience__role">{r}</span></div>'
             f'<span class="pm-experience__years">{dot}{yrs}</span>' + (f'<p class="pm-experience__scope">{scope}</p>' if scope else '') + '</li>')
 
 def copy_btn(i):
@@ -78,9 +78,6 @@ body { background: var(--color-bg-canvas); }
 .lp-exp .pm-experience__org { display: flex; align-items: center; min-height: 28px; }
 .lp-exp .lp-logo { display: block; width: auto; color: var(--color-text-primary); }
 .lp-exp .pm-experience__years { align-self: center; }
-/* Apple has no public wordmark: its logomark + the name in Instrument Sans, sized to sit with the other wordmarks */
-.lp-exp .pm-experience__org { gap: var(--space-1); }
-.lp-logo-word { font-size: var(--type-h4); line-height: 1; font-weight: var(--weight-medium); letter-spacing: var(--tracking-h4); color: var(--color-text-primary); }
 
 /* Tinted showcase cards: copy on top, the wash and asset rise from the bottom */
 .pm-card--showcase.lp-tint, .pm-card--showcase.lp-tint:hover, .pm-card--showcase.lp-tint:focus-within {
