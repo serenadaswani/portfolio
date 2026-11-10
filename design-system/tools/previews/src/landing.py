@@ -5,7 +5,7 @@ REPO = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), 
 tokens = open(os.path.join(REPO, 'design-system', 'css', 'tokens.css')).read()
 comps = open(os.path.join(REPO, 'design-system', 'css', 'components.css')).read()
 NAME = 'Serena Daswani'
-VER = 'v1.8'
+VER = 'v1.9'
 # Real content comes from site.js (see CLAUDE.md). Anything marked Placeholder or TBC is still to replace.
 FEATURED = [  # strongest first: full width
     ('mensio', 'Redesigning Mensio’s Data Explorer for self-serve analysis', 'Turning analysts’ follow-up questions into a guided chart builder.', ['Product design', 'Analytics'], '2026 · Mensio', 'mensio.html'),

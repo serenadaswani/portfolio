@@ -12,7 +12,7 @@ from lib import I, showcase
 REPO = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '..', '..'))
 tokens = open(os.path.join(REPO, 'design-system', 'css', 'tokens.css')).read()
 comps = open(os.path.join(REPO, 'design-system', 'css', 'components.css')).read()
-VER = 'v1.8'
+VER = 'v1.9'
 NAME = 'Serena Daswani'
 
 _fig = [0]

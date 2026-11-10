@@ -4,7 +4,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wdth,wght@0,75..100,400..700;1,75..100,400..700&display=swap">
 <style>
-/* ===== Paper × Midnight v1.8 · tokens.css (verbatim) ===== */
+/* ===== Paper × Midnight v1.9 · tokens.css (verbatim) ===== */
 /* Paper × Midnight — semantic CSS tokens v1.6 (generated from design-tokens.json) */
 /* Audit fixes applied. Provisional: test the rendered build for WCAG 2.2 AA. */
 :root {
@@ -96,6 +96,8 @@
   --color-disabled-border: var(--silver);
   --color-overlay-scrim: rgba(11, 18, 32, 0.72);
   --color-overlay-backdrop: rgba(11, 18, 32, 0.92);
+  --color-badge-bg: rgba(255, 255, 255, 0.55);
+  --color-badge-border: rgba(17, 24, 39, 0.08);
   /* type */
   --font-sans: "Instrument Sans", sans-serif; --font-meta: "Instrument Sans", sans-serif;
   --font-width-display: 90%; --font-width-text: 100%;
@@ -194,6 +196,8 @@
   --color-disabled-border: var(--dark-border-default);
   --color-overlay-scrim: rgba(11, 18, 32, 0.72);
   --color-overlay-backdrop: rgba(11, 18, 32, 0.92);
+  --color-badge-bg: rgba(255, 255, 255, 0.06);
+  --color-badge-border: rgba(255, 255, 255, 0.10);
   --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.24);
   --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.24), 0 4px 12px -4px rgba(0, 0, 0, 0.36);
   --shadow-md: 0 2px 4px -2px rgba(0, 0, 0, 0.30), 0 12px 24px -8px rgba(0, 0, 0, 0.45);
@@ -241,6 +245,8 @@
     --color-disabled-border: var(--dark-border-default);
     --color-overlay-scrim: rgba(11, 18, 32, 0.72);
     --color-overlay-backdrop: rgba(11, 18, 32, 0.92);
+    --color-badge-bg: rgba(255, 255, 255, 0.06);
+    --color-badge-border: rgba(255, 255, 255, 0.10);
     --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.24);
     --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.24), 0 4px 12px -4px rgba(0, 0, 0, 0.36);
     --shadow-md: 0 2px 4px -2px rgba(0, 0, 0, 0.30), 0 12px 24px -8px rgba(0, 0, 0, 0.45);
@@ -284,7 +290,7 @@
 :focus-visible { outline: var(--focus-ring-width) solid var(--color-focus-ring); outline-offset: var(--focus-ring-offset); }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; } }
 
-/* ===== Paper × Midnight v1.8 · components.css (verbatim) ===== */
+/* ===== Paper × Midnight v1.9 · components.css (verbatim) ===== */
 /* Paper × Midnight — component stylesheet v1.8 (load after tokens.css)
    Token-driven: consumes semantic tokens only. No token values are introduced here.
    Shape rule   radius-sm (4)  controls and labels: buttons, inputs, tabs, nav items, badges, tooltips
@@ -622,7 +628,7 @@ body { margin: 0; background: var(--color-bg-canvas); color: var(--color-text-pr
 @container (min-width: 768px) { .pm-showcase-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } .pm-showcase-grid > .pm-showcase-grid__wide { grid-column: 1 / -1; } }
 
 /* ---------- 6. Badge and tag ---------- */
-.pm-badge { display: inline-flex; align-items: center; gap: var(--space-1); min-height: 24px; padding: 0 var(--space-2); border-radius: var(--radius-sm); font-size: var(--type-caption); line-height: var(--line-caption); font-weight: var(--weight-medium); letter-spacing: 0; background: transparent; color: var(--color-text-secondary); box-shadow: inset 0 0 0 1px var(--color-border-default); white-space: nowrap; }
+.pm-badge { display: inline-flex; align-items: center; gap: var(--space-1); min-height: 24px; padding: 0 var(--space-2); border-radius: var(--radius-sm); font-size: var(--type-caption); line-height: var(--line-caption); font-weight: var(--weight-medium); letter-spacing: 0; background: var(--color-badge-bg); color: var(--color-text-secondary); box-shadow: inset 0 0 0 1px var(--color-badge-border); white-space: nowrap; }
 .pm-badge--sm { min-height: 20px; padding: 0 var(--space-1); }
 .pm-badge--outline { }
 .pm-badge--meta { font-family: var(--font-meta); font-weight: var(--weight-regular); font-variant-numeric: tabular-nums; }
@@ -632,6 +638,7 @@ body { margin: 0; background: var(--color-bg-canvas); color: var(--color-text-pr
 .pm-badge--warning { background: var(--color-state-warning-bg); color: var(--color-state-warning); }
 .pm-badge--error { background: var(--color-state-error-bg); color: var(--color-state-error); }
 .pm-badge--info { background: var(--color-state-info-bg); color: var(--color-state-info); }
+@media (prefers-contrast: more) { .pm-badge { box-shadow: inset 0 0 0 1px var(--color-border-default); } .pm-badge--accent, .pm-badge--success, .pm-badge--warning, .pm-badge--error, .pm-badge--info { box-shadow: none; } }
 .pm-badge .pm-icon, .pm-badge .pm-status__icon { width: 12px; height: 12px; margin: 0; }
 
 /* ---------- 7. Status indicator ---------- */
@@ -1187,7 +1194,7 @@ body { font-family: var(--font-sans); }
       <div class="lp-contact__actions"><button type="button" class="pm-btn pm-btn--secondary pm-btn--sm" data-copy="" id="copy-contact"><svg class="pm-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg><span>Copy email</span></button><a class="pm-btn pm-btn--ghost pm-btn--sm" href="https://www.linkedin.com/in/serena-daswani" target="_blank" rel="noopener">LinkedIn<svg class="pm-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg><span class="pm-sr"> (opens in a new tab)</span></a></div>
     </section>
 
-    <p class="pm-meta-text lp-colophon">© 2026 Serena Daswani · Built on Paper × Midnight v1.8</p>
+    <p class="pm-meta-text lp-colophon">© 2026 Serena Daswani · Built on Paper × Midnight v1.9</p>
   </main>
 </div>
 <p class="pm-sr" aria-live="polite" id="lp-live"></p>

@@ -1,5 +1,10 @@
 # Changes applied
 
+## v1.9 frosted badge (approved from the badge review)
+- Badge tag: the silver outline is replaced by a frosted fill, `color-badge-bg` (white at 55% light, 6% dark) with a 1px `color-badge-border` (ink at 8% light, white at 10% dark). No backdrop blur, so the flat-but-dimensional rule holds. `prefers-contrast: more` restores a `color-border-default` edge.
+- New tokens: `color-badge-bg`, `color-badge-border`.
+- Review record: `prototypes/review-badges.html`.
+
 ## v1.8 one type family and split layout (approved from the v1.8 review)
 | # | Change | Type |
 |---|---|---|

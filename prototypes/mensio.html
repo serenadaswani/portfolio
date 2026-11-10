@@ -4,7 +4,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wdth,wght@0,75..100,400..700;1,75..100,400..700&display=swap">
 <style>
-/* ===== Paper × Midnight v1.8 · tokens.css (verbatim) ===== */
+/* ===== Paper × Midnight v1.9 · tokens.css (verbatim) ===== */
 /* Paper × Midnight — semantic CSS tokens v1.6 (generated from design-tokens.json) */
 /* Audit fixes applied. Provisional: test the rendered build for WCAG 2.2 AA. */
 :root {
@@ -96,6 +96,8 @@
   --color-disabled-border: var(--silver);
   --color-overlay-scrim: rgba(11, 18, 32, 0.72);
   --color-overlay-backdrop: rgba(11, 18, 32, 0.92);
+  --color-badge-bg: rgba(255, 255, 255, 0.55);
+  --color-badge-border: rgba(17, 24, 39, 0.08);
   /* type */
   --font-sans: "Instrument Sans", sans-serif; --font-meta: "Instrument Sans", sans-serif;
   --font-width-display: 90%; --font-width-text: 100%;
@@ -194,6 +196,8 @@
   --color-disabled-border: var(--dark-border-default);
   --color-overlay-scrim: rgba(11, 18, 32, 0.72);
   --color-overlay-backdrop: rgba(11, 18, 32, 0.92);
+  --color-badge-bg: rgba(255, 255, 255, 0.06);
+  --color-badge-border: rgba(255, 255, 255, 0.10);
   --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.24);
   --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.24), 0 4px 12px -4px rgba(0, 0, 0, 0.36);
   --shadow-md: 0 2px 4px -2px rgba(0, 0, 0, 0.30), 0 12px 24px -8px rgba(0, 0, 0, 0.45);
@@ -241,6 +245,8 @@
     --color-disabled-border: var(--dark-border-default);
     --color-overlay-scrim: rgba(11, 18, 32, 0.72);
     --color-overlay-backdrop: rgba(11, 18, 32, 0.92);
+    --color-badge-bg: rgba(255, 255, 255, 0.06);
+    --color-badge-border: rgba(255, 255, 255, 0.10);
     --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.24);
     --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.24), 0 4px 12px -4px rgba(0, 0, 0, 0.36);
     --shadow-md: 0 2px 4px -2px rgba(0, 0, 0, 0.30), 0 12px 24px -8px rgba(0, 0, 0, 0.45);
@@ -284,7 +290,7 @@
 :focus-visible { outline: var(--focus-ring-width) solid var(--color-focus-ring); outline-offset: var(--focus-ring-offset); }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; } }
 
-/* ===== Paper × Midnight v1.8 · components.css (verbatim) ===== */
+/* ===== Paper × Midnight v1.9 · components.css (verbatim) ===== */
 /* Paper × Midnight — component stylesheet v1.8 (load after tokens.css)
    Token-driven: consumes semantic tokens only. No token values are introduced here.
    Shape rule   radius-sm (4)  controls and labels: buttons, inputs, tabs, nav items, badges, tooltips
@@ -622,7 +628,7 @@ body { margin: 0; background: var(--color-bg-canvas); color: var(--color-text-pr
 @container (min-width: 768px) { .pm-showcase-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } .pm-showcase-grid > .pm-showcase-grid__wide { grid-column: 1 / -1; } }
 
 /* ---------- 6. Badge and tag ---------- */
-.pm-badge { display: inline-flex; align-items: center; gap: var(--space-1); min-height: 24px; padding: 0 var(--space-2); border-radius: var(--radius-sm); font-size: var(--type-caption); line-height: var(--line-caption); font-weight: var(--weight-medium); letter-spacing: 0; background: transparent; color: var(--color-text-secondary); box-shadow: inset 0 0 0 1px var(--color-border-default); white-space: nowrap; }
+.pm-badge { display: inline-flex; align-items: center; gap: var(--space-1); min-height: 24px; padding: 0 var(--space-2); border-radius: var(--radius-sm); font-size: var(--type-caption); line-height: var(--line-caption); font-weight: var(--weight-medium); letter-spacing: 0; background: var(--color-badge-bg); color: var(--color-text-secondary); box-shadow: inset 0 0 0 1px var(--color-badge-border); white-space: nowrap; }
 .pm-badge--sm { min-height: 20px; padding: 0 var(--space-1); }
 .pm-badge--outline { }
 .pm-badge--meta { font-family: var(--font-meta); font-weight: var(--weight-regular); font-variant-numeric: tabular-nums; }
@@ -632,6 +638,7 @@ body { margin: 0; background: var(--color-bg-canvas); color: var(--color-text-pr
 .pm-badge--warning { background: var(--color-state-warning-bg); color: var(--color-state-warning); }
 .pm-badge--error { background: var(--color-state-error-bg); color: var(--color-state-error); }
 .pm-badge--info { background: var(--color-state-info-bg); color: var(--color-state-info); }
+@media (prefers-contrast: more) { .pm-badge { box-shadow: inset 0 0 0 1px var(--color-border-default); } .pm-badge--accent, .pm-badge--success, .pm-badge--warning, .pm-badge--error, .pm-badge--info { box-shadow: none; } }
 .pm-badge .pm-icon, .pm-badge .pm-status__icon { width: 12px; height: 12px; margin: 0; }
 
 /* ---------- 7. Status indicator ---------- */
@@ -1198,7 +1205,7 @@ body { margin: 0; font-family: var(--font-sans); background: var(--color-bg-canv
     <ul class="pm-showcase-grid"><li><article class="pm-card pm-card--showcase"><div class="pm-card__layout"><div class="pm-card__copy"><p class="pm-card__eyebrow">Placeholder</p><h3 class="pm-card__title"><a href="landing.html#work">Placeholder project</a></h3><p class="pm-card__sub">Your second strongest project.</p><ul class="pm-card__meta" aria-label="Disciplines"><li class="pm-badge">Product design</li></ul></div><div class="pm-card__shot"><img src="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%201600%201000%22%3E%3Crect%20width%3D%221600%22%20height%3D%221000%22%20fill%3D%22%23FBFBF9%22/%3E%3Crect%20x%3D%22120%22%20y%3D%22200%22%20width%3D%221360%22%20height%3D%222%22%20fill%3D%22%23D5DBE3%22%20opacity%3D%22.6%22/%3E%3Crect%20x%3D%22120%22%20y%3D%22360%22%20width%3D%221360%22%20height%3D%222%22%20fill%3D%22%23D5DBE3%22%20opacity%3D%22.6%22/%3E%3Crect%20x%3D%22120%22%20y%3D%22520%22%20width%3D%221360%22%20height%3D%222%22%20fill%3D%22%23D5DBE3%22%20opacity%3D%22.6%22/%3E%3Crect%20x%3D%22120%22%20y%3D%22680%22%20width%3D%221360%22%20height%3D%222%22%20fill%3D%22%23D5DBE3%22%20opacity%3D%22.6%22/%3E%3Crect%20x%3D%22120%22%20y%3D%22840%22%20width%3D%221360%22%20height%3D%222%22%20fill%3D%22%23D5DBE3%22%20opacity%3D%22.6%22/%3E%3Cpath%20d%3D%22M120%20120%20820%20L270%20760%20L420%20780%20L570%20640%20L720%20600%20L870%20520%20L1020%20470%20L1170%20420%20L1320%20330%20L1470%20300%22%20fill%3D%22none%22%20stroke%3D%22%232448D8%22%20stroke-width%3D%2210%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22/%3E%3Crect%20x%3D%22120%22%20y%3D%2280%22%20width%3D%22360%22%20height%3D%2228%22%20rx%3D%228%22%20fill%3D%22%23D5DBE3%22/%3E%3C/svg%3E" alt="" width="1600" height="1000" loading="lazy"></div></div></article></li><li><article class="pm-card pm-card--showcase"><div class="pm-card__layout"><div class="pm-card__copy"><p class="pm-card__eyebrow">Placeholder</p><h3 class="pm-card__title"><a href="landing.html#work">Placeholder project</a></h3><p class="pm-card__sub">A supporting project.</p><ul class="pm-card__meta" aria-label="Disciplines"><li class="pm-badge">Product design</li></ul></div><div class="pm-card__shot"><img src="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%201600%201000%22%3E%3Crect%20width%3D%221600%22%20height%3D%221000%22%20fill%3D%22%23F6F7F9%22/%3E%3Crect%20x%3D%220%22%20y%3D%220%22%20width%3D%22360%22%20height%3D%221000%22%20fill%3D%22%23FFFFFF%22/%3E%3Crect%20x%3D%2240%22%20y%3D%2260%22%20width%3D%22200%22%20height%3D%2216%22%20rx%3D%228%22%20fill%3D%22%23C9D1DC%22/%3E%3Crect%20x%3D%2240%22%20y%3D%22130%22%20width%3D%22240%22%20height%3D%2212%22%20rx%3D%226%22%20fill%3D%22%23C9D1DC%22%20opacity%3D%22.7%22/%3E%3Crect%20x%3D%2240%22%20y%3D%22186%22%20width%3D%22220%22%20height%3D%2212%22%20rx%3D%226%22%20fill%3D%22%23C9D1DC%22%20opacity%3D%22.7%22/%3E%3Crect%20x%3D%2240%22%20y%3D%22242%22%20width%3D%22200%22%20height%3D%2212%22%20rx%3D%226%22%20fill%3D%22%23C9D1DC%22%20opacity%3D%22.7%22/%3E%3Crect%20x%3D%2240%22%20y%3D%22298%22%20width%3D%22180%22%20height%3D%2212%22%20rx%3D%226%22%20fill%3D%22%23C9D1DC%22%20opacity%3D%22.7%22/%3E%3Crect%20x%3D%2240%22%20y%3D%22354%22%20width%3D%22160%22%20height%3D%2212%22%20rx%3D%226%22%20fill%3D%22%23C9D1DC%22%20opacity%3D%22.7%22/%3E%3Crect%20x%3D%2240%22%20y%3D%22410%22%20width%3D%22140%22%20height%3D%2212%22%20rx%3D%226%22%20fill%3D%22%23C9D1DC%22%20opacity%3D%22.7%22/%3E%3Crect%20x%3D%2240%22%20y%3D%22466%22%20width%3D%22120%22%20height%3D%2212%22%20rx%3D%226%22%20fill%3D%22%23C9D1DC%22%20opacity%3D%22.7%22/%3E%3Crect%20x%3D%22440%22%20y%3D%2260%22%20width%3D%22520%22%20height%3D%2240%22%20rx%3D%228%22%20fill%3D%22%23C9D1DC%22/%3E%3Crect%20x%3D%221300%22%20y%3D%2256%22%20width%3D%22200%22%20height%3D%2248%22%20rx%3D%2210%22%20fill%3D%22%232F5BFF%22/%3E%3Crect%20x%3D%22440%22%20y%3D%22180%22%20width%3D%221060%22%20height%3D%2296%22%20rx%3D%2212%22%20fill%3D%22%23FFFFFF%22/%3E%3Crect%20x%3D%22480%22%20y%3D%22212%22%20width%3D%22420%22%20height%3D%2214%22%20rx%3D%227%22%20fill%3D%22%23C9D1DC%22/%3E%3Crect%20x%3D%22480%22%20y%3D%22240%22%20width%3D%22260%22%20height%3D%2210%22%20rx%3D%225%22%20fill%3D%22%23C9D1DC%22%20opacity%3D%22.6%22/%3E%3Crect%20x%3D%221340%22%20y%3D%22214%22%20width%3D%22120%22%20height%3D%2228%22%20rx%3D%2214%22%20fill%3D%22%232F5BFF%22%20opacity%3D%221%22/%3E%3Crect%20x%3D%22440%22%20y%3D%22300%22%20width%3D%221060%22%20height%3D%2296%22%20rx%3D%2212%22%20fill%3D%22%23FFFFFF%22/%3E%3Crect%20x%3D%22480%22%20y%3D%22332%22%20width%3D%22380%22%20height%3D%2214%22%20rx%3D%227%22%20fill%3D%22%23C9D1DC%22/%3E%3Crect%20x%3D%22480%22%20y%3D%22360%22%20width%3D%22260%22%20height%3D%2210%22%20rx%3D%225%22%20fill%3D%22%23C9D1DC%22%20opacity%3D%22.6%22/%3E%3Crect%20x%3D%221340%22%20y%3D%22334%22%20width%3D%22120%22%20height%3D%2228%22%20rx%3D%2214%22%20fill%3D%22%23C9D1DC%22%20opacity%3D%220.5%22/%3E%3Crect%20x%3D%22440%22%20y%3D%22420%22%20width%3D%221060%22%20height%3D%2296%22%20rx%3D%2212%22%20fill%3D%22%23FFFFFF%22/%3E%3Crect%20x%3D%22480%22%20y%3D%22452%22%20width%3D%22340%22%20height%3D%2214%22%20rx%3D%227%22%20fill%3D%22%23C9D1DC%22/%3E%3Crect%20x%3D%22480%22%20y%3D%22480%22%20width%3D%22260%22%20height%3D%2210%22%20rx%3D%225%22%20fill%3D%22%23C9D1DC%22%20opacity%3D%22.6%22/%3E%3Crect%20x%3D%221340%22%20y%3D%22454%22%20width%3D%22120%22%20height%3D%2228%22%20rx%3D%2214%22%20fill%3D%22%23C9D1DC%22%20opacity%3D%220.5%22/%3E%3Crect%20x%3D%22440%22%20y%3D%22540%22%20width%3D%221060%22%20height%3D%2296%22%20rx%3D%2212%22%20fill%3D%22%23FFFFFF%22/%3E%3Crect%20x%3D%22480%22%20y%3D%22572%22%20width%3D%22300%22%20height%3D%2214%22%20rx%3D%227%22%20fill%3D%22%23C9D1DC%22/%3E%3Crect%20x%3D%22480%22%20y%3D%22600%22%20width%3D%22260%22%20height%3D%2210%22%20rx%3D%225%22%20fill%3D%22%23C9D1DC%22%20opacity%3D%22.6%22/%3E%3Crect%20x%3D%221340%22%20y%3D%22574%22%20width%3D%22120%22%20height%3D%2228%22%20rx%3D%2214%22%20fill%3D%22%23C9D1DC%22%20opacity%3D%220.5%22/%3E%3Crect%20x%3D%22440%22%20y%3D%22660%22%20width%3D%221060%22%20height%3D%2296%22%20rx%3D%2212%22%20fill%3D%22%23FFFFFF%22/%3E%3Crect%20x%3D%22480%22%20y%3D%22692%22%20width%3D%22260%22%20height%3D%2214%22%20rx%3D%227%22%20fill%3D%22%23C9D1DC%22/%3E%3Crect%20x%3D%22480%22%20y%3D%22720%22%20width%3D%22260%22%20height%3D%2210%22%20rx%3D%225%22%20fill%3D%22%23C9D1DC%22%20opacity%3D%22.6%22/%3E%3Crect%20x%3D%221340%22%20y%3D%22694%22%20width%3D%22120%22%20height%3D%2228%22%20rx%3D%2214%22%20fill%3D%22%23C9D1DC%22%20opacity%3D%220.5%22/%3E%3Crect%20x%3D%22440%22%20y%3D%22780%22%20width%3D%221060%22%20height%3D%2296%22%20rx%3D%2212%22%20fill%3D%22%23FFFFFF%22/%3E%3Crect%20x%3D%22480%22%20y%3D%22812%22%20width%3D%22220%22%20height%3D%2214%22%20rx%3D%227%22%20fill%3D%22%23C9D1DC%22/%3E%3Crect%20x%3D%22480%22%20y%3D%22840%22%20width%3D%22260%22%20height%3D%2210%22%20rx%3D%225%22%20fill%3D%22%23C9D1DC%22%20opacity%3D%22.6%22/%3E%3Crect%20x%3D%221340%22%20y%3D%22814%22%20width%3D%22120%22%20height%3D%2228%22%20rx%3D%2214%22%20fill%3D%22%23C9D1DC%22%20opacity%3D%220.5%22/%3E%3C/svg%3E" alt="" width="1600" height="1000" loading="lazy"></div></div></article></li></ul>
   </section>
 
-  <p class="pm-meta-text cs-colophon">© 2026 Serena Daswani · Built on Paper × Midnight v1.8</p>
+  <p class="pm-meta-text cs-colophon">© 2026 Serena Daswani · Built on Paper × Midnight v1.9</p>
 </div>
 </div>
 
