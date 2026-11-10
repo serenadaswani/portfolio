@@ -94,6 +94,9 @@ body { background: var(--color-bg-canvas); }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .lp { --lp-aside-bg: var(--color-bg-surface); } }
 @container (min-width: 1024px) { .pm-split__aside { background: var(--lp-aside-bg); } }
 
+/* Dividers between sections carry the spacing (Divider default strength, lg size) */
+.pm-split__main > .pm-divider + .pm-split__section { margin-top: 0; }
+
 /* Sections (after ericsin.com): microcopy + heading on the left, content on the right (>=768px main column).
    Work keeps its grid full width under the header row. */
 .lp-sec { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-6); }
@@ -232,6 +235,8 @@ page = f'''<title>Serena Daswani Portfolio</title>
       <ul class="pm-showcase-grid lp-sec__full">{''.join(f'<li class="pm-showcase-grid__wide">{card(p)}</li>' for p in FEATURED)}{''.join(f'<li>{card(p)}</li>' for p in MORE)}</ul>
     </section>
 
+    <hr class="pm-divider pm-divider--default pm-divider--lg" aria-hidden="true">
+
     <section class="pm-split__section lp-sec" id="about" aria-labelledby="lp-about-h">
       {sec_head(2, 'About', 'lp-about-h', 'About me', 'San Francisco')}
       <div class="lp-sec__body lp-about">
@@ -242,10 +247,14 @@ page = f'''<title>Serena Daswani Portfolio</title>
       </div>
     </section>
 
+    <hr class="pm-divider pm-divider--default pm-divider--lg" aria-hidden="true">
+
     <section class="pm-split__section lp-sec" id="experience" aria-labelledby="lp-exp-h">
       {sec_head(3, 'Experience', 'lp-exp-h', '4+ years of experience', '2022 – 2026')}
       <div class="lp-sec__body"><ol class="lp-tl" aria-labelledby="lp-exp-h">{''.join(tl_item(len(ROLES) - 1 - j, len(ROLES), *r) for j, r in enumerate(ROLES))}</ol></div>
     </section>
+
+    <hr class="pm-divider pm-divider--default pm-divider--lg" aria-hidden="true">
 
     <section class="pm-split__section lp-sec" id="contact" aria-labelledby="lp-contact-h">
       {sec_head(4, 'Contact', 'lp-contact-h', 'Want to work together?', 'Say hello.')}
