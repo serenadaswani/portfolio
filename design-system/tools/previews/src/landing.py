@@ -60,13 +60,20 @@ def sec_head(n, label, hid, title, sub):
     return (f'<div class="lp-sec__head"><p class="lp-sec__micro pm-meta-text">{n:02d} · {label}</p>'
             f'<h2 class="lp-sec__h" id="{hid}">{title}<span>{sub}</span></h2></div>')
 
-def tl_item(i, m, org, r, yrs, now, scope=''):
-    """Timeline row: dot on the rail · dates · logo · role, all centred on one line (stacked on narrow screens)."""
-    return (f'<li class="lp-tl__item{" is-current" if now else ""}" style="--i:{i}">'
+def date_nb(yrs):
+    """Keep each date whole and the dash with the start date, so a narrow column breaks as 'Jan 2026 –' / 'Present'."""
+    a, _, b = yrs.partition(' – ')
+    nb = lambda t: t.replace(' ', '\u00a0')
+    return f'{nb(a)}\u00a0– {nb(b)}' if b else nb(a)
+
+def tl_item(i, n, m, org, r, yrs, now, scope=''):
+    """Timeline row: dates · dot on the rail · logo with the role underneath, centred on the row."""
+    p = i / (n - 1) if n > 1 else 1
+    return (f'<li class="lp-tl__item{" is-current" if now else ""}" style="--p:{p:.4f}">'
+            f'<span class="lp-tl__date pm-meta-text">{date_nb(yrs)}</span>'
             '<span class="lp-tl__dot" aria-hidden="true"></span>'
-            f'<span class="lp-tl__date pm-meta-text">{yrs}</span>'
-            f'<h3 class="lp-tl__org">{logo(org)}<span class="pm-sr">{org}</span></h3>'
-            f'<span class="lp-tl__role">{r}</span></li>')
+            f'<div class="lp-tl__body"><h3 class="lp-tl__org">{logo(org)}<span class="pm-sr">{org}</span></h3>'
+            f'<span class="lp-tl__role">{r}</span></div></li>')
 
 def copy_btn(i):
     # No public address yet: the button says so instead of copying a placeholder.
@@ -102,27 +109,33 @@ body { background: var(--color-bg-canvas); }
 /* Right-hand content starts level with the heading, not the microcopy above it */
 @container (min-width: 768px) { .lp-sec__body { padding-top: calc(var(--type-label) * var(--line-label) + var(--space-3)); } }
 
-/* Timeline: a rail with one dot per role; dates · logo · role sit to its right, centred on the row.
-   Animates bottom to top once in view (rail grows upward, rows follow, oldest first). Static with reduced motion or no JS. */
-.lp-tl { --lp-row: 64px; position: relative; list-style: none; margin: 0; padding: 0 0 0 var(--space-8); }
-.lp-tl::before { content: ""; position: absolute; left: 5px; top: calc(var(--lp-row) / 2); bottom: calc(var(--lp-row) / 2); width: 2px; border-radius: 1px; background: var(--color-border-default); transform-origin: 50% 100%; }
-.lp-tl__item { position: relative; display: grid; grid-template-columns: 9.5rem 8rem minmax(0, 1fr); column-gap: var(--space-4); align-items: center; min-height: var(--lp-row); }
-.lp-tl__dot { position: absolute; left: calc(-1 * var(--space-8)); top: 50%; width: 12px; height: 12px; margin-top: -6px; border-radius: 50%; background: var(--color-bg-canvas); box-shadow: inset 0 0 0 2px var(--color-border-strong); }
-.lp-tl__item.is-current .lp-tl__dot { background: var(--color-selected-indicator); box-shadow: 0 0 0 3px var(--color-action-selected-bg); }
-.lp-tl__date { white-space: nowrap; }
+/* Timeline: dates · rail with one dot per role · logo with the role underneath, each row centred.
+   The rail and soft dots use color-border-default (decorative); the current role's dot is the selection colour.
+   Animation (once, when the section comes into view): the line grows from the oldest role up to the present one,
+   each row and dot appearing as the line reaches it, and lands on the current role with a small pulse.
+   Static with reduced motion or without JS. */
+.lp-tl { --lp-row: 76px; --lp-date: 9.5rem; --lp-gap: var(--space-5); --lp-dur: calc(var(--motion-duration-base) * 7);
+  position: relative; list-style: none; margin: 0; padding: 0; }
+.lp-tl::before { content: ""; position: absolute; left: calc(var(--lp-date) + var(--lp-gap) + 5px); top: calc(var(--lp-row) / 2); bottom: calc(var(--lp-row) / 2); width: 2px; border-radius: 1px; background: var(--color-border-default); transform-origin: 50% 100%; }
+.lp-tl__item { display: grid; grid-template-columns: var(--lp-date) 12px minmax(0, 1fr); column-gap: var(--lp-gap); align-items: center; height: var(--lp-row); }
+.lp-tl__date { text-align: right; text-wrap: balance; }
 .lp-tl__item.is-current .lp-tl__date { color: var(--color-text-primary); }
-.lp-tl__org { margin: 0; display: flex; align-items: center; min-height: 28px; }
+.lp-tl__dot { position: relative; width: 12px; height: 12px; border-radius: 50%; background: var(--color-bg-canvas); box-shadow: inset 0 0 0 2px var(--color-border-default); }
+.lp-tl__item.is-current .lp-tl__dot { background: var(--color-selected-indicator); box-shadow: 0 0 0 3px var(--color-action-selected-bg); }
+.lp-tl__body { display: grid; gap: var(--space-1); justify-items: start; min-width: 0; }
+.lp-tl__org { margin: 0; display: flex; align-items: center; min-height: 26px; }
 .lp-tl .lp-logo { display: block; width: auto; color: var(--color-text-primary); }
-.lp-tl__role { font-size: var(--type-body-md); line-height: var(--line-body-md); color: var(--color-text-secondary); }
-@container lp-body (max-width: 519px) {
-  .lp-tl { --lp-row: 80px; }
-  .lp-tl__item { grid-template-columns: auto minmax(0, 1fr); row-gap: var(--space-1); align-content: center; }
-  .lp-tl__date { grid-column: 1 / -1; }
-}
+.lp-tl__role { font-size: var(--type-body-sm); line-height: var(--line-body-sm); color: var(--color-text-secondary); }
+@container lp-body (max-width: 479px) { .lp-tl { --lp-date: 6.5rem; --lp-gap: var(--space-4); } }
+
 .lp-anim .lp-tl::before { transform: scaleY(0); }
-.lp-anim .lp-tl__item { opacity: 0; transform: translateY(var(--space-2)); }
-.lp-anim .lp-tl.is-in::before { transform: scaleY(1); transition: transform calc(var(--motion-duration-base) * 5) var(--motion-ease); }
-.lp-anim .lp-tl.is-in .lp-tl__item { opacity: 1; transform: none; transition: opacity calc(var(--motion-duration-base) * 2) var(--motion-ease), transform calc(var(--motion-duration-base) * 2) var(--motion-ease); transition-delay: calc(var(--i) * var(--motion-duration-base) + var(--motion-duration-fast)); }
+.lp-anim .lp-tl__dot { transform: scale(0); }
+.lp-anim .lp-tl__date, .lp-anim .lp-tl__body { opacity: 0; transform: translateY(var(--space-1)); }
+.lp-anim .lp-tl.is-in::before { transform: scaleY(1); transition: transform var(--lp-dur) linear; }
+.lp-anim .lp-tl.is-in .lp-tl__dot { transform: none; transition: transform var(--motion-duration-base) var(--motion-ease) calc(var(--p) * var(--lp-dur)); }
+.lp-anim .lp-tl.is-in .lp-tl__date, .lp-anim .lp-tl.is-in .lp-tl__body { opacity: 1; transform: none; transition: opacity calc(var(--motion-duration-base) * 2) var(--motion-ease) calc(var(--p) * var(--lp-dur)), transform calc(var(--motion-duration-base) * 2) var(--motion-ease) calc(var(--p) * var(--lp-dur)); }
+.lp-anim .lp-tl.is-in .is-current .lp-tl__dot::after { content: ""; position: absolute; inset: -3px; border-radius: 50%; box-shadow: 0 0 0 2px var(--color-selected-indicator); opacity: 0; animation: lp-land calc(var(--motion-duration-base) * 4) var(--motion-ease) var(--lp-dur) 1; }
+@keyframes lp-land { from { opacity: .6; transform: scale(1); } to { opacity: 0; transform: scale(2.2); } }
 
 /* Tinted showcase cards: copy on top, the wash and asset rise from the bottom */
 .pm-card--showcase.lp-tint, .pm-card--showcase.lp-tint:hover, .pm-card--showcase.lp-tint:focus-within {
@@ -226,7 +239,7 @@ page = f'''<title>Serena Daswani Portfolio</title>
 
     <section class="pm-split__section lp-sec" id="experience" aria-labelledby="lp-exp-h">
       {sec_head(3, 'Experience', 'lp-exp-h', '4+ years of experience', '2022 – 2026')}
-      <div class="lp-sec__body"><ol class="lp-tl" aria-labelledby="lp-exp-h">{''.join(tl_item(len(ROLES) - 1 - j, *r) for j, r in enumerate(ROLES))}</ol></div>
+      <div class="lp-sec__body"><ol class="lp-tl" aria-labelledby="lp-exp-h">{''.join(tl_item(len(ROLES) - 1 - j, len(ROLES), *r) for j, r in enumerate(ROLES))}</ol></div>
     </section>
 
     <section class="pm-split__section lp-sec" id="contact" aria-labelledby="lp-contact-h">
