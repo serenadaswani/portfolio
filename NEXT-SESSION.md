@@ -32,6 +32,8 @@
 - No Bento section on the home page (the showcase cards already do that job). The component stays in the system.
 
 ## Open decisions
+- Featured order is my proposal from the Framer site: Mensio, Procense Digital Forms (full width), then Apple QA tool and OmniSynkAI autofill. The three non-Mensio cards link to the Framer case studies for now.
+- Make the white page background a system change (`--color-bg-canvas` → white) instead of a page override?
 - Which project is the second full-width card, and which two go side by side?
 - Real project imagery: plain screenshots, or device mockups, on the showcase cards?
 - Résumé: PDF link, or a résumé page built from ExperienceList?

@@ -152,6 +152,10 @@ MORE = [('chart', 'Placeholder project', 'Your second strongest project.', ['Pro
         ('queue', 'Placeholder project', 'A supporting project.', ['Product design'], 'Placeholder')]
 
 PAGE_CSS = r"""
+/* Page background: white in light (the system's canvas token stays paper); dark is unchanged */
+@media (prefers-color-scheme: light) { :root:not([data-theme="dark"]) { --color-bg-canvas: var(--white); } }
+[data-theme="light"] { --color-bg-canvas: var(--white); }
+body { background: var(--color-bg-canvas); }
 /* ===== Case-study composition (v1.8) =====
    Header (back link, eyebrow, title, badges, summary panel, StatRow) -> 220px sticky InPageNavigation + reading column
    (>=1024px container; a horizontal strip above the content below that) -> more case studies (Card --showcase, two-up). */
@@ -283,7 +287,7 @@ page = f'''<title>Mensio Case Study</title>
 
   <section class="cs-more" aria-labelledby="cs-more-h">
     <h2 class="cs-h2" id="cs-more-h">More case studies</h2>
-    <ul class="pm-showcase-grid">{''.join(f'<li>{showcase(k, t, s, b, e, href="landing.html#work")}</li>' for k, t, s, b, e in MORE)}</ul>
+    <ul class="pm-showcase-grid">{''.join(f'<li>{showcase(k, t, s, b, e, href="landing.html#work", more="")}</li>' for k, t, s, b, e in MORE)}</ul>
   </section>
 
   <p class="pm-meta-text cs-colophon">© 2026 {NAME} · Built on Paper × Midnight {VER}</p>

@@ -8,25 +8,27 @@ NAME = 'Serena Daswani'
 VER = 'v1.8'
 # Real content comes from site.js (see CLAUDE.md). Anything marked Placeholder or TBC is still to replace.
 FEATURED = [  # strongest first: full width
-    ('form', 'Redesigning Mensio’s Data Explorer for self-serve analysis', 'Shipped 2026.', ['Product design', 'Analytics'], '2026 · Mensio', 'mensio.html'),
-    ('chart', 'Placeholder project', 'Your second strongest project.', ['Product design'], 'Placeholder', None)]
+    ('chart', 'Redesigning Mensio’s Data Explorer for self-serve analysis', 'Turning analysts’ follow-up questions into a guided chart builder.', ['Product design', 'Analytics'], '2026 · Mensio', 'mensio.html'),
+    ('form', 'Modernizing manufacturing QA with digital forms', 'A tablet-first replacement for paper batch and SOP forms in chemical manufacturing.', ['Product design', 'Manufacturing'], '2023 · Procense', 'https://serenadaswani.framer.website/project-detail-procense-digital-forms-application')]
 MORE = [  # two-up below
-    ('queue', 'Placeholder project', 'A supporting project.', ['Product design'], 'Placeholder', None),
-    ('grid', 'Placeholder project', 'A supporting project.', ['Design systems'], 'Placeholder', None)]
-ROLES = [('D', 'Deploy', 'Product designer', 'Now', True), ('A', 'Apple', 'Product designer', 'Years TBC', False),
-         ('P', 'Procense', 'Product designer', 'Years TBC', False), ('O', 'OmniSynkAI', 'Design intern', 'Years TBC', False)]
+    ('queue', 'Rethinking an internal QA reporting tool', 'Sole designer on an internal tool for QA workflows.', ['Product design'], '2025 · Apple', 'https://serenadaswani.framer.website/project-detail-apple-internal-reporting-tool'),
+    ('grid', 'AI autofill for inventory listings', 'Generated listing content with regeneration, feedback and tone options.', ['Product design', 'AI'], '2024 · OmniSynkAI', 'https://serenadaswani.framer.website/project-detail-omnisynkai-ai-autofill-feature')]
+ROLES = [('D', 'Deploy', 'Product designer', 'Now', True, 'Product design for Mensio, and a design system adopted across Deploy’s products.'),
+         ('A', 'Apple', 'UI/UX designer, contract', 'From 2024', False, 'Sole designer on an internal QA reporting tool.'),
+         ('O', 'OmniSynkAI', 'Product design intern', '2024', False, 'Designed an AI autofill feature for inventory listings.'),
+         ('P', 'Procense', 'UI/UX designer, contract', '2022 – 2024', False, 'Sole designer for a B2B enterprise platform for manufacturing QA.')]
 SOCIAL = [('LinkedIn', 'https://www.linkedin.com/in/serena-daswani'), ('GitHub', 'https://github.com/serenadaswani'), ('Framer', 'https://serenadaswani.framer.website/')]
 SECTIONS = ['Work', 'About', 'Experience', 'Contact']
 
 def card(p):
     k, t, sub, badges, eyebrow, href = p
-    return showcase(k, t, sub, badges, eyebrow, href=href or '#work')
+    return showcase(k, t, sub, badges, eyebrow, href=href or '#work', more='')
 
-def role(m, org, r, yrs, now):
+def role(m, org, r, yrs, now, scope=''):
     dot = '<span class="pm-hero__dot" aria-hidden="true"></span>' if now else ''
     return (f'<li class="pm-experience__item"><span class="pm-experience__mark" aria-hidden="true">{m}</span>'
             f'<div class="pm-experience__head"><h3 class="pm-experience__org">{org}</h3><span class="pm-experience__role">{r}</span></div>'
-            f'<span class="pm-experience__years">{dot}{yrs}</span></li>')
+            f'<span class="pm-experience__years">{dot}{yrs}</span>' + (f'<p class="pm-experience__scope">{scope}</p>' if scope else '') + '</li>')
 
 def copy_btn(i):
     # No public address yet: the button says so instead of copying a placeholder.
@@ -36,6 +38,12 @@ def ext(label, href):
     return f'<a class="pm-link pm-link--subtle" href="{href}" target="_blank" rel="noopener">{label}<span class="pm-sr"> (opens in a new tab)</span></a>'
 
 PAGE_CSS = r"""
+/* Page background: white in light (the system's canvas token stays paper); dark is unchanged */
+@media (prefers-color-scheme: light) { :root:not([data-theme="dark"]) { --color-bg-canvas: var(--white); } }
+[data-theme="light"] { --color-bg-canvas: var(--white); }
+body { background: var(--color-bg-canvas); }
+/* Side column on surface where it is a sidebar (>=1024px) */
+@container (min-width: 1024px) { .pm-split__aside { background: var(--color-bg-surface); } }
 /* ===== Landing composition (v1.8) =====
    Layout: split. Sticky 360px intro + vertical nav on the left (≥1024px); work, about, experience, contact on the right.
    Work = Card --showcase: strongest projects full width, then two-up. */
@@ -79,13 +87,13 @@ page = f'''<title>Serena Daswani Portfolio</title>
       <h1 class="pm-intro__name">{NAME} <span>is a product designer who builds for fun.</span></h1>
       <p class="pm-intro__text">Currently designing at Deploy. Previously at Apple and Procense.</p>
       <span class="pm-intro__status"><span class="pm-hero__dot" aria-hidden="true"></span>Designing at Deploy</span>
-      <div class="pm-intro__actions">{copy_btn('intro')}<a class="pm-btn pm-btn--ghost pm-btn--sm" href="#resume" data-soon>Résumé{I["ext"]}</a></div>
+      <div class="pm-intro__actions">{copy_btn('intro')}<a class="pm-btn pm-btn--ghost pm-btn--sm" href="#resume" data-soon>Resume{I["ext"]}</a></div>
     </div>
     <nav class="pm-sidenav pm-split__nav" aria-label="Sections"><ul class="pm-sidenav__list">{NAV}</ul></nav>
     <div class="pm-split__foot">
       <ul aria-label="Elsewhere">{''.join(f'<li>{ext(l, h)}</li>' for l, h in SOCIAL)}</ul>
       <div class="lp-tools">
-        <span class="pm-meta-text" id="lp-time" aria-label="Local time in Los Angeles">--:-- PT</span>
+        <span class="pm-meta-text" id="lp-time" aria-label="Local time in San Francisco">--:-- PT</span>
         <span class="pm-tooltip-anchor">
           <button type="button" class="pm-btn pm-btn--ghost pm-btn--icon pm-btn--xs" id="lp-theme" aria-pressed="false" aria-labelledby="lp-theme-tip">{I["moon"]}</button>
           <span role="tooltip" id="lp-theme-tip" class="pm-tooltip lp-tip">Dark theme</span>
@@ -104,13 +112,13 @@ page = f'''<title>Serena Daswani Portfolio</title>
       <h2 class="pm-split__h" id="lp-about-h">About</h2>
       <div class="lp-about">
         <div class="lp-about" style="gap:var(--space-4)">
-          <p>I’m a product designer at Deploy. Before that I designed at Apple and Procense, and interned at OmniSynkAI.</p>
-          <p>Placeholder bio: how you work, what you care about, and one personal detail. Two or three short paragraphs.</p>
+          <p>I’m a product designer in San Francisco who turns complexity into clarity. I’m designing at Deploy; before that I designed at Apple and Procense, and interned at OmniSynkAI.</p>
+          <p>My background is enterprise design: data-heavy tools for testing, QA and engineering. I’m hands-on from research and prototyping through to UI polish.</p><p>Off the clock, you’ll find me people-watching at my local Philz, or watching Bay Area sports from the couch.</p>
         </div>
         <dl class="pm-meta">
           <dt>Now</dt><dd>Product designer, Deploy</dd>
           <dt>Before</dt><dd>Apple, Procense, OmniSynkAI</dd>
-          <dt>Based in</dt><dd>Los Angeles</dd>
+          <dt>Based in</dt><dd>San Francisco</dd>
         </dl>
       </div>
     </section>
@@ -163,7 +171,7 @@ page = f'''<title>Serena Daswani Portfolio</title>
     }});
   }});
 
-  // Live local time, Los Angeles
+  // Live local time, San Francisco (Pacific)
   var t = document.getElementById('lp-time');
   function tick() {{ try {{ t.textContent = new Intl.DateTimeFormat('en-US', {{ hour: 'numeric', minute: '2-digit', timeZone: 'America/Los_Angeles' }}).format(new Date()) + ' PT'; }} catch (e) {{ t.textContent = ''; }} }}
   tick(); setInterval(tick, 15000);

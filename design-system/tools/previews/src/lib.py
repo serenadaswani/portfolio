@@ -106,5 +106,5 @@ def showcase(img_key, title, sub, badges, eyebrow='', state='', href='#c', alt='
             f'<h3 class="pm-card__title"><a href="{href}">{title}</a></h3>'
             + (f'<p class="pm-card__sub">{sub}</p>' if sub else '') +
             (f'<ul class="pm-card__meta" aria-label="Disciplines">{b}</ul>' if b else '') +
-            f'<span class="pm-card__more" aria-hidden="true">{more}{I["arrow"]}</span></div>'
+            (f'<span class="pm-card__more" aria-hidden="true">{more}{I["arrow"]}</span>' if more else '') + '</div>'
             f'<div class="pm-card__shot"><img src="{IMG[img_key]}" alt="{alt}" width="1600" height="1000" loading="lazy"></div></div></article>')
