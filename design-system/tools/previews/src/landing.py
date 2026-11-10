@@ -7,12 +7,12 @@ comps = open(os.path.join(REPO, 'design-system', 'css', 'components.css')).read(
 NAME = 'Serena Daswani'
 VER = 'v1.9'
 # Real content comes from site.js (see CLAUDE.md). Anything marked Placeholder or TBC is still to replace.
-FEATURED = [  # strongest first: full width
-    ('mensio', 'Redesigning Mensio’s Data Explorer for self-serve analysis', 'Turning analysts’ follow-up questions into a guided chart builder.', ['Product design', 'Analytics'], '2026 · Mensio', 'mensio.html'),
-    ('procense', 'Modernizing manufacturing QA with digital forms', 'A tablet-first replacement for paper batch and SOP forms in chemical manufacturing.', ['Product design', 'Manufacturing'], '2023 · Procense', 'https://serenadaswani.framer.website/project-detail-procense-digital-forms-application')]
+FEATURED = [  # strongest first: full width. Title = project name (one line); the longer line goes underneath.
+    ('mensio', 'Mensio Data Explorer', 'Redesigning chart building for self-serve analysis, from analysts’ follow-up questions to a guided builder.', ['Product design', 'Analytics'], '', 'mensio.html'),
+    ('procense', 'Procense Digital Forms', 'A tablet-first replacement for paper batch and SOP forms in chemical manufacturing QA.', ['Product design', 'Manufacturing'], '', 'https://serenadaswani.framer.website/project-detail-procense-digital-forms-application')]
 MORE = [  # two-up below
-    ('apple', 'Rethinking an internal QA reporting tool', 'Sole designer on an internal tool for QA workflows.', ['Product design'], '2025 · Apple', 'https://serenadaswani.framer.website/project-detail-apple-internal-reporting-tool'),
-    ('omni', 'AI autofill for inventory listings', 'Generated listing content with regeneration, feedback and tone options.', ['Product design', 'AI'], '2024 · OmniSynkAI', 'https://serenadaswani.framer.website/project-detail-omnisynkai-ai-autofill-feature')]
+    ('apple', 'Apple QA Reporting', 'Sole designer on an internal tool for QA workflows.', ['Product design'], '', 'https://serenadaswani.framer.website/project-detail-apple-internal-reporting-tool'),
+    ('omni', 'OmniSynkAI Autofill', 'AI-generated listing content with regeneration, feedback and tone options.', ['Product design', 'AI'], '', 'https://serenadaswani.framer.website/project-detail-omnisynkai-ai-autofill-feature')]
 ROLES = [('D', 'Deploy', 'Product designer', 'Jan 2026 – Present', True, 'Product design for Mensio, and a design system adopted across Deploy’s products.'),
          ('A', 'Apple', 'UI/UX designer, contract', 'Aug 2024 – Dec 2025', False, 'Sole designer on an internal QA reporting tool.'),
          ('O', 'OmniSynkAI', 'Product design intern', 'Jul – Sep 2024', False, 'Designed an AI autofill feature for inventory listings.'),
@@ -153,11 +153,19 @@ body { background: var(--color-bg-canvas); }
 /* Hover (and keyboard focus): a soft grey shadow, x 0 · y 3 · blur 12 · grey at 10% */
 .pm-card--showcase.lp-tint:focus-within { box-shadow: 0 3px 12px rgb(27 32 38 / 10%); }
 @media (hover: hover) { .pm-card--showcase.lp-tint:hover { box-shadow: 0 3px 12px rgb(27 32 38 / 10%); } }
-@container pm-showcase (min-width: 768px) { .lp-tint .pm-card__copy { align-self: start !important; } }
-.lp-tint .pm-card__shot { padding: var(--space-8) var(--space-8) var(--space-8) !important; align-self: end; }
-@container pm-showcase (min-width: 768px) { .lp-tint .pm-card__shot { padding: var(--space-12) var(--space-10) var(--space-10) var(--space-2) !important; } }
-@container pm-showcase (max-width: 479px) { .lp-tint .pm-card__shot { padding: var(--space-6) var(--space-5) var(--space-5) !important; } }
-.lp-shot { aspect-ratio: 16 / 10; border-radius: var(--radius-md); background: var(--color-bg-elevated); box-shadow: 0 0 0 1px var(--color-border-subtle), var(--shadow-sm); display: grid; place-items: center; }
+/* Card layout: text and tags get the room; the asset sits offset to the right, cropped by the card's right and bottom edges */
+.lp-tint .pm-card__title { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
+.lp-tint .pm-card__copy { min-width: 0; }
+@container pm-showcase (min-width: 768px) {
+  .lp-tint .pm-card__layout { grid-template-columns: minmax(0, 2fr) minmax(0, 3fr); }
+  .lp-tint .pm-card__copy { align-self: start !important; }
+}
+.lp-tint .pm-card__shot { align-self: end; padding: var(--space-10) 0 0 var(--space-12) !important; }
+@container pm-showcase (min-width: 768px) { .lp-tint .pm-card__shot { padding: var(--space-12) 0 0 var(--space-4) !important; } }
+@container pm-showcase (max-width: 479px) { .lp-tint .pm-card__shot { padding: var(--space-8) 0 0 var(--space-8) !important; } }
+.lp-shot { aspect-ratio: 16 / 10; border-radius: var(--radius-md) 0 0 0; background: var(--color-bg-elevated); box-shadow: 0 0 0 1px var(--color-border-subtle), var(--shadow-sm); display: grid; place-items: center; }
+/* Apple keeps its centred logo (no asset to offset) */
+.lp-tint .pm-card__shot:has(.lp-shot--apple) { padding: var(--space-8) !important; }
 .lp-shot--apple { background: none; box-shadow: none; color: var(--color-text-primary); }
 .lp-shot__logo { width: 16%; min-width: 48px; height: auto; }
 @media (prefers-reduced-motion: no-preference) {
@@ -221,8 +229,7 @@ page = f'''<title>Serena Daswani Portfolio</title>
 
   <main class="pm-split__main">
     <section class="pm-split__section lp-sec" id="work" aria-labelledby="lp-work-h">
-      {sec_head(1, 'Work', 'lp-work-h', 'Selected work', '2022 – 2026')}
-      <div class="lp-sec__body"><p class="lp-sec__intro">Product design for data-heavy tools: analytics, manufacturing QA, internal reporting and AI features.</p></div>
+      {sec_head(1, 'Work', 'lp-work-h', 'Featured work', '2022 – 2026')}
       <ul class="pm-showcase-grid lp-sec__full">{''.join(f'<li class="pm-showcase-grid__wide">{card(p)}</li>' for p in FEATURED)}{''.join(f'<li>{card(p)}</li>' for p in MORE)}</ul>
     </section>
 
