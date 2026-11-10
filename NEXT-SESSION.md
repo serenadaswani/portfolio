@@ -32,6 +32,7 @@
 - No Bento section on the home page (the showcase cards already do that job). The component stays in the system.
 
 ## Open decisions
+- Project card washes are page-level for now. If they stay, add a `--tinted` showcase variant to the design system (side-by-side first), so the case study's "More case studies" cards can use it too.
 - Featured order is my proposal from the Framer site: Mensio, Procense Digital Forms (full width), then Apple QA tool and OmniSynkAI autofill. The three non-Mensio cards link to the Framer case studies for now.
 - Make the white page background a system change (`--color-bg-canvas` → white) instead of a page override?
 - Which project is the second full-width card, and which two go side by side?

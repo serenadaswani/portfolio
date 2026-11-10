@@ -1,4 +1,4 @@
-import sys, os
+import sys, os, base64
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from lib import I, S, IMG, showcase
 REPO = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '..', '..'))
@@ -8,11 +8,11 @@ NAME = 'Serena Daswani'
 VER = 'v1.8'
 # Real content comes from site.js (see CLAUDE.md). Anything marked Placeholder or TBC is still to replace.
 FEATURED = [  # strongest first: full width
-    ('chart', 'Redesigning Mensio’s Data Explorer for self-serve analysis', 'Turning analysts’ follow-up questions into a guided chart builder.', ['Product design', 'Analytics'], '2026 · Mensio', 'mensio.html'),
-    ('form', 'Modernizing manufacturing QA with digital forms', 'A tablet-first replacement for paper batch and SOP forms in chemical manufacturing.', ['Product design', 'Manufacturing'], '2023 · Procense', 'https://serenadaswani.framer.website/project-detail-procense-digital-forms-application')]
+    ('mensio', 'Redesigning Mensio’s Data Explorer for self-serve analysis', 'Turning analysts’ follow-up questions into a guided chart builder.', ['Product design', 'Analytics'], '2026 · Mensio', 'mensio.html'),
+    ('procense', 'Modernizing manufacturing QA with digital forms', 'A tablet-first replacement for paper batch and SOP forms in chemical manufacturing.', ['Product design', 'Manufacturing'], '2023 · Procense', 'https://serenadaswani.framer.website/project-detail-procense-digital-forms-application')]
 MORE = [  # two-up below
-    ('queue', 'Rethinking an internal QA reporting tool', 'Sole designer on an internal tool for QA workflows.', ['Product design'], '2025 · Apple', 'https://serenadaswani.framer.website/project-detail-apple-internal-reporting-tool'),
-    ('grid', 'AI autofill for inventory listings', 'Generated listing content with regeneration, feedback and tone options.', ['Product design', 'AI'], '2024 · OmniSynkAI', 'https://serenadaswani.framer.website/project-detail-omnisynkai-ai-autofill-feature')]
+    ('apple', 'Rethinking an internal QA reporting tool', 'Sole designer on an internal tool for QA workflows.', ['Product design'], '2025 · Apple', 'https://serenadaswani.framer.website/project-detail-apple-internal-reporting-tool'),
+    ('omni', 'AI autofill for inventory listings', 'Generated listing content with regeneration, feedback and tone options.', ['Product design', 'AI'], '2024 · OmniSynkAI', 'https://serenadaswani.framer.website/project-detail-omnisynkai-ai-autofill-feature')]
 ROLES = [('D', 'Deploy', 'Product designer', 'Now', True, 'Product design for Mensio, and a design system adopted across Deploy’s products.'),
          ('A', 'Apple', 'UI/UX designer, contract', 'From 2024', False, 'Sole designer on an internal QA reporting tool.'),
          ('O', 'OmniSynkAI', 'Product design intern', '2024', False, 'Designed an AI autofill feature for inventory listings.'),
@@ -20,9 +20,26 @@ ROLES = [('D', 'Deploy', 'Product designer', 'Now', True, 'Product design for Me
 SOCIAL = [('LinkedIn', 'https://www.linkedin.com/in/serena-daswani'), ('GitHub', 'https://github.com/serenadaswani'), ('Framer', 'https://serenadaswani.framer.website/')]
 SECTIONS = ['Work', 'About', 'Experience', 'Contact']
 
+# Project art: a soft wash rising from the bottom (where the asset sits) and fading to white, like Anthropic's
+# curated-collection cards. Literal hex is project art (content), not UI chrome. (bottom colour, mid colour, strength)
+TINT = {
+    'mensio':   ('#206CFD', '#206CFD', '16%'),
+    'procense': ('#1B2026', '#1B2026', '11%'),
+    'apple':    ('#B6BAC6', '#B6BAC6', '45%'),
+    'omni':     ('#755CFB', '#9B94E0', '16%'),   # the sparkle purples from the Framer asset
+}
+APPLE_LOGO = 'data:image/png;base64,' + base64.b64encode(open(os.path.join(REPO, 'assets', 'apple-logo.png'), 'rb').read()).decode()
+
 def card(p):
     k, t, sub, badges, eyebrow, href = p
-    return showcase(k, t, sub, badges, eyebrow, href=href or '#work', more='')
+    a, b, amt = TINT[k]
+    html = showcase('white', t, sub, badges, eyebrow, href=href or '#work', more='')
+    html = html.replace('class="pm-card pm-card--showcase"', f'class="pm-card pm-card--showcase lp-tint" style="--lp-a:{a};--lp-b:{b};--lp-amt:{amt}"', 1)
+    # Placeholder asset: a plain 8px-rounded rectangle until the real screenshot exists. Apple keeps its logo centred.
+    inner = f'<img class="lp-shot__logo" src="{APPLE_LOGO}" alt="" width="82" height="95">' if k == 'apple' else ''
+    shot = f'<div class="lp-shot{" lp-shot--apple" if k == "apple" else ""}" aria-hidden="true">{inner}</div>'
+    i = html.index('<div class="pm-card__shot">'); j = html.index('</div></div></article>')
+    return html[:i] + f'<div class="pm-card__shot">{shot}' + html[j:]
 
 def role(m, org, r, yrs, now, scope=''):
     dot = '<span class="pm-hero__dot" aria-hidden="true"></span>' if now else ''
@@ -42,8 +59,33 @@ PAGE_CSS = r"""
 @media (prefers-color-scheme: light) { :root:not([data-theme="dark"]) { --color-bg-canvas: var(--white); } }
 [data-theme="light"] { --color-bg-canvas: var(--white); }
 body { background: var(--color-bg-canvas); }
-/* Side column on surface where it is a sidebar (>=1024px) */
-@container (min-width: 1024px) { .pm-split__aside { background: var(--color-bg-surface); } }
+/* Side column on paper where it is a sidebar (>=1024px); dark keeps the surface step */
+.lp { --lp-aside-bg: var(--paper); }
+[data-theme="dark"] .lp { --lp-aside-bg: var(--color-bg-surface); }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .lp { --lp-aside-bg: var(--color-bg-surface); } }
+@container (min-width: 1024px) { .pm-split__aside { background: var(--lp-aside-bg); } }
+
+/* Tinted showcase cards: copy on top, the wash and asset rise from the bottom */
+.pm-card--showcase.lp-tint, .pm-card--showcase.lp-tint:hover, .pm-card--showcase.lp-tint:focus-within {
+  background: linear-gradient(to top,
+    color-mix(in srgb, var(--lp-a) var(--lp-amt), var(--color-bg-elevated)) 0%,
+    color-mix(in srgb, var(--lp-b) calc(var(--lp-amt) * 0.45), var(--color-bg-elevated)) 45%,
+    var(--color-bg-elevated) 90%);
+  box-shadow: 0 0 0 1px var(--color-border-subtle), var(--shadow-xs);
+}
+@media (hover: hover) { .pm-card--showcase.lp-tint:hover { box-shadow: 0 0 0 1px var(--color-border-default), var(--shadow-sm); } }
+@container pm-showcase (min-width: 768px) { .lp-tint .pm-card__copy { align-self: start !important; } }
+.lp-tint .pm-card__shot { padding: var(--space-8) var(--space-8) var(--space-8) !important; align-self: end; }
+@container pm-showcase (min-width: 768px) { .lp-tint .pm-card__shot { padding: var(--space-12) var(--space-10) var(--space-10) var(--space-2) !important; } }
+@container pm-showcase (max-width: 479px) { .lp-tint .pm-card__shot { padding: var(--space-6) var(--space-5) var(--space-5) !important; } }
+.lp-shot { aspect-ratio: 16 / 10; border-radius: var(--radius-md); background: var(--color-bg-elevated); box-shadow: 0 0 0 1px var(--color-border-subtle), var(--shadow-sm); display: grid; place-items: center; }
+.lp-shot--apple { background: #B6BAC6; }
+.pm-card--showcase .pm-card__shot img.lp-shot__logo { width: 13%; min-width: 36px; height: auto; aspect-ratio: auto; border-radius: 0; box-shadow: none; transform: none !important; }
+@media (prefers-reduced-motion: no-preference) {
+  .pm-card--showcase.lp-tint { transition: box-shadow var(--motion-duration-base) var(--motion-ease); }
+  .lp-shot { transition: transform var(--motion-duration-base) var(--motion-ease); }
+}
+@media (hover: hover) and (prefers-reduced-motion: no-preference) { .pm-card--showcase.lp-tint:hover .lp-shot { transform: translateY(calc(-1 * var(--space-1))); } }
 /* ===== Landing composition (v1.8) =====
    Layout: split. Sticky 360px intro + vertical nav on the left (≥1024px); work, about, experience, contact on the right.
    Work = Card --showcase: strongest projects full width, then two-up. */
