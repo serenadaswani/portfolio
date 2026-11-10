@@ -13,10 +13,10 @@ FEATURED = [  # strongest first: full width
 MORE = [  # two-up below
     ('apple', 'Rethinking an internal QA reporting tool', 'Sole designer on an internal tool for QA workflows.', ['Product design'], '2025 · Apple', 'https://serenadaswani.framer.website/project-detail-apple-internal-reporting-tool'),
     ('omni', 'AI autofill for inventory listings', 'Generated listing content with regeneration, feedback and tone options.', ['Product design', 'AI'], '2024 · OmniSynkAI', 'https://serenadaswani.framer.website/project-detail-omnisynkai-ai-autofill-feature')]
-ROLES = [('D', 'Deploy', 'Product designer', 'Now', True, 'Product design for Mensio, and a design system adopted across Deploy’s products.'),
-         ('A', 'Apple', 'UI/UX designer, contract', 'From 2024', False, 'Sole designer on an internal QA reporting tool.'),
-         ('O', 'OmniSynkAI', 'Product design intern', '2024', False, 'Designed an AI autofill feature for inventory listings.'),
-         ('P', 'Procense', 'UI/UX designer, contract', '2022 – 2024', False, 'Sole designer for a B2B enterprise platform for manufacturing QA.')]
+ROLES = [('D', 'Deploy', 'Product designer', 'Jan 2026 – Present', True, 'Product design for Mensio, and a design system adopted across Deploy’s products.'),
+         ('A', 'Apple', 'UI/UX designer, contract', 'Aug 2024 – Dec 2025', False, 'Sole designer on an internal QA reporting tool.'),
+         ('O', 'OmniSynkAI', 'Product design intern', 'Jul – Sep 2024', False, 'Designed an AI autofill feature for inventory listings.'),
+         ('P', 'Procense', 'UI/UX designer, contract', 'Jan 2022 – Aug 2024', False, 'Sole designer for a B2B enterprise platform for manufacturing QA.')]
 SOCIAL = [('LinkedIn', 'https://www.linkedin.com/in/serena-daswani'), ('GitHub', 'https://github.com/serenadaswani'), ('Framer', 'https://serenadaswani.framer.website/')]
 SECTIONS = ['Work', 'About', 'Experience', 'Contact']
 
