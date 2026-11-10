@@ -13,7 +13,7 @@ I = {
  'prev': _l('chevron-left'), 'next': _l('chevron-right'), 'play': _l('play'), 'pause': _l('pause'),
  'cc': _l('captions'), 'vol': _l('volume-2'), 'full': _l('maximize'), 'copy': _l('copy'), 'info': _l('info'),
  'check': _l('check'), 'image': _l('image'), 'broken': _l('image-off'), 'expand': _l('maximize-2'),
- 'menu': _l('menu'), 'moon': _l('moon'), 'download': _l('download'), 'edit': _l('pencil'), 'lock': _l('lock'),
+ 'menu': _l('menu'), 'moon': _l('moon'), 'download': _l('download'), 'edit': _l('pencil'), 'lock': _l('lock'), 'user': _l('user-round'),
 }
 
 # Status glyphs: Lucide outline shapes, one distinct shape per status (never colour alone)

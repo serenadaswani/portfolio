@@ -75,7 +75,7 @@ page = f'''<title>Serena Daswani Portfolio</title>
 <div class="pm-split">
   <aside class="pm-split__aside" aria-label="Introduction">
     <div class="pm-intro">
-      <span class="pm-intro__mark" aria-hidden="true">SD</span>
+      <span class="pm-intro__photo pm-intro__photo--empty" aria-hidden="true">{I["user"]}</span>
       <h1 class="pm-intro__name">{NAME} <span>is a product designer who builds for fun.</span></h1>
       <p class="pm-intro__text">Currently designing at Deploy. Previously at Apple and Procense.</p>
       <span class="pm-intro__status"><span class="pm-hero__dot" aria-hidden="true"></span>Designing at Deploy</span>

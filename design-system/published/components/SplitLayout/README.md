@@ -5,7 +5,7 @@ A two-column page for the portfolio home (v1.8), after Megan Yap and Dakota Sumn
 ## Anatomy
 1. **Split**: `.pm-split`, a grid. Put `.pm-cq` on its parent. ≥1024px container: `360px` + `minmax(0, 1fr)`.
 2. **Aside**: `<aside class="pm-split__aside">`, a flex column with `space-6` gaps. At ≥1024px it's sticky, one viewport tall (`--pm-split-h`, default `100dvh`), with a `color-border-subtle` rule on its right edge and its own scroll if the window is short.
-3. **Intro** `.pm-intro`: 40px mark (initials now, photo later), name as the page's `<h1 class="pm-intro__name">` (`type-h2` size, with the descriptor in a tertiary `<span>`), one line of text, a status with the live dot, and Copy email + Résumé (`pm-btn--sm`).
+3. **Intro** `.pm-intro`: 64px photo (`.pm-intro__photo`, `radius-md`, subtle ring; wrap an `<img alt="">` in it, or use `--empty` for the Lucide `user-round` placeholder), name as the page's `<h1 class="pm-intro__name">` (`type-h2` size, with the descriptor in a tertiary `<span>`), one line of text, a status with the live dot, and Copy email + Résumé (`pm-btn--sm`).
 4. **Vertical nav**: the SideNavigation component with `.pm-split__nav`, pushed to the bottom of the aside (`margin-top: auto`). Links point to sections on the page.
 5. **Foot** `.pm-split__foot`: social links (`pm-link--subtle`) and local time in the metadata voice, above a hairline.
 6. **Main** `.pm-split__main`: the content column, and itself a container, so its contents respond to the column's width rather than the window's.
@@ -41,4 +41,4 @@ Same structure in both. The aside sits on canvas with only a subtle rule, so the
 - 44px nav targets under `pointer: coarse` (SideNavigation).
 
 ## Token dependencies
-`color-bg-canvas|surface` `color-border-subtle` `color-text-primary|secondary|tertiary` `color-selected-indicator` `color-state-success` · `space-2|3|4|6|8|10|12|16|20|24` · `radius-sm` · `type-h2|body-md|body-sm|label` · `font-meta` · `tracking-heading` · `weight-medium`
+`color-bg-canvas|surface` `color-border-subtle` `color-text-primary|secondary|tertiary` `color-selected-indicator` `color-state-success` · `space-2|3|4|6|8|10|12|16|20|24` · `radius-md` · `type-h2|body-md|body-sm|label` · `font-meta` · `tracking-heading` · `weight-medium`

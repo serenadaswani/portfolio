@@ -651,7 +651,11 @@ body { margin: 0; background: var(--color-bg-canvas); color: var(--color-text-pr
 @container (min-width: 768px) { .pm-split__main { padding-inline: var(--space-10); } }
 @container (min-width: 1024px) { .pm-split__main { padding: var(--space-12) var(--space-10) var(--space-24); } }
 .pm-intro { display: grid; justify-items: start; gap: var(--space-4); }
-.pm-intro__mark { width: 40px; height: 40px; border-radius: var(--radius-sm); display: grid; place-items: center; background: var(--color-bg-surface); box-shadow: inset 0 0 0 1px var(--color-border-subtle); font-size: var(--type-label); line-height: 1; font-weight: var(--weight-medium); color: var(--color-text-secondary); }
+/* Photo: 64px square (a container, so radius-md), subtle ring. An <img> fills it; until there is one,
+   --empty shows a 20px Lucide user-round on surface. Decorative: the name sits right beside it. */
+.pm-intro__photo { display: grid; place-items: center; width: 64px; height: 64px; flex: none; overflow: hidden; border-radius: var(--radius-md); background: var(--color-bg-surface); box-shadow: inset 0 0 0 1px var(--color-border-subtle); color: var(--color-text-tertiary); }
+.pm-intro__photo img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.pm-intro__photo .pm-icon { width: 20px; height: 20px; }
 .pm-intro__name { margin: var(--space-2) 0 0; font-size: var(--type-h2); line-height: var(--line-h2); font-weight: var(--weight-medium); letter-spacing: var(--tracking-heading); text-wrap: balance; color: var(--color-text-primary); }
 .pm-intro__name span { color: var(--color-text-tertiary); }
 .pm-intro__text { margin: 0; max-width: 36ch; font-size: var(--type-body-md); line-height: var(--line-body-md); color: var(--color-text-secondary); }
