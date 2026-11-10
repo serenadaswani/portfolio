@@ -1,0 +1,25 @@
+{
+  "v": 3,
+  "assetGroups": {},
+  "blobs": {},
+  "createdOnFiles": {
+    "at": "2026-11-10T03:22:24Z",
+    "v": 1
+  },
+  "docs": {
+    "readme": "project/README.md",
+    "sections": []
+  },
+  "groups": [],
+  "lastChange": {
+    "by": "Claude",
+    "at": "2026-11-10T07:05:25Z",
+    "via": "Claude Code",
+    "note": "v1.7: floating nav, Hero, Card --tile + work grid, ExperienceList, StatRow (approved from side-by-side review)."
+  },
+  "layout": "files",
+  "libraries": [],
+  "namespace": "PaperMidnight",
+  "sections": {},
+  "title": "Paper × Midnight"
+}

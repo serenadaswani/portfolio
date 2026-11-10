@@ -1,0 +1,66 @@
+<!-- @dsCard group="Foundations" height=2220 subtitle="Every text, border, indicator and focus colour on every surface, both themes (v1.1 tokens). Ratios are computed live." -->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Color and surfaces</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wdth,wght@0,75..100,400..700;1,75..100,400..700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  .grid { display: grid; grid-template-columns: 132px repeat(4, minmax(0, 1fr)); border-radius: var(--radius-lg); overflow: hidden; box-shadow: inset 0 0 0 1px var(--color-border-subtle); }
+  .grid > div { padding: var(--space-3); min-height: 64px; display: flex; flex-direction: column; justify-content: center; gap: var(--space-1); }
+  .hd { font-family: var(--font-mono); font-size: 12px; line-height: 17px; color: var(--color-text-tertiary); background: var(--color-bg-canvas); }
+  .rowname { font-family: var(--font-mono); font-size: 12px; line-height: 17px; color: var(--color-text-secondary); background: var(--color-bg-canvas); }
+  .s-canvas { background: var(--color-bg-canvas); } .s-surface { background: var(--color-bg-surface); }
+  .s-elevated { background: var(--color-bg-elevated); } .s-sunken { background: var(--color-bg-sunken); }
+  .sample { font-size: 16px; line-height: 22px; }
+  .bar { height: 0; border-top: 3px solid; width: 56px; }
+  .ring { width: 56px; height: 20px; border-radius: var(--radius-sm); }
+  .stack { display: flex; gap: var(--space-2); margin-bottom: var(--space-6); }
+  .stack div { flex: 1; height: 72px; border-radius: var(--radius-md); padding: var(--space-2) var(--space-3); font-family: var(--font-mono); font-size: 12px; line-height: 17px; color: var(--color-text-secondary); display: flex; align-items: flex-end; }
+  h2 { margin: 0 0 var(--space-4); }
+  .note { margin: var(--space-4) 0 0; max-width: 680px; color: var(--color-text-secondary); }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script>
+{{CHECK_FN}}
+var surfaces=[['canvas','--color-bg-canvas'],['surface','--color-bg-surface'],['elevated','--color-bg-elevated'],['sunken','--color-bg-sunken']];
+var rows=[
+  ['text-primary','--color-text-primary','text',4.5],
+  ['text-secondary','--color-text-secondary','text',4.5],
+  ['text-tertiary','--color-text-tertiary','text',4.5],
+  ['action-primary (fill, not text)','--color-action-primary','link',3,false,true],
+  ['text-link','--color-text-link','link',4.5],
+  ['state-error','--color-state-error','text',4.5],
+  ['focus-ring','--color-focus-ring','ring',3],
+  ['border-strong','--color-border-strong','bar',3],
+  ['border-control (inputs)','--color-border-control','bar',3],
+  ['border-button (secondary btn)','--color-border-button','bar',3,false,true],
+  ['selected-indicator','--color-selected-indicator','bar',3],
+  ['border-default','--color-border-default','bar',3,false,true],
+  ['border-subtle','--color-border-subtle','bar',3,false,true]
+];
+function theme(id,name){
+  var h='<section class="pm-theme" data-theme="'+id+'"><p class="pm-kicker">'+name+'</p><h2 class="h3">Surfaces and roles</h2>';
+  h+='<div class="stack">'+surfaces.map(function(s){return '<div class="s-'+s[0]+'" style="box-shadow:inset 0 0 0 1px var(--color-border-subtle)">'+s[0]+'</div>';}).join('')+'</div>';
+  h+='<div class="grid"><div class="hd">role</div>'+surfaces.map(function(s){return '<div class="hd s-'+s[0]+'">on '+s[0]+'</div>';}).join('');
+  rows.forEach(function(r){
+    h+='<div class="rowname">'+r[0]+''+'</div>';
+    surfaces.forEach(function(s){
+      var mark = r[2]==='text' ? '<span class="sample" style="color:var('+r[1]+')">Selected work</span>'
+        : r[2]==='link' ? '<span class="sample" style="color:var('+r[1]+');text-decoration:underline;text-underline-offset:.2em">Read case study</span>'
+        : r[2]==='ring' ? '<span class="ring" style="outline:3px solid var('+r[1]+');outline-offset:0"></span>'
+        : '<span class="bar" style="border-color:var('+r[1]+')"></span>';
+      h+='<div class="s-'+s[0]+'">'+mark+'<span data-fg="'+r[1]+'" data-bg="'+s[1]+'" data-min="'+r[3]+'"'+(r[5]?' data-deco':'')+'></span></div>';
+    });
+  });
+  h+='</div><p class="body-sm note">Text needs 4.5:1 (no style under 24px is “large” at weight 500). Focus rings, control borders and the selection indicator need 3:1. Cobalt-500 is a fill, never small text: links use text-link. Subtle and default borders are decorative: a region must also be marked by a surface change, never by the border alone.</p></section>';
+  return h;
+}
+document.getElementById('root').innerHTML=theme('light','Light · Paper')+theme('dark','Dark · Midnight');
+pmCheck();
+</script>
+</body>
+</html>
