@@ -1,0 +1,25 @@
+{
+  "v": 3,
+  "assetGroups": {},
+  "blobs": {},
+  "createdOnFiles": {
+    "at": "2026-11-10T03:22:24Z",
+    "v": 1
+  },
+  "docs": {
+    "readme": "project/README.md",
+    "sections": []
+  },
+  "groups": [],
+  "lastChange": {
+    "by": "Claude",
+    "at": "2026-11-10T19:30:00Z",
+    "via": "Claude Code",
+    "note": "v1.8: intro photo slot (.pm-intro__photo) with a placeholder replaces the initials mark in SplitLayout."
+  },
+  "layout": "files",
+  "libraries": [],
+  "namespace": "PaperMidnight",
+  "sections": {},
+  "title": "Paper × Midnight"
+}
