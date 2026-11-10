@@ -228,7 +228,7 @@ page = f'''<title>Serena Daswani Portfolio</title>
 
   <main class="pm-split__main">
     <section class="pm-split__section lp-sec" id="work" aria-labelledby="lp-work-h">
-      {sec_head(1, 'Work', 'lp-work-h', 'Featured work', '2022 – 2026')}
+      <h2 class="pm-sr" id="lp-work-h">Featured work</h2>
       <ul class="pm-showcase-grid lp-sec__full">{''.join(f'<li class="pm-showcase-grid__wide">{card(p)}</li>' for p in FEATURED)}{''.join(f'<li>{card(p)}</li>' for p in MORE)}</ul>
     </section>
 
