@@ -42,10 +42,17 @@ def card(p):
     i = html.index('<div class="pm-card__shot">'); j = html.index('</div></div></article>')
     return html[:i] + f'<div class="pm-card__shot">{shot}' + html[j:]
 
+# Company logos (official artwork, saved in assets/logos/). Text parts use currentColor so they flip with the theme;
+# brand accents keep their colour. Heights are optically balanced: all-caps and wide wordmarks sit smaller.
+LOGO_H = {'Deploy': 22, 'Apple': 22, 'OmniSynkAI': 17, 'Procense': 13}
+def logo(org):
+    svg = open(os.path.join(REPO, 'assets', 'logos', org.lower() + '.svg')).read().strip()
+    return svg.replace('<svg ', f'<svg class="lp-logo" style="height:{LOGO_H[org]}px" aria-hidden="true" focusable="false" ', 1)
+
 def role(m, org, r, yrs, now, scope=''):
     dot = '<span class="pm-hero__dot" aria-hidden="true"></span>' if now else ''
-    return (f'<li class="pm-experience__item"><span class="pm-experience__mark" aria-hidden="true">{m}</span>'
-            f'<div class="pm-experience__head"><h3 class="pm-experience__org">{org}</h3><span class="pm-experience__role">{r}</span></div>'
+    return (f'<li class="pm-experience__item">'
+            f'<div class="pm-experience__head"><h3 class="pm-experience__org">{logo(org)}<span class="pm-sr">{org}</span></h3><span class="pm-experience__role">{r}</span></div>'
             f'<span class="pm-experience__years">{dot}{yrs}</span>' + (f'<p class="pm-experience__scope">{scope}</p>' if scope else '') + '</li>')
 
 def copy_btn(i):
@@ -65,6 +72,12 @@ body { background: var(--color-bg-canvas); }
 [data-theme="dark"] .lp { --lp-aside-bg: var(--color-bg-surface); }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .lp { --lp-aside-bg: var(--color-bg-surface); } }
 @container (min-width: 1024px) { .pm-split__aside { background: var(--lp-aside-bg); } }
+
+/* Experience: company logos in place of the initials mark and name */
+.lp-exp .pm-experience__head { align-items: center; gap: var(--space-1) var(--space-3); }
+.lp-exp .pm-experience__org { display: flex; align-items: center; min-height: 28px; }
+.lp-exp .lp-logo { display: block; width: auto; color: var(--color-text-primary); }
+.lp-exp .pm-experience__years { align-self: center; }
 
 /* Tinted showcase cards: copy on top, the wash and asset rise from the bottom */
 .pm-card--showcase.lp-tint, .pm-card--showcase.lp-tint:hover, .pm-card--showcase.lp-tint:focus-within {
@@ -170,7 +183,7 @@ page = f'''<title>Serena Daswani Portfolio</title>
 
     <section class="pm-split__section" id="experience" aria-labelledby="lp-exp-h">
       <h2 class="pm-split__h" id="lp-exp-h">Experience</h2>
-      <ol class="pm-experience" aria-labelledby="lp-exp-h">{''.join(role(*r) for r in ROLES)}</ol>
+      <ol class="pm-experience pm-experience--plain lp-exp" aria-labelledby="lp-exp-h">{''.join(role(*r) for r in ROLES)}</ol>
     </section>
 
     <section class="pm-split__section lp-contact" id="contact" aria-labelledby="lp-contact-h">
