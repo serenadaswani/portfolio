@@ -5,6 +5,9 @@ REPO = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), 
 tokens = open(os.path.join(REPO, 'design-system', 'css', 'tokens.css')).read()
 comps = open(os.path.join(REPO, 'design-system', 'css', 'components.css')).read()
 NAME = 'Serena Daswani'
+# LP_LOGO=right builds a variant for review: card logo top-right above the screenshot, title on the left centred
+# with it (from 480px card width; narrower cards keep the logo above the title). LP_OUT sets the output path.
+LOGO_RIGHT = os.environ.get('LP_LOGO') == 'right'
 VER = 'v1.9'
 # Real content comes from site.js (see CLAUDE.md). Anything marked Placeholder or TBC is still to replace.
 FEATURED = [  # strongest first: full width. Title = project name (one line); the longer line goes underneath.
@@ -38,7 +41,9 @@ def white_logo(k):
     svg = re.sub(r'<defs>.*?</defs>', '', svg, flags=re.S)
     svg = re.sub(r'fill="(?!none)[^"]*"', 'fill="currentColor"', svg)
     svg = re.sub(r'\s(width|height)="[^"]*"', '', svg, count=2)
-    svg = svg.replace('<svg ', f'<svg class="lp-card-logo" style="height:{hgt}px" role="img" aria-label="{name}" focusable="false" ', 1)
+    vb = re.search(r'viewBox="[\d.]+ [\d.]+ ([\d.]+) ([\d.]+)"', svg)
+    wid = round(hgt * float(vb.group(1)) / float(vb.group(2))) if vb else hgt * 4
+    svg = svg.replace('<svg ', f'<svg class="lp-card-logo" style="height:{hgt}px;--lp-logo-h:{hgt}px;--lp-logo-w:{wid}px" role="img" aria-label="{name}" focusable="false" ', 1)
     return svg
 
 def card(p):
@@ -332,5 +337,7 @@ page = f'''<title>Serena Daswani Portfolio</title>
 }})();
 </script>
 '''
-open(os.path.join(REPO, 'prototypes/landing.html'), 'w').write(page)
+if LOGO_RIGHT:
+    page = page.replace('</style>', '\n/* Variant (LP_LOGO=right): logo top-right above the screenshot, vertically centred with the title on the left */\n@container pm-showcase (min-width: 480px) {\n  .lp-tint .pm-card__copy > .lp-card-logo { position: absolute; z-index: 1; right: var(--space-8); margin: 0;\n    top: calc(var(--space-8) + (var(--type-h3) * var(--line-h3) - var(--lp-logo-h)) / 2); }\n  .lp-tint .pm-card__copy { padding-right: calc(var(--space-8) + var(--lp-logo-w-max, 140px) + var(--space-6)) !important; }\n}\n@container pm-showcase (min-width: 768px) { .lp-tint .pm-card__copy { padding-right: var(--space-8) !important; } }\n' + '</style>', 1)
+open(os.environ.get('LP_OUT') or os.path.join(REPO, 'prototypes/landing.html'), 'w').write(page)
 print(len(page))
