@@ -7,6 +7,7 @@ Static site (plain HTML, CSS and JS, with no build step and no package manager).
 | `index.html`, `about.html`, `landing-a.html`, `landing-b.html`, `projects/`, `styles.css`, `site.js` | The **current site** (Inter + Libre Baskerville, orange accent, sidebar layout). `site.js` holds the real content in `SITE`. | Live version. Don't restyle it in place. |
 | `design-system/` | **Paper × Midnight v1.8**, the new design system: tokens, component CSS, docs, the published Claude design-system source, and the build and check tools. | Source of truth for the redesign |
 | `prototypes/landing.html` | One-page landing built only from the design system, on the Split layout with Card `--showcase`. **The starting point for the redesign.** | v2 (split) |
+| `prototypes/mensio.html` | Case-study template, first instance (Mensio). Built by `design-system/tools/previews/src/casestudy.py`; edit that, not the HTML. | Draft |
 | `prototypes/review-v1.8.html` | The v1.7 → v1.8 review (metadata font, split layout options). A record; don't rebuild it. | Archive |
 | `prototypes/proposals.html` | Snapshot of the v1.6 → v1.7 side-by-side review. A record; don't rebuild it. | Archive |
 

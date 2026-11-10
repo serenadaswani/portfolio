@@ -8,7 +8,7 @@ NAME = 'Serena Daswani'
 VER = 'v1.8'
 # Real content comes from site.js (see CLAUDE.md). Anything marked Placeholder or TBC is still to replace.
 FEATURED = [  # strongest first: full width
-    ('form', 'Redesigning Mensio’s Data Explorer for self-serve analysis', 'Shipped 2026.', ['Product design', 'Analytics'], '2026 · Mensio', 'projects/mensio.html'),
+    ('form', 'Redesigning Mensio’s Data Explorer for self-serve analysis', 'Shipped 2026.', ['Product design', 'Analytics'], '2026 · Mensio', 'mensio.html'),
     ('chart', 'Placeholder project', 'Your second strongest project.', ['Product design'], 'Placeholder', None)]
 MORE = [  # two-up below
     ('queue', 'Placeholder project', 'A supporting project.', ['Product design'], 'Placeholder', None),
@@ -169,7 +169,7 @@ page = f'''<title>Serena Daswani Portfolio</title>
   tick(); setInterval(tick, 15000);
 
   // Links to pages that aren't in this prototype stay put
-  document.querySelectorAll('[data-soon], a[href="#work"]:not([data-spy]), a[href="projects/mensio.html"]').forEach(function (a) {{ a.addEventListener('click', function (e) {{ e.preventDefault(); }}); }});
+  document.querySelectorAll('[data-soon], a[href="#work"]:not([data-spy])').forEach(function (a) {{ a.addEventListener('click', function (e) {{ e.preventDefault(); }}); }});
 }})();
 </script>
 '''

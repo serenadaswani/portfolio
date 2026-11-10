@@ -14,7 +14,7 @@
 
 ## Agenda
 1. **Real content and images.** Swap the landing placeholders for real material (see "Bring with you" below). Put images in `assets/` at the repo root (photo, project screenshots at 16:10, about 1600×1000) and reference them from `landing.py`; the prototype currently embeds generated placeholder art.
-2. **Case-study template (Leah Kim structure), starting with Mensio.** Build it from existing components: back link + eyebrow → title + badges → summary panel (Background / Problem / Approach / Outcome) → StatRow → sticky InPageNavigation + sections with ImageFrame → learnings → more case studies (Card `--showcase`). Port the copy from `projects/mensio.html`.
+2. **Case-study template (Leah Kim structure), starting with Mensio.** *First draft built (`prototypes/mensio.html`, from `design-system/tools/previews/src/casestudy.py`); the landing's Mensio card links to it. Figures are "Image to come" slots; header stats (14 wks, 8 → 5, 6) need sign-off.* Build it from existing components: back link + eyebrow → title + badges → summary panel (Background / Problem / Approach / Outcome) → StatRow → sticky InPageNavigation + sections with ImageFrame → learnings → more case studies (Card `--showcase`). Port the copy from `projects/mensio.html`.
 3. **The rest of the IA.** The current site's nav has Work · Fun · Notes · About. Do Fun and Notes become sections in the right column, separate pages, or go?
 4. **Interactions.** Showcase hover, scroll-spy feel, any page-load moment. Keep the reduced-motion fallbacks.
 5. **Ship path.** Move the prototype to `index.html` once approved, link `design-system/css/` instead of inlining it, port the case studies, then retire `styles.css` and the `landing-a`/`landing-b` experiments.
