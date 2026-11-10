@@ -6,7 +6,7 @@ A short text bubble that names an icon-only control or adds a one-line explanati
 1. **Anchor**: `.pm-tooltip-anchor` wraps the trigger and the bubble (so the bubble is hoverable).
 2. **Trigger**: a focusable control (button or link). Never a plain `span`.
 3. **Bubble**: `<span role="tooltip" id>`, `color-bg-inverse` / `color-text-inverse`, `radius-sm`, `type-caption` at 500. There's no arrow: the `space-2` offset and inverse contrast make the link to the trigger clear, and an arrow is decoration.
-4. **Shortcut** (optional): `<kbd>` in Geist Mono at 72% opacity ("⌘C").
+4. **Shortcut** (optional): `<kbd>` in the metadata voice at 72% opacity ("⌘C").
 5. **Hover bridge**: an invisible `::before` covering the gap, so moving the pointer onto the bubble doesn't close it.
 
 ## Variants
@@ -42,4 +42,4 @@ No hover on touch: tooltips show on focus only. Every icon button keeps its name
 - No interactive content inside. If you need a link, use a popover or dialog.
 
 ## Token dependencies
-`color-bg-inverse` `color-text-inverse` · `space-1|2|3|8` · `radius-sm` · `type-caption` `type-body-sm` · `font-mono` · `weight-regular` `weight-medium` · `motion-duration-fast` `motion-ease`
+`color-bg-inverse` `color-text-inverse` · `space-1|2|3|8` · `radius-sm` · `type-caption` `type-body-sm` · `font-meta` · `weight-regular` `weight-medium` · `motion-duration-fast` `motion-ease`

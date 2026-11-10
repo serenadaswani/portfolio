@@ -1,6 +1,6 @@
 from lib import h
 NAME = 'Typeface'; GROUP = 'Foundations'; HEIGHT = 2000; WIDTH = 1100
-SUB = 'Instrument Sans (primary) + Geist Mono (metadata): before/after against Geist, and the full ramp with live metrics.'
+SUB = 'Instrument Sans for everything, metadata included (v1.8): before/after against Geist, and the full ramp with live metrics.'
 
 def col(cls, tag):
     return (f'<div class="tf-col {cls}"><p class="pm-spec__cap tf-tag">{tag}</p>'
@@ -9,7 +9,7 @@ def col(cls, tag):
             '<p class="tf-h4">Review queue for model evaluations</p>'
             '<p class="tf-b">Reviewers spent most of their time deciding what to look at, not reviewing it. 0123456789</p>'
             '<div class="tf-ui"><span class="pm-btn pm-btn--primary pm-btn--sm">View project</span><span class="pm-btn pm-btn--secondary pm-btn--sm">Download PDF</span></div>'
-            '<p class="pm-mono" style="margin:var(--space-3) 0 0">2024 · AI tooling · Fig. 03</p></div>')
+            '<p class="pm-meta-text" style="margin:var(--space-3) 0 0">2024 · AI tooling · Fig. 03</p></div>')
 
 RAMP = [('display-xl', 'Making complex systems legible'), ('display-lg', 'Designing the review queue'), ('h1', 'Selected work'), ('h2', 'The problem'),
         ('h3', 'What we tried first'), ('h4', 'Constraints'), ('body-lg', 'Reviewers spent most of their time triaging, not reviewing.'),
@@ -18,9 +18,9 @@ RAMP = [('display-xl', 'Making complex systems legible'), ('display-lg', 'Design
 
 BODY = (h('Before / after · same content, same sizes') +
         '<div class="tf-grid">' + col('tf-geist', 'Before · Geist, −0.045 / −0.03em') + col('tf-inst', 'After · Instrument Sans, −0.025 / −0.015em, display 90% width') + '</div>' +
-        h('Ramp · Instrument Sans with Geist Mono metadata (metrics read live)') +
-        '<div class="tf-ramp">' + ''.join(f'<div class="tf-row"><span class="pm-mono tf-spec" data-s="{n}">{n}</span><p class="{n}">{t}</p></div>' for n, t in RAMP) +
-        '<div class="tf-row"><span class="pm-mono tf-spec">mono · caption</span><p class="pm-mono" style="margin:0">2024.02 – 2024.11 · v2.1 · 01 02 03 · 0:42 / 3:10</p></div></div>')
+        h('Ramp · Instrument Sans, with the metadata voice (metrics read live)') +
+        '<div class="tf-ramp">' + ''.join(f'<div class="tf-row"><span class="pm-meta-text tf-spec" data-s="{n}">{n}</span><p class="{n}">{t}</p></div>' for n, t in RAMP) +
+        '<div class="tf-row"><span class="pm-meta-text tf-spec">meta · label 400</span><p class="pm-meta-text" style="margin:0">2024.02 – 2024.11 · v2.1 · 01 02 03 · 0:42 / 3:10</p></div></div>')
 STYLE = ('@import url("https://fonts.googleapis.com/css2?family=Geist:wght@400;500&display=swap");'
          '.tf-grid{display:grid;grid-template-columns:1fr 1fr;gap:var(--space-10)}'
          '.tf-col{border-top:1px solid var(--color-border-default);padding-top:var(--space-3)}'
@@ -38,7 +38,7 @@ STYLE = ('@import url("https://fonts.googleapis.com/css2?family=Geist:wght@400;5
          '.tf-row{display:grid;grid-template-columns:200px 1fr;gap:var(--space-6);align-items:baseline;padding-top:var(--space-3);border-top:1px solid var(--color-border-subtle)}'
          '.tf-row p{margin:0}'
          '@media (max-width:720px){.tf-grid{grid-template-columns:1fr}.tf-row{grid-template-columns:1fr;gap:var(--space-1)}}')
-PAIRS = [('heading', '--color-text-primary', '--color-bg-canvas', 4.5), ('body', '--color-text-secondary', '--color-bg-canvas', 4.5), ('mono', '--color-text-tertiary', '--color-bg-canvas', 4.5)]
+PAIRS = [('heading', '--color-text-primary', '--color-bg-canvas', 4.5), ('body', '--color-text-secondary', '--color-bg-canvas', 4.5), ('meta', '--color-text-tertiary', '--color-bg-canvas', 4.5)]
 SCRIPT = r'''
 function tf(){document.querySelectorAll('[data-s]').forEach(function(e){var p=e.nextElementSibling,c=getComputedStyle(p);
   e.textContent=e.dataset.s+' · '+parseFloat(c.fontSize)+'/'+Math.round(parseFloat(c.lineHeight))+' · '+c.fontWeight+' · '+(c.letterSpacing==='normal'?'0':(parseFloat(c.letterSpacing)/parseFloat(c.fontSize)).toFixed(3)+'em')+(c.fontStretch&&c.fontStretch!=='100%'&&c.fontStretch!=='normal'?' · '+c.fontStretch:'');});}
@@ -47,16 +47,16 @@ tf(); if(document.fonts)document.fonts.ready.then(tf); pmCheck();
 README = r'''
 # Typeface
 
-Instrument Sans is the primary typeface from v1.4. Geist Mono stays as the secondary face, but only for metadata. This card keeps the before and after on record, plus the full ramp with metrics read live from the rendered text.
+Instrument Sans is the only typeface. It became the primary face in v1.4, and from v1.8 it also sets metadata, replacing Geist Mono, which read as code. This card keeps the before and after on record, plus the full ramp with metrics read live from the rendered text.
 
 ## Anatomy
 - **Primary**: Instrument Sans, variable: weights 400–700, width 75–100%, with italics. Loaded from Google Fonts. The fallback is system `sans-serif`.
-- **Secondary**: Geist Mono 400 and 500. It sets metadata only: years, dates, counts, versions, numbering, time codes, URL prefixes.
+- **Metadata voice** (`font-meta`): Instrument Sans 400 at `type-label` (13px), tertiary, with tabular figures. It sets years, dates, counts, versions, numbering, time codes and URL prefixes. Size, weight and colour set it apart from reading text; there is no second family.
 
 ## Why Instrument Sans
 - **Distinctiveness.** Geist is strongly associated with Vercel, so a system set in it reads as a Vercel derivative. Instrument Sans is a slightly narrow grotesque with more editorial warmth, and it's recognisable without being decorative.
 - **Editorial headlines.** The width axis allows condensed display type (`font-width-display` 90%), which is the Stripe-like headline character the brief asked for, without a second family.
-- **Pairing.** Geist Mono's geometric construction contrasts cleanly with Instrument's humanist proportions. One face reads as prose, the other as data.
+- **One family.** v1.4–v1.7 paired it with Geist Mono for metadata. In v1.8 that was dropped: the mono read as code, and one family looks calmer and more modern. Tabular figures keep years and counts aligned.
 
 ## Variants
 Weights in use: 400 (reading), 500 (names and actions), 600 (wordmark only). Width: 90% for `display-xl` and `display-lg`, 100% everywhere else. Italic is available for emphasis in prose.
@@ -87,5 +87,5 @@ Display sizes step up at 768px and 1024px as before. The 90% width applies at ev
 - Sizes are rem and line heights are unitless, so user font settings and text-spacing overrides still work.
 
 ## Token dependencies
-`font-sans` (Instrument Sans) · `font-mono` (Geist Mono) · `font-width-display` `font-width-text` · `tracking-display|heading|h3|h4|body|label` · all `type-*` and `line-*` · `weight-regular|medium|semibold`
+`font-sans` (Instrument Sans) · `font-meta` (Instrument Sans, metadata) · `font-width-display` `font-width-text` · `tracking-display|heading|h3|h4|body|label` · all `type-*` and `line-*` · `weight-regular|medium|semibold`
 '''

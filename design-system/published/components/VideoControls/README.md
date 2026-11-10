@@ -7,7 +7,7 @@ A custom control bar for short prototype and walkthrough videos in case studies.
 2. **Big play** (poster state): a primary lg icon button, centred, named "Play video: <title>".
 3. **Control bar**: `role="group" aria-label="Video controls"` on `color-overlay-scrim`.
 4. **Play/Pause**: on-image icon button whose `aria-label` swaps (the action, not the state).
-5. **Current time**: mono caption.
+5. **Current time**: metadata label.
 6. **Seek**: `<input type="range">` with `aria-label="Seek"` and `aria-valuetext="0:42 of 3:10"`. 4px outlined track, solid fill, 12px thumb.
 7. **Duration**.
 8. **Captions**: toggle, `aria-pressed`.
@@ -44,4 +44,4 @@ Below a 768px container: Mute hides (devices have hardware volume), the duration
 - If you use native `<video controls>` instead, these styles don't apply, and that's an acceptable fallback.
 
 ## Token dependencies
-`color-overlay-scrim` `color-text-on-image` `color-text-secondary` `color-focus-ring` `color-selected-indicator` `color-action-primary` `color-text-on-accent` (all dark scope) · `ink` (player letterbox) · `control-height-md|lg` `control-min-target` · `space-1|2|3` · `radius-sm` `radius-lg` · `type-caption` · `font-mono` · Button (on-image, primary), ImageContainer
+`color-overlay-scrim` `color-text-on-image` `color-text-secondary` `color-focus-ring` `color-selected-indicator` `color-action-primary` `color-text-on-accent` (all dark scope) · `ink` (player letterbox) · `control-height-md|lg` `control-min-target` · `space-1|2|3` · `radius-sm` `radius-lg` · `type-caption` · `font-meta` · Button (on-image, primary), ImageContainer

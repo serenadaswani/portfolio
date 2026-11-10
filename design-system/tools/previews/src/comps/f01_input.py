@@ -57,9 +57,9 @@ Text input, textarea and select share one field anatomy. The control is the one 
 1. **Field**: `.pm-field`, a vertical stack with a `space-2` gap.
 2. **Label**: a `<label for>`, `type-body-sm` at 500, primary. Always visible: no placeholder-as-label, no floating labels.
 3. **Optional marker**: "Optional" in tertiary. Mark the exception, not every required field.
-4. **Counter** (textarea): mono caption, right of the label, `aria-hidden` (the limit is enforced by `maxlength`).
+4. **Counter** (textarea): metadata label, right of the label, `aria-hidden` (the limit is enforced by `maxlength`).
 5. **Control**: `.pm-input` on `color-bg-elevated`, 1px `color-border-control`, `radius-sm`, `space-3` padding x.
-6. **Prefix** (optional): `.pm-input-group__addon`, mono caption on a tonal cell ("https://").
+6. **Prefix** (optional): `.pm-input-group__addon`, metadata label on a tonal cell ("https://").
 7. **Select**: native `<select>` + a 16px chevron.
 8. **Hint**: `type-label`, secondary, below the control (`aria-describedby`).
 9. **Error**: `type-label` at 500, `color-state-error`, octagon icon + "Error:" + a fix ("enter a full email address").
@@ -94,5 +94,5 @@ Fields are fluid (100% of their column). Composed forms cap at about 520px wide.
 - Don't disable submit to signal errors. Validate on submit and explain.
 
 ## Token dependencies
-`color-bg-elevated|surface` `color-border-control|default` `color-text-primary|secondary|tertiary` `color-state-error` `color-focus-ring` `color-disabled-bg|text|border` · `control-height-sm|md` · `space-1|2|3|5` · `radius-sm` · `type-body-sm|body-md|label|caption` · `font-mono` · `weight-medium`
+`color-bg-elevated|surface` `color-border-control|default` `color-text-primary|secondary|tertiary` `color-state-error` `color-focus-ring` `color-disabled-bg|text|border` · `control-height-sm|md` · `space-1|2|3|5` · `radius-sm` · `type-body-sm|body-md|label|caption` · `font-meta` · `weight-medium`
 '''

@@ -55,7 +55,7 @@ def sem_block(th,ind='  '):
 L.append('  /* semantic: light (default) */'); L+=sem_block('light')
 L.append('  /* type */')
 fam=lambda k: ', '.join(f'"{x}"' if ' ' in x else x for x in ty['fontFamily'][k]['$value'])
-L.append(f'  --font-sans: {fam("sans")}; --font-mono: {fam("mono")};')
+L.append(f'  --font-sans: {fam("sans")}; --font-meta: {fam("meta")};')
 L.append(f"  --font-width-display: {ty['fontWidth']['display']['$value']}; --font-width-text: {ty['fontWidth']['text']['$value']};")
 for k,v in ty['fontWeight'].items():
   if k!='wordmark' and not str(v['$value']).startswith('{'): L.append(f'  --weight-{k}: {v["$value"]};')
@@ -141,7 +141,7 @@ for bp,mn in [('tablet','768'),('desktop','1024')]:
     resp+=[(f'type-{n}-{bp}',fs,f'{n} size at ≥{mn}px.'),(f'line-{n}-{bp}',str(lh),f'{n} line height at ≥{mn}px.')]
 art={'name':'Paper × Midnight','version':4,
  'color':{'themes':[{'id':'light','name':'Light · Paper'},{'id':'dark','name':'Dark · Midnight'}],'note':'v1.1 with audit fixes applied. Components use only color-* roles; primitives feed them.','tokens':ctoks},
- 'type':{'fonts':[],'families':{'sans':'"Instrument Sans", sans-serif','mono':'"Geist Mono", monospace'},'groups':groups},
+ 'type':{'fonts':[],'families':{'sans':'"Instrument Sans", sans-serif','meta':'"Instrument Sans", sans-serif'},'groups':groups},
  'fontWidth':fam([('font-width-display','90%','font-stretch for display-xl and display-lg: condensed editorial headlines.'),('font-width-text','100%','Every other style.')],'Instrument Sans width axis (75–100%).'),
  'spacing':fam([(f'space-{k[5:]}',v['$value'],usage['space'][k]) for k,v in src['spacing'].items()],'4px base.'),
  'radius':fam([(f'radius-{k}',v['$value'],usage['radius'][k]) for k,v in src['layout']['radius'].items()]),

@@ -41,9 +41,9 @@ How project artifacts are presented in case studies. The frame is the shared, br
 2. **Stage**: `.pm-frame__stage`, a `color-bg-sunken` well with `radius-lg` and padding. It gives any screenshot a neutral ground (figure–ground).
 3. **Image container**: `.pm-media` inside, `radius-sm` (nested: 12 outer, 4 inner), with a 1px `color-border-default` edge so white screenshots don't melt into light wells.
 4. **Chrome** (browser variant): a 28px elevated bar with a centred address placeholder, `aria-hidden`. The traffic-light dots were removed in v1.3 as decoration.
-5. **Markers** (annotated): 20px discs with mono numerals, `color-action-primary` with `color-text-on-accent` and a 2px canvas halo.
-6. **Caption**: `<figcaption>` with a mono index ("Fig. 03", tertiary, tabular) and text (`type-label`, secondary), baseline-aligned.
-7. **Notes** (annotated): an `<ol>` on hairlines with mono `01` counters that match the markers.
+5. **Markers** (annotated): 20px discs with numerals, `color-action-primary` with `color-text-on-accent` and a 2px canvas halo.
+6. **Caption**: `<figcaption>` with a index ("Fig. 03", tertiary, tabular) and text (`type-label`, secondary), baseline-aligned.
+7. **Notes** (annotated): an `<ol>` on hairlines with `01` counters that match the markers.
 8. **Expand** (optional): an on-image icon button on `color-overlay-scrim` that opens the Lightbox.
 
 ## Variants

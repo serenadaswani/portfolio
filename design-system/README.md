@@ -1,6 +1,6 @@
-# Paper × Midnight design system (v1.7)
+# Paper × Midnight design system (v1.8)
 
-Editorial, analytical and quietly distinctive: Paper and Midnight surfaces, one cobalt accent, Instrument Sans with Geist Mono metadata, Lucide icons, and flat-but-dimensional depth. WCAG 2.2 AA in both themes, with Apple HIG behaviour.
+Editorial, analytical and quietly distinctive: Paper and Midnight surfaces, one cobalt accent, Instrument Sans throughout (metadata included), Lucide icons, and flat-but-dimensional depth. WCAG 2.2 AA in both themes, with Apple HIG behaviour.
 
 Browse it (live previews and guidelines for every component): https://claude.ai/artifact/4Xae2JhSbDpb6tUHM1wuGL
 
@@ -22,14 +22,14 @@ design-system/
       src/build2.py              Builds every component preview + README into published/components/
       build_foundations.py       Builds the Colour/Surfaces and 375 / 768 / 1280 layout cards
       src/landing.py             Builds prototypes/landing.html from css/
-      src/review.py              Builds the side-by-side review page (records only)
+      src/review.py, review2.py  Built the v1.6 and v1.8 review pages (records only; don't rebuild)
       src/lib.py, lucide.json    Lucide icons (lucide-static 0.460.0, ISC), placeholder imagery, helpers
       checks/*.js                Playwright checks: contrast + errors (shot3), overlaps, first-line alignment
 ```
 
 ## Use it on a page
 ```html
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wdth,wght@0,75..100,400..700;1,75..100,400..700&family=Geist+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wdth,wght@0,75..100,400..700;1,75..100,400..700&display=swap">
 <link rel="stylesheet" href="/design-system/css/tokens.css">
 <link rel="stylesheet" href="/design-system/css/components.css">
 <div class="pm-cq"> … pm-* components … </div>
@@ -45,4 +45,4 @@ Class names and markup for each component are in `published/components/<Name>/RE
 - **Run the checks:** see `CLAUDE.md` at the repo root.
 
 ## Version history
-See `docs/CHANGELOG.md` (v1.1 audit fixes → v1.7 one-page portfolio patterns).
+See `docs/CHANGELOG.md` (v1.1 audit fixes → v1.8 split layout and one type family).

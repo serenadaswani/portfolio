@@ -13,7 +13,7 @@ A rule that separates content when space alone isn't enough. Use it sparingly: p
 | Subtle | default | 1.00–1.55:1 · decorative | Between list rows, inside panels. |
 | Default | `pm-divider--default` | 1.29–2.11:1 · decorative | Between page sections, panel footers. |
 | Strong | `pm-divider--strong` | 3.03–3.98:1 | When the rule itself means something (end of a table, a hard boundary). |
-| Labelled | `pm-divider-label` (left-aligned; `--center` for centred) | label 4.67:1+ | Timeline years, archive splits. Mono caption, sentence case, no uppercase. |
+| Labelled | `pm-divider-label` (left-aligned; `--center` for centred) | label 4.67:1+ | Timeline years, archive splits. Metadata label, sentence case, no uppercase. |
 | Vertical | `pm-divider--vertical` | default | Grouping buttons in a toolbar. |
 
 ## Sizes
@@ -35,4 +35,4 @@ Only `pm-divider--lg` changes (`space-12` → `space-16`). Labelled dividers kee
 - Decorative strengths must never be the only cue for a boundary that matters. Use Strong, or a surface change.
 
 ## Token dependencies
-`color-border-subtle` `color-border-default` `color-border-strong` `color-text-tertiary` · `space-1|2|3|4|8|12|16` · `type-caption` · `font-mono`
+`color-border-subtle` `color-border-default` `color-border-strong` `color-text-tertiary` · `space-1|2|3|4|8|12|16` · `type-caption` · `font-meta`

@@ -5,8 +5,9 @@ Static site (plain HTML, CSS and JS, with no build step and no package manager).
 | Path | What it is | Status |
 |---|---|---|
 | `index.html`, `about.html`, `landing-a.html`, `landing-b.html`, `projects/`, `styles.css`, `site.js` | The **current site** (Inter + Libre Baskerville, orange accent, sidebar layout). `site.js` holds the real content in `SITE`. | Live version. Don't restyle it in place. |
-| `design-system/` | **Paper × Midnight v1.7**, the new design system: tokens, component CSS, docs, the published Claude design-system source, and the build and check tools. | Source of truth for the redesign |
-| `prototypes/landing.html` | One-page landing built only from the design system. **The starting point for the redesign.** | v1 |
+| `design-system/` | **Paper × Midnight v1.8**, the new design system: tokens, component CSS, docs, the published Claude design-system source, and the build and check tools. | Source of truth for the redesign |
+| `prototypes/landing.html` | One-page landing built only from the design system, on the Split layout with Card `--showcase`. **The starting point for the redesign.** | v2 (split) |
+| `prototypes/review-v1.8.html` | The v1.7 → v1.8 review (metadata font, split layout options). A record; don't rebuild it. | Archive |
 | `prototypes/proposals.html` | Snapshot of the v1.6 → v1.7 side-by-side review. A record; don't rebuild it. | Archive |
 
 Start every session by reading `NEXT-SESSION.md` for the current agenda.
@@ -19,7 +20,7 @@ Start every session by reading `NEXT-SESSION.md` for the current agenda.
 
 ## Design rules (keep the system cohesive)
 - Use **semantic tokens only** (`--color-*`, `--space-*`, `--radius-*`, `--type-*`, `--shadow-*`). No literal colours, no new accent hues. Cobalt is for the primary action, focus and one precise selection cue only.
-- **Type roles:** Instrument Sans 500 = names and actions · 400 = reading text · Geist Mono 12px = metadata (years, counts, numbering, time). No uppercase or tracked labels. Display styles use `--font-width-display` (90%).
+- **Type roles:** one family, Instrument Sans. 500 = names and actions · 400 = reading text · metadata (years, counts, numbering, time) = `--font-meta` at `type-label` (13px), 400, tertiary, tabular figures (`.pm-meta-text`). No Geist Mono or other second family. No uppercase or tracked labels. Display styles use `--font-width-display` (90%).
 - **Shape:** `radius-sm` (4) for controls and labels · `radius-md` (8) for containers, including the floating nav · `radius-lg` (12) for artifact stages only. No pills. Nested radius = outer − padding.
 - **Depth, flat but dimensional:** containers rest on a `--color-border-subtle` ring + `--shadow-xs`; interactive surfaces go to `--color-border-default` + `--shadow-sm` on hover. Popover `--shadow-md`, dialog `--shadow-lg`. No gradients, blur or glass.
 - **Icons:** Lucide only (the set shadcn/ui uses; geometry in `design-system/tools/previews/src/lucide.json`), stroke 2. Sizes 16 / 14 / 12 / 20. Centre text-adjacent icons on the first line: margin-top = (line-height × font-size − icon) / 2.
@@ -49,4 +50,4 @@ Landing prototype artifact: https://claude.ai/artifact/XM7Noz2dHb3rfzVEtTnGRb
 - Currently designing at Deploy. Previously designed at Apple and Procense; interned at OmniSynkAI.
 - Project: **Mensio**, “Redesigning Mensio's Data Explorer for self-serve analysis” (shipped 2026, `projects/mensio.html`).
 - Socials: LinkedIn https://www.linkedin.com/in/serena-daswani · GitHub https://github.com/serenadaswani · Framer https://serenadaswani.framer.website/ · Résumé (no link yet).
-- The prototype's Northwind AI / Lumen Systems / Fieldstone / Studio Parallel roles, the "New York" clock, "10 yrs", `hello@serenadaswani.com`, the −52% stat and the four sample projects are **placeholders** to replace.
+- Still placeholders in the landing prototype: the second featured project and the two two-up projects, the About bio, experience years ("Years TBC"), the public email (Copy email says "Email TBC") and the Résumé link.

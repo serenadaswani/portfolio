@@ -5,7 +5,7 @@ Switches between sibling views inside one page section. Underline tabs sit on a 
 ## Anatomy
 1. **Tablist**: `role="tablist"` with `aria-label`, plus a 1px `color-border-default` baseline.
 2. **Tab**: `<button role="tab">`, `type-body-sm` at 500, `space-3` padding x, `radius-sm` top corners.
-3. **Count** (optional): mono caption, tertiary, tabular (`04`).
+3. **Count** (optional): metadata label, tertiary, tabular (`04`).
 4. **Indicator**: a 2px `color-selected-indicator` rule on the baseline.
 5. **Panel**: `role="tabpanel"`, labelled by its tab, `space-5` above.
 
@@ -41,4 +41,4 @@ The tablist scrolls horizontally (scrollbar hidden) and never wraps to two lines
 - Don't use tabs for page navigation (that's TopNavigation, or InPageNavigation with links).
 
 ## Token dependencies
-`color-text-primary|secondary|tertiary` `color-border-default|subtle|control` `color-selected-indicator` `color-bg-surface|elevated` `color-disabled-text` `color-focus-ring` · `control-height-sm|md` · `space-1|2|3|5` · `radius-sm|md` · `type-body-sm|label|caption` · `font-mono` · `weight-medium`
+`color-text-primary|secondary|tertiary` `color-border-default|subtle|control` `color-selected-indicator` `color-bg-surface|elevated` `color-disabled-text` `color-focus-ring` · `control-height-sm|md` · `space-1|2|3|5` · `radius-sm|md` · `type-body-sm|label|caption` · `font-meta` · `weight-medium`

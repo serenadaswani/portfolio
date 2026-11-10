@@ -1,6 +1,6 @@
 from lib import cell, h, frames
 NAME = 'ExperienceList'; GROUP = 'Page sections'; HEIGHT = 1300; WIDTH = 1100
-SUB = 'Roles on hairlines: mono initials mark, organisation and role, mono years, one scope line. Plain variant without marks.'
+SUB = 'Roles on hairlines: initials mark, organisation and role, years, one scope line. Plain variant without marks.'
 
 ROLES = [('NW', 'Northwind AI', 'Lead product designer', '2023 – Now', True, 'Evaluation tooling for model reviewers; set up the product design system.'),
          ('LS', 'Lumen Systems', 'Senior product designer', '2020 – 2023', False, 'Internal platform: permissions, audit trails and operator workflows.'),
@@ -24,13 +24,13 @@ SCRIPT = 'pmCheck();'
 README = r'''
 # ExperienceList
 
-A role history in rows, read top to bottom: organisation, role, years, and one line on what you did. It's the Dakota-style experience section in Paper × Midnight's spec-sheet language: hairlines, mono years, no cards.
+A role history in rows, read top to bottom: organisation, role, years, and one line on what you did. It's the Dakota-style experience section in Paper × Midnight's spec-sheet language: hairlines, years, no cards.
 
 ## Anatomy
 1. **List**: `<ol class="pm-experience">` (newest first), `color-border-subtle` hairline above and between rows.
-2. **Mark** (optional): 40px `color-bg-surface` square, `radius-sm`, mono initials. A real logo can go here later.
+2. **Mark** (optional): 40px `color-bg-surface` square, `radius-sm`, initials. A real logo can go here later.
 3. **Head**: organisation (`<h3>`, `type-body-md` at 500) + role (`type-body-sm`, secondary), sharing a baseline and wrapping.
-4. **Years**: mono caption, tertiary, tabular figures, right-aligned. The current role gets a 6px `color-state-success` dot.
+4. **Years**: metadata label, tertiary, tabular figures, right-aligned. The current role gets a 6px `color-state-success` dot.
 5. **Scope**: one line, `type-body-sm`, secondary, max 60ch.
 
 ## Variants
@@ -54,5 +54,5 @@ Below 768px, the years move under the role (left-aligned). The scope stays align
 - Contrast: organisation 17.92:1, role 7.66:1, years 5.55:1 on light canvas.
 
 ## Token dependencies
-`color-border-subtle` `color-bg-surface` `color-text-primary|secondary|tertiary` `color-state-success` · `type-body-md|body-sm|caption` · `font-mono` · `weight-medium` · `radius-sm` · `space-1|2|4|5`
+`color-border-subtle` `color-bg-surface` `color-text-primary|secondary|tertiary` `color-state-success` · `type-body-md|body-sm|caption` · `font-meta` · `weight-medium` · `radius-sm` · `space-1|2|4|5`
 '''

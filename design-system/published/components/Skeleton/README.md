@@ -10,7 +10,7 @@ A grey placeholder in the shape of the content that's loading. It holds layout s
 
 ## Variants
 - **Elements**: individual shapes, matched to the type token they stand in for. Text bars are the cap height of `type-body-sm`/`type-body-md`, with margins making up the token line height, so lines occupy exactly what the real text will.
-- **Card composition** (`pm-skeleton-group--card`): mirrors the frameless Card (well, mono eyebrow line, title, two summary lines). No container fill.
+- **Card composition** (`pm-skeleton-group--card`): mirrors the frameless Card (well, eyebrow line, title, two summary lines). No container fill.
 - **Static**: under `prefers-reduced-motion: reduce`, no shimmer, just flat fills.
 
 ## Sizes

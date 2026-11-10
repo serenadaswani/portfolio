@@ -1,6 +1,6 @@
 from lib import I, cell, h, frames, img
 NAME = 'Card'; GROUP = 'Containers'; HEIGHT = 2400; WIDTH = 1100
-SUB = 'Frameless editorial card: hairline image well, mono metadata, title, summary. Outlined, featured, horizontal, compact, locked.'
+SUB = 'Frameless editorial card: hairline image well, metadata, title, summary. Outlined, featured, horizontal, compact, locked.'
 
 def card(cls='', key='queue', title='Review queue for model evaluations', eyebrow='2024 · AI tooling', state='', current=False, badges=True, media=True,
          summary='Cut median triage time by turning ad-hoc review into a ranked, explainable queue.'):
@@ -38,7 +38,7 @@ STYLE = ('.card-grid{list-style:none;margin:0;padding:0;display:grid;gap:var(--s
          '@container (min-width:1024px){.card-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}'
          '.pm-spec__grid .pm-spec__cell{align-items:stretch}')
 PAIRS = [('title', '--color-text-primary', '--color-bg-canvas', 4.5), ('summary', '--color-text-secondary', '--color-bg-canvas', 4.5),
-         ('eyebrow (mono)', '--color-text-tertiary', '--color-bg-canvas', 4.5), ('hover well edge', '--color-border-strong', '--color-bg-canvas', 3),
+         ('eyebrow (meta)', '--color-text-tertiary', '--color-bg-canvas', 4.5), ('hover well edge', '--color-border-strong', '--color-bg-canvas', 3),
          ('outlined hover', '--color-border-strong', '--color-bg-elevated', 3), ('selected ring', '--color-selected-indicator', '--color-bg-canvas', 3),
          ('focus ring', '--color-focus-ring', '--color-bg-canvas', 3)]
 SCRIPT = "document.querySelectorAll('a[href=\"#c\"]').forEach(function(a){a.addEventListener('click',function(e){e.preventDefault();});});pmCheck();"
@@ -50,7 +50,7 @@ The project card. By default it's frameless: an image well with a hairline edge,
 ## Anatomy
 1. **Card**: `<article class="pm-card">`, no fill, `radius-md` (used only for the focus ring's shape).
 2. **Image well**: `.pm-media.pm-card__media`, 16:10, `radius-md`, 1px `color-border-subtle` edge. `color-bg-sunken` shows while loading.
-3. **Eyebrow**: Geist Mono caption, tertiary, year first ("2024 · AI tooling"). It's metadata, so it's set as metadata.
+3. **Eyebrow**: metadata voice (`font-meta`, 13px regular), tertiary, year first ("2024 · AI tooling"). It's metadata, so it's set as metadata.
 4. **Title**: `<h3>` + stretched link, `type-h4` at 500, `tracking-h4`, balanced wrapping.
 5. **Summary**: `type-body-sm`, `color-text-secondary`, max 48ch.
 6. **Tags**: Badges, 1px outline, `space-1` apart.
@@ -95,7 +95,7 @@ The grid goes 1 → 2 → 3 per row, and Horizontal stacks below 768px. Titles w
 - Contrast: title ≥15.07:1, summary ≥6.45:1, eyebrow ≥4.67:1 on every light surface.
 
 ## Token dependencies
-`color-text-primary|secondary|tertiary` `color-border-subtle|default|strong` `color-bg-elevated|surface|sunken` `color-selected-indicator` `color-focus-ring` · `shadow-xs|sm` · `space-1|2|3|4|5|6|8|10` · `radius-md` · `type-h4|h3|body-sm|body-md|caption` · `font-mono` · `weight-medium` · `tracking-h4|h3` · `link-underline-*` · Badge, ImageContainer
+`color-text-primary|secondary|tertiary` `color-border-subtle|default|strong` `color-bg-elevated|surface|sunken` `color-selected-indicator` `color-focus-ring` · `shadow-xs|sm` · `space-1|2|3|4|5|6|8|10` · `radius-md` · `type-h4|h3|body-sm|body-md|caption` · `font-meta` · `weight-medium` · `tracking-h4|h3` · `link-underline-*` · Badge, ImageContainer
 '''
 
 # ---- v1.7: tile variant + staggered work grid ----
@@ -105,7 +105,7 @@ TP = [('queue', 'Review queue for model evaluations', 'Product design · AI tool
 def tile(k, t, sub, y, state=''):
     return (f'<article class="pm-card pm-card--tile{state}"><div class="pm-card__stage"><img src="{IMG[k]}" alt="" width="1600" height="1000">'
             f'<span class="pm-card__go" aria-hidden="true">{I["arrow"]}</span></div>'
-            f'<div class="pm-card__row"><h3 class="pm-card__title"><a href="#c">{t}</a></h3><span class="pm-mono">{y}</span></div><p class="pm-card__sub">{sub}</p></article>')
+            f'<div class="pm-card__row"><h3 class="pm-card__title"><a href="#c">{t}</a></h3><span class="pm-meta-text">{y}</span></div><p class="pm-card__sub">{sub}</p></article>')
 BODY = (h('Tile · default for selected work (v1.7)') + '<div class="pm-spec__grid">' +
         cell(tile(*TP[0]), 'default') + cell(tile(*TP[1], state=' is-hover'), 'hover · stage deepens, artwork lifts, ↗ appears') +
         cell(tile(*TP[2], state=' is-focus'), 'focus-visible') + cell(tile(*TP[3], state=' is-active'), 'active') + '</div>' +
@@ -116,4 +116,31 @@ SUB = 'Tile (default for selected work): neutral stage with whole-card hover. Al
 README = README.replace("## Variants\n| Variant | Class | Use |\n|---|---|---|", """## Variants
 | Variant | Class | Use |
 |---|---|---|
-| **Tile** (v1.7) | `pm-card--tile` | **Default for selected work.** No outline. The artwork sits on a `color-bg-surface` stage (`radius-md`) and rises flush from its bottom edge: the stage is padded `space-12` top and `space-8` sides (`space-8`/`space-5` below 768px), and the full 16:10 screenshot gets top-only `radius-sm` and `shadow-md`, never cropped. Below it are the title (`type-body-lg` at 500) with a mono year on the same baseline, then one "Discipline · Area" line. Hover covers the whole card: the stage goes to `color-bg-sunken`, the artwork lifts `space-2` (no lift with reduced motion), and a ↗ chip appears. Focus shows the card ring and the chip. Lay tiles out in `pm-work-grid`: two columns from 768px, with the right column offset `space-24`. |""",1)
+| **Tile** (v1.7) | `pm-card--tile` | **Default for selected work.** No outline. The artwork sits on a `color-bg-surface` stage (`radius-md`) and rises flush from its bottom edge: the stage is padded `space-12` top and `space-8` sides (`space-8`/`space-5` below 768px), and the full 16:10 screenshot gets top-only `radius-sm` and `shadow-md`, never cropped. Below it are the title (`type-body-lg` at 500) with the year on the same baseline, then one "Discipline · Area" line. Hover covers the whole card: the stage goes to `color-bg-sunken`, the artwork lifts `space-2` (no lift with reduced motion), and a ↗ chip appears. Focus shows the card ring and the chip. Lay tiles out in `pm-work-grid`: two columns from 768px, with the right column offset `space-24`. |""",1)
+
+# ---- v1.8: showcase variant + showcase grid ----
+from lib import showcase
+MENSIO = ('form', 'Redesigning Mensio’s Data Explorer for self-serve analysis', 'Shipped 2026.', ['Product design', 'Analytics'], '2026 · Mensio')
+SC = [MENSIO, ('queue', 'Review queue for model evaluations', 'Placeholder project.', ['Product design', 'AI tooling'], '2025 · Placeholder'),
+      ('grid', 'One token source for four teams', 'Placeholder project.', ['Design systems'], '2024 · Placeholder')]
+SC_GRID = ('<div style="padding:var(--space-6) var(--space-4)"><ul class="pm-showcase-grid">'
+           f'<li class="pm-showcase-grid__wide">{showcase(*SC[0])}</li><li>{showcase(*SC[1])}</li><li>{showcase(*SC[2])}</li></ul></div>')
+BODY = (h('Showcase · strongest work full width, supporting work two-up (v1.8)') + frames(SC_GRID, 1024, 375) +
+        h('Showcase states') + '<div class="pm-spec__grid">' +
+        cell(showcase(*SC[1]), 'default') + cell(showcase(*SC[1], state=' is-hover'), 'hover · fill deepens to sunken, screen lifts 8px') +
+        cell(showcase(*SC[2], state=' is-focus'), 'focus-visible · ring around the card') + cell(showcase(*SC[2], state=' is-active'), 'active · sunken') + '</div>' + BODY)
+PAIRS = PAIRS + [('showcase title', '--color-text-primary', '--color-bg-surface', 4.5), ('showcase sub', '--color-text-secondary', '--color-bg-surface', 4.5),
+                 ('showcase eyebrow', '--color-text-tertiary', '--color-bg-surface', 4.5), ('showcase hover title', '--color-text-primary', '--color-bg-sunken', 4.5),
+                 ('showcase hover eyebrow', '--color-text-tertiary', '--color-bg-sunken', 4.5)]
+HEIGHT = 4200
+SUB = 'Showcase (v1.8, featured work) and Tile: big surface containers with whole-card hover. Also frameless, outlined, featured, horizontal, compact and locked.'
+README = README.replace("|---|---|---|\n| **Tile** (v1.7)", """|---|---|---|
+| **Showcase** (v1.8) | `pm-card--showcase` in `pm-showcase-grid` | **Featured work in the split layout.** One large `color-bg-surface` container per project (`radius-md`, no ring), Dakota-style. The card is its own container (`container: pm-showcase`), so the same markup works at any width: at ≥768px the copy sits bottom-left (5fr) and the screen fills the right (7fr) at 420px min height; narrower, the copy sits on top and the screen rises from the bottom-right edge. Order is the hierarchy: put the strongest projects first as `pm-showcase-grid__wide` (full row), then supporting projects two-up. Copy: eyebrow (year · client), `type-h3` title, one-line sub, badges, "Read case study →" (decorative; the title is the link). Hover and focus: fill → `color-bg-sunken`, screen lifts `space-2`, arrow nudges 2px; no lift under reduced motion. |
+| **Tile** (v1.7)""")
+README = README.replace("## Sizes", """## Showcase anatomy (v1.8)
+1. **Grid**: `<ul class="pm-showcase-grid">`, `space-4` gap. One column; two at a ≥768px container. `li.pm-showcase-grid__wide` spans the row.
+2. **Card**: `<article class="pm-card pm-card--showcase">` > `.pm-card__layout` (the grid that switches at 768px of the card's own width).
+3. **Copy** `.pm-card__copy`: eyebrow, `<h3 class="pm-card__title">` + stretched link, `.pm-card__sub`, `.pm-card__meta` badges, `.pm-card__more`. `space-8` padding (`space-6`/`space-5` under 480px).
+4. **Shot** `.pm-card__shot`: a 16:10 screen, `radius-sm` top-left only, `color-border-subtle` ring + `shadow-md`, flush with the card's right and bottom edges (the card clips it).
+
+## Sizes""",1)

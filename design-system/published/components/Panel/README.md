@@ -6,7 +6,7 @@ A titled region for grouped content: project details, an aside, a form or an err
 1. **Region**: `<section>` or `<aside>`, `aria-labelledby` its title, `radius-md`.
 2. **Header**: title (`type-body-md` at 500; `type-h4` at lg) + optional sm action, pulled to the right edge by `space-2` so its label aligns with the padding. An optional description (secondary) wraps under the title.
 3. **Body**: `type-body-sm`, `color-text-secondary`, `space-3` under the header.
-4. **Metadata rows** (`pm-meta`): key (`type-label`, tertiary) and value (`type-body-sm`, primary) on `color-border-subtle` hairlines, like a spec sheet. Dates and numbers are Geist Mono.
+4. **Metadata rows** (`pm-meta`): key (`type-label`, tertiary) and value (`type-body-sm`, primary) on `color-border-subtle` hairlines, like a spec sheet. Dates and numbers use tabular figures.
 5. **Footer**: tonal `color-bg-surface` strip under a `color-border-default` hairline, actions right-aligned.
 
 ## Variants
@@ -39,4 +39,4 @@ Padding compresses below 768px. The header wraps its action under the title befo
 - Contrast: body 8.01 / 8.64:1 on elevated, keys 5.80 / 6.49:1.
 
 ## Token dependencies
-`color-bg-elevated|surface|sunken` `color-border-default|subtle` `shadow-xs` `color-text-primary|secondary|tertiary` `color-state-error` `color-focus-ring` · `space-2|3|4|5|6|8` · `radius-sm|md` · `type-body-md|body-sm|label|h4|caption` · `font-mono` · `weight-medium` · `control-height-sm`
+`color-bg-elevated|surface|sunken` `color-border-default|subtle` `shadow-xs` `color-text-primary|secondary|tertiary` `color-state-error` `color-focus-ring` · `space-2|3|4|5|6|8` · `radius-sm|md` · `type-body-md|body-sm|label|h4|caption` · `font-meta` · `weight-medium` · `control-height-sm`

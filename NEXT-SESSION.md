@@ -1,8 +1,8 @@
 # Next session: start here
 
-## Where we left off (Paper × Midnight v1.7)
-- **Design system:** 27 components with live previews and guidelines (light and dark), Instrument Sans + Geist Mono, Lucide icons, an Apple HIG pass, and soft dimensional depth. Browse it: https://claude.ai/artifact/4Xae2JhSbDpb6tUHM1wuGL
-- **Landing prototype v1:** floating nav → centred hero → staggered work grid → about → bento → experience → contact. https://claude.ai/artifact/XM7Noz2dHb3rfzVEtTnGRb (source: `prototypes/landing.html`, built by `design-system/tools/previews/src/landing.py`)
+## Where we left off (Paper × Midnight v1.8)
+- **Design system:** 28 components with live previews and guidelines (light and dark), Instrument Sans only (metadata moved off Geist Mono in v1.8), Lucide icons, an Apple HIG pass, and soft dimensional depth. Browse it: https://claude.ai/artifact/4Xae2JhSbDpb6tUHM1wuGL
+- **Landing prototype v2 (split layout):** sticky left column (intro, Copy email, Résumé, vertical nav with scroll-spy, socials, LA clock) → right column: showcase work (two full width, two side by side) → about → experience → contact. The v1 bento and floating nav are not on this page any more. https://claude.ai/artifact/XM7Noz2dHb3rfzVEtTnGRb (source: `prototypes/landing.html`, built by `design-system/tools/previews/src/landing.py`)
 - **References we agreed on:** itti (nav, hero, work grid), Dakota Sumner (one-page narrative), Leah Kim (case-study layout). Stripe and Vercel inform depth; Apple HIG informs behaviour.
 - Everything is on branch `paper-midnight-design-system`. The current site files are untouched.
 
@@ -20,6 +20,9 @@
 5. **Ship path.** Decide how the redesign replaces the current site: move `prototypes/landing.html` → `index.html` once approved, port `projects/mensio.html` to the template, then retire `styles.css` and the `landing-a`/`landing-b` experiments.
 
 ## Open decisions
+- Which project is the second full-width card, and which two go side by side?
+- Intro mark: initials now; a photo like Dakota's?
+- Bring back the Bento ("What I bring") as a section, or leave it out?
 - Floating nav: keep the container, or switch to `pm-topnav--bare` (links only)?
 - Real project imagery: screenshots, device mockups, or both on the tile stage?
 - Résumé: PDF link, or a résumé page built from ExperienceList?

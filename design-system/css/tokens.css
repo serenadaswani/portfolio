@@ -90,7 +90,7 @@
   --color-overlay-scrim: rgba(11, 18, 32, 0.72);
   --color-overlay-backdrop: rgba(11, 18, 32, 0.92);
   /* type */
-  --font-sans: "Instrument Sans", sans-serif; --font-mono: "Geist Mono", monospace;
+  --font-sans: "Instrument Sans", sans-serif; --font-meta: "Instrument Sans", sans-serif;
   --font-width-display: 90%; --font-width-text: 100%;
   --weight-regular: 400;
   --weight-medium: 500;

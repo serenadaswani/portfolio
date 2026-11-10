@@ -5,19 +5,19 @@
 <meta charset="utf-8">
 <title>Color and surfaces</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wdth,wght@0,75..100,400..700;1,75..100,400..700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wdth,wght@0,75..100,400..700;1,75..100,400..700&display=swap" rel="stylesheet">
 <style>
   .grid { display: grid; grid-template-columns: 132px repeat(4, minmax(0, 1fr)); border-radius: var(--radius-lg); overflow: hidden; box-shadow: inset 0 0 0 1px var(--color-border-subtle); }
   .grid > div { padding: var(--space-3); min-height: 64px; display: flex; flex-direction: column; justify-content: center; gap: var(--space-1); }
-  .hd { font-family: var(--font-mono); font-size: 12px; line-height: 17px; color: var(--color-text-tertiary); background: var(--color-bg-canvas); }
-  .rowname { font-family: var(--font-mono); font-size: 12px; line-height: 17px; color: var(--color-text-secondary); background: var(--color-bg-canvas); }
+  .hd { font-family: var(--font-meta); font-size: var(--type-label); line-height: var(--line-label); font-variant-numeric: tabular-nums; color: var(--color-text-tertiary); background: var(--color-bg-canvas); }
+  .rowname { font-family: var(--font-meta); font-size: var(--type-label); line-height: var(--line-label); font-variant-numeric: tabular-nums; color: var(--color-text-secondary); background: var(--color-bg-canvas); }
   .s-canvas { background: var(--color-bg-canvas); } .s-surface { background: var(--color-bg-surface); }
   .s-elevated { background: var(--color-bg-elevated); } .s-sunken { background: var(--color-bg-sunken); }
   .sample { font-size: 16px; line-height: 22px; }
   .bar { height: 0; border-top: 3px solid; width: 56px; }
   .ring { width: 56px; height: 20px; border-radius: var(--radius-sm); }
   .stack { display: flex; gap: var(--space-2); margin-bottom: var(--space-6); }
-  .stack div { flex: 1; height: 72px; border-radius: var(--radius-md); padding: var(--space-2) var(--space-3); font-family: var(--font-mono); font-size: 12px; line-height: 17px; color: var(--color-text-secondary); display: flex; align-items: flex-end; }
+  .stack div { flex: 1; height: 72px; border-radius: var(--radius-md); padding: var(--space-2) var(--space-3); font-family: var(--font-meta); font-size: var(--type-label); line-height: var(--line-label); font-variant-numeric: tabular-nums; color: var(--color-text-secondary); display: flex; align-items: flex-end; }
   h2 { margin: 0 0 var(--space-4); }
   .note { margin: var(--space-4) 0 0; max-width: 680px; color: var(--color-text-secondary); }
 </style>

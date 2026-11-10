@@ -43,16 +43,16 @@ SCRIPT = "document.querySelectorAll('a[href=\"#b\"]').forEach(function(a){a.addE
 README = r'''
 # Bento
 
-A grid of feature-highlight tiles for showing what you do at a glance: capabilities, outcomes, principles. It takes the good parts of Stripe's bento: copy on top, the visual anchored to the bottom edge, one large number when a metric is the story, and soft layered depth. It keeps Paper × Midnight's language: mono eyebrows, hairline rings, a single accent, `radius-md` containers.
+A grid of feature-highlight tiles for showing what you do at a glance: capabilities, outcomes, principles. It takes the good parts of Stripe's bento: copy on top, the visual anchored to the bottom edge, one large number when a metric is the story, and soft layered depth. It keeps Paper × Midnight's language: eyebrows, hairline rings, a single accent, `radius-md` containers.
 
 ## Anatomy
 1. **Grid**: `.pm-bento`, dense auto-flow, `space-4` gap (`space-5` at ≥1024px).
 2. **Tile**: `<article class="pm-bento__tile">`, `color-bg-elevated`, `radius-md`, 1px `color-border-subtle` ring + `shadow-xs`. Flat but dimensional.
 3. **Body**: `space-5` padding (`space-8` on featured), `space-2` rhythm.
-4. **Eyebrow**: mono caption, numbered and named ("01 · Systems").
+4. **Eyebrow**: metadata label, numbered and named ("01 · Systems").
 5. **Title**: `type-h4` (h3 on featured), balanced wrapping. Optionally a stretched link, which makes the tile interactive.
 6. **Text**: `type-body-sm` (body-md on featured), secondary, max 42ch.
-7. **Stat** (optional): `type-display-lg` at 90% width, tabular figures, + mono label. Use one per grid at most.
+7. **Stat** (optional): `type-display-lg` at 90% width, tabular figures, + metadata label. Use one per grid at most.
 8. **Visual** (optional): `pm-media` set into the bottom edge, inset by the body padding, top corners only (`radius-sm`, nested in `radius-md`), with its own `shadow-sm`. `--bleed` runs edge to edge.
 9. **List** (optional): Lucide `check` + text, icons centred on the first line.
 
@@ -90,5 +90,5 @@ Light: paper-white tiles with a mist ring and a Midnight-tinted soft shadow. Dar
 - Contrast: title ≥15.07:1, text ≥7.07:1 (tonal), eyebrow ≥5.12:1 on the light surfaces.
 
 ## Token dependencies
-`color-bg-elevated|surface|sunken` `color-border-subtle|default` `color-text-primary|secondary|tertiary` `color-focus-ring` · `shadow-xs|sm|md` · `space-2|3|4|5|8` · `radius-sm|md` · `type-h4|h3|body-sm|body-md|display-lg|caption` · `font-mono` · `font-width-display` · `tracking-h4|h3|display` · `weight-medium` · ImageContainer
+`color-bg-elevated|surface|sunken` `color-border-subtle|default` `color-text-primary|secondary|tertiary` `color-focus-ring` · `shadow-xs|sm|md` · `space-2|3|4|5|8` · `radius-sm|md` · `type-h4|h3|body-sm|body-md|display-lg|caption` · `font-meta` · `font-width-display` · `tracking-h4|h3|display` · `weight-medium` · ImageContainer
 '''

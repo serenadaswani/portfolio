@@ -1,6 +1,6 @@
 # Badge
 
-A small static label: a discipline tag, a version or year, "Featured", or a status. Shape and type tell them apart: outline for tags, mono for technical values, a tonal fill for status. All of them are square-cornered.
+A small static label: a discipline tag, a version or year, "Featured", or a status. Shape and type tell them apart: outline for tags, meta for technical values, a tonal fill for status. All of them are square-cornered.
 
 ## Anatomy
 1. **Container**: `<span>` or `<li>` (in a `<ul>` of tags), `radius-sm`, 24px tall.
@@ -11,7 +11,7 @@ A small static label: a discipline tag, a version or year, "Featured", or a stat
 | Variant | Class | Treatment | Use |
 |---|---|---|---|
 | Tag | default (`--outline` is an alias) | 1px `color-border-default`, secondary text, no fill | Disciplines on cards |
-| Mono | `pm-badge--mono` | Geist Mono at 400, tabular | Years, versions, counts |
+| Meta | `pm-badge--meta` | Metadata voice at 400, tabular | Years, versions, counts |
 | Accent | `pm-badge--accent` | `color-action-selected-bg` / `-text` | One per view |
 | Status | `--success` `--warning` `--error` `--info` | tonal state fill + glyph + word | Project or content status |
 
@@ -33,4 +33,4 @@ Rows wrap with a `space-1` gap. Badges never truncate.
 Plain text · status glyphs are decorative and the word carries the meaning · wrap live-changing badges in `role="status"`.
 
 ## Token dependencies
-`color-border-default` `color-text-secondary` `color-action-selected-bg|text` `color-state-*` and `-bg` · `space-1|2` · `radius-sm` · `type-caption` · `font-mono` · `weight-medium|regular`
+`color-border-default` `color-text-secondary` `color-action-selected-bg|text` `color-state-*` and `-bg` · `space-1|2` · `radius-sm` · `type-caption` · `font-meta` · `weight-medium|regular`

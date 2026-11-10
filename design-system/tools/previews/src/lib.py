@@ -96,3 +96,15 @@ def cell(inner, cap):
 
 def h(text):
     return f'<h2 class="pm-spec__h">{text}</h2>'
+
+
+def showcase(img_key, title, sub, badges, eyebrow='', state='', href='#c', alt='', more='Read case study'):
+    """Card --showcase markup (v1.8). Same markup full-width or two-up: the card lays itself out by its own width."""
+    b = ''.join(f'<li class="pm-badge">{x}</li>' for x in badges)
+    return (f'<article class="pm-card pm-card--showcase{state}"><div class="pm-card__layout"><div class="pm-card__copy">'
+            + (f'<p class="pm-card__eyebrow">{eyebrow}</p>' if eyebrow else '') +
+            f'<h3 class="pm-card__title"><a href="{href}">{title}</a></h3>'
+            + (f'<p class="pm-card__sub">{sub}</p>' if sub else '') +
+            (f'<ul class="pm-card__meta" aria-label="Disciplines">{b}</ul>' if b else '') +
+            f'<span class="pm-card__more" aria-hidden="true">{more}{I["arrow"]}</span></div>'
+            f'<div class="pm-card__shot"><img src="{IMG[img_key]}" alt="{alt}" width="1600" height="1000" loading="lazy"></div></div></article>')

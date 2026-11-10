@@ -4,7 +4,7 @@ sys.path.insert(0, os.path.join(B, 'src'))
 sys.path.insert(0, os.path.join(B, 'src', 'comps'))
 CHECK = open(os.path.join(B, 'src', 'check.js')).read()
 FONTS = ('<link rel="preconnect" href="https://fonts.googleapis.com">\n'
-         '<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wdth,wght@0,75..100,400..700;1,75..100,400..700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">')
+         '<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wdth,wght@0,75..100,400..700;1,75..100,400..700&display=swap" rel="stylesheet">')
 THEMES = [('light', 'l', 'Light · Paper'), ('dark', 'd', 'Dark · Midnight')]
 
 def pairs_html(pairs, theme=None):

@@ -5,7 +5,7 @@ The project card. By default it's frameless: an image well with a hairline edge,
 ## Anatomy
 1. **Card**: `<article class="pm-card">`, no fill, `radius-md` (used only for the focus ring's shape).
 2. **Image well**: `.pm-media.pm-card__media`, 16:10, `radius-md`, 1px `color-border-subtle` edge. `color-bg-sunken` shows while loading.
-3. **Eyebrow**: Geist Mono caption, tertiary, year first ("2024 · AI tooling"). It's metadata, so it's set as metadata.
+3. **Eyebrow**: metadata voice (`font-meta`, 13px regular), tertiary, year first ("2024 · AI tooling"). It's metadata, so it's set as metadata.
 4. **Title**: `<h3>` + stretched link, `type-h4` at 500, `tracking-h4`, balanced wrapping.
 5. **Summary**: `type-body-sm`, `color-text-secondary`, max 48ch.
 6. **Tags**: Badges, 1px outline, `space-1` apart.
@@ -17,13 +17,20 @@ Removed in v1.3: the surface fill and the "Read case study →" line (the whole 
 ## Variants
 | Variant | Class | Use |
 |---|---|---|
-| **Tile** (v1.7) | `pm-card--tile` | **Default for selected work.** No outline. The artwork sits on a `color-bg-surface` stage (`radius-md`) and rises flush from its bottom edge: the stage is padded `space-12` top and `space-8` sides (`space-8`/`space-5` below 768px), and the full 16:10 screenshot gets top-only `radius-sm` and `shadow-md`, never cropped. Below it are the title (`type-body-lg` at 500) with a mono year on the same baseline, then one "Discipline · Area" line. Hover covers the whole card: the stage goes to `color-bg-sunken`, the artwork lifts `space-2` (no lift with reduced motion), and a ↗ chip appears. Focus shows the card ring and the chip. Lay tiles out in `pm-work-grid`: two columns from 768px, with the right column offset `space-24`. |
+| **Showcase** (v1.8) | `pm-card--showcase` in `pm-showcase-grid` | **Featured work in the split layout.** One large `color-bg-surface` container per project (`radius-md`, no ring), Dakota-style. The card is its own container (`container: pm-showcase`), so the same markup works at any width: at ≥768px the copy sits bottom-left (5fr) and the screen fills the right (7fr) at 420px min height; narrower, the copy sits on top and the screen rises from the bottom-right edge. Order is the hierarchy: put the strongest projects first as `pm-showcase-grid__wide` (full row), then supporting projects two-up. Copy: eyebrow (year · client), `type-h3` title, one-line sub, badges, "Read case study →" (decorative; the title is the link). Hover and focus: fill → `color-bg-sunken`, screen lifts `space-2`, arrow nudges 2px; no lift under reduced motion. |
+| **Tile** (v1.7) | `pm-card--tile` | **Default for selected work.** No outline. The artwork sits on a `color-bg-surface` stage (`radius-md`) and rises flush from its bottom edge: the stage is padded `space-12` top and `space-8` sides (`space-8`/`space-5` below 768px), and the full 16:10 screenshot gets top-only `radius-sm` and `shadow-md`, never cropped. Below it are the title (`type-body-lg` at 500) with the year on the same baseline, then one "Discipline · Area" line. Hover covers the whole card: the stage goes to `color-bg-sunken`, the artwork lifts `space-2` (no lift with reduced motion), and a ↗ chip appears. Focus shows the card ring and the chip. Lay tiles out in `pm-work-grid`: two columns from 768px, with the right column offset `space-24`. |
 | Frameless | default | Work grids, the main index. |
 | Outlined | `pm-card--outlined` | Dense grids and related lists. Elevated paper, 1px `color-border-subtle` ring + `shadow-xs`, image flush to the frame with a hairline under it. |
 | Compact | `+ pm-card--compact` | Next and related project, no image: `space-3`/`space-4` padding, `body-md` title. |
 | Featured | `pm-card--featured` | One lead project: 16:9, `type-h3` title, `body-md` summary. |
 | Horizontal | `pm-card--horizontal` | At ≥768px container: image 7/12, text 5/12. Deliberately asymmetric. |
 | Locked | `pm-card--locked` | NDA work: no link, lock fallback, warning badge. |
+
+## Showcase anatomy (v1.8)
+1. **Grid**: `<ul class="pm-showcase-grid">`, `space-4` gap. One column; two at a ≥768px container. `li.pm-showcase-grid__wide` spans the row.
+2. **Card**: `<article class="pm-card pm-card--showcase">` > `.pm-card__layout` (the grid that switches at 768px of the card's own width).
+3. **Copy** `.pm-card__copy`: eyebrow, `<h3 class="pm-card__title">` + stretched link, `.pm-card__sub`, `.pm-card__meta` badges, `.pm-card__more`. `space-8` padding (`space-6`/`space-5` under 480px).
+4. **Shot** `.pm-card__shot`: a 16:10 screen, `radius-sm` top-left only, `color-border-subtle` ring + `shadow-md`, flush with the card's right and bottom edges (the card clips it).
 
 ## Sizes
 One size. Width comes from the grid (each card spans 4 columns). Grid gaps are `space-6` horizontal and `space-10` vertical: rows need more air than columns, because the eye reads down a card.
@@ -51,4 +58,4 @@ The grid goes 1 → 2 → 3 per row, and Horizontal stacks below 768px. Titles w
 - Contrast: title ≥15.07:1, summary ≥6.45:1, eyebrow ≥4.67:1 on every light surface.
 
 ## Token dependencies
-`color-text-primary|secondary|tertiary` `color-border-subtle|default|strong` `color-bg-elevated|surface|sunken` `color-selected-indicator` `color-focus-ring` · `shadow-xs|sm` · `space-1|2|3|4|5|6|8|10` · `radius-md` · `type-h4|h3|body-sm|body-md|caption` · `font-mono` · `weight-medium` · `tracking-h4|h3` · `link-underline-*` · Badge, ImageContainer
+`color-text-primary|secondary|tertiary` `color-border-subtle|default|strong` `color-bg-elevated|surface|sunken` `color-selected-indicator` `color-focus-ring` · `shadow-xs|sm` · `space-1|2|3|4|5|6|8|10` · `radius-md` · `type-h4|h3|body-sm|body-md|caption` · `font-meta` · `weight-medium` · `tracking-h4|h3` · `link-underline-*` · Badge, ImageContainer

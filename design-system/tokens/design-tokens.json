@@ -548,12 +548,13 @@
           "sans-serif"
         ]
       },
-      "mono": {
+      "meta": {
         "$type": "fontFamily",
         "$value": [
-          "Geist Mono",
-          "monospace"
-        ]
+          "Instrument Sans",
+          "sans-serif"
+        ],
+        "$description": "Metadata voice (v1.8): years, dates, counts, numbering, time. Same family as text, set at label size, regular weight, tertiary, tabular figures."
       }
     },
     "fontWeight": {

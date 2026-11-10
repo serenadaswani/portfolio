@@ -1,5 +1,14 @@
 # Changes applied
 
+## v1.8 one type family and split layout (approved from the v1.8 review)
+| # | Change | Type |
+|---|---|---|
+| A | Metadata voice moves from Geist Mono to Instrument Sans: new `typography.fontFamily.meta` (`--font-meta`) replaces `mono` (`--font-mono` is gone). Every metadata selector now sets `--font-meta` at `type-label` (13px), weight 400, tertiary, tabular figures. Classes renamed: `pm-mono` → `pm-meta-text`, `pm-badge--mono` → `pm-badge--meta`. Geist Mono is no longer loaded. | Token + type role |
+| B | **SplitLayout** (`pm-split`, `pm-intro`, `pm-split__nav`, `pm-split__foot`, `pm-split__section`): 360px sticky intro + vertical nav beside the work column at ≥1024px; one column below, with the nav as a wrapping row. `.pm-split__main` is a container. | New |
+| B2 | Card `--showcase` + `pm-showcase-grid`: one large surface container per project. The card is its own container, so the same markup lays out copy-left/screen-right at ≥768px and copy-over-screen when narrower. Strongest work full width (`pm-showcase-grid__wide`), supporting work two-up. Hover: sunken fill, screen lifts 8px. | Variant |
+| B3 | SideNavigation supports `aria-current="location"` (scroll-spy): weight 500 + cobalt tick, moving under the label in the row layout. | Behaviour |
+Landing prototype rebuilt on the split layout with real content (Mensio, Deploy, Apple, Procense, OmniSynkAI, LA time, socials).
+
 ## v1.7 one-page portfolio patterns (approved from the side-by-side review)
 | # | Change | Type |
 |---|---|---|

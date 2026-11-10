@@ -1,6 +1,6 @@
 from lib import I, cell, h, frames
 NAME = 'SideNavigation'; GROUP = 'Navigation'; HEIGHT = 1700; WIDTH = 1100
-SUB = 'Compact 32px rows; current page = primary text, weight 500 and a cobalt tick; mono counts; disclosure below 1024px.'
+SUB = 'Compact 32px rows; current page = primary text, weight 500 and a cobalt tick; counts; disclosure below 1024px.'
 
 def side():
     return ('<div style="display:grid;grid-template-columns:minmax(0,260px) 1fr;gap:var(--space-6);padding:var(--space-4)" class="sn-layout">'
@@ -48,7 +48,7 @@ A vertical list for moving between sibling pages. Rows are compact (32px with a 
 2. **Toggle** (<1024px): secondary button naming the current page.
 3. **Heading**: `type-caption` at 500, `color-text-tertiary`, sentence case. It names the list.
 4. **Item**: `type-body-sm` at 400, `color-text-secondary`, `radius-sm`, `space-3` padding x.
-5. **Count / meta**: Geist Mono caption, tertiary, tabular figures, right-aligned.
+5. **Count / meta**: metadata voice (`font-meta`, 13px regular), tertiary, tabular figures, right-aligned.
 6. **Group**: `<button aria-expanded>` + a nested list on a 1px `color-border-subtle` rail.
 7. **Tick**: 2px × (row − 16px) `color-selected-indicator`, inset at the left edge.
 
@@ -80,5 +80,5 @@ The tick is 4.95:1 (light) and 6.88:1 (dark) on canvas. The weight and text-colo
 Specific `aria-label` · `aria-current="page"` · groups use `aria-expanded` + `aria-controls` · disabled entries aren't focusable and are explained in text · the toggle names the current location.
 
 ## Token dependencies
-`color-text-primary|secondary|tertiary` `color-bg-surface|sunken|elevated` `color-border-subtle|default` `color-selected-indicator` `color-disabled-text` `color-focus-ring` · `control-height-sm` `control-min-target` · `space-1|2|3|6` · `radius-sm|md` · `type-body-sm` `type-caption` · `font-mono` · `weight-regular|medium`
+`color-text-primary|secondary|tertiary` `color-bg-surface|sunken|elevated` `color-border-subtle|default` `color-selected-indicator` `color-disabled-text` `color-focus-ring` · `control-height-sm` `control-min-target` · `space-1|2|3|6` · `radius-sm|md` · `type-body-sm` `type-caption` · `font-meta` · `weight-regular|medium`
 '''

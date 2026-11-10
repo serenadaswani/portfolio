@@ -5,7 +5,7 @@ NAME = 'Panel'; GROUP = 'Containers'; HEIGHT = 1900; WIDTH = 1100
 SUB = 'Dimensional (default: light ring + shadow-xs) and tonal regions, hairline metadata rows, collapsible, error, tonal footer.'
 
 META = ('<dl class="pm-meta"><dt>Role</dt><dd>Lead product designer</dd><dt>Team</dt><dd>2 designers, 6 engineers, 1 PM</dd>'
-        '<dt>Timeline</dt><dd><span class="pm-mono">2024.02 – 2024.11</span></dd><dt>Outcome</dt><dd>Median triage time roughly halved in the pilot</dd></dl>')
+        '<dt>Timeline</dt><dd><span class="pm-meta-text">2024.02 – 2024.11</span></dd><dt>Outcome</dt><dd>Median triage time roughly halved in the pilot</dd></dl>')
 
 def panel(cls='', title='Project details', body=META, action=True, footer=False, desc=None):
     n = next(_c)
@@ -28,7 +28,7 @@ ERR = ('<section class="pm-panel pm-panel--error" role="alert" aria-labelledby="
 BODY = (h('Variants') + '<div class="pm-spec__grid" style="grid-template-columns:repeat(auto-fill,minmax(300px,1fr))">' +
         cell(panel(), 'default · light ring + shadow-xs') +
         cell(panel(' pm-panel--tonal', action=False), 'tonal · Mineral fill, no border') +
-        cell(panel(' pm-panel--sunken', title='Raw data', action=False, body='<p class="pm-mono" style="margin:0">n = 412 evaluations · p50 18m → 9m</p>'), 'sunken · code and data') +
+        cell(panel(' pm-panel--sunken', title='Raw data', action=False, body='<p class="pm-meta-text" style="margin:0">n = 412 evaluations · p50 18m → 9m</p>'), 'sunken · code and data') +
         cell(panel(title='Contact', desc='I reply within two working days.', body='<p>Messages go straight to my inbox.</p>', action=False, footer=True), 'with description + tonal footer') +
         cell(coll('a'), 'collapsible · expanded') + cell(coll('b', False), 'collapsible · collapsed') +
         cell(ERR, 'error') + '</div>' +
@@ -44,7 +44,7 @@ BODY = (h('Variants') + '<div class="pm-spec__grid" style="grid-template-columns
 STYLE = '.pm-spec__grid .pm-spec__cell{align-items:stretch}'
 PAIRS = [('title', '--color-text-primary', '--color-bg-elevated', 4.5), ('body', '--color-text-secondary', '--color-bg-elevated', 4.5),
          ('body/tonal', '--color-text-secondary', '--color-bg-surface', 4.5), ('key', '--color-text-tertiary', '--color-bg-elevated', 4.5),
-         ('mono/sunken', '--color-text-tertiary', '--color-bg-sunken', 4.5), ('error edge', '--color-state-error', '--color-bg-elevated', 3),
+         ('meta/sunken', '--color-text-tertiary', '--color-bg-sunken', 4.5), ('error edge', '--color-state-error', '--color-bg-elevated', 3),
          ('edge', '--color-border-default', '--color-bg-canvas', 0)]
 SCRIPT = r'''
 document.querySelectorAll('.pm-panel__toggle[aria-controls]').forEach(function(b){b.addEventListener('click',function(){b.setAttribute('aria-expanded',b.getAttribute('aria-expanded')!=='true');});});
@@ -59,7 +59,7 @@ A titled region for grouped content: project details, an aside, a form or an err
 1. **Region**: `<section>` or `<aside>`, `aria-labelledby` its title, `radius-md`.
 2. **Header**: title (`type-body-md` at 500; `type-h4` at lg) + optional sm action, pulled to the right edge by `space-2` so its label aligns with the padding. An optional description (secondary) wraps under the title.
 3. **Body**: `type-body-sm`, `color-text-secondary`, `space-3` under the header.
-4. **Metadata rows** (`pm-meta`): key (`type-label`, tertiary) and value (`type-body-sm`, primary) on `color-border-subtle` hairlines, like a spec sheet. Dates and numbers are Geist Mono.
+4. **Metadata rows** (`pm-meta`): key (`type-label`, tertiary) and value (`type-body-sm`, primary) on `color-border-subtle` hairlines, like a spec sheet. Dates and numbers use tabular figures.
 5. **Footer**: tonal `color-bg-surface` strip under a `color-border-default` hairline, actions right-aligned.
 
 ## Variants
@@ -92,5 +92,5 @@ Padding compresses below 768px. The header wraps its action under the title befo
 - Contrast: body 8.01 / 8.64:1 on elevated, keys 5.80 / 6.49:1.
 
 ## Token dependencies
-`color-bg-elevated|surface|sunken` `color-border-default|subtle` `shadow-xs` `color-text-primary|secondary|tertiary` `color-state-error` `color-focus-ring` · `space-2|3|4|5|6|8` · `radius-sm|md` · `type-body-md|body-sm|label|h4|caption` · `font-mono` · `weight-medium` · `control-height-sm`
+`color-bg-elevated|surface|sunken` `color-border-default|subtle` `shadow-xs` `color-text-primary|secondary|tertiary` `color-state-error` `color-focus-ring` · `space-2|3|4|5|6|8` · `radius-sm|md` · `type-body-md|body-sm|label|h4|caption` · `font-meta` · `weight-medium` · `control-height-sm`
 '''

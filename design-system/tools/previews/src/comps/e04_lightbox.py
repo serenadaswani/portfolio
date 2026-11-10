@@ -54,7 +54,7 @@ A modal viewer for looking closely at project artifacts. It's always rendered in
 ## Anatomy
 1. **Dialog**: native `<dialog class="pm-lightbox" data-theme="dark">` opened with `showModal()`, labelled by the caption (`aria-labelledby`).
 2. **Backdrop**: `color-overlay-backdrop` (ink at 92%).
-3. **Top bar**: counter "2 of 5" (`aria-live="polite"`, mono, `color-text-secondary`) and a Close icon button.
+3. **Top bar**: counter "2 of 5" (`aria-live="polite"`, metadata voice, `color-text-secondary`) and a Close icon button.
 4. **Stage**: Previous button · figure (`pm-media--contain`, never cropped) · Next button.
 5. **Footer**: caption (`color-text-on-image`, `reading-max-width`), a mobile previous/next pair, and a thumbnail strip.
 
@@ -89,5 +89,5 @@ Always dark-scoped, so light and dark pages show an identical viewer. That's del
 - Don't autoplay slideshows.
 
 ## Token dependencies
-`color-overlay-backdrop` `color-text-on-image` `color-text-secondary` `color-focus-ring` (dark scope) `color-selected-indicator` · `content-max-width` `reading-max-width` · `control-height-md` · `space-2|3|4` · `radius-md` `radius-lg` · `type-body-sm` `type-caption` · `font-mono` · `motion-duration-base` `motion-ease` · Button (on-image), Thumbnail, ImageContainer
+`color-overlay-backdrop` `color-text-on-image` `color-text-secondary` `color-focus-ring` (dark scope) `color-selected-indicator` · `content-max-width` `reading-max-width` · `control-height-md` · `space-2|3|4` · `radius-md` `radius-lg` · `type-body-sm` `type-caption` · `font-meta` · `motion-duration-base` `motion-ease` · Button (on-image), Thumbnail, ImageContainer
 '''
