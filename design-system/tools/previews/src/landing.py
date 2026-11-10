@@ -53,7 +53,7 @@ def role(m, org, r, yrs, now, scope=''):
     dot = '<span class="pm-hero__dot" aria-hidden="true"></span>' if now else ''
     return (f'<li class="pm-experience__item">'
             f'<div class="pm-experience__head"><h3 class="pm-experience__org">{logo(org)}' + f'<span class="pm-sr">{org}</span>' + f'</h3><span class="pm-experience__role">{r}</span></div>'
-            f'<span class="pm-experience__years">{dot}{yrs}</span>' + (f'<p class="pm-experience__scope">{scope}</p>' if scope else '') + '</li>')
+            f'<span class="pm-experience__years">{dot}{yrs}</span>' + '</li>')  # no scope line: logo, role and dates only
 
 def copy_btn(i):
     # No public address yet: the button says so instead of copying a placeholder.
