@@ -1,4 +1,4 @@
-import sys, os
+import sys, os, re
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from lib import I, S, IMG, showcase
 REPO = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '..', '..'))
@@ -20,27 +20,35 @@ ROLES = [('D', 'Deploy', 'Product designer', 'Jan 2026 – Present', True, 'Prod
 SOCIAL = [('LinkedIn', 'https://www.linkedin.com/in/serena-daswani'), ('GitHub', 'https://github.com/serenadaswani'), ('Framer', 'https://serenadaswani.framer.website/')]
 SECTIONS = ['Work', 'About', 'Experience', 'Contact']
 
-# Project art: a soft wash rising from the bottom (where the asset sits) and fading to white, like Anthropic's
-# curated-collection cards. Literal hex is project art (content), not UI chrome. (bottom colour, mid colour, strength)
-TINT = {
-    'mensio':   ('#206CFD', '#206CFD', '16%'),
-    'procense': ('#1B2026', '#1B2026', '11%'),
-    'apple':    ('#B6BAC6', '#B6BAC6', '45%'),
-    'omni':     ('#755CFB', '#9B94E0', '16%'),   # the sparkle purples from the Framer asset
+# Project art, after Apple Music's banners: a bright brand-colour background, a soft glow behind the screenshot,
+# and the screenshot fading into the background at its cropped bottom edge. The darkest tone sits top-left, where the
+# white logo and text are, so white text keeps >= 4.5:1 there (Mensio #175CFF 5.2:1, Procense #1B2026 16.4:1,
+# Apple #000 21:1, OmniSynkAI #4745B0 7.7:1). Literal hex is project art (each brand's own colours), not UI chrome.
+BRAND = {
+    'mensio':   {'bg': 'linear-gradient(160deg, #175CFF 0%, #175CFF 40%, #206CFD 62%, #3693F9 100%)', 'glow': 'rgb(255 255 255 / 45%)'},
+    'procense': {'bg': 'radial-gradient(120% 90% at 90% 100%, #2483FF 0%, rgb(36 131 255 / 0%) 60%), #1B2026', 'glow': 'rgb(36 131 255 / 55%)'},
+    'apple':    {'bg': 'radial-gradient(110% 80% at 85% 100%, #2C2C2E 0%, #000000 60%), #000000', 'glow': 'rgb(255 255 255 / 14%)'},
+    'omni':     {'bg': 'linear-gradient(160deg, #4745B0 0%, #5B43E8 40%, #755CFB 75%, #9B94E0 100%)', 'glow': 'rgb(255 255 255 / 40%)'},
 }
-# Apple logo, transparent, filled with the primary text colour (black in light, white in dark)
-APPLE_LOGO = '<svg class="lp-shot__logo" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M12.152 6.896c-.948 0-2.415-1.078-3.96-1.04-2.04.027-3.91 1.183-4.961 3.014-2.117 3.675-.546 9.103 1.519 12.09 1.013 1.454 2.208 3.09 3.792 3.039 1.52-.065 2.09-.987 3.935-.987 1.831 0 2.35.987 3.96.948 1.637-.026 2.676-1.48 3.676-2.948 1.156-1.688 1.636-3.325 1.662-3.415-.039-.013-3.182-1.221-3.22-4.857-.026-3.04 2.48-4.494 2.597-4.559-1.429-2.09-3.623-2.324-4.39-2.376-2-.156-3.675 1.09-4.61 1.09zM15.53 3.83c.843-1.012 1.4-2.427 1.245-3.83-1.207.052-2.662.805-3.532 1.818-.78.896-1.454 2.338-1.273 3.714 1.338.104 2.715-.688 3.559-1.701"/></svg>'
+# White logos for the card (official artwork in assets/logos/, every fill forced to currentColor = white here)
+CARD_LOGO = {'mensio': ('mensio', 22, 'Mensio'), 'procense': ('procense', 15, 'Procense'), 'apple': ('apple', 26, 'Apple'), 'omni': ('omnisynkai', 20, 'OmniSynkAI')}
+def white_logo(k):
+    f, hgt, name = CARD_LOGO[k]
+    svg = open(os.path.join(REPO, 'assets', 'logos', f + '.svg')).read().strip()
+    svg = re.sub(r'<defs>.*?</defs>', '', svg, flags=re.S)
+    svg = re.sub(r'fill="(?!none)[^"]*"', 'fill="currentColor"', svg)
+    svg = re.sub(r'\s(width|height)="[^"]*"', '', svg, count=2)
+    svg = svg.replace('<svg ', f'<svg class="lp-card-logo" style="height:{hgt}px" role="img" aria-label="{name}" focusable="false" ', 1)
+    return svg
 
 def card(p):
     k, t, sub, badges, eyebrow, href = p
-    a, b, amt = TINT[k]
     html = showcase('white', t, sub, badges, eyebrow, href=href or '#work', more='')
-    html = html.replace('class="pm-card pm-card--showcase"', f'class="pm-card pm-card--showcase lp-tint" style="--lp-a:{a};--lp-b:{b};--lp-amt:{amt}"', 1)
-    # Placeholder asset: a plain 8px-rounded rectangle until the real screenshot exists. Apple keeps its logo centred.
-    inner = APPLE_LOGO if k == 'apple' else ''
-    shot = f'<div class="lp-shot{" lp-shot--apple" if k == "apple" else ""}" aria-hidden="true">{inner}</div>'
+    html = html.replace('class="pm-card pm-card--showcase"', f'class="pm-card pm-card--showcase lp-tint" style="--lp-bg:{BRAND[k]["bg"]};--lp-glow:{BRAND[k]["glow"]}"', 1)
+    html = html.replace('<div class="pm-card__copy">', f'<div class="pm-card__copy">{white_logo(k)}', 1)
+    # Placeholder asset: a white 8px-rounded rectangle until the real (white) screenshot exists
     i = html.index('<div class="pm-card__shot">'); j = html.index('</div></div></article>')
-    return html[:i] + f'<div class="pm-card__shot">{shot}' + html[j:]
+    return html[:i] + '<div class="pm-card__shot"><div class="lp-shot" aria-hidden="true"></div>' + html[j:]
 
 # Company logos (official artwork, saved in assets/logos/). Text parts use currentColor so they flip with the theme;
 # brand accents keep their colour. Heights are optically balanced: all-caps and wide wordmarks sit smaller.
@@ -144,32 +152,29 @@ body { background: var(--color-bg-canvas); }
 .lp-anim .lp-tl.is-in .is-current .lp-tl__dot::after { content: ""; position: absolute; inset: -3px; border-radius: 50%; box-shadow: 0 0 0 2px var(--color-selected-indicator); opacity: 0; animation: lp-land calc(var(--motion-duration-base) * 4) var(--motion-ease) var(--lp-dur) 1; }
 @keyframes lp-land { from { opacity: .6; transform: scale(1); } to { opacity: 0; transform: scale(2.2); } }
 
-/* Tinted showcase cards: copy on top, the wash and asset rise from the bottom */
-.pm-card--showcase.lp-tint, .pm-card--showcase.lp-tint:hover, .pm-card--showcase.lp-tint:focus-within {
-  background: linear-gradient(to top,
-    color-mix(in srgb, var(--lp-a) var(--lp-amt), var(--color-bg-elevated)) 0%,
-    color-mix(in srgb, var(--lp-b) calc(var(--lp-amt) * 0.45), var(--color-bg-elevated)) 45%,
-    var(--color-bg-elevated) 90%);
-  box-shadow: none; /* no border at rest */
-}
-/* Hover (and keyboard focus): a soft grey shadow, x 0 · y 3 · blur 12 · grey at 10% */
+/* Project cards (after Apple Music's banners): brand background, white logo + text top-left, the white screenshot
+   offset right with a soft glow behind it, fading into the background at its cropped bottom edge. Same in both themes. */
+.pm-card--showcase.lp-tint, .pm-card--showcase.lp-tint:hover, .pm-card--showcase.lp-tint:focus-within { background: var(--lp-bg); box-shadow: none; isolation: isolate; }
 .pm-card--showcase.lp-tint:focus-within { box-shadow: 0 3px 12px rgb(27 32 38 / 10%); }
 @media (hover: hover) { .pm-card--showcase.lp-tint:hover { box-shadow: 0 3px 12px rgb(27 32 38 / 10%); } }
-/* Card layout: text and tags get the room; the asset sits offset to the right, cropped by the card's right and bottom edges */
+.lp-tint .pm-card__copy { min-width: 0; gap: var(--space-2); }
+.lp-card-logo { display: block; width: auto; margin-bottom: var(--space-6); color: var(--color-text-on-image); }
 .lp-tint .pm-card__title { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
-.lp-tint .pm-card__copy { min-width: 0; }
+.lp-tint .pm-card__title a, .lp-tint .pm-card__sub { color: var(--color-text-on-image); }
+.lp-tint .pm-card__sub { max-width: 42ch; }
+/* Tags on colour: frosted white, white text */
+.lp-tint .pm-badge { background: color-mix(in srgb, var(--color-text-on-image) 16%, transparent); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--color-text-on-image) 30%, transparent); color: var(--color-text-on-image); }
 @container pm-showcase (min-width: 768px) {
   .lp-tint .pm-card__layout { grid-template-columns: minmax(0, 2fr) minmax(0, 3fr); }
   .lp-tint .pm-card__copy { align-self: start !important; }
 }
-.lp-tint .pm-card__shot { align-self: end; padding: var(--space-10) 0 0 var(--space-12) !important; }
-@container pm-showcase (min-width: 768px) { .lp-tint .pm-card__shot { padding: var(--space-12) 0 0 var(--space-4) !important; } }
+/* The screenshot sits lower than the logo, offset right and cropped by the card's right edge */
+.lp-tint .pm-card__shot { position: relative; align-self: end; padding: var(--space-10) 0 0 var(--space-12) !important; }
+@container pm-showcase (min-width: 768px) { .lp-tint .pm-card__shot { padding: var(--space-20) 0 0 var(--space-4) !important; } }
 @container pm-showcase (max-width: 479px) { .lp-tint .pm-card__shot { padding: var(--space-8) 0 0 var(--space-8) !important; } }
-.lp-shot { aspect-ratio: 16 / 10; border-radius: var(--radius-md) 0 0 0; background: var(--color-bg-elevated); box-shadow: 0 0 0 1px var(--color-border-subtle), var(--shadow-sm); display: grid; place-items: center; }
-/* Apple keeps its centred logo (no asset to offset) */
-.lp-tint .pm-card__shot:has(.lp-shot--apple) { padding: var(--space-8) !important; }
-.lp-shot--apple { background: none; box-shadow: none; color: var(--color-text-primary); }
-.lp-shot__logo { width: 16%; min-width: 48px; height: auto; }
+.lp-tint .pm-card__shot::before { content: ""; position: absolute; z-index: -1; inset: 15% -10% -20% 0; background: radial-gradient(closest-side, var(--lp-glow), transparent); pointer-events: none; }
+.lp-shot { aspect-ratio: 16 / 10; border-radius: var(--radius-md) 0 0 0; background: var(--color-text-on-image); box-shadow: 0 var(--space-6) var(--space-12) rgb(0 0 0 / 22%);
+  -webkit-mask-image: linear-gradient(to bottom, #000 72%, transparent); mask-image: linear-gradient(to bottom, #000 72%, transparent); }
 @media (prefers-reduced-motion: no-preference) {
   .pm-card--showcase.lp-tint { transition: box-shadow var(--motion-duration-base) var(--motion-ease); }
   .lp-shot { transition: transform var(--motion-duration-base) var(--motion-ease); }
