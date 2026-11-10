@@ -55,6 +55,19 @@ def role(m, org, r, yrs, now, scope=''):
             f'<div class="pm-experience__head"><h3 class="pm-experience__org">{logo(org)}' + f'<span class="pm-sr">{org}</span>' + f'</h3><span class="pm-experience__role">{r}</span></div>'
             f'<span class="pm-experience__years">{dot}{yrs}</span>' + '</li>')  # no scope line: logo, role and dates only
 
+def sec_head(n, label, hid, title, sub):
+    """Section header (after ericsin.com): microcopy, then the heading with a quiet second line."""
+    return (f'<div class="lp-sec__head"><p class="lp-sec__micro pm-meta-text">{n:02d} · {label}</p>'
+            f'<h2 class="lp-sec__h" id="{hid}">{title}<span>{sub}</span></h2></div>')
+
+def tl_item(i, m, org, r, yrs, now, scope=''):
+    """Timeline row: dot on the rail · dates · logo · role, all centred on one line (stacked on narrow screens)."""
+    return (f'<li class="lp-tl__item{" is-current" if now else ""}" style="--i:{i}">'
+            '<span class="lp-tl__dot" aria-hidden="true"></span>'
+            f'<span class="lp-tl__date pm-meta-text">{yrs}</span>'
+            f'<h3 class="lp-tl__org">{logo(org)}<span class="pm-sr">{org}</span></h3>'
+            f'<span class="lp-tl__role">{r}</span></li>')
+
 def copy_btn(i):
     # No public address yet: the button says so instead of copying a placeholder.
     return f'<button type="button" class="pm-btn pm-btn--secondary pm-btn--sm" data-copy="" id="copy-{i}">{I["copy"]}<span>Copy email</span></button>'
@@ -73,11 +86,43 @@ body { background: var(--color-bg-canvas); }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .lp { --lp-aside-bg: var(--color-bg-surface); } }
 @container (min-width: 1024px) { .pm-split__aside { background: var(--lp-aside-bg); } }
 
-/* Experience: company logos in place of the initials mark and name */
-.lp-exp .pm-experience__head { align-items: center; gap: var(--space-1) var(--space-3); }
-.lp-exp .pm-experience__org { display: flex; align-items: center; min-height: 28px; }
-.lp-exp .lp-logo { display: block; width: auto; color: var(--color-text-primary); }
-.lp-exp .pm-experience__years { align-self: center; }
+/* Sections (after ericsin.com): microcopy + heading on the left, content on the right (>=768px main column).
+   Work keeps its grid full width under the header row. */
+.lp-sec { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-6); }
+@container (min-width: 768px) {
+  .lp-sec { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); column-gap: var(--space-10); row-gap: var(--space-10); align-items: start; }
+  .lp-sec__full { grid-column: 1 / -1; }
+}
+.lp-sec__head { display: grid; gap: var(--space-3); align-content: start; }
+.lp-sec__micro { margin: 0; }
+.lp-sec__h { margin: 0; display: grid; font-size: var(--type-h3); line-height: var(--line-h3); font-weight: var(--weight-medium); letter-spacing: var(--tracking-h3); text-wrap: balance; }
+.lp-sec__h span { color: var(--color-text-tertiary); }
+.lp-sec__body { container: lp-body / inline-size; min-width: 0; }
+.lp-sec__intro { margin: 0; max-width: 48ch; font-size: var(--type-body-md); line-height: var(--line-body-md); color: var(--color-text-secondary); text-wrap: pretty; }
+/* Right-hand content starts level with the heading, not the microcopy above it */
+@container (min-width: 768px) { .lp-sec__body { padding-top: calc(var(--type-label) * var(--line-label) + var(--space-3)); } }
+
+/* Timeline: a rail with one dot per role; dates · logo · role sit to its right, centred on the row.
+   Animates bottom to top once in view (rail grows upward, rows follow, oldest first). Static with reduced motion or no JS. */
+.lp-tl { --lp-row: 64px; position: relative; list-style: none; margin: 0; padding: 0 0 0 var(--space-8); }
+.lp-tl::before { content: ""; position: absolute; left: 5px; top: calc(var(--lp-row) / 2); bottom: calc(var(--lp-row) / 2); width: 2px; border-radius: 1px; background: var(--color-border-default); transform-origin: 50% 100%; }
+.lp-tl__item { position: relative; display: grid; grid-template-columns: 9.5rem 8rem minmax(0, 1fr); column-gap: var(--space-4); align-items: center; min-height: var(--lp-row); }
+.lp-tl__dot { position: absolute; left: calc(-1 * var(--space-8)); top: 50%; width: 12px; height: 12px; margin-top: -6px; border-radius: 50%; background: var(--color-bg-canvas); box-shadow: inset 0 0 0 2px var(--color-border-strong); }
+.lp-tl__item.is-current .lp-tl__dot { background: var(--color-selected-indicator); box-shadow: 0 0 0 3px var(--color-action-selected-bg); }
+.lp-tl__date { white-space: nowrap; }
+.lp-tl__item.is-current .lp-tl__date { color: var(--color-text-primary); }
+.lp-tl__org { margin: 0; display: flex; align-items: center; min-height: 28px; }
+.lp-tl .lp-logo { display: block; width: auto; color: var(--color-text-primary); }
+.lp-tl__role { font-size: var(--type-body-md); line-height: var(--line-body-md); color: var(--color-text-secondary); }
+@container lp-body (max-width: 519px) {
+  .lp-tl { --lp-row: 80px; }
+  .lp-tl__item { grid-template-columns: auto minmax(0, 1fr); row-gap: var(--space-1); align-content: center; }
+  .lp-tl__date { grid-column: 1 / -1; }
+}
+.lp-anim .lp-tl::before { transform: scaleY(0); }
+.lp-anim .lp-tl__item { opacity: 0; transform: translateY(var(--space-2)); }
+.lp-anim .lp-tl.is-in::before { transform: scaleY(1); transition: transform calc(var(--motion-duration-base) * 5) var(--motion-ease); }
+.lp-anim .lp-tl.is-in .lp-tl__item { opacity: 1; transform: none; transition: opacity calc(var(--motion-duration-base) * 2) var(--motion-ease), transform calc(var(--motion-duration-base) * 2) var(--motion-ease); transition-delay: calc(var(--i) * var(--motion-duration-base) + var(--motion-duration-fast)); }
 
 /* Tinted showcase cards: copy on top, the wash and asset rise from the bottom */
 .pm-card--showcase.lp-tint, .pm-card--showcase.lp-tint:hover, .pm-card--showcase.lp-tint:focus-within {
@@ -115,9 +160,6 @@ body { font-family: var(--font-sans); }
 .lp-about p { margin: 0; max-width: 60ch; font-size: var(--type-body-md); line-height: var(--line-body-md); color: var(--color-text-secondary); text-wrap: pretty; }
 .lp-about p:first-child { font-size: var(--type-body-lg); line-height: var(--line-body-lg); color: var(--color-text-primary); }
 .lp-about .pm-meta { max-width: 480px; }
-.lp-contact { display: grid; justify-items: start; gap: var(--space-5); }
-.lp-contact h3 { margin: 0; max-width: 22ch; font-size: var(--type-h2); line-height: var(--line-h2); font-weight: var(--weight-medium); letter-spacing: var(--tracking-heading); text-wrap: balance; }
-.lp-contact h3 span { color: var(--color-text-tertiary); }
 .lp-contact__actions { display: flex; flex-wrap: wrap; gap: var(--space-2); }
 .lp-colophon { margin: var(--space-16) 0 0; padding-top: var(--space-4); border-top: 1px solid var(--color-border-subtle); }
 """
@@ -161,14 +203,15 @@ page = f'''<title>Serena Daswani Portfolio</title>
   </aside>
 
   <main class="pm-split__main">
-    <section class="pm-split__section" id="work" aria-labelledby="lp-work-h">
-      <h2 class="pm-split__h" id="lp-work-h">Selected work</h2>
-      <ul class="pm-showcase-grid">{''.join(f'<li class="pm-showcase-grid__wide">{card(p)}</li>' for p in FEATURED)}{''.join(f'<li>{card(p)}</li>' for p in MORE)}</ul>
+    <section class="pm-split__section lp-sec" id="work" aria-labelledby="lp-work-h">
+      {sec_head(1, 'Work', 'lp-work-h', 'Selected work', '2022 – 2026')}
+      <div class="lp-sec__body"><p class="lp-sec__intro">Product design for data-heavy tools: analytics, manufacturing QA, internal reporting and AI features.</p></div>
+      <ul class="pm-showcase-grid lp-sec__full">{''.join(f'<li class="pm-showcase-grid__wide">{card(p)}</li>' for p in FEATURED)}{''.join(f'<li>{card(p)}</li>' for p in MORE)}</ul>
     </section>
 
-    <section class="pm-split__section" id="about" aria-labelledby="lp-about-h">
-      <h2 class="pm-split__h" id="lp-about-h">About</h2>
-      <div class="lp-about">
+    <section class="pm-split__section lp-sec" id="about" aria-labelledby="lp-about-h">
+      {sec_head(2, 'About', 'lp-about-h', 'About me', 'San Francisco')}
+      <div class="lp-sec__body lp-about">
         <div class="lp-about" style="gap:var(--space-4)">
           <p>I’m a product designer in San Francisco who turns complexity into clarity. I’m designing at Deploy; before that I designed at Apple and Procense, and interned at OmniSynkAI.</p>
           <p>My background is enterprise design: data-heavy tools for testing, QA and engineering. I’m hands-on from research and prototyping through to UI polish.</p><p>Off the clock, you’ll find me people-watching at my local Philz, or watching Bay Area sports from the couch.</p>
@@ -181,15 +224,14 @@ page = f'''<title>Serena Daswani Portfolio</title>
       </div>
     </section>
 
-    <section class="pm-split__section" id="experience" aria-labelledby="lp-exp-h">
-      <h2 class="pm-split__h" id="lp-exp-h">Experience</h2>
-      <ol class="pm-experience pm-experience--plain lp-exp" aria-labelledby="lp-exp-h">{''.join(role(*r) for r in ROLES)}</ol>
+    <section class="pm-split__section lp-sec" id="experience" aria-labelledby="lp-exp-h">
+      {sec_head(3, 'Experience', 'lp-exp-h', '4+ years of experience', '2022 – 2026')}
+      <div class="lp-sec__body"><ol class="lp-tl" aria-labelledby="lp-exp-h">{''.join(tl_item(len(ROLES) - 1 - j, *r) for j, r in enumerate(ROLES))}</ol></div>
     </section>
 
-    <section class="pm-split__section lp-contact" id="contact" aria-labelledby="lp-contact-h">
-      <h2 class="pm-split__h" id="lp-contact-h" style="margin:0">Contact</h2>
-      <h3>Want to work together? <span>Say hello.</span></h3>
-      <div class="lp-contact__actions">{copy_btn('contact')}{''.join(f'<a class="pm-btn pm-btn--ghost pm-btn--sm" href="{h}" target="_blank" rel="noopener">{l}{I["ext"]}<span class="pm-sr"> (opens in a new tab)</span></a>' for l, h in SOCIAL[:1])}</div>
+    <section class="pm-split__section lp-sec" id="contact" aria-labelledby="lp-contact-h">
+      {sec_head(4, 'Contact', 'lp-contact-h', 'Want to work together?', 'Say hello.')}
+      <div class="lp-sec__body"><div class="lp-contact__actions">{copy_btn('contact')}{''.join(f'<a class="pm-btn pm-btn--ghost pm-btn--sm" href="{h}" target="_blank" rel="noopener">{l}{I["ext"]}<span class="pm-sr"> (opens in a new tab)</span></a>' for l, h in SOCIAL[:1])}</div></div>
     </section>
 
     <p class="pm-meta-text lp-colophon">© 2026 {NAME} · Built on Paper × Midnight {VER}</p>
@@ -206,6 +248,14 @@ page = f'''<title>Serena Daswani Portfolio</title>
   function sync() {{ themeBtn.setAttribute('aria-pressed', String(isDark())); }}
   themeBtn.addEventListener('click', function () {{ root.setAttribute('data-theme', isDark() ? 'light' : 'dark'); sync(); }});
   sync();
+
+  // Timeline: animate bottom to top once it is in view (skipped with reduced motion)
+  var tl = document.querySelector('.lp-tl');
+  if (tl && 'IntersectionObserver' in window && !matchMedia('(prefers-reduced-motion: reduce)').matches) {{
+    document.documentElement.classList.add('lp-anim');
+    var io = new IntersectionObserver(function (es) {{ es.forEach(function (e) {{ if (e.isIntersecting) {{ tl.classList.add('is-in'); io.disconnect(); }} }}); }}, {{ threshold: 0.35 }});
+    io.observe(tl);
+  }}
 
   // Scroll-spy: mark the section in view with aria-current="location"
   var links = [].slice.call(document.querySelectorAll('[data-spy]'));
