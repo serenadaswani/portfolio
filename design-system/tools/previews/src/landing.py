@@ -172,7 +172,6 @@ body { font-family: var(--font-sans); }
 .lp-about { display: grid; gap: var(--space-8); }
 .lp-about p { margin: 0; max-width: 60ch; font-size: var(--type-body-md); line-height: var(--line-body-md); color: var(--color-text-secondary); text-wrap: pretty; }
 .lp-about p:first-child { font-size: var(--type-body-lg); line-height: var(--line-body-lg); color: var(--color-text-primary); }
-.lp-about .pm-meta { max-width: 480px; }
 .lp-contact__actions { display: flex; flex-wrap: wrap; gap: var(--space-2); }
 .lp-colophon { margin: var(--space-16) 0 0; padding-top: var(--space-4); border-top: 1px solid var(--color-border-subtle); }
 """
@@ -229,11 +228,6 @@ page = f'''<title>Serena Daswani Portfolio</title>
           <p>I’m a product designer in San Francisco who turns complexity into clarity. I’m designing at Deploy; before that I designed at Apple and Procense, and interned at OmniSynkAI.</p>
           <p>My background is enterprise design: data-heavy tools for testing, QA and engineering. I’m hands-on from research and prototyping through to UI polish.</p><p>Off the clock, you’ll find me people-watching at my local Philz, or watching Bay Area sports from the couch.</p>
         </div>
-        <dl class="pm-meta">
-          <dt>Now</dt><dd>Product designer, Deploy</dd>
-          <dt>Before</dt><dd>Apple, Procense, OmniSynkAI</dd>
-          <dt>Based in</dt><dd>San Francisco</dd>
-        </dl>
       </div>
     </section>
 
