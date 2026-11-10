@@ -102,8 +102,12 @@ body { background: var(--color-bg-canvas); }
 }
 .lp-sec__head { display: grid; gap: var(--space-3); align-content: start; }
 .lp-sec__micro { margin: 0; }
-.lp-sec__h { margin: 0; display: grid; font-size: var(--type-h3); line-height: var(--line-h3); font-weight: var(--weight-medium); letter-spacing: var(--tracking-h3); text-wrap: balance; }
-.lp-sec__h span { color: var(--color-text-tertiary); }
+/* High-contrast heading pair (after ericsin.com): same size and weight, primary vs a light grey.
+   At h2 size (28-32px) both lines are WCAG large text, so the sub-line may use the 3:1 grey
+   (color-border-strong: 3.77:1 light, 3.67:1 dark). prefers-contrast: more returns it to tertiary. */
+.lp-sec__h { margin: 0; display: grid; font-size: var(--type-h2); line-height: var(--line-h2); font-weight: var(--weight-medium); letter-spacing: var(--tracking-display-lg); color: var(--color-text-primary); text-wrap: balance; }
+.lp-sec__h span { color: var(--color-border-strong); }
+@media (prefers-contrast: more) { .lp-sec__h span { color: var(--color-text-tertiary); } }
 .lp-sec__body { container: lp-body / inline-size; min-width: 0; }
 .lp-sec__intro { margin: 0; max-width: 48ch; font-size: var(--type-body-md); line-height: var(--line-body-md); color: var(--color-text-secondary); text-wrap: pretty; }
 /* Right-hand content starts level with the heading, not the microcopy above it */
