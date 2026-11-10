@@ -1,4 +1,4 @@
-import sys, os, base64
+import sys, os
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from lib import I, S, IMG, showcase
 REPO = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '..', '..'))
@@ -28,7 +28,8 @@ TINT = {
     'apple':    ('#B6BAC6', '#B6BAC6', '45%'),
     'omni':     ('#755CFB', '#9B94E0', '16%'),   # the sparkle purples from the Framer asset
 }
-APPLE_LOGO = 'data:image/png;base64,' + base64.b64encode(open(os.path.join(REPO, 'assets', 'apple-logo.png'), 'rb').read()).decode()
+# Apple logo, transparent, filled with the primary text colour (black in light, white in dark)
+APPLE_LOGO = '<svg class="lp-shot__logo" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M12.152 6.896c-.948 0-2.415-1.078-3.96-1.04-2.04.027-3.91 1.183-4.961 3.014-2.117 3.675-.546 9.103 1.519 12.09 1.013 1.454 2.208 3.09 3.792 3.039 1.52-.065 2.09-.987 3.935-.987 1.831 0 2.35.987 3.96.948 1.637-.026 2.676-1.48 3.676-2.948 1.156-1.688 1.636-3.325 1.662-3.415-.039-.013-3.182-1.221-3.22-4.857-.026-3.04 2.48-4.494 2.597-4.559-1.429-2.09-3.623-2.324-4.39-2.376-2-.156-3.675 1.09-4.61 1.09zM15.53 3.83c.843-1.012 1.4-2.427 1.245-3.83-1.207.052-2.662.805-3.532 1.818-.78.896-1.454 2.338-1.273 3.714 1.338.104 2.715-.688 3.559-1.701"/></svg>'
 
 def card(p):
     k, t, sub, badges, eyebrow, href = p
@@ -36,7 +37,7 @@ def card(p):
     html = showcase('white', t, sub, badges, eyebrow, href=href or '#work', more='')
     html = html.replace('class="pm-card pm-card--showcase"', f'class="pm-card pm-card--showcase lp-tint" style="--lp-a:{a};--lp-b:{b};--lp-amt:{amt}"', 1)
     # Placeholder asset: a plain 8px-rounded rectangle until the real screenshot exists. Apple keeps its logo centred.
-    inner = f'<img class="lp-shot__logo" src="{APPLE_LOGO}" alt="" width="82" height="95">' if k == 'apple' else ''
+    inner = APPLE_LOGO if k == 'apple' else ''
     shot = f'<div class="lp-shot{" lp-shot--apple" if k == "apple" else ""}" aria-hidden="true">{inner}</div>'
     i = html.index('<div class="pm-card__shot">'); j = html.index('</div></div></article>')
     return html[:i] + f'<div class="pm-card__shot">{shot}' + html[j:]
@@ -71,16 +72,18 @@ body { background: var(--color-bg-canvas); }
     color-mix(in srgb, var(--lp-a) var(--lp-amt), var(--color-bg-elevated)) 0%,
     color-mix(in srgb, var(--lp-b) calc(var(--lp-amt) * 0.45), var(--color-bg-elevated)) 45%,
     var(--color-bg-elevated) 90%);
-  box-shadow: 0 0 0 1px var(--color-border-subtle), var(--shadow-xs);
+  box-shadow: none; /* no border at rest */
 }
-@media (hover: hover) { .pm-card--showcase.lp-tint:hover { box-shadow: 0 0 0 1px var(--color-border-default), var(--shadow-sm); } }
+/* Hover (and keyboard focus): a soft grey shadow, x 0 · y 3 · blur 12 · grey at 10% */
+.pm-card--showcase.lp-tint:focus-within { box-shadow: 0 3px 12px rgb(27 32 38 / 10%); }
+@media (hover: hover) { .pm-card--showcase.lp-tint:hover { box-shadow: 0 3px 12px rgb(27 32 38 / 10%); } }
 @container pm-showcase (min-width: 768px) { .lp-tint .pm-card__copy { align-self: start !important; } }
 .lp-tint .pm-card__shot { padding: var(--space-8) var(--space-8) var(--space-8) !important; align-self: end; }
 @container pm-showcase (min-width: 768px) { .lp-tint .pm-card__shot { padding: var(--space-12) var(--space-10) var(--space-10) var(--space-2) !important; } }
 @container pm-showcase (max-width: 479px) { .lp-tint .pm-card__shot { padding: var(--space-6) var(--space-5) var(--space-5) !important; } }
 .lp-shot { aspect-ratio: 16 / 10; border-radius: var(--radius-md); background: var(--color-bg-elevated); box-shadow: 0 0 0 1px var(--color-border-subtle), var(--shadow-sm); display: grid; place-items: center; }
-.lp-shot--apple { background: #B6BAC6; }
-.pm-card--showcase .pm-card__shot img.lp-shot__logo { width: 13%; min-width: 36px; height: auto; aspect-ratio: auto; border-radius: 0; box-shadow: none; transform: none !important; }
+.lp-shot--apple { background: none; box-shadow: none; color: var(--color-text-primary); }
+.lp-shot__logo { width: 16%; min-width: 48px; height: auto; }
 @media (prefers-reduced-motion: no-preference) {
   .pm-card--showcase.lp-tint { transition: box-shadow var(--motion-duration-base) var(--motion-ease); }
   .lp-shot { transition: transform var(--motion-duration-base) var(--motion-ease); }
