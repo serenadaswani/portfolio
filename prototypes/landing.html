@@ -1170,6 +1170,14 @@ body { background: var(--color-bg-canvas); }
   box-shadow: 0 1px 2px rgb(0 0 0 / 6%), 0 var(--space-4) var(--space-10) calc(-1 * var(--space-2)) rgb(0 0 0 / 18%); }
 .lp-shot::after { content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none;
   box-shadow: inset 0 0 0 1px rgb(255 255 255 / 12%), inset 0 0 var(--space-6) rgb(0 0 0 / 7%); }
+/* Logo top-right above the screenshot, vertically centred with the title on the left (from 480px card width;
+   narrower cards keep the logo above the title so the title never truncates) */
+@container pm-showcase (min-width: 480px) {
+  .lp-tint .pm-card__copy > .lp-card-logo { position: absolute; z-index: 1; right: var(--space-8); margin: 0;
+    top: calc(var(--space-8) + (var(--type-h3) * var(--line-h3) - var(--lp-logo-h)) / 2); }
+  .lp-tint .pm-card__copy { padding-right: calc(var(--space-8) + var(--lp-logo-w-max, 140px) + var(--space-6)) !important; }
+}
+@container pm-showcase (min-width: 768px) { .lp-tint .pm-card__copy { padding-right: var(--space-8) !important; } }
 @media (prefers-reduced-motion: no-preference) {
   .pm-card--showcase.lp-tint { transition: box-shadow var(--motion-duration-base) var(--motion-ease); }
   .lp-shot { transition: transform var(--motion-duration-base) var(--motion-ease); }
