@@ -1156,13 +1156,17 @@ body { background: var(--color-bg-canvas); }
   .lp-tint .pm-card__copy { align-self: start !important; }
 }
 /* The screenshot sits lower than the logo, offset right and cropped by the card's right edge */
-.lp-tint .pm-card__shot { position: relative; align-self: end; padding: var(--space-10) 0 var(--space-10) var(--space-12) !important; }
-@container pm-showcase (min-width: 768px) { .lp-tint .pm-card__shot { padding: var(--space-20) 0 var(--space-10) var(--space-4) !important; } }
-@container pm-showcase (max-width: 479px) { .lp-tint .pm-card__shot { padding: var(--space-8) 0 var(--space-8) var(--space-8) !important; } }
+/* Docked to the bottom-right corner: cropped by the card's right and bottom edges, 15% larger than its column */
+.lp-tint .pm-card__shot { position: relative; align-self: end; padding: var(--space-10) 0 0 var(--space-12) !important; }
+@container pm-showcase (min-width: 768px) { .lp-tint .pm-card__shot { padding: var(--space-24) 0 0 var(--space-4) !important; } }
+/* Runs past the bottom edge too (cropped), so it sits low in the card */
+.lp-tint .lp-shot { margin-bottom: calc(-1 * var(--space-10)); }
+@container pm-showcase (min-width: 768px) { .lp-tint .lp-shot { margin-bottom: calc(-1 * var(--space-16)); } }
+@container pm-showcase (max-width: 479px) { .lp-tint .pm-card__shot { padding: var(--space-8) 0 0 var(--space-8) !important; } }
 .lp-tint .pm-card__shot::before { content: ""; position: absolute; z-index: -1; inset: 15% -10% -20% 0; background: radial-gradient(closest-side, var(--lp-glow), transparent); pointer-events: none; }
 /* Lifted, not pasted on (after Apple Music's album art): a soft two-layer outer shadow plus a faint inner vignette
    drawn on top of the image (::after), so the edges blend into the background. No fade: the whole screenshot stays visible. */
-.lp-shot { position: relative; aspect-ratio: 16 / 10; border-radius: var(--radius-md) 0 0 var(--radius-md); background: var(--color-text-on-image);
+.lp-shot { position: relative; width: 115%; aspect-ratio: 16 / 10; border-radius: var(--radius-md) 0 0 0; background: var(--color-text-on-image);
   box-shadow: 0 1px 2px rgb(0 0 0 / 6%), 0 var(--space-4) var(--space-10) calc(-1 * var(--space-2)) rgb(0 0 0 / 18%); }
 .lp-shot::after { content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none;
   box-shadow: inset 0 0 0 1px rgb(255 255 255 / 12%), inset 0 0 var(--space-6) rgb(0 0 0 / 7%); }
