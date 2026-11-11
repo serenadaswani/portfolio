@@ -104,7 +104,12 @@ body { background: var(--color-bg-canvas); }
 .pm-split__main > .pm-divider + .pm-split__section { margin-top: 0; }
 
 /* About + Experience share one section: bio, then an "Experience" sub-heading and the timeline */
-.lp-sub { display: flex; align-items: baseline; gap: var(--space-2); margin: var(--space-12) 0 var(--space-4); font-size: var(--type-body-md); line-height: var(--line-body-md); font-weight: var(--weight-medium); color: var(--color-text-primary); }
+/* Sub-section heading (Experience): the same left-column pattern, one step smaller (h4 size). At that size the second
+   line is not WCAG large text, so it stays tertiary (4.5:1+) rather than the lighter large-text grey. */
+.lp-sec__h.lp-sec__h--sub { font-size: var(--type-h4); line-height: var(--line-h4); letter-spacing: var(--tracking-h4); }
+.lp-sec__h.lp-sec__h--sub span { color: var(--color-text-tertiary); }
+.lp-sec__head--sub { margin-top: var(--space-6); }
+@container (min-width: 768px) { .lp-sec__head--sub, .lp-sec__body--sub { margin-top: var(--space-8); } }
 /* Resume in the side nav: a link out, marked with the external icon (14px, centred) */
 .pm-sidenav__item.lp-nav-ext { justify-content: flex-start; align-items: center; gap: var(--space-1); }
 .lp-nav-ext .pm-icon { width: 14px; height: 14px; flex: none; }
@@ -268,9 +273,9 @@ page = f'''<title>Serena Daswani Portfolio</title>
           <p>I’m a product designer in San Francisco who turns complexity into clarity. I’m designing at Deploy; before that I designed at Apple and Procense, and interned at OmniSynkAI.</p>
           <p>My background is enterprise design: data-heavy tools for testing, QA and engineering. I’m hands-on from research and prototyping through to UI polish.</p><p>Off the clock, you’ll find me people-watching at my local Philz, or watching Bay Area sports from the couch.</p>
         </div>
-        <h3 class="lp-sub" id="lp-exp-h">Experience <span class="pm-meta-text">2022 – 2026</span></h3>
-        <ol class="lp-tl" aria-labelledby="lp-exp-h">{''.join(tl_item(len(ROLES) - 1 - j, len(ROLES), *r) for j, r in enumerate(ROLES))}</ol>
       </div>
+      <div class="lp-sec__head lp-sec__head--sub"><h3 class="lp-sec__h lp-sec__h--sub" id="lp-exp-h">Experience<span>2022 – 2026</span></h3></div>
+      <div class="lp-sec__body lp-sec__body--sub"><ol class="lp-tl" aria-labelledby="lp-exp-h">{''.join(tl_item(len(ROLES) - 1 - j, len(ROLES), *r) for j, r in enumerate(ROLES))}</ol></div>
     </section>
 
     <p class="pm-meta-text lp-colophon">© 2026 {NAME} · Built on Paper × Midnight {VER}</p>
