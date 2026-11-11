@@ -18,7 +18,7 @@ ROLES = [('D', 'Deploy', 'Product designer', 'Jan 2026 – Present', True, 'Prod
          ('O', 'OmniSynkAI', 'Product design intern', 'Jul – Sep 2024', False, 'Designed an AI autofill feature for inventory listings.'),
          ('P', 'Procense', 'UI/UX designer, contract', 'Jan 2022 – Aug 2024', False, 'Sole designer for a B2B enterprise platform for manufacturing QA.')]
 SOCIAL = [('LinkedIn', 'https://www.linkedin.com/in/serena-daswani'), ('GitHub', 'https://github.com/serenadaswani'), ('Framer', 'https://serenadaswani.framer.website/')]
-SECTIONS = ['Work', 'About', 'Experience', 'Contact']
+SECTIONS = ['Work', 'About']
 
 # Project art, after Apple Music's banners: a bright brand-colour background, a soft glow behind the screenshot,
 # and the screenshot fading into the background at its cropped bottom edge. The darkest tone sits top-left, where the
@@ -83,12 +83,8 @@ def tl_item(i, n, m, org, r, yrs, now, scope=''):
     return (f'<li class="lp-tl__item{" is-current" if now else ""}" style="--p:{p:.4f}">'
             f'<span class="lp-tl__date pm-meta-text">{date_nb(yrs)}</span>'
             '<span class="lp-tl__dot" aria-hidden="true"></span>'
-            f'<div class="lp-tl__body"><h3 class="lp-tl__org">{logo(org)}<span class="pm-sr">{org}</span></h3>'
+            f'<div class="lp-tl__body"><h4 class="lp-tl__org">{logo(org)}<span class="pm-sr">{org}</span></h4>'
             f'<span class="lp-tl__role">{r}</span></div></li>')
-
-def copy_btn(i):
-    # No public address yet: the button says so instead of copying a placeholder.
-    return f'<button type="button" class="pm-btn pm-btn--secondary pm-btn--sm" data-copy="" id="copy-{i}">{I["copy"]}<span>Copy email</span></button>'
 
 def ext(label, href):
     return f'<a class="pm-link pm-link--subtle" href="{href}" target="_blank" rel="noopener">{label}<span class="pm-sr"> (opens in a new tab)</span></a>'
@@ -106,6 +102,12 @@ body { background: var(--color-bg-canvas); }
 
 /* Dividers between sections carry the spacing (Divider default strength, lg size) */
 .pm-split__main > .pm-divider + .pm-split__section { margin-top: 0; }
+
+/* About + Experience share one section: bio, then an "Experience" sub-heading and the timeline */
+.lp-sub { display: flex; align-items: baseline; gap: var(--space-2); margin: var(--space-12) 0 var(--space-4); font-size: var(--type-body-md); line-height: var(--line-body-md); font-weight: var(--weight-medium); color: var(--color-text-primary); }
+/* Resume in the side nav: a link out, marked with the external icon (14px, centred) */
+.pm-sidenav__item.lp-nav-ext { justify-content: flex-start; align-items: center; gap: var(--space-1); }
+.lp-nav-ext .pm-icon { width: 14px; height: 14px; flex: none; }
 
 /* Sections (after ericsin.com): microcopy + heading on the left, content on the right (>=768px main column).
    Work keeps its grid full width under the header row. */
@@ -210,11 +212,11 @@ body { font-family: var(--font-sans); }
 .lp-about { display: grid; gap: var(--space-8); }
 .lp-about p { margin: 0; max-width: 60ch; font-size: var(--type-body-md); line-height: var(--line-body-md); color: var(--color-text-secondary); text-wrap: pretty; }
 .lp-about p:first-child { font-size: var(--type-body-lg); line-height: var(--line-body-lg); color: var(--color-text-primary); }
-.lp-contact__actions { display: flex; flex-wrap: wrap; gap: var(--space-2); }
 .lp-colophon { margin: var(--space-16) 0 0; padding-top: var(--space-4); border-top: 1px solid var(--color-border-subtle); }
 """
 
-NAV = ''.join(f'<li><a class="pm-sidenav__item" href="#{s.lower()}"{" aria-current=\"location\"" if j == 0 else ""} data-spy>{s}</a></li>' for j, s in enumerate(SECTIONS))
+NAV = (''.join(f'<li><a class="pm-sidenav__item" href="#{s.lower()}"{" aria-current=\"location\"" if j == 0 else ""} data-spy>{s}</a></li>' for j, s in enumerate(SECTIONS))
+       + f'<li><a class="pm-sidenav__item lp-nav-ext" href="#resume" data-soon>Resume{I["ext"]}</a></li>')
 
 page = f'''<title>Serena Daswani Portfolio</title>
 <meta name="claude:viewport-fit-sides" content="cover">
@@ -237,7 +239,6 @@ page = f'''<title>Serena Daswani Portfolio</title>
       <h1 class="pm-intro__name">{NAME} <span>is a product designer who builds for fun.</span></h1>
       <p class="pm-intro__text">Currently designing at Deploy. Previously at Apple and Procense.</p>
       <span class="pm-intro__status"><span class="pm-hero__dot" aria-hidden="true"></span>Designing at Deploy</span>
-      <div class="pm-intro__actions">{copy_btn('intro')}<a class="pm-btn pm-btn--ghost pm-btn--sm" href="#resume" data-soon>Resume{I["ext"]}</a></div>
     </div>
     <nav class="pm-sidenav pm-split__nav" aria-label="Sections"><ul class="pm-sidenav__list">{NAV}</ul></nav>
     <div class="pm-split__foot">
@@ -262,32 +263,19 @@ page = f'''<title>Serena Daswani Portfolio</title>
 
     <section class="pm-split__section lp-sec" id="about" aria-labelledby="lp-about-h">
       {sec_head(2, 'About', 'lp-about-h', 'About me', 'San Francisco')}
-      <div class="lp-sec__body lp-about">
+      <div class="lp-sec__body">
         <div class="lp-about" style="gap:var(--space-4)">
           <p>I’m a product designer in San Francisco who turns complexity into clarity. I’m designing at Deploy; before that I designed at Apple and Procense, and interned at OmniSynkAI.</p>
           <p>My background is enterprise design: data-heavy tools for testing, QA and engineering. I’m hands-on from research and prototyping through to UI polish.</p><p>Off the clock, you’ll find me people-watching at my local Philz, or watching Bay Area sports from the couch.</p>
         </div>
+        <h3 class="lp-sub" id="lp-exp-h">Experience <span class="pm-meta-text">2022 – 2026</span></h3>
+        <ol class="lp-tl" aria-labelledby="lp-exp-h">{''.join(tl_item(len(ROLES) - 1 - j, len(ROLES), *r) for j, r in enumerate(ROLES))}</ol>
       </div>
-    </section>
-
-    <hr class="pm-divider pm-divider--default pm-divider--lg" aria-hidden="true">
-
-    <section class="pm-split__section lp-sec" id="experience" aria-labelledby="lp-exp-h">
-      {sec_head(3, 'Experience', 'lp-exp-h', '4+ years of experience', '2022 – 2026')}
-      <div class="lp-sec__body"><ol class="lp-tl" aria-labelledby="lp-exp-h">{''.join(tl_item(len(ROLES) - 1 - j, len(ROLES), *r) for j, r in enumerate(ROLES))}</ol></div>
-    </section>
-
-    <hr class="pm-divider pm-divider--default pm-divider--lg" aria-hidden="true">
-
-    <section class="pm-split__section lp-sec" id="contact" aria-labelledby="lp-contact-h">
-      {sec_head(4, 'Contact', 'lp-contact-h', 'Want to work together?', 'Say hello.')}
-      <div class="lp-sec__body"><div class="lp-contact__actions">{copy_btn('contact')}{''.join(f'<a class="pm-btn pm-btn--ghost pm-btn--sm" href="{h}" target="_blank" rel="noopener">{l}{I["ext"]}<span class="pm-sr"> (opens in a new tab)</span></a>' for l, h in SOCIAL[:1])}</div></div>
     </section>
 
     <p class="pm-meta-text lp-colophon">© 2026 {NAME} · Built on Paper × Midnight {VER}</p>
   </main>
 </div>
-<p class="pm-sr" aria-live="polite" id="lp-live"></p>
 </div>
 
 <script>
@@ -319,18 +307,6 @@ page = f'''<title>Serena Daswani Portfolio</title>
     links.forEach(function (a) {{ if (a === cur) a.setAttribute('aria-current', 'location'); else a.removeAttribute('aria-current'); }});
   }}
   window.addEventListener('scroll', spy, {{ passive: true }}); window.addEventListener('resize', spy); spy();
-
-  // Copy email: no public address yet, so say that
-  var live = document.getElementById('lp-live');
-  document.querySelectorAll('[data-copy]').forEach(function (b) {{
-    var label = b.querySelector('span');
-    b.addEventListener('click', function () {{
-      var e = b.getAttribute('data-copy');
-      function done(ok, msg) {{ label.textContent = msg; live.textContent = ok ? 'Email address copied' : msg; setTimeout(function () {{ label.textContent = 'Copy email'; }}, 2000); }}
-      if (!e) {{ done(false, 'Email TBC'); return; }}
-      try {{ navigator.clipboard.writeText(e).then(function () {{ done(true, 'Copied'); }}, function () {{ done(false, e); }}); }} catch (x) {{ done(false, e); }}
-    }});
-  }});
 
   // Live local time, San Francisco (Pacific)
   var t = document.getElementById('lp-time');
