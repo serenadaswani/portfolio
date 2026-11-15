@@ -106,7 +106,7 @@ body { margin: 0; font-family: var(--font-sans); background: var(--color-bg-canv
   .cx-slot, .cx-cta { order: 0; }
   .cx-slot { margin: 0; }
   .cx-copy .cx-cta { margin-top: var(--space-4); padding-left: 0; }
-  .cx-title { font-size: var(--type-h2); line-height: var(--line-h2); letter-spacing: var(--tracking-h2); }
+  .cx-title { font-size: var(--type-h3); line-height: var(--line-h3); letter-spacing: var(--tracking-h3); }
   .cx-tags { justify-content: flex-start; }
 }
 

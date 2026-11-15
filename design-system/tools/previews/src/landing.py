@@ -7,12 +7,13 @@ comps = open(os.path.join(REPO, 'design-system', 'css', 'components.css')).read(
 NAME = 'Serena Daswani'
 VER = 'v1.9'
 # Real content comes from site.js (see CLAUDE.md). Anything marked Placeholder or TBC is still to replace.
-FEATURED = [  # strongest first: full width. Title = project name (one line); the longer line goes underneath.
-    ('mensio', 'Mensio Data Explorer', 'Redesigning chart building for self-serve analysis, from analysts’ follow-up questions to a guided builder.', ['Product design', 'Analytics'], '', 'mensio.html'),
-    ('procense', 'Procense Digital Forms', 'A tablet-first replacement for paper batch and SOP forms in chemical manufacturing QA.', ['Product design', 'Manufacturing'], '', 'https://serenadaswani.framer.website/project-detail-procense-digital-forms-application')]
+FEATURED = [  # strongest first: full width. Titles after itti.framer.website: verb (what kind of work) + what + who/impact, under 8 words.
+    # Facts from the Framer case studies; the line underneath adds context the title doesn't carry.
+    ('mensio', 'Redesigning Mensio’s Data Explorer for self-serve analysis', 'Turned analysts’ follow-up questions into a guided chart builder, shipped in 14 weeks.', ['Product design', 'Analytics'], '', 'mensio.html'),
+    ('procense', 'Digitizing QA forms for 10% faster batches', 'Tablet-first batch and SOP forms for chemical manufacturing, with fully automated traceability.', ['Product design', 'Manufacturing'], '', 'https://serenadaswani.framer.website/project-detail-procense-digital-forms-application')]
 MORE = [  # two-up below
-    ('apple', 'Apple QA Reporting', 'Sole designer on an internal tool for QA workflows.', ['Product design'], '', 'https://serenadaswani.framer.website/project-detail-apple-internal-reporting-tool'),
-    ('omni', 'OmniSynkAI Autofill', 'AI-generated listing content with regeneration, feedback and tone options.', ['Product design', 'AI'], '', 'https://serenadaswani.framer.website/project-detail-omnisynkai-ai-autofill-feature')]
+    ('apple', 'Redesigning QA reporting for Apple’s internal teams', 'Sole designer on an internal tool for QA workflows.', ['Product design'], '', 'https://serenadaswani.framer.website/project-detail-apple-internal-reporting-tool'),
+    ('omni', 'Designing AI autofill for e-commerce product listings', 'Generated listing content with regeneration, feedback and tone options.', ['Product design', 'AI'], '', 'https://serenadaswani.framer.website/project-detail-omnisynkai-ai-autofill-feature')]
 ROLES = [('D', 'Deploy', 'Product designer', 'Jan 2026 – Present', True, 'Product design for Mensio, and a design system adopted across Deploy’s products.'),
          ('A', 'Apple', 'UI/UX designer, contract', 'Aug 2024 – Dec 2025', False, 'Sole designer on an internal QA reporting tool.'),
          ('O', 'OmniSynkAI', 'Product design intern', 'Jul – Sep 2024', False, 'Designed an AI autofill feature for inventory listings.'),
@@ -176,7 +177,7 @@ body { background: var(--color-bg-canvas); }
 }
 .lp-tint .pm-card__copy { min-width: 0; gap: var(--space-2); }
 .lp-card-logo { display: block; width: auto; margin-bottom: var(--space-6); color: var(--color-text-on-image); }
-.lp-tint .pm-card__title { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
+.lp-tint .pm-card__title { max-width: 100%; text-wrap: balance; } /* titles are short sentences now: they may wrap */
 .lp-tint .pm-card__title a, .lp-tint .pm-card__sub { color: var(--color-text-on-image); }
 .lp-tint .pm-card__sub { max-width: 42ch; }
 /* Tags on colour: frosted white, white text */
