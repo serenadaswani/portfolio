@@ -1222,7 +1222,7 @@ body { margin: 0; font-family: var(--font-sans); background: var(--color-bg-canv
 .cx-nav .pm-topnav__item .pm-icon { width: 14px; height: 14px; margin-left: var(--space-1); }
 
 /* Hero: full width; the page background cross-fades to the active project's darker shade */
-.cx { position: relative; isolation: isolate; overflow: hidden; color: var(--color-text-on-image); padding-top: var(--space-4); }
+.cx { position: relative; isolation: isolate; overflow: hidden; color: var(--color-text-on-image); padding-top: var(--space-8); }
 .cx-bg, .cx-bg > span { position: absolute; inset: 0; z-index: -1; }
 .cx-bg > span { opacity: 0; background: var(--page); }
 .cx-bg > span.is-active { opacity: 1; }
@@ -1239,7 +1239,7 @@ body { margin: 0; font-family: var(--font-sans); background: var(--color-bg-canv
    About shows below the hero. */
 /* Sizes live on the section so the track and the image layer share them */
 /* The centre card spans the section with a 60px margin each side; the screenshot keeps its own size and the rest is padding */
-.cx { --cx-margin: 60px; --cx-w: calc(100cqw - 2 * var(--cx-margin)); --cx-img: min(900px, calc(var(--cx-w) - 2 * var(--space-16)), calc((100svh - 568px) * 1.92)); --cx-pad: calc((var(--cx-w) - var(--cx-img)) / 2); }
+.cx { --cx-margin: 60px; --cx-w: calc(100cqw - 2 * var(--cx-margin)); --cx-img: min(960px, calc(var(--cx-w) - 2 * var(--space-16)), calc((100svh - 520px) * 1.92)); --cx-pad: calc((var(--cx-w) - var(--cx-img)) / 2); }
 .cx-track {
   /* neighbouring cards sit just off-screen at rest and slide in fully opaque, like pages (only their screenshots show) */
   display: flex; align-items: center; gap: calc((100cqw - var(--cx-w)) / 2 + var(--space-4)); overflow-x: auto; overscroll-behavior-x: contain; scroll-snap-type: x mandatory; scrollbar-width: none;
@@ -1270,7 +1270,7 @@ body { margin: 0; font-family: var(--font-sans); background: var(--color-bg-canv
    Neighbours peek in only slightly from the screen edges so they never cover the copy. */
 @media (min-width: 1024px) and (min-aspect-ratio: 13/10) {
   .cx { --cx-text: clamp(300px, 24cqw, 400px); --cx-col-gap: var(--space-12);
-    --cx-img: min(calc(var(--cx-w) - 2 * var(--space-12) - var(--cx-text) - var(--cx-col-gap)), calc((100svh - 300px) * 1.6)); }
+    --cx-img: min(calc(var(--cx-w) - 2 * var(--space-12) - var(--cx-text) - var(--cx-col-gap)), calc((100svh - 240px) * 1.6)); }
   .cx-card { grid-template-columns: var(--cx-text) var(--cx-img); justify-content: center; align-items: center; column-gap: var(--cx-col-gap);
     padding: var(--space-10) var(--space-12); text-align: left; }
   .cx-copy { display: grid; justify-items: start; align-content: center; gap: var(--space-2); }
@@ -1314,7 +1314,7 @@ body { margin: 0; font-family: var(--font-sans); background: var(--color-bg-canv
 .cx-card:not(.is-active) .cx-cta { pointer-events: none; }
 
 /* Controls: previous / dots / next (always enabled: the loop never ends) */
-.cx-controls { display: flex; justify-content: center; align-items: center; gap: var(--space-3); padding-bottom: var(--space-4); }
+.cx-controls { display: flex; justify-content: center; align-items: center; gap: var(--space-3); padding-bottom: var(--space-8); }
 .cx-controls .pm-btn { color: var(--color-text-on-image); background: transparent; }
 
 @media (hover: hover) { .cx-controls .pm-btn:hover { background: color-mix(in srgb, var(--color-text-on-image) 16%, transparent); } }
@@ -1333,7 +1333,8 @@ body { margin: 0; font-family: var(--font-sans); background: var(--color-bg-canv
 }
 
 /* Below the hero: About + Experience, reusing the section and timeline styles from landing.html */
-.cx-main { max-width: var(--content-max-width); margin: 0 auto; padding: var(--space-4) var(--space-4) var(--space-16); container-type: inline-size; }
+/* 60px between the work section and About */
+.cx-main { max-width: var(--content-max-width); margin: 0 auto; padding: 60px var(--space-4) var(--space-16); container-type: inline-size; }
 @container (min-width: 768px) { .cx-main { padding-inline: var(--space-10); } }
 .cx-foot { display: flex; flex-wrap: wrap; justify-content: space-between; gap: var(--space-3); margin-top: var(--space-16); padding-top: var(--space-4); border-top: 1px solid var(--color-border-subtle); }
 .cx-foot ul { display: flex; gap: var(--space-4); list-style: none; margin: 0; padding: 0; }
