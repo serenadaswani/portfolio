@@ -19,6 +19,9 @@ ROLES = [('D', 'Deploy', 'Product designer', 'Jan 2026 – Present', True, 'Prod
          ('P', 'Procense', 'UI/UX designer, contract', 'Jan 2022 – Aug 2024', False, 'Sole designer for a B2B enterprise platform for manufacturing QA.')]
 SOCIAL = [('LinkedIn', 'https://www.linkedin.com/in/serena-daswani'), ('GitHub', 'https://github.com/serenadaswani'), ('Framer', 'https://serenadaswani.framer.website/')]
 SECTIONS = ['Work', 'About']
+BIO = ['I’m a product designer in San Francisco who turns complexity into clarity. I’m designing at Deploy; before that I designed at Apple and Procense, and interned at OmniSynkAI.',
+       'My background is enterprise design: data-heavy tools for testing, QA and engineering. I’m hands-on from research and prototyping through to UI polish.',
+       'Off the clock, you’ll find me people-watching at my local Philz, or watching Bay Area sports from the couch.']
 
 # Project art, after Apple Music's banners: a bright brand-colour background, a soft glow behind the screenshot,
 # and the screenshot fading into the background at its cropped bottom edge. The darkest tone sits top-left, where the
@@ -164,8 +167,13 @@ body { background: var(--color-bg-canvas); }
 /* Project cards (after Apple Music's banners): brand background, white logo + text top-left, the white screenshot
    offset right with a soft glow behind it, fading into the background at its cropped bottom edge. Same in both themes. */
 .pm-card--showcase.lp-tint, .pm-card--showcase.lp-tint:hover, .pm-card--showcase.lp-tint:focus-within { background: var(--lp-bg); box-shadow: none; isolation: isolate; }
-.pm-card--showcase.lp-tint:focus-within { box-shadow: 0 3px 12px rgb(27 32 38 / 10%); }
-@media (hover: hover) { .pm-card--showcase.lp-tint:hover { box-shadow: 0 3px 12px rgb(27 32 38 / 10%); } }
+/* Hover and keyboard focus on the whole card: it rises and its shadow grows (about 10% larger than before) */
+.pm-card--showcase.lp-tint:focus-within { box-shadow: 0 4px 14px rgb(27 32 38 / 12%); }
+@media (hover: hover) { .pm-card--showcase.lp-tint:hover { box-shadow: 0 4px 14px rgb(27 32 38 / 12%); } }
+@media (prefers-reduced-motion: no-preference) {
+  .pm-card--showcase.lp-tint:focus-within { transform: translateY(calc(-1 * var(--space-1))); }
+  @media (hover: hover) { .pm-card--showcase.lp-tint:hover { transform: translateY(calc(-1 * var(--space-1))); } }
+}
 .lp-tint .pm-card__copy { min-width: 0; gap: var(--space-2); }
 .lp-card-logo { display: block; width: auto; margin-bottom: var(--space-6); color: var(--color-text-on-image); }
 .lp-tint .pm-card__title { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
@@ -201,7 +209,7 @@ body { background: var(--color-bg-canvas); }
 }
 @container pm-showcase (min-width: 768px) { .lp-tint .pm-card__copy { padding-right: var(--space-8) !important; } }
 @media (prefers-reduced-motion: no-preference) {
-  .pm-card--showcase.lp-tint { transition: box-shadow var(--motion-duration-base) var(--motion-ease); }
+  .pm-card--showcase.lp-tint { transition: box-shadow var(--motion-duration-base) var(--motion-ease), transform var(--motion-duration-base) var(--motion-ease); }
   .lp-shot { transition: transform var(--motion-duration-base) var(--motion-ease); }
 }
 @media (hover: hover) and (prefers-reduced-motion: no-preference) { .pm-card--showcase.lp-tint:hover .lp-shot { transform: translateY(calc(-1 * var(--space-1))); } }
@@ -270,8 +278,7 @@ page = f'''<title>Serena Daswani Portfolio</title>
       {sec_head(2, 'About', 'lp-about-h', 'About me', 'San Francisco')}
       <div class="lp-sec__body">
         <div class="lp-about" style="gap:var(--space-4)">
-          <p>I’m a product designer in San Francisco who turns complexity into clarity. I’m designing at Deploy; before that I designed at Apple and Procense, and interned at OmniSynkAI.</p>
-          <p>My background is enterprise design: data-heavy tools for testing, QA and engineering. I’m hands-on from research and prototyping through to UI polish.</p><p>Off the clock, you’ll find me people-watching at my local Philz, or watching Bay Area sports from the couch.</p>
+          {''.join(f'<p>{x}</p>' for x in BIO)}
         </div>
       </div>
       <div class="lp-sec__head lp-sec__head--sub"><h3 class="lp-sec__h lp-sec__h--sub" id="lp-exp-h">Experience<span>2022 – 2026</span></h3></div>
