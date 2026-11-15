@@ -34,10 +34,10 @@ def card(i, p, clone=False):
     tags = ''.join(f'<li class="pm-badge">{b}</li>' for b in badges)
     a11y = ' aria-hidden="true" inert' if clone else f' role="group" aria-roledescription="slide" aria-label="{i + 1} of {len(PROJECTS)}: {title}"'
     return (f'<article class="cx-card" data-i="{i}"{a11y} style="--card:{c["card"]};--glow:{c["glow"]}">'
-            f'{L.white_logo(k)}<h3 class="cx-title">{title}</h3><p class="cx-sub">{sub}</p>'
+            f'<div class="cx-copy">{L.white_logo(k)}<h3 class="cx-title">{title}</h3><p class="cx-sub">{sub}</p>'
             f'<ul class="cx-tags" aria-label="Disciplines">{tags}</ul>'
-            '<div class="cx-slot"></div>'
-            f'<a class="cx-cta" href="{href}">View case study{I["arrow"]}</a></article>')
+            f'<a class="cx-cta" href="{href}">View case study{I["arrow"]}</a></div>'
+            '<div class="cx-slot"></div></article>')
 
 def shot(j):
     """A screenshot on the image layer, one per card in the track (j = track position). Placed by the script."""
@@ -90,6 +90,25 @@ body { margin: 0; font-family: var(--font-sans); background: var(--color-bg-canv
 .cx-tags { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--space-1); list-style: none; margin: var(--space-2) 0 0; padding: 0; }
 .cx .pm-badge { background: color-mix(in srgb, var(--color-text-on-image) 16%, transparent); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--color-text-on-image) 30%, transparent); color: var(--color-text-on-image); }
 .cx-slot { width: var(--cx-img); aspect-ratio: 16 / 10; margin: var(--space-4) 0 var(--space-1); }
+/* Stacked (narrow or tall windows): copy, screenshot, then the link */
+.cx-copy { display: contents; }
+.cx-slot { order: 1; } .cx-cta { order: 2; }
+
+/* Wide, landscape windows (1024px+ and at least 1.3x wider than tall): the media carries the slide. Copy moves to a left column and the screenshot takes the
+   rest, sized to nearly the full card height, so a wide-but-short window no longer leaves the card mostly empty.
+   Neighbours peek in only slightly from the screen edges so they never cover the copy. */
+@media (min-width: 1024px) and (min-aspect-ratio: 13/10) {
+  .cx { --cx-text: clamp(300px, 24cqw, 400px); --cx-col-gap: var(--space-12);
+    --cx-img: min(calc(var(--cx-w) - 2 * var(--space-12) - var(--cx-text) - var(--cx-col-gap)), calc((100svh - 300px) * 1.6)); }
+  .cx-card { grid-template-columns: var(--cx-text) var(--cx-img); justify-content: center; align-items: center; column-gap: var(--cx-col-gap);
+    padding: var(--space-10) var(--space-12); text-align: left; }
+  .cx-copy { display: grid; justify-items: start; align-content: center; gap: var(--space-2); }
+  .cx-slot, .cx-cta { order: 0; }
+  .cx-slot { margin: 0; }
+  .cx-copy .cx-cta { margin-top: var(--space-4); padding-left: 0; }
+  .cx-title { font-size: var(--type-h2); line-height: var(--line-h2); letter-spacing: var(--tracking-h2); }
+  .cx-tags { justify-content: flex-start; }
+}
 
 /* Image layer: above the cards; each screenshot placed by transform from the scroll position. Clicking a side
    screenshot lands on the neighbouring card underneath, which brings it to the centre. */
@@ -106,7 +125,7 @@ body { margin: 0; font-family: var(--font-sans); background: var(--color-bg-canv
 .cx-paddle:focus-visible { outline: 2px solid var(--color-text-on-image); outline-offset: 2px; }
 .cx-paddle:focus-visible > span { opacity: 1; transform: none; }
 @media (prefers-reduced-motion: no-preference) { .cx-paddle > span { transition: opacity var(--motion-duration-base) var(--motion-ease), transform var(--motion-duration-base) var(--motion-ease); } }
-.cx-card > :not(.cx-slot) { transform: translateX(var(--shift, 0px)); }
+.cx-copy > * { transform: translateX(var(--shift, 0px)); }
 .cx-img { position: absolute; left: 0; top: 0; width: var(--cx-img); transform-origin: 50% 50%; will-change: transform; } /* taps and swipes pass through to the track */
 .cx-img__float { position: relative; display: block; }
 /* Side screenshots are solid (nothing shows through them, so no card edge or border runs across them) and dimmed with
@@ -185,15 +204,19 @@ SCRIPT = r"""
   }
   function layout() {
     var p = progress(), hr = hero.getBoundingClientRect(), slot = cards[Math.max(0, Math.min(cards.length - 1, Math.round(p)))].querySelector('.cx-slot').getBoundingClientRect();
-    var w = slot.width, h = slot.height, cx = hr.width / 2, cy = slot.top - hr.top + h / 2;
-    var spread = cx - (w * SIDE) / 2;                  // a neighbour sits flush with the screen edge, on top of the card's margin
+    var w = slot.width, h = slot.height, cy = slot.top - hr.top + h / 2, sw = w * SIDE, sh = h * SIDE;
+    // Resting geometry: where the active screenshot sits (centre of its slot with the card at rest) and where each
+    // neighbour rests. Stacked: flush with the screen edges. Wide: peeking in from the edges (24px into the card's margin).
+    var cardW = cards[0].offsetWidth, margin = (hr.width - cardW) / 2, cslot = cards[0].querySelector('.cx-slot');
+    var cx = margin + cslot.offsetLeft + w / 2, wide = matchMedia('(min-width: 1024px) and (min-aspect-ratio: 13/10)').matches;
+    var leftC = wide ? margin + 24 - sw / 2 : sw / 2, rightC = wide ? hr.width - margin - 24 + sw / 2 : hr.width - sw / 2;
     imgs.forEach(function (m, j) {
       var d = j - p, ad = Math.abs(d);
       if (ad > 2.5) { m.style.visibility = 'hidden'; return; }
       var t = Math.min(ad, 1), sc = 1 - (1 - SIDE) * t;
       // neighbours rest at half opacity and fade up as they come to the centre; further ones fade out
       // neighbours rest dimmed (a 50% tint of the card colour) and brighten as they come to the centre; further ones fade out
-      var x = cx + d * spread, dim = Math.min(ad, 1) * 0.5, op = ad <= 1 ? 1 : Math.max(0, 1 - (ad - 1) * 3);
+      var x = d < 0 ? cx + d * (cx - leftC) : cx + d * (rightC - cx), dim = Math.min(ad, 1) * 0.5, op = ad <= 1 ? 1 : Math.max(0, 1 - (ad - 1) * 3);
       m.style.setProperty('--dim', dim.toFixed(3));
       m.style.visibility = op > 0 ? 'visible' : 'hidden';
       m.style.opacity = op; m.style.zIndex = String(100 - Math.round(ad * 10));
@@ -202,9 +225,10 @@ SCRIPT = r"""
     // Card text trails the card a little while it moves (parallax), and is still at rest
     cards.forEach(function (c, j) { var d = j - p; c.style.setProperty('--shift', (Math.abs(d) < 1.5 ? (-d * 56).toFixed(1) : 0) + 'px'); });
     // Paddles cover the resting side screenshots
-    if (paddles) { var sw = w * SIDE, sh = h * SIDE;
-      paddles[0].style.cssText = 'left:0;top:' + (cy - sh / 2) + 'px;width:' + sw + 'px;height:' + sh + 'px';
-      paddles[1].style.cssText = 'left:' + (hr.width - sw) + 'px;top:' + (cy - sh / 2) + 'px;width:' + sw + 'px;height:' + sh + 'px'; }
+    if (paddles) { // cover the visible part of each resting neighbour
+      var lw = Math.max(48, leftC + sw / 2), rl = Math.min(hr.width - 48, rightC - sw / 2);
+      paddles[0].style.cssText = 'left:0;top:' + (cy - sh / 2) + 'px;width:' + lw + 'px;height:' + sh + 'px';
+      paddles[1].style.cssText = 'left:' + rl + 'px;top:' + (cy - sh / 2) + 'px;width:' + (hr.width - rl) + 'px;height:' + sh + 'px'; }
     mark(Math.round(p));
   }
   function recentre() { // jump, without animation, from a copy at either end to the same card in the middle copy
