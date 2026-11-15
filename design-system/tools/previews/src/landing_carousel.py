@@ -68,21 +68,21 @@ body { margin: 0; font-family: var(--font-sans); background: var(--color-bg-canv
    About shows below the hero. */
 /* Sizes live on the section so the track and the image layer share them */
 /* The centre card spans the section with a 60px margin each side; the screenshot keeps its own size and the rest is padding */
-.cx { --cx-margin: 60px; --cx-w: calc(100cqw - 2 * var(--cx-margin)); --cx-img: min(968px, calc(var(--cx-w) - 2 * var(--space-16)), calc((100svh - 560px) * 1.92)); --cx-pad: calc((var(--cx-w) - var(--cx-img)) / 2); }
+.cx { --cx-margin: 60px; --cx-w: calc(100cqw - 2 * var(--cx-margin)); --cx-img: min(900px, calc(var(--cx-w) - 2 * var(--space-16)), calc((100svh - 568px) * 1.92)); --cx-pad: calc((var(--cx-w) - var(--cx-img)) / 2); }
 .cx-track {
   /* neighbouring cards sit just off-screen at rest and slide in fully opaque, like pages (only their screenshots show) */
   display: flex; align-items: center; gap: calc((100cqw - var(--cx-w)) / 2 + var(--space-4)); overflow-x: auto; overscroll-behavior-x: contain; scroll-snap-type: x mandatory; scrollbar-width: none;
-  padding: 0 calc((100cqw - var(--cx-w)) / 2) var(--space-4); }
+  padding: 0 calc((100cqw - var(--cx-w)) / 2) var(--space-2); }
 .cx-track::-webkit-scrollbar { display: none; }
 .cx-track:focus-visible { outline: 2px solid var(--color-text-on-image); outline-offset: -4px; border-radius: var(--radius-lg); }
 @container (max-width: 767px) { .cx { --cx-margin: var(--space-3); --cx-img: calc(var(--cx-w) - 2 * var(--space-5)); } }
 
 /* Card: the brand colour with a soft glow behind the screenshot */
 .cx-card { --vis: 1; flex: 0 0 var(--cx-w); scroll-snap-align: center; position: relative; isolation: isolate; display: grid; justify-items: center; text-align: center; gap: var(--space-2);
-  padding: var(--space-6) var(--cx-pad) var(--space-2); border-radius: var(--radius-lg); }
+  padding: var(--space-10) var(--cx-pad) var(--space-8); border-radius: var(--radius-lg); }
 .cx-card::before { content: ""; position: absolute; inset: 0; z-index: -1; border-radius: inherit; opacity: var(--vis);
   background: radial-gradient(70% 45% at 50% 62%, color-mix(in srgb, var(--glow) 55%, transparent) 0%, transparent 70%), var(--card);
-  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--color-text-on-image) 10%, transparent), 0 var(--space-6) var(--space-12) calc(-1 * var(--space-4)) rgb(0 0 0 / 30%); }
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--color-text-on-image) 10%, transparent); } /* no drop shadow: the card rests on the page colour */
 .cx-card > * { opacity: var(--vis); }
 .cx-card .lp-card-logo { margin: 0 0 var(--space-2); color: var(--color-text-on-image); }
 .cx-title { margin: 0; font-size: var(--type-h3); line-height: var(--line-h3); font-weight: var(--weight-medium); letter-spacing: var(--tracking-h3); text-wrap: balance; }
@@ -111,7 +111,7 @@ body { margin: 0; font-family: var(--font-sans); background: var(--color-bg-canv
 .cx-card:not(.is-active) .cx-cta { pointer-events: none; }
 
 /* Controls: previous / dots / next (always enabled: the loop never ends) */
-.cx-controls { display: flex; justify-content: center; align-items: center; gap: var(--space-3); padding-bottom: var(--space-6); }
+.cx-controls { display: flex; justify-content: center; align-items: center; gap: var(--space-3); padding-bottom: var(--space-4); }
 .cx-controls .pm-btn { color: var(--color-text-on-image); background: transparent; }
 @media (hover: hover) { .cx-controls .pm-btn:hover { background: color-mix(in srgb, var(--color-text-on-image) 16%, transparent); } }
 .cx-controls .pm-btn:focus-visible { outline: 2px solid var(--color-text-on-image); outline-offset: 2px; }
@@ -122,16 +122,14 @@ body { margin: 0; font-family: var(--font-sans); background: var(--color-bg-canv
 .cx-dot:focus-visible { outline: 2px solid var(--color-text-on-image); outline-offset: 0; }
 @media (pointer: coarse) { .cx-dot { width: 44px; height: 44px; } }
 
-/* Motion: background cross-fade and a gentle float on the front screenshot. Scroll-linked placement is not an
-   animation, so it stays with reduced motion; the float and smooth scrolling do not. */
+/* Motion: background cross-fade. The front screenshot is static. Scroll-linked placement is not an animation, so it
+   stays with reduced motion; smooth scrolling does not. */
 @media (prefers-reduced-motion: no-preference) {
   .cx-bg > span { transition: opacity calc(var(--motion-duration-base) * 2.5) var(--motion-ease); }
-  .cx-img[data-active="true"] .cx-img__float { animation: cx-float 6s ease-in-out infinite; }
-  @keyframes cx-float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(calc(-1 * var(--space-2))); } }
 }
 
 /* Below the hero: About + Experience, reusing the section and timeline styles from landing.html */
-.cx-main { max-width: var(--content-max-width); margin: 0 auto; padding: var(--space-6) var(--space-4) var(--space-16); container-type: inline-size; }
+.cx-main { max-width: var(--content-max-width); margin: 0 auto; padding: var(--space-4) var(--space-4) var(--space-16); container-type: inline-size; }
 @container (min-width: 768px) { .cx-main { padding-inline: var(--space-10); } }
 .cx-foot { display: flex; flex-wrap: wrap; justify-content: space-between; gap: var(--space-3); margin-top: var(--space-16); padding-top: var(--space-4); border-top: 1px solid var(--color-border-subtle); }
 .cx-foot ul { display: flex; gap: var(--space-4); list-style: none; margin: 0; padding: 0; }
