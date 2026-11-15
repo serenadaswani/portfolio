@@ -27,7 +27,7 @@ HERO = {
 }
 
 def card(i, p, clone=False):
-    """One project card: logo, title, description, tags, the floating screenshot, then 'View case study'.
+    """One project card: logo, title, description, tags, an empty slot for the screenshot, then 'View case study'.
     Clones (for the infinite loop) are hidden from assistive tech and out of the tab order."""
     k, title, sub, badges, _, href = p
     c = HERO[k]
@@ -36,8 +36,12 @@ def card(i, p, clone=False):
     return (f'<article class="cx-card" data-i="{i}"{a11y} style="--card:{c["card"]};--glow:{c["glow"]}">'
             f'{L.white_logo(k)}<h3 class="cx-title">{title}</h3><p class="cx-sub">{sub}</p>'
             f'<ul class="cx-tags" aria-label="Disciplines">{tags}</ul>'
-            '<div class="cx-shot"><span class="cx-shot__img"></span></div>'
+            '<div class="cx-slot"></div>'
             f'<a class="cx-cta" href="{href}">View case study{I["arrow"]}</a></article>')
+
+def shot(j):
+    """A screenshot on the image layer, one per card in the track (j = track position). Placed by the script."""
+    return f'<div class="cx-img" data-j="{j}"><span class="cx-img__float"><span class="cx-shot__img"></span></span></div>'
 
 CSS = r"""
 /* ===== Landing, carousel idea (after the Philz app) ===== */
@@ -56,41 +60,41 @@ body { margin: 0; font-family: var(--font-sans); background: var(--color-bg-canv
    on each side. Sized from the page width (cqw on .cxp). */
 /* Wider card, bigger screenshot, more of each neighbour. The width is also capped by the window height so the whole
    centre card stays in view (below the 56px nav) on shorter screens. */
-/* Geometry. --cx-side: how much of each neighbour's screenshot shows at the screen edge; --cx-over: how far it reaches
-   into the centre card (on top of it, inside the card's side padding). The centre card spans the rest of the width; its
-   screenshot keeps its own size (--cx-img, sized from the window height so the top of About shows below the hero), and
-   the leftover becomes side padding. Every card and screenshot is the same size; side screenshots slide inward by
-   --cx-pull so their inner edge lands exactly --cx-over inside the centre card. */
-.cx-track { --cx-side: 168px; --cx-over: var(--space-8); --cx-gap: var(--space-6);
-  --cx-w: calc(100cqw - 2 * (var(--cx-side) - var(--cx-over)));
-  --cx-img: min(806px, calc(var(--cx-w) - 2 * var(--space-16)), calc((100svh - 560px) * 1.6));
-  --cx-pull: calc(var(--cx-gap) + (var(--cx-w) - var(--cx-img)) / 2 + var(--cx-over));
-  display: flex; align-items: center; gap: var(--cx-gap); overflow-x: auto; overscroll-behavior-x: contain; scroll-snap-type: x mandatory; scrollbar-width: none; padding: 0 calc((100cqw - var(--cx-w)) / 2) var(--space-4); }
+/* Geometry (after the Philz app recording). Cards scroll and snap like pages; only the centre card's surface shows.
+   Screenshots sit on a separate layer above the cards: the active one large and in front, its neighbours smaller (42%)
+   and behind it, centred just past the main screenshot's edge so they reach only slightly into the card. As you scroll,
+   the script interpolates every screenshot's position, size and stacking from the scroll position, so an incoming one
+   grows and comes forward while the outgoing one shrinks back. --cx-img is sized from the window height so the top of
+   About shows below the hero. */
+/* Sizes live on the section so the track and the image layer share them */
+.cx { --cx-pad: var(--space-16); --cx-img: min(806px, 60cqw, calc((100svh - 560px) * 1.6)); --cx-w: calc(var(--cx-img) + 2 * var(--cx-pad)); }
+.cx-track {
+  /* neighbouring cards sit just off-screen at rest and slide in fully opaque, like pages (only their screenshots show) */
+  display: flex; align-items: center; gap: calc((100cqw - var(--cx-w)) / 2 + var(--space-4)); overflow-x: auto; overscroll-behavior-x: contain; scroll-snap-type: x mandatory; scrollbar-width: none;
+  padding: 0 calc((100cqw - var(--cx-w)) / 2) var(--space-4); }
 .cx-track::-webkit-scrollbar { display: none; }
 .cx-track:focus-visible { outline: 2px solid var(--color-text-on-image); outline-offset: -4px; border-radius: var(--radius-lg); }
-@container (max-width: 767px) { .cx-track { --cx-side: 28px; --cx-over: var(--space-3); --cx-gap: var(--space-2); --cx-img: calc(var(--cx-w) - 2 * var(--space-6)); } }
+@container (max-width: 767px) { .cx { --cx-pad: var(--space-5); --cx-img: calc(84cqw - 2 * var(--cx-pad)); } }
 
-/* Card (after Philz): the brand colour, a soft glow behind the screenshot, everything centred */
-.cx-card { flex: 0 0 var(--cx-w); scroll-snap-align: center; position: relative; isolation: isolate; display: grid; justify-items: center; text-align: center; gap: var(--space-2);
-  padding: var(--space-6) calc((var(--cx-w) - var(--cx-img)) / 2) var(--space-2); border-radius: var(--radius-lg); }
-/* The card surface is a layer, so side cards can drop it: only their screenshot shows, like Philz's peeking drinks */
-.cx-card::before { content: ""; position: absolute; inset: 0; z-index: -1; border-radius: inherit; opacity: 0;
+/* Card: the brand colour with a soft glow behind the screenshot */
+.cx-card { --vis: 1; flex: 0 0 var(--cx-w); scroll-snap-align: center; position: relative; isolation: isolate; display: grid; justify-items: center; text-align: center; gap: var(--space-2);
+  padding: var(--space-6) var(--cx-pad) var(--space-2); border-radius: var(--radius-lg); }
+.cx-card::before { content: ""; position: absolute; inset: 0; z-index: -1; border-radius: inherit; opacity: var(--vis);
   background: radial-gradient(70% 45% at 50% 62%, color-mix(in srgb, var(--glow) 55%, transparent) 0%, transparent 70%), var(--card);
   box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--color-text-on-image) 10%, transparent), 0 var(--space-6) var(--space-12) calc(-1 * var(--space-4)) rgb(0 0 0 / 30%); }
-.cx-card.is-active { z-index: 1; }
-.cx-card.is-prev, .cx-card.is-next { z-index: 2; } /* their screenshots sit on top of the centre card's edge */
-.cx-card.is-active::before { opacity: 1; }
-.cx-card > :not(.cx-shot) { transition: opacity var(--motion-duration-base) var(--motion-ease); }
-.cx-card:not(.is-active) > :not(.cx-shot) { opacity: 0; }
-/* Side screenshots overflow their (invisible) cards toward the centre and tuck behind the centre card */
-.cx-card.is-prev .cx-shot { transform: translateX(var(--cx-pull)); }
-.cx-card.is-next .cx-shot { transform: translateX(calc(-1 * var(--cx-pull))); }
+.cx-card > * { opacity: var(--vis); }
 .cx-card .lp-card-logo { margin: 0 0 var(--space-2); color: var(--color-text-on-image); }
 .cx-title { margin: 0; font-size: var(--type-h3); line-height: var(--line-h3); font-weight: var(--weight-medium); letter-spacing: var(--tracking-h3); text-wrap: balance; }
 .cx-sub { margin: 0; max-width: 34rem; font-size: var(--type-body-md); line-height: var(--line-body-md); text-wrap: pretty; }
 .cx-tags { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--space-1); list-style: none; margin: var(--space-2) 0 0; padding: 0; }
 .cx .pm-badge { background: color-mix(in srgb, var(--color-text-on-image) 16%, transparent); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--color-text-on-image) 30%, transparent); color: var(--color-text-on-image); }
-.cx-shot { width: var(--cx-img); margin: var(--space-4) 0 var(--space-1); }
+.cx-slot { width: var(--cx-img); aspect-ratio: 16 / 10; margin: var(--space-4) 0 var(--space-1); }
+
+/* Image layer: above the cards; each screenshot placed by transform from the scroll position. Clicking a side
+   screenshot lands on the neighbouring card underneath, which brings it to the centre. */
+.cx-imgs { position: absolute; inset: 0; z-index: 3; pointer-events: none; }
+.cx-img { position: absolute; left: 0; top: 0; width: var(--cx-img); transform-origin: 50% 50%; will-change: transform; } /* taps and swipes pass through to the track */
+.cx-img__float { display: block; }
 .cx-shot__img { position: relative; display: block; aspect-ratio: 16 / 10; border-radius: var(--radius-md); background: var(--color-text-on-image);
   box-shadow: 0 1px 2px rgb(0 0 0 / 6%), 0 var(--space-5) var(--space-10) calc(-1 * var(--space-2)) rgb(0 0 0 / 30%); }
 .cx-shot__img::after { content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; box-shadow: inset 0 0 0 1px rgb(255 255 255 / 12%), inset 0 0 var(--space-6) rgb(0 0 0 / 7%); }
@@ -100,8 +104,6 @@ body { margin: 0; font-family: var(--font-sans); background: var(--color-bg-canv
 .cx-cta:focus-visible { outline: 2px solid var(--color-text-on-image); outline-offset: 3px; }
 @media (hover: hover) { .cx-cta:hover { text-decoration: underline; text-underline-offset: 0.2em; } .cx-cta:hover .pm-icon { transform: translateX(2px); } }
 .cx-cta .pm-icon { transition: transform var(--motion-duration-base) var(--motion-ease); }
-/* A peeking card brings itself to the centre when clicked */
-.cx-card:not(.is-active) { cursor: pointer; }
 .cx-card:not(.is-active) .cx-cta { pointer-events: none; }
 
 /* Controls: previous / dots / next (always enabled: the loop never ends) */
@@ -116,12 +118,11 @@ body { margin: 0; font-family: var(--font-sans); background: var(--color-bg-canv
 .cx-dot:focus-visible { outline: 2px solid var(--color-text-on-image); outline-offset: 0; }
 @media (pointer: coarse) { .cx-dot { width: 44px; height: 44px; } }
 
-/* Motion: background cross-fade, card scale, a gentle float on the active screenshot. All off with reduced motion. */
+/* Motion: background cross-fade and a gentle float on the front screenshot. Scroll-linked placement is not an
+   animation, so it stays with reduced motion; the float and smooth scrolling do not. */
 @media (prefers-reduced-motion: no-preference) {
   .cx-bg > span { transition: opacity calc(var(--motion-duration-base) * 2.5) var(--motion-ease); }
-  .cx-card, .cx-card .cx-shot { transition: transform calc(var(--motion-duration-base) * 2) var(--motion-ease); }
-  .cx-card::before { transition: opacity calc(var(--motion-duration-base) * 2) var(--motion-ease); }
-  .cx-card.is-active .cx-shot__img { animation: cx-float 6s ease-in-out infinite; }
+  .cx-img[data-active="true"] .cx-img__float { animation: cx-float 6s ease-in-out infinite; }
   @keyframes cx-float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(calc(-1 * var(--space-2))); } }
 }
 
@@ -144,43 +145,59 @@ SCRIPT = r"""
   var nav = document.querySelector('.cx-nav'), menu = nav.querySelector('.pm-topnav__menu');
   menu.addEventListener('click', function () { var open = nav.getAttribute('data-open') !== 'true'; nav.setAttribute('data-open', String(open)); menu.setAttribute('aria-expanded', String(open)); });
 
-  // Carousel, infinite: three copies of the cards; the track always settles on the middle copy, so there is a card
-  // on each side of the active one. Background, dots and the live label follow the active card.
+  // Carousel, infinite: three copies of the cards; the track always settles on the middle copy, so there is always a
+  // neighbour on each side. Every frame, each screenshot is placed from the exact scroll position.
   var hero = document.getElementById('work'), track = hero.querySelector('.cx-track');
   var cards = [].slice.call(track.querySelectorAll('.cx-card')), n = cards.length / 3;
+  var imgs = [].slice.call(hero.querySelectorAll('.cx-img'));
   var bgs = [].slice.call(hero.querySelectorAll('.cx-bg > span')), dots = [].slice.call(hero.querySelectorAll('.cx-dot'));
-  var live = document.getElementById('cx-live'), pos = n, settle;
+  var live = document.getElementById('cx-live'), pos = -1, settle;
+  var SIDE = 0.42;            // neighbour scale
   function centre(k) { var c = cards[k]; return c.offsetLeft - (track.clientWidth - c.offsetWidth) / 2; }
+  function stride() { return cards[1].offsetLeft - cards[0].offsetLeft; }
+  function progress() { return (track.scrollLeft - centre(0)) / stride(); } // fractional index of the card at the centre
   function mark(k) {
-    pos = k; var i = k % n;
-    cards.forEach(function (c, j) { c.classList.toggle('is-active', j === k); c.classList.toggle('is-prev', j === k - 1); c.classList.toggle('is-next', j === k + 1); });
+    if (k === pos) return; pos = k; var i = k % n;
+    cards.forEach(function (c, j) { c.classList.toggle('is-active', j === k); });
+    imgs.forEach(function (m, j) { m.setAttribute('data-active', String(j === k)); });
     bgs.forEach(function (b, j) { b.classList.toggle('is-active', j === i); });
     dots.forEach(function (d, j) { d.setAttribute('aria-current', String(j === i)); });
     var label = cards[n + i].getAttribute('aria-label'); if (live.textContent !== label) live.textContent = label;
   }
-  function nearest() {
-    var mid = track.scrollLeft + track.clientWidth / 2, best = 0, d = Infinity;
-    cards.forEach(function (c, j) { var x = Math.abs(c.offsetLeft + c.offsetWidth / 2 - mid); if (x < d) { d = x; best = j; } });
-    return best;
+  function layout() {
+    var p = progress(), hr = hero.getBoundingClientRect(), slot = cards[Math.max(0, Math.min(cards.length - 1, Math.round(p)))].querySelector('.cx-slot').getBoundingClientRect();
+    var w = slot.width, h = slot.height, cx = hr.width / 2, cy = slot.top - hr.top + h / 2;
+    var spread = w / 2 + 8 + (w * SIDE) / 2;           // a neighbour's centre: just past the main screenshot's edge
+    imgs.forEach(function (m, j) {
+      var d = j - p, ad = Math.abs(d);
+      if (ad > 2.5) { m.style.visibility = 'hidden'; return; }
+      var t = Math.min(ad, 1), sc = 1 - (1 - SIDE) * t;
+      var x = cx + d * spread, op = ad <= 1.2 ? 1 : Math.max(0, 1 - (ad - 1.2) * 2.5);
+      m.style.visibility = op > 0 ? 'visible' : 'hidden';
+      m.style.opacity = op; m.style.zIndex = String(100 - Math.round(ad * 10));
+      m.style.transform = 'translate(' + (x - w / 2) + 'px,' + (cy - h / 2) + 'px) scale(' + sc + ')';
+    });
+    mark(Math.round(p));
   }
   function recentre() { // jump, without animation, from a copy at either end to the same card in the middle copy
-    var k = nearest(); if (k < n || k >= 2 * n) { var m = n + (k % n); track.style.scrollSnapType = 'none'; track.scrollLeft = centre(m); track.style.scrollSnapType = ''; mark(m); }
+    var k = Math.round(progress()); if (k < n || k >= 2 * n) { track.style.scrollSnapType = 'none'; track.scrollLeft = centre(n + (k % n)); track.style.scrollSnapType = ''; layout(); }
   }
   var ticking = false;
   track.addEventListener('scroll', function () {
-    if (!ticking) { ticking = true; requestAnimationFrame(function () { ticking = false; var k = nearest(); if (k !== pos) mark(k); }); }
+    if (!ticking) { ticking = true; requestAnimationFrame(function () { ticking = false; layout(); }); }
     clearTimeout(settle); settle = setTimeout(recentre, 160);
   }, { passive: true });
   if ('onscrollend' in window) track.addEventListener('scrollend', function () { clearTimeout(settle); recentre(); });
-  function go(k) { track.scrollTo({ left: centre(k), behavior: reduce ? 'auto' : 'smooth' }); mark(k); }
+  function go(k) { track.scrollTo({ left: centre(k), behavior: reduce ? 'auto' : 'smooth' }); if (reduce) layout(); }
   hero.querySelector('[data-cx="prev"]').addEventListener('click', function () { go(pos - 1); });
   hero.querySelector('[data-cx="next"]').addEventListener('click', function () { go(pos + 1); });
   dots.forEach(function (d, i) { d.addEventListener('click', function () { go(n + i); }); });
   track.addEventListener('keydown', function (e) { if (e.key === 'ArrowRight') { e.preventDefault(); go(pos + 1); } if (e.key === 'ArrowLeft') { e.preventDefault(); go(pos - 1); } });
-  cards.forEach(function (c, j) { c.addEventListener('click', function (e) { if (j !== pos) { e.preventDefault(); go(j); } }); });
+  cards.forEach(function (c, j) { c.addEventListener('click', function (e) { if (j !== pos && !e.target.closest('.cx-cta')) go(j); }); });
   // Start on the first project in the middle copy
-  track.style.scrollSnapType = 'none'; track.scrollLeft = centre(n); track.style.scrollSnapType = ''; mark(n);
-  addEventListener('resize', function () { track.scrollLeft = centre(pos); });
+  track.style.scrollSnapType = 'none'; track.scrollLeft = centre(n); track.style.scrollSnapType = ''; layout();
+  addEventListener('resize', function () { track.scrollLeft = centre(pos); layout(); });
+  if (document.fonts) document.fonts.ready.then(layout);
 
   // Timeline: same reveal as landing.html, replayed each time it comes into view
   var tl = document.querySelector('.lp-tl');
@@ -198,6 +215,7 @@ SCRIPT = r"""
 n = len(PROJECTS)
 bgs = ''.join(f'<span class="{"is-active" if i == 0 else ""}" style="--page:{HERO[p[0]]["page"]}"></span>' for i, p in enumerate(PROJECTS))
 dots = ''.join(f'<li><button type="button" class="cx-dot" aria-label="Show {p[1]}" aria-current="{"true" if i == 0 else "false"}"></button></li>' for i, p in enumerate(PROJECTS))
+shots = ''.join(shot(j) for j in range(3 * n))
 cards = (''.join(card(i, p, clone=True) for i, p in enumerate(PROJECTS)) + ''.join(card(i, p) for i, p in enumerate(PROJECTS))
          + ''.join(card(i, p, clone=True) for i, p in enumerate(PROJECTS)))
 roles = ''.join(L.tl_item(len(L.ROLES) - 1 - j, len(L.ROLES), *r) for j, r in enumerate(L.ROLES))
@@ -241,6 +259,7 @@ page = f'''<title>Portfolio Carousel Idea</title>
   <h2 class="pm-sr" id="cx-h">Featured work</h2>
   <div class="cx-bg" aria-hidden="true">{bgs}</div>
   <div class="cx-track" tabindex="0" aria-label="Projects. Use the left and right arrow keys to move between them.">{cards}</div>
+  <div class="cx-imgs" aria-hidden="true">{shots}</div>
   <div class="cx-controls">
     <button type="button" class="pm-btn pm-btn--ghost pm-btn--icon" data-cx="prev" aria-label="Previous project">{I["prev"]}</button>
     <ul class="cx-dots">{dots}</ul>
