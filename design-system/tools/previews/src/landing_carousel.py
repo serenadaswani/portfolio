@@ -94,6 +94,19 @@ body { margin: 0; font-family: var(--font-sans); background: var(--color-bg-canv
 /* Image layer: above the cards; each screenshot placed by transform from the scroll position. Clicking a side
    screenshot lands on the neighbouring card underneath, which brings it to the centre. */
 .cx-imgs { position: absolute; inset: 0; z-index: 3; pointer-events: none; }
+/* Desktop patterns (after Apple's product galleries and the carousel guidance cited in the commit): mouse drag to move,
+   hover paddles over the side screenshots, one eased slide for every control, and card text that trails the card
+   slightly while it moves. Touch keeps native swiping; the paddles only appear for a fine pointer. */
+@media (pointer: fine) { .cx-track { cursor: grab; } .cx-track.is-dragging { cursor: grabbing; } .cx-track.is-dragging * { user-select: none; } }
+.cx-paddle { position: absolute; z-index: 4; display: none; place-items: center; padding: 0; border: 0; background: none; color: var(--color-text-on-image); cursor: pointer; border-radius: var(--radius-md); }
+@media (pointer: fine) { .cx-paddle { display: grid; } }
+.cx-paddle > span { display: grid; place-items: center; width: 48px; height: 48px; border-radius: 50%; background: rgb(0 0 0 / 35%); opacity: 0; transform: scale(.9); }
+.cx-paddle .pm-icon { width: 20px; height: 20px; }
+@media (hover: hover) { .cx-paddle:hover > span { opacity: 1; transform: none; } }
+.cx-paddle:focus-visible { outline: 2px solid var(--color-text-on-image); outline-offset: 2px; }
+.cx-paddle:focus-visible > span { opacity: 1; transform: none; }
+@media (prefers-reduced-motion: no-preference) { .cx-paddle > span { transition: opacity var(--motion-duration-base) var(--motion-ease), transform var(--motion-duration-base) var(--motion-ease); } }
+.cx-card > :not(.cx-slot) { transform: translateX(var(--shift, 0px)); }
 .cx-img { position: absolute; left: 0; top: 0; width: var(--cx-img); transform-origin: 50% 50%; will-change: transform; } /* taps and swipes pass through to the track */
 .cx-img__float { position: relative; display: block; }
 /* Side screenshots are solid (nothing shows through them, so no card edge or border runs across them) and dimmed with
@@ -113,6 +126,7 @@ body { margin: 0; font-family: var(--font-sans); background: var(--color-bg-canv
 /* Controls: previous / dots / next (always enabled: the loop never ends) */
 .cx-controls { display: flex; justify-content: center; align-items: center; gap: var(--space-3); padding-bottom: var(--space-4); }
 .cx-controls .pm-btn { color: var(--color-text-on-image); background: transparent; }
+
 @media (hover: hover) { .cx-controls .pm-btn:hover { background: color-mix(in srgb, var(--color-text-on-image) 16%, transparent); } }
 .cx-controls .pm-btn:focus-visible { outline: 2px solid var(--color-text-on-image); outline-offset: 2px; }
 .cx-dots { display: flex; gap: var(--space-2); list-style: none; margin: 0; padding: 0; }
@@ -153,7 +167,7 @@ SCRIPT = r"""
   var cards = [].slice.call(track.querySelectorAll('.cx-card')), n = cards.length / 3;
   var imgs = [].slice.call(hero.querySelectorAll('.cx-img'));
   var bgs = [].slice.call(hero.querySelectorAll('.cx-bg > span')), dots = [].slice.call(hero.querySelectorAll('.cx-dot'));
-  var live = document.getElementById('cx-live'), pos = -1, settle;
+  var live = document.getElementById('cx-live'), pos = -1, settle, paddles = null;
   var SIDE = 0.48;            // neighbour scale (48% of the main screenshot)
   function centre(k) { var c = cards[k]; return c.offsetLeft - (track.clientWidth - c.offsetWidth) / 2; }
   function stride() { return cards[1].offsetLeft - cards[0].offsetLeft; }
@@ -166,6 +180,8 @@ SCRIPT = r"""
     hero.style.setProperty('--cx-tint', getComputedStyle(cards[n + i]).getPropertyValue('--card'));
     dots.forEach(function (d, j) { d.setAttribute('aria-current', String(j === i)); });
     var label = cards[n + i].getAttribute('aria-label'); if (live.textContent !== label) live.textContent = label;
+    if (paddles) { var name = function (q) { return cards[n + ((q % n) + n) % n].querySelector('.cx-title').textContent; };
+      paddles[0].setAttribute('aria-label', 'Previous project: ' + name(i - 1)); paddles[1].setAttribute('aria-label', 'Next project: ' + name(i + 1)); }
   }
   function layout() {
     var p = progress(), hr = hero.getBoundingClientRect(), slot = cards[Math.max(0, Math.min(cards.length - 1, Math.round(p)))].querySelector('.cx-slot').getBoundingClientRect();
@@ -183,6 +199,12 @@ SCRIPT = r"""
       m.style.opacity = op; m.style.zIndex = String(100 - Math.round(ad * 10));
       m.style.transform = 'translate(' + (x - w / 2) + 'px,' + (cy - h / 2) + 'px) scale(' + sc + ')';
     });
+    // Card text trails the card a little while it moves (parallax), and is still at rest
+    cards.forEach(function (c, j) { var d = j - p; c.style.setProperty('--shift', (Math.abs(d) < 1.5 ? (-d * 56).toFixed(1) : 0) + 'px'); });
+    // Paddles cover the resting side screenshots
+    if (paddles) { var sw = w * SIDE, sh = h * SIDE;
+      paddles[0].style.cssText = 'left:0;top:' + (cy - sh / 2) + 'px;width:' + sw + 'px;height:' + sh + 'px';
+      paddles[1].style.cssText = 'left:' + (hr.width - sw) + 'px;top:' + (cy - sh / 2) + 'px;width:' + sw + 'px;height:' + sh + 'px'; }
     mark(Math.round(p));
   }
   function recentre() { // jump, without animation, from a copy at either end to the same card in the middle copy
@@ -191,15 +213,57 @@ SCRIPT = r"""
   var ticking = false;
   track.addEventListener('scroll', function () {
     if (!ticking) { ticking = true; requestAnimationFrame(function () { ticking = false; layout(); }); }
-    clearTimeout(settle); settle = setTimeout(recentre, 160);
+    clearTimeout(settle); if (!anim && !drag) settle = setTimeout(recentre, 160);
   }, { passive: true });
-  if ('onscrollend' in window) track.addEventListener('scrollend', function () { clearTimeout(settle); recentre(); });
-  function go(k) { track.scrollTo({ left: centre(k), behavior: reduce ? 'auto' : 'smooth' }); if (reduce) layout(); }
-  hero.querySelector('[data-cx="prev"]').addEventListener('click', function () { go(pos - 1); });
-  hero.querySelector('[data-cx="next"]').addEventListener('click', function () { go(pos + 1); });
+  if ('onscrollend' in window) track.addEventListener('scrollend', function () { if (anim || drag) return; clearTimeout(settle); recentre(); });
+  // One eased slide for every control (arrows, dots, keys, paddles, drag release): easeOutQuint over 650ms, the same in
+  // every browser, instead of the browser's own smooth scrolling. Instant with reduced motion.
+  var anim = null;
+  function animateTo(left) {
+    if (anim) cancelAnimationFrame(anim.raf);
+    if (reduce) { track.scrollLeft = left; layout(); recentre(); return; }
+    var from = track.scrollLeft, dist = left - from, t0 = performance.now(), dur = 650;
+    track.style.scrollSnapType = 'none';
+    anim = { raf: 0 };
+    (function step(now) {
+      var t = Math.min(1, (now - t0) / dur), e = 1 - Math.pow(1 - t, 5);
+      track.scrollLeft = from + dist * e;
+      if (t < 1) anim.raf = requestAnimationFrame(step);
+      else { anim = null; track.style.scrollSnapType = ''; recentre(); }
+    })(t0);
+  }
+  function go(k) { animateTo(centre(k)); }
+  hero.querySelectorAll('[data-cx="prev"]').forEach(function (b) { b.addEventListener('click', function () { go(pos - 1); }); });
+  hero.querySelectorAll('[data-cx="next"]').forEach(function (b) { b.addEventListener('click', function () { go(pos + 1); }); });
   dots.forEach(function (d, i) { d.addEventListener('click', function () { go(n + i); }); });
   track.addEventListener('keydown', function (e) { if (e.key === 'ArrowRight') { e.preventDefault(); go(pos + 1); } if (e.key === 'ArrowLeft') { e.preventDefault(); go(pos - 1); } });
-  cards.forEach(function (c, j) { c.addEventListener('click', function (e) { if (j !== pos && !e.target.closest('.cx-cta')) go(j); }); });
+  cards.forEach(function (c, j) { c.addEventListener('click', function (e) { if (dragged) { e.preventDefault(); return; } if (j !== pos && !e.target.closest('.cx-cta')) go(j); }); });
+  // Mouse drag: the card follows the pointer; on release it settles on the nearest card, or moves one card if the drag
+  // was a quick flick or went past 15% of a card. Touch and trackpads keep native scrolling.
+  var drag = null, dragged = false;
+  track.addEventListener('pointerdown', function (e) {
+    if (e.pointerType !== 'mouse' || e.button !== 0 || e.target.closest('a, button')) return;
+    if (anim) { cancelAnimationFrame(anim.raf); anim = null; }
+    drag = { x: e.clientX, left: track.scrollLeft, t: performance.now(), v: 0, lx: e.clientX, lt: performance.now() }; dragged = false;
+    track.style.scrollSnapType = 'none'; track.setPointerCapture(e.pointerId);
+  });
+  track.addEventListener('pointermove', function (e) {
+    if (!drag) return;
+    var dx = e.clientX - drag.x, now = performance.now();
+    if (Math.abs(dx) > 4) { dragged = true; track.classList.add('is-dragging'); }
+    drag.v = (e.clientX - drag.lx) / Math.max(1, now - drag.lt); drag.lx = e.clientX; drag.lt = now;
+    track.scrollLeft = drag.left - dx;
+  });
+  function endDrag(e) {
+    if (!drag) return;
+    var start = Math.round((drag.left - centre(0)) / stride()), p = progress(), k = Math.round(p);
+    if (dragged && k === start) { if (drag.v < -0.5 || p - start > 0.15) k = start + 1; else if (drag.v > 0.5 || start - p > 0.15) k = start - 1; }
+    drag = null; track.classList.remove('is-dragging'); go(k);
+    setTimeout(function () { dragged = false; }, 0);
+  }
+  track.addEventListener('pointerup', endDrag); track.addEventListener('pointercancel', endDrag);
+  // Paddles sit over the side screenshots and name the project they lead to
+  paddles = [].slice.call(hero.querySelectorAll('[data-paddle]')); layout();
   // Start on the first project in the middle copy
   track.style.scrollSnapType = 'none'; track.scrollLeft = centre(n); track.style.scrollSnapType = ''; layout();
   addEventListener('resize', function () { track.scrollLeft = centre(pos); layout(); });
@@ -266,6 +330,8 @@ page = f'''<title>Portfolio Carousel Idea</title>
   <div class="cx-bg" aria-hidden="true">{bgs}</div>
   <div class="cx-track" tabindex="0" aria-label="Projects. Use the left and right arrow keys to move between them.">{cards}</div>
   <div class="cx-imgs" aria-hidden="true">{shots}</div>
+  <button type="button" class="cx-paddle" data-cx="prev" data-paddle aria-label="Previous project"><span>{I["prev"]}</span></button>
+  <button type="button" class="cx-paddle" data-cx="next" data-paddle aria-label="Next project"><span>{I["next"]}</span></button>
   <div class="cx-controls">
     <button type="button" class="pm-btn pm-btn--ghost pm-btn--icon" data-cx="prev" aria-label="Previous project">{I["prev"]}</button>
     <ul class="cx-dots">{dots}</ul>
