@@ -176,9 +176,10 @@ body { background: var(--color-bg-canvas); }
 }
 .lp-tint .pm-card__copy { min-width: 0; gap: var(--space-2); }
 .lp-card-logo { display: block; width: auto; margin-bottom: var(--space-6); color: var(--color-text-on-image); }
-.lp-tint .pm-card__title { max-width: 100%; text-wrap: balance; } /* titles are short sentences now: they may wrap */
+/* Heading and summary share one fixed width on every card (16.5rem: what the half-width cards have beside their logo), so they wrap the same way everywhere */
+.lp-tint .pm-card__title, .lp-tint .pm-card__sub { width: min(100%, 16.5rem); max-width: none; }
+.lp-tint .pm-card__title { text-wrap: balance; }
 .lp-tint .pm-card__title a, .lp-tint .pm-card__sub { color: var(--color-text-on-image); }
-.lp-tint .pm-card__sub { max-width: 42ch; }
 /* Tags on colour: frosted white, white text */
 .lp-tint .pm-badge { background: color-mix(in srgb, var(--color-text-on-image) 16%, transparent); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--color-text-on-image) 30%, transparent); color: var(--color-text-on-image); }
 @container pm-showcase (min-width: 768px) {

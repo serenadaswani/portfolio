@@ -85,8 +85,10 @@ body { margin: 0; font-family: var(--font-sans); background: var(--color-bg-canv
   box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--color-text-on-image) 10%, transparent); } /* no drop shadow: the card rests on the page colour */
 .cx-card > * { opacity: var(--vis); }
 .cx-card .lp-card-logo { margin: 0 0 var(--space-2); color: var(--color-text-on-image); }
+/* Heading and summary share one fixed width on every card: 30rem stacked; the full copy column side by side */
+.cx-title, .cx-sub { width: min(100%, 30rem); }
 .cx-title { margin: 0; font-size: var(--type-h3); line-height: var(--line-h3); font-weight: var(--weight-medium); letter-spacing: var(--tracking-h3); text-wrap: balance; }
-.cx-sub { margin: 0; max-width: 34rem; font-size: var(--type-body-md); line-height: var(--line-body-md); text-wrap: pretty; }
+.cx-sub { margin: 0; font-size: var(--type-body-md); line-height: var(--line-body-md); text-wrap: pretty; }
 .cx-tags { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--space-1); list-style: none; margin: var(--space-2) 0 0; padding: 0; }
 .cx .pm-badge { background: color-mix(in srgb, var(--color-text-on-image) 16%, transparent); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--color-text-on-image) 30%, transparent); color: var(--color-text-on-image); }
 .cx-slot { width: var(--cx-img); aspect-ratio: 16 / 10; margin: var(--space-4) 0 var(--space-1); }
@@ -103,6 +105,7 @@ body { margin: 0; font-family: var(--font-sans); background: var(--color-bg-canv
   .cx-card { grid-template-columns: var(--cx-text) var(--cx-img); justify-content: center; align-items: center; column-gap: var(--cx-col-gap);
     padding: var(--space-10) var(--space-12); text-align: left; }
   .cx-copy { display: grid; justify-items: start; align-content: center; gap: var(--space-2); }
+  .cx-copy .cx-title, .cx-copy .cx-sub { width: 100%; }
   .cx-slot, .cx-cta { order: 0; }
   .cx-slot { margin: 0; }
   .cx-copy .cx-cta { margin-top: var(--space-4); padding-left: 0; }
