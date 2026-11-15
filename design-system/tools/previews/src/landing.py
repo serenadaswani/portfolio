@@ -7,13 +7,14 @@ comps = open(os.path.join(REPO, 'design-system', 'css', 'components.css')).read(
 NAME = 'Serena Daswani'
 VER = 'v1.9'
 # Real content comes from site.js (see CLAUDE.md). Anything marked Placeholder or TBC is still to replace.
-FEATURED = [  # strongest first: full width. Titles after itti.framer.website: verb (what kind of work) + what + who/impact, under 8 words.
-    # Facts from the Framer case studies; the line underneath adds context the title doesn't carry.
-    ('mensio', 'Redesigning Mensio’s Data Explorer for self-serve analysis', 'Turned analysts’ follow-up questions into a guided chart builder, shipped in 14 weeks.', ['Product design', 'Analytics'], '', 'mensio.html'),
-    ('procense', 'Digitizing QA forms for 10% faster batches', 'Tablet-first batch and SOP forms for chemical manufacturing, with fully automated traceability.', ['Product design', 'Manufacturing'], '', 'https://serenadaswani.framer.website/project-detail-procense-digital-forms-application')]
+FEATURED = [  # strongest first: full width. Titles after itti.framer.website: verb (what kind of work) + what + result, under 8 words.
+    # The line underneath is the TLDR for hiring managers, designers and ops: role and scope, then the outcome.
+    # Facts from the Framer site; Procense's 10% is projected (prototype not yet tested with operators), so it says so.
+    ('mensio', 'Redesigning Mensio’s charts so customers self-serve', 'Replaced a ~1-day analyst request with a guided chart builder customers run themselves. Research, design and acting PM; shipped in 14 weeks.', ['Product design', 'Analytics'], '', 'mensio.html'),
+    ('procense', 'Digitizing paper QA forms for chemical manufacturing', 'Sole designer of a tablet-first app replacing paper batch and SOP forms. Projected 10% faster approvals and fully automated traceability.', ['Product design', 'Manufacturing'], '', 'https://serenadaswani.framer.website/project-detail-procense-digital-forms-application')]
 MORE = [  # two-up below
-    ('apple', 'Redesigning QA reporting for Apple’s internal teams', 'Sole designer on an internal tool for QA workflows.', ['Product design'], '', 'https://serenadaswani.framer.website/project-detail-apple-internal-reporting-tool'),
-    ('omni', 'Designing AI autofill for e-commerce product listings', 'Generated listing content with regeneration, feedback and tone options.', ['Product design', 'AI'], '', 'https://serenadaswani.framer.website/project-detail-omnisynkai-ai-autofill-feature')]
+    ('apple', 'Redesigning QA reporting for Apple’s internal teams', 'Sole designer, wireframes to beta, with PMs and engineers. Released features that streamlined QA workflows across teams.', ['Product design'], '', 'https://serenadaswani.framer.website/project-detail-apple-internal-reporting-tool'),
+    ('omni', 'Adding AI autofill that halved listing input', 'New AI feature for 1,000+ e-commerce businesses: listing content sellers can regenerate, rate and re-tone, cutting manual input by 50%.', ['Product design', 'AI'], '', 'https://serenadaswani.framer.website/project-detail-omnisynkai-ai-autofill-feature')]
 ROLES = [('D', 'Deploy', 'Product designer', 'Jan 2026 – Present', True, 'Product design for Mensio, and a design system adopted across Deploy’s products.'),
          ('A', 'Apple', 'UI/UX designer, contract', 'Aug 2024 – Dec 2025', False, 'Sole designer on an internal QA reporting tool.'),
          ('O', 'OmniSynkAI', 'Product design intern', 'Jul – Sep 2024', False, 'Designed an AI autofill feature for inventory listings.'),
