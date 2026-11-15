@@ -114,17 +114,10 @@ body { margin: 0; font-family: var(--font-sans); background: var(--color-bg-canv
    screenshot lands on the neighbouring card underneath, which brings it to the centre. */
 .cx-imgs { position: absolute; inset: 0; z-index: 3; pointer-events: none; }
 /* Desktop patterns (after Apple's product galleries and the carousel guidance cited in the commit): mouse drag to move,
-   hover paddles over the side screenshots, one eased slide for every control, and card text that trails the card
-   slightly while it moves. Touch keeps native swiping; the paddles only appear for a fine pointer. */
+   click a side screenshot to bring it to the centre, one eased slide for every control, and card text that trails the
+   card slightly while it moves. Touch keeps native swiping. (No hover arrows: the labelled Previous/Next buttons,
+   dots and arrow keys below are the accessible controls.) */
 @media (pointer: fine) { .cx-track { cursor: grab; } .cx-track.is-dragging { cursor: grabbing; } .cx-track.is-dragging * { user-select: none; } }
-.cx-paddle { position: absolute; z-index: 4; display: none; place-items: center; padding: 0; border: 0; background: none; color: var(--color-text-on-image); cursor: pointer; border-radius: var(--radius-md); }
-@media (pointer: fine) { .cx-paddle { display: grid; } }
-.cx-paddle > span { display: grid; place-items: center; width: 48px; height: 48px; border-radius: 50%; background: rgb(0 0 0 / 35%); opacity: 0; transform: scale(.9); }
-.cx-paddle .pm-icon { width: 20px; height: 20px; }
-@media (hover: hover) { .cx-paddle:hover > span { opacity: 1; transform: none; } }
-.cx-paddle:focus-visible { outline: 2px solid var(--color-text-on-image); outline-offset: 2px; }
-.cx-paddle:focus-visible > span { opacity: 1; transform: none; }
-@media (prefers-reduced-motion: no-preference) { .cx-paddle > span { transition: opacity var(--motion-duration-base) var(--motion-ease), transform var(--motion-duration-base) var(--motion-ease); } }
 .cx-copy > * { transform: translateX(var(--shift, 0px)); }
 .cx-img { position: absolute; left: 0; top: 0; width: var(--cx-img); transform-origin: 50% 50%; will-change: transform; } /* taps and swipes pass through to the track */
 .cx-img__float { position: relative; display: block; }
@@ -187,7 +180,7 @@ SCRIPT = r"""
   var cards = [].slice.call(track.querySelectorAll('.cx-card')), n = cards.length / 3;
   var imgs = [].slice.call(hero.querySelectorAll('.cx-img'));
   var bgs = [].slice.call(hero.querySelectorAll('.cx-bg > span')), dots = [].slice.call(hero.querySelectorAll('.cx-dot'));
-  var live = document.getElementById('cx-live'), pos = -1, settle, paddles = null;
+  var live = document.getElementById('cx-live'), pos = -1, settle, sideRects = null;
   var SIDE = 0.48;            // neighbour scale (48% of the main screenshot)
   function centre(k) { var c = cards[k]; return c.offsetLeft - (track.clientWidth - c.offsetWidth) / 2; }
   function stride() { return cards[1].offsetLeft - cards[0].offsetLeft; }
@@ -195,13 +188,13 @@ SCRIPT = r"""
   function mark(k) {
     if (k === pos) return; pos = k; var i = k % n;
     cards.forEach(function (c, j) { c.classList.toggle('is-active', j === k); });
+    // Only the centre card's link is in the tab order; off-screen cards' links are skipped
+    cards.forEach(function (c, j) { var l = c.querySelector('.cx-cta'); if (j % n === k % n && j >= n && j < 2 * n) l.removeAttribute('tabindex'); else l.setAttribute('tabindex', '-1'); });
     imgs.forEach(function (m, j) { m.setAttribute('data-active', String(j === k)); });
     bgs.forEach(function (b, j) { b.classList.toggle('is-active', j === i); });
     hero.style.setProperty('--cx-tint', getComputedStyle(cards[n + i]).getPropertyValue('--card'));
     dots.forEach(function (d, j) { d.setAttribute('aria-current', String(j === i)); });
     var label = cards[n + i].getAttribute('aria-label'); if (live.textContent !== label) live.textContent = label;
-    if (paddles) { var name = function (q) { return cards[n + ((q % n) + n) % n].querySelector('.cx-title').textContent; };
-      paddles[0].setAttribute('aria-label', 'Previous project: ' + name(i - 1)); paddles[1].setAttribute('aria-label', 'Next project: ' + name(i + 1)); }
   }
   function layout() {
     var p = progress(), hr = hero.getBoundingClientRect(), slot = cards[Math.max(0, Math.min(cards.length - 1, Math.round(p)))].querySelector('.cx-slot').getBoundingClientRect();
@@ -225,11 +218,8 @@ SCRIPT = r"""
     });
     // Card text trails the card a little while it moves (parallax), and is still at rest
     cards.forEach(function (c, j) { var d = j - p; c.style.setProperty('--shift', (Math.abs(d) < 1.5 ? (-d * 56).toFixed(1) : 0) + 'px'); });
-    // Paddles cover the resting side screenshots
-    if (paddles) { // cover the visible part of each resting neighbour
-      var lw = Math.max(48, leftC + sw / 2), rl = Math.min(hr.width - 48, rightC - sw / 2);
-      paddles[0].style.cssText = 'left:0;top:' + (cy - sh / 2) + 'px;width:' + lw + 'px;height:' + sh + 'px';
-      paddles[1].style.cssText = 'left:' + rl + 'px;top:' + (cy - sh / 2) + 'px;width:' + (hr.width - rl) + 'px;height:' + sh + 'px'; }
+    // Remember where the resting neighbours are, so a click on one can bring it to the centre
+    sideRects = [[Math.max(0, leftC - sw / 2), cy - sh / 2, leftC + sw / 2, cy + sh / 2], [rightC - sw / 2, cy - sh / 2, Math.min(hr.width, rightC + sw / 2), cy + sh / 2]];
     mark(Math.round(p));
   }
   function recentre() { // jump, without animation, from a copy at either end to the same card in the middle copy
@@ -241,7 +231,7 @@ SCRIPT = r"""
     clearTimeout(settle); if (!anim && !drag) settle = setTimeout(recentre, 160);
   }, { passive: true });
   if ('onscrollend' in window) track.addEventListener('scrollend', function () { if (anim || drag) return; clearTimeout(settle); recentre(); });
-  // One eased slide for every control (arrows, dots, keys, paddles, drag release): easeOutQuint over 650ms, the same in
+  // One eased slide for every control (arrows, dots, keys, side-screenshot clicks, drag release): easeOutQuint over 650ms, the same in
   // every browser, instead of the browser's own smooth scrolling. Instant with reduced motion.
   var anim = null;
   function animateTo(left) {
@@ -287,8 +277,12 @@ SCRIPT = r"""
     setTimeout(function () { dragged = false; }, 0);
   }
   track.addEventListener('pointerup', endDrag); track.addEventListener('pointercancel', endDrag);
-  // Paddles sit over the side screenshots and name the project they lead to
-  paddles = [].slice.call(hero.querySelectorAll('[data-paddle]')); layout();
+  // Mouse shortcut: clicking a side screenshot brings that project to the centre (keyboard users have the buttons and keys)
+  hero.addEventListener('click', function (e) {
+    if (dragged || !sideRects || e.target.closest('a, button')) return;
+    var hr = hero.getBoundingClientRect(), x = e.clientX - hr.left, y = e.clientY - hr.top;
+    sideRects.forEach(function (r, i) { if (x >= r[0] && x <= r[2] && y >= r[1] && y <= r[3]) go(pos + (i ? 1 : -1)); });
+  });
   // Start on the first project in the middle copy
   track.style.scrollSnapType = 'none'; track.scrollLeft = centre(n); track.style.scrollSnapType = ''; layout();
   addEventListener('resize', function () { track.scrollLeft = centre(pos); layout(); });
@@ -355,8 +349,6 @@ page = f'''<title>Portfolio Carousel Idea</title>
   <div class="cx-bg" aria-hidden="true">{bgs}</div>
   <div class="cx-track" tabindex="0" aria-label="Projects. Use the left and right arrow keys to move between them.">{cards}</div>
   <div class="cx-imgs" aria-hidden="true">{shots}</div>
-  <button type="button" class="cx-paddle" data-cx="prev" data-paddle aria-label="Previous project"><span>{I["prev"]}</span></button>
-  <button type="button" class="cx-paddle" data-cx="next" data-paddle aria-label="Next project"><span>{I["next"]}</span></button>
   <div class="cx-controls">
     <button type="button" class="pm-btn pm-btn--ghost pm-btn--icon" data-cx="prev" aria-label="Previous project">{I["prev"]}</button>
     <ul class="cx-dots">{dots}</ul>
