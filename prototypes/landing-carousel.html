@@ -1222,21 +1222,23 @@ body { margin: 0; font-family: var(--font-sans); background: var(--color-bg-canv
 .cx-nav .pm-topnav__item .pm-icon { width: 14px; height: 14px; margin-left: var(--space-1); }
 
 /* Hero: full width; the page background cross-fades to the active project's darker shade */
-.cx { position: relative; isolation: isolate; overflow: hidden; color: var(--color-text-on-image); padding-top: var(--space-10); }
+.cx { position: relative; isolation: isolate; overflow: hidden; color: var(--color-text-on-image); padding-top: var(--space-6); }
 .cx-bg, .cx-bg > span { position: absolute; inset: 0; z-index: -1; }
 .cx-bg > span { opacity: 0; background: var(--page); }
 .cx-bg > span.is-active { opacity: 1; }
 
 /* Track: infinite (three copies; the script recentres onto the middle copy), active card centred, a neighbour peeking
    on each side. Sized from the page width (cqw on .cxp). */
-.cx-track { --cx-w: min(560px, 62cqw); --cx-peek: 96px; display: flex; align-items: center; gap: calc((100cqw - var(--cx-w)) / 2 - var(--cx-peek)); overflow-x: auto; overscroll-behavior-x: contain; scroll-snap-type: x mandatory; scrollbar-width: none; padding: var(--space-4) calc((100cqw - var(--cx-w)) / 2) var(--space-10); }
+/* Wider card, bigger screenshot, more of each neighbour. The width is also capped by the window height so the whole
+   centre card stays in view (below the 56px nav) on shorter screens. */
+.cx-track { --cx-w: min(800px, 68cqw, calc((100svh - 56px - 340px) * 1.6 + 48px)); --cx-peek: 200px; display: flex; align-items: center; gap: calc((100cqw - var(--cx-w)) / 2 - var(--cx-peek)); overflow-x: auto; overscroll-behavior-x: contain; scroll-snap-type: x mandatory; scrollbar-width: none; padding: 0 calc((100cqw - var(--cx-w)) / 2) var(--space-6); }
 .cx-track::-webkit-scrollbar { display: none; }
 .cx-track:focus-visible { outline: 2px solid var(--color-text-on-image); outline-offset: -4px; border-radius: var(--radius-lg); }
-@container (max-width: 767px) { .cx-track { --cx-w: 74cqw; --cx-peek: var(--space-10); } }
+@container (max-width: 767px) { .cx-track { --cx-w: 76cqw; --cx-peek: var(--space-16); } }
 
 /* Card (after Philz): the brand colour, a soft glow behind the screenshot, everything centred */
 .cx-card { flex: 0 0 var(--cx-w); scroll-snap-align: center; position: relative; isolation: isolate; display: grid; justify-items: center; text-align: center; gap: var(--space-2);
-  padding: var(--space-8) var(--space-6) var(--space-6); border-radius: var(--radius-lg);
+  padding: var(--space-6) var(--space-6) var(--space-3); border-radius: var(--radius-lg);
   background: radial-gradient(70% 45% at 50% 62%, color-mix(in srgb, var(--glow) 55%, transparent) 0%, transparent 70%), var(--card);
   box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--color-text-on-image) 10%, transparent), 0 var(--space-6) var(--space-12) calc(-1 * var(--space-4)) rgb(0 0 0 / 30%);
   transform: scale(.9); opacity: .55; }
@@ -1249,21 +1251,22 @@ body { margin: 0; font-family: var(--font-sans); background: var(--color-bg-canv
 .cx-sub { margin: 0; max-width: 34rem; font-size: var(--type-body-md); line-height: var(--line-body-md); text-wrap: pretty; }
 .cx-tags { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--space-1); list-style: none; margin: var(--space-2) 0 0; padding: 0; }
 .cx .pm-badge { background: color-mix(in srgb, var(--color-text-on-image) 16%, transparent); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--color-text-on-image) 30%, transparent); color: var(--color-text-on-image); }
-.cx-shot { width: 100%; margin: var(--space-6) 0 var(--space-6); }
+.cx-shot { width: 100%; margin: var(--space-4) 0 var(--space-2); }
 .cx-shot__img { position: relative; display: block; aspect-ratio: 16 / 10; border-radius: var(--radius-md); background: var(--color-text-on-image);
   box-shadow: 0 1px 2px rgb(0 0 0 / 6%), 0 var(--space-5) var(--space-10) calc(-1 * var(--space-2)) rgb(0 0 0 / 30%); }
 .cx-shot__img::after { content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; box-shadow: inset 0 0 0 1px rgb(255 255 255 / 12%), inset 0 0 var(--space-6) rgb(0 0 0 / 7%); }
-/* "View case study": a white button with the card's colour as its text (same contrast as white on the card) */
-.cx-cta { display: inline-flex; align-items: center; justify-content: center; gap: var(--space-2); min-height: var(--control-height-lg, 48px); padding: 0 var(--space-6); border-radius: var(--radius-md); background: var(--color-text-on-image); color: var(--card); font-weight: var(--weight-medium); text-decoration: none; }
+/* "View case study": a white text link with an arrow on every card (44px target) */
+.cx-cta { display: inline-flex; align-items: center; justify-content: center; gap: var(--space-2); min-height: var(--control-min-target, 44px); padding: 0 var(--space-3); border-radius: var(--radius-sm); color: var(--color-text-on-image); font-weight: var(--weight-medium); text-decoration: none; }
 .cx-cta .pm-icon { width: 16px; height: 16px; }
 .cx-cta:focus-visible { outline: 2px solid var(--color-text-on-image); outline-offset: 3px; }
-@media (hover: hover) { .cx-cta:hover { box-shadow: 0 var(--space-1) var(--space-3) rgb(0 0 0 / 20%); } }
+@media (hover: hover) { .cx-cta:hover { text-decoration: underline; text-underline-offset: 0.2em; } .cx-cta:hover .pm-icon { transform: translateX(2px); } }
+.cx-cta .pm-icon { transition: transform var(--motion-duration-base) var(--motion-ease); }
 /* A peeking card brings itself to the centre when clicked */
 .cx-card:not(.is-active) { cursor: pointer; }
 .cx-card:not(.is-active) .cx-cta { pointer-events: none; }
 
 /* Controls: previous / dots / next (always enabled: the loop never ends) */
-.cx-controls { display: flex; justify-content: center; align-items: center; gap: var(--space-3); padding-bottom: var(--space-10); }
+.cx-controls { display: flex; justify-content: center; align-items: center; gap: var(--space-3); padding-bottom: var(--space-8); }
 .cx-controls .pm-btn { color: var(--color-text-on-image); background: transparent; }
 @media (hover: hover) { .cx-controls .pm-btn:hover { background: color-mix(in srgb, var(--color-text-on-image) 16%, transparent); } }
 .cx-controls .pm-btn:focus-visible { outline: 2px solid var(--color-text-on-image); outline-offset: 2px; }
