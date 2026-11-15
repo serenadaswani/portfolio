@@ -1238,14 +1238,15 @@ body { margin: 0; font-family: var(--font-sans); background: var(--color-bg-canv
    grows and comes forward while the outgoing one shrinks back. --cx-img is sized from the window height so the top of
    About shows below the hero. */
 /* Sizes live on the section so the track and the image layer share them */
-.cx { --cx-pad: var(--space-16); --cx-img: min(806px, 60cqw, calc((100svh - 560px) * 1.6)); --cx-w: calc(var(--cx-img) + 2 * var(--cx-pad)); }
+/* The centre card spans the section with a 60px margin each side; the screenshot keeps its own size and the rest is padding */
+.cx { --cx-margin: 60px; --cx-w: calc(100cqw - 2 * var(--cx-margin)); --cx-img: min(806px, calc(var(--cx-w) - 2 * var(--space-16)), calc((100svh - 560px) * 1.6)); --cx-pad: calc((var(--cx-w) - var(--cx-img)) / 2); }
 .cx-track {
   /* neighbouring cards sit just off-screen at rest and slide in fully opaque, like pages (only their screenshots show) */
   display: flex; align-items: center; gap: calc((100cqw - var(--cx-w)) / 2 + var(--space-4)); overflow-x: auto; overscroll-behavior-x: contain; scroll-snap-type: x mandatory; scrollbar-width: none;
   padding: 0 calc((100cqw - var(--cx-w)) / 2) var(--space-4); }
 .cx-track::-webkit-scrollbar { display: none; }
 .cx-track:focus-visible { outline: 2px solid var(--color-text-on-image); outline-offset: -4px; border-radius: var(--radius-lg); }
-@container (max-width: 767px) { .cx { --cx-pad: var(--space-5); --cx-img: calc(84cqw - 2 * var(--cx-pad)); } }
+@container (max-width: 767px) { .cx { --cx-margin: var(--space-3); --cx-img: calc(var(--cx-w) - 2 * var(--space-5)); } }
 
 /* Card: the brand colour with a soft glow behind the screenshot */
 .cx-card { --vis: 1; flex: 0 0 var(--cx-w); scroll-snap-align: center; position: relative; isolation: isolate; display: grid; justify-items: center; text-align: center; gap: var(--space-2);
@@ -1415,12 +1416,13 @@ body { margin: 0; font-family: var(--font-sans); background: var(--color-bg-canv
   function layout() {
     var p = progress(), hr = hero.getBoundingClientRect(), slot = cards[Math.max(0, Math.min(cards.length - 1, Math.round(p)))].querySelector('.cx-slot').getBoundingClientRect();
     var w = slot.width, h = slot.height, cx = hr.width / 2, cy = slot.top - hr.top + h / 2;
-    var spread = w / 2 + 8 + (w * SIDE) / 2;           // a neighbour's centre: just past the main screenshot's edge
+    var spread = cx - (w * SIDE) / 2;                  // a neighbour sits flush with the screen edge, on top of the card's margin
     imgs.forEach(function (m, j) {
       var d = j - p, ad = Math.abs(d);
       if (ad > 2.5) { m.style.visibility = 'hidden'; return; }
       var t = Math.min(ad, 1), sc = 1 - (1 - SIDE) * t;
-      var x = cx + d * spread, op = ad <= 1.2 ? 1 : Math.max(0, 1 - (ad - 1.2) * 2.5);
+      // neighbours rest at half opacity and fade up as they come to the centre; further ones fade out
+      var x = cx + d * spread, op = ad <= 1 ? 1 - 0.5 * ad : Math.max(0, 0.5 - (ad - 1) * 1.5);
       m.style.visibility = op > 0 ? 'visible' : 'hidden';
       m.style.opacity = op; m.style.zIndex = String(100 - Math.round(ad * 10));
       m.style.transform = 'translate(' + (x - w / 2) + 'px,' + (cy - h / 2) + 'px) scale(' + sc + ')';
