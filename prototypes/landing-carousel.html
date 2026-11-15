@@ -1404,7 +1404,7 @@ body { margin: 0; font-family: var(--font-sans); background: var(--color-bg-canv
   var imgs = [].slice.call(hero.querySelectorAll('.cx-img'));
   var bgs = [].slice.call(hero.querySelectorAll('.cx-bg > span')), dots = [].slice.call(hero.querySelectorAll('.cx-dot'));
   var live = document.getElementById('cx-live'), pos = -1, settle;
-  var SIDE = 0.42;            // neighbour scale
+  var SIDE = 0.48;            // neighbour scale (48% of the main screenshot)
   function centre(k) { var c = cards[k]; return c.offsetLeft - (track.clientWidth - c.offsetWidth) / 2; }
   function stride() { return cards[1].offsetLeft - cards[0].offsetLeft; }
   function progress() { return (track.scrollLeft - centre(0)) / stride(); } // fractional index of the card at the centre
