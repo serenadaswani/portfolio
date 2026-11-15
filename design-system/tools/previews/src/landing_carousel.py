@@ -16,24 +16,28 @@ from lib import I
 PROJECTS = L.FEATURED + L.MORE
 # Solid brand base under the centred text (white text: Mensio 5.24:1, Procense 16.4:1, Apple 21:1, OmniSynkAI 6.15:1)
 # and a lighter brand glow behind the screenshot only. Literal hex is project art, as on landing.html.
+# Page background (one step darker) and card fill (the brand colour) per project, after the Philz app's tinted card on a
+# tinted page. White text on the card: Mensio 5.24:1, Procense 14.5:1, Apple 17:1, OmniSynkAI 6.15:1; the card is
+# 1.2-1.5x lighter than the page, so it lifts without leaving the palette. Literal hex is project art.
 HERO = {
-    'mensio':   ('#175CFF', '#3693F9'),
-    'procense': ('#1B2026', '#2483FF'),
-    'apple':    ('#000000', '#3A3A3C'),
-    'omni':     ('#5B43E8', '#9B94E0'),
+    'mensio':   {'page': '#0F47D1', 'card': '#175CFF', 'glow': '#3693F9'},
+    'procense': {'page': '#12161B', 'card': '#232A33', 'glow': '#2483FF'},
+    'apple':    {'page': '#000000', 'card': '#1C1C1E', 'glow': '#3A3A3C'},
+    'omni':     {'page': '#3F3A9E', 'card': '#5B43E8', 'glow': '#9B94E0'},
 }
 
-def text(i, p):
+def card(i, p, clone=False):
+    """One project card: logo, title, description, tags, the floating screenshot, then 'View case study'.
+    Clones (for the infinite loop) are hidden from assistive tech and out of the tab order."""
     k, title, sub, badges, _, href = p
+    c = HERO[k]
     tags = ''.join(f'<li class="pm-badge">{b}</li>' for b in badges)
-    return (f'<div class="cx-text{" is-active" if i == 0 else ""}" data-i="{i}"{"" if i == 0 else " aria-hidden=\"true\""}>'
-            f'{L.white_logo(k)}<h2 class="cx-title">{title}</h2><p class="cx-sub">{sub}</p>'
-            f'<ul class="cx-tags" aria-label="Disciplines">{tags}</ul></div>')
-
-def slide(i, p):
-    k, title, _, _, _, href = p
-    return (f'<div class="cx-slide{" is-active" if i == 0 else ""}" data-i="{i}" role="group" aria-roledescription="slide" aria-label="{i + 1} of {len(PROJECTS)}: {title}">'
-            f'<a class="cx-shot" href="{href}" tabindex="-1" aria-hidden="true"><span class="cx-shot__img"></span></a></div>')
+    a11y = ' aria-hidden="true" inert' if clone else f' role="group" aria-roledescription="slide" aria-label="{i + 1} of {len(PROJECTS)}: {title}"'
+    return (f'<article class="cx-card" data-i="{i}"{a11y} style="--card:{c["card"]};--glow:{c["glow"]}">'
+            f'{L.white_logo(k)}<h3 class="cx-title">{title}</h3><p class="cx-sub">{sub}</p>'
+            f'<ul class="cx-tags" aria-label="Disciplines">{tags}</ul>'
+            '<div class="cx-shot"><span class="cx-shot__img"></span></div>'
+            f'<a class="cx-cta" href="{href}">View case study{I["arrow"]}</a></article>')
 
 CSS = r"""
 /* ===== Landing, carousel idea (after the Philz app) ===== */
@@ -42,37 +46,49 @@ body { margin: 0; font-family: var(--font-sans); background: var(--color-bg-canv
 .cx-nav .pm-topnav__brand { font-weight: var(--weight-medium); }
 .cx-nav .pm-topnav__item .pm-icon { width: 14px; height: 14px; margin-left: var(--space-1); }
 
-/* Hero: full width, background = the active project's brand colour (layers cross-fade; gradients can't transition) */
-.cx { position: relative; isolation: isolate; overflow: hidden; color: var(--color-text-on-image); padding-top: var(--space-12); }
+/* Hero: full width; the page background cross-fades to the active project's darker shade */
+.cx { position: relative; isolation: isolate; overflow: hidden; color: var(--color-text-on-image); padding-top: var(--space-10); }
 .cx-bg, .cx-bg > span { position: absolute; inset: 0; z-index: -1; }
-.cx-bg > span { opacity: 0; background: radial-gradient(60% 55% at 50% 72%, var(--glow) 0%, transparent 70%), var(--base); }
+.cx-bg > span { opacity: 0; background: var(--page); }
 .cx-bg > span.is-active { opacity: 1; }
 
-/* Centred heading block: one per project, stacked in one cell, the active one shown */
-.cx-copy { display: grid; justify-items: center; text-align: center; padding: 0 var(--space-4); }
-.cx-text { grid-area: 1 / 1; display: grid; justify-items: center; gap: var(--space-2); max-width: 36rem; opacity: 0; visibility: hidden; transform: translateY(var(--space-2)); }
-.cx-text.is-active { opacity: 1; visibility: visible; transform: none; }
-.cx-text .lp-card-logo { margin: 0 0 var(--space-3); color: var(--color-text-on-image); }
-.cx-title { margin: 0; font-size: var(--type-h1); line-height: var(--line-h1); font-weight: var(--weight-medium); letter-spacing: var(--tracking-h1); text-wrap: balance; }
-.cx-sub { margin: 0; font-size: var(--type-body-md); line-height: var(--line-body-md); text-wrap: pretty; }
+/* Track: infinite (three copies; the script recentres onto the middle copy), active card centred, a neighbour peeking
+   on each side. Sized from the page width (cqw on .cxp). */
+.cx-track { --cx-w: min(560px, 62cqw); --cx-peek: 96px; display: flex; align-items: center; gap: calc((100cqw - var(--cx-w)) / 2 - var(--cx-peek)); overflow-x: auto; overscroll-behavior-x: contain; scroll-snap-type: x mandatory; scrollbar-width: none; padding: var(--space-4) calc((100cqw - var(--cx-w)) / 2) var(--space-10); }
+.cx-track::-webkit-scrollbar { display: none; }
+.cx-track:focus-visible { outline: 2px solid var(--color-text-on-image); outline-offset: -4px; border-radius: var(--radius-lg); }
+@container (max-width: 767px) { .cx-track { --cx-w: 74cqw; --cx-peek: var(--space-10); } }
+
+/* Card (after Philz): the brand colour, a soft glow behind the screenshot, everything centred */
+.cx-card { flex: 0 0 var(--cx-w); scroll-snap-align: center; position: relative; isolation: isolate; display: grid; justify-items: center; text-align: center; gap: var(--space-2);
+  padding: var(--space-8) var(--space-6) var(--space-6); border-radius: var(--radius-lg);
+  background: radial-gradient(70% 45% at 50% 62%, color-mix(in srgb, var(--glow) 55%, transparent) 0%, transparent 70%), var(--card);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--color-text-on-image) 10%, transparent), 0 var(--space-6) var(--space-12) calc(-1 * var(--space-4)) rgb(0 0 0 / 30%);
+  transform: scale(.9); opacity: .55; }
+.cx-card.is-active { transform: none; opacity: 1; }
+/* Side cards show only their colour and screenshot (like Philz's peeking drinks), not clipped words */
+.cx-card > :not(.cx-shot) { transition: opacity var(--motion-duration-base) var(--motion-ease); }
+.cx-card:not(.is-active) > :not(.cx-shot) { opacity: 0; }
+.cx-card .lp-card-logo { margin: 0 0 var(--space-3); color: var(--color-text-on-image); }
+.cx-title { margin: 0; font-size: var(--type-h2); line-height: var(--line-h2); font-weight: var(--weight-medium); letter-spacing: var(--tracking-h2); text-wrap: balance; }
+.cx-sub { margin: 0; max-width: 34rem; font-size: var(--type-body-md); line-height: var(--line-body-md); text-wrap: pretty; }
 .cx-tags { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--space-1); list-style: none; margin: var(--space-2) 0 0; padding: 0; }
 .cx .pm-badge { background: color-mix(in srgb, var(--color-text-on-image) 16%, transparent); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--color-text-on-image) 30%, transparent); color: var(--color-text-on-image); }
-
-/* Screenshot strip: the active one centred, neighbours smaller and peeking in from the edges */
-/* Sized from the page width (cqw on .cxp): the active slide is centred, and each neighbour shows a slice of about --cx-peek */
-.cx-track { --cx-w: min(600px, 60cqw); --cx-peek: 150px; display: flex; gap: calc((100cqw - var(--cx-w)) / 2 - var(--cx-peek)); overflow-x: auto; overscroll-behavior-x: contain; scroll-snap-type: x mandatory; scrollbar-width: none; padding: var(--space-10) calc((100cqw - var(--cx-w)) / 2) var(--space-12); }
-.cx-track::-webkit-scrollbar { display: none; }
-.cx-track:focus-visible { outline: 2px solid var(--color-text-on-image); outline-offset: -4px; border-radius: var(--radius-md); }
-@container (max-width: 767px) { .cx-track { --cx-w: 76cqw; --cx-peek: var(--space-20); } }
-.cx-slide { flex: 0 0 var(--cx-w); scroll-snap-align: center; display: grid; place-items: center; }
-.cx-shot { display: block; width: 100%; border-radius: var(--radius-md); transform: scale(.82); opacity: .85; }
-.cx-slide.is-active .cx-shot { transform: none; opacity: 1; }
+.cx-shot { width: 100%; margin: var(--space-6) 0 var(--space-6); }
 .cx-shot__img { position: relative; display: block; aspect-ratio: 16 / 10; border-radius: var(--radius-md); background: var(--color-text-on-image);
-  box-shadow: 0 1px 2px rgb(0 0 0 / 6%), 0 var(--space-6) var(--space-12) calc(-1 * var(--space-2)) rgb(0 0 0 / 28%); }
+  box-shadow: 0 1px 2px rgb(0 0 0 / 6%), 0 var(--space-5) var(--space-10) calc(-1 * var(--space-2)) rgb(0 0 0 / 30%); }
 .cx-shot__img::after { content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; box-shadow: inset 0 0 0 1px rgb(255 255 255 / 12%), inset 0 0 var(--space-6) rgb(0 0 0 / 7%); }
+/* "View case study": a white button with the card's colour as its text (same contrast as white on the card) */
+.cx-cta { display: inline-flex; align-items: center; justify-content: center; gap: var(--space-2); min-height: var(--control-height-lg, 48px); padding: 0 var(--space-6); border-radius: var(--radius-md); background: var(--color-text-on-image); color: var(--card); font-weight: var(--weight-medium); text-decoration: none; }
+.cx-cta .pm-icon { width: 16px; height: 16px; }
+.cx-cta:focus-visible { outline: 2px solid var(--color-text-on-image); outline-offset: 3px; }
+@media (hover: hover) { .cx-cta:hover { box-shadow: 0 var(--space-1) var(--space-3) rgb(0 0 0 / 20%); } }
+/* A peeking card brings itself to the centre when clicked */
+.cx-card:not(.is-active) { cursor: pointer; }
+.cx-card:not(.is-active) .cx-cta { pointer-events: none; }
 
-/* Controls: previous / dots / next; then a darker band with the call to action (Philz's "I'll take it!") */
-.cx-controls { display: flex; justify-content: center; align-items: center; gap: var(--space-3); padding-bottom: var(--space-8); }
+/* Controls: previous / dots / next (always enabled: the loop never ends) */
+.cx-controls { display: flex; justify-content: center; align-items: center; gap: var(--space-3); padding-bottom: var(--space-10); }
 .cx-controls .pm-btn { color: var(--color-text-on-image); background: transparent; }
 @media (hover: hover) { .cx-controls .pm-btn:hover { background: color-mix(in srgb, var(--color-text-on-image) 16%, transparent); } }
 .cx-controls .pm-btn:focus-visible { outline: 2px solid var(--color-text-on-image); outline-offset: 2px; }
@@ -82,20 +98,12 @@ body { margin: 0; font-family: var(--font-sans); background: var(--color-bg-canv
 .cx-dot[aria-current="true"]::before { background: var(--color-text-on-image); }
 .cx-dot:focus-visible { outline: 2px solid var(--color-text-on-image); outline-offset: 0; }
 @media (pointer: coarse) { .cx-dot { width: 44px; height: 44px; } }
-.cx-cta { display: flex; justify-content: center; padding: var(--space-5) var(--space-4); background: rgb(0 0 0 / 18%); }
-.cx-cta a { display: inline-flex; align-items: center; gap: var(--space-2); min-height: var(--control-min-target); color: var(--color-text-on-image); font-weight: var(--weight-medium); text-decoration: none; border-radius: var(--radius-sm); }
-.cx-cta a .pm-icon { width: 16px; height: 16px; }
-.cx-cta a:focus-visible { outline: 2px solid var(--color-text-on-image); outline-offset: 4px; }
-@media (hover: hover) { .cx-cta a:hover { text-decoration: underline; text-underline-offset: 0.2em; } }
 
-/* Motion: cross-fades, the strip's scale, a gentle float on the active screenshot. All off with reduced motion. */
+/* Motion: background cross-fade, card scale, a gentle float on the active screenshot. All off with reduced motion. */
 @media (prefers-reduced-motion: no-preference) {
-  .cx-track { scroll-behavior: smooth; }
   .cx-bg > span { transition: opacity calc(var(--motion-duration-base) * 2.5) var(--motion-ease); }
-  .cx-text { transition: opacity calc(var(--motion-duration-base) * 1.5) var(--motion-ease), transform calc(var(--motion-duration-base) * 1.5) var(--motion-ease), visibility 0s linear calc(var(--motion-duration-base) * 1.5); }
-  .cx-text.is-active { transition-delay: 0s; }
-  .cx-shot { transition: transform calc(var(--motion-duration-base) * 2) var(--motion-ease), opacity calc(var(--motion-duration-base) * 2) var(--motion-ease); }
-  .cx-slide.is-active .cx-shot__img { animation: cx-float 6s ease-in-out infinite; }
+  .cx-card { transition: transform calc(var(--motion-duration-base) * 2) var(--motion-ease), opacity calc(var(--motion-duration-base) * 2) var(--motion-ease); }
+  .cx-card.is-active .cx-shot__img { animation: cx-float 6s ease-in-out infinite; }
   @keyframes cx-float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(calc(-1 * var(--space-2))); } }
 }
 
@@ -118,33 +126,43 @@ SCRIPT = r"""
   var nav = document.querySelector('.cx-nav'), menu = nav.querySelector('.pm-topnav__menu');
   menu.addEventListener('click', function () { var open = nav.getAttribute('data-open') !== 'true'; nav.setAttribute('data-open', String(open)); menu.setAttribute('aria-expanded', String(open)); });
 
-  // Carousel: the slide nearest the centre is active; background, heading, dots and the call to action follow it
+  // Carousel, infinite: three copies of the cards; the track always settles on the middle copy, so there is a card
+  // on each side of the active one. Background, dots and the live label follow the active card.
   var hero = document.getElementById('work'), track = hero.querySelector('.cx-track');
-  var slides = [].slice.call(track.querySelectorAll('.cx-slide')), texts = [].slice.call(hero.querySelectorAll('.cx-text'));
+  var cards = [].slice.call(track.querySelectorAll('.cx-card')), n = cards.length / 3;
   var bgs = [].slice.call(hero.querySelectorAll('.cx-bg > span')), dots = [].slice.call(hero.querySelectorAll('.cx-dot'));
-  var cta = hero.querySelector('.cx-cta a'), live = document.getElementById('cx-live'), active = 0;
-  function set(i) {
-    if (i === active) return; active = i;
-    [slides, texts, bgs].forEach(function (list) { list.forEach(function (el, j) { el.classList.toggle('is-active', j === i); }); });
-    texts.forEach(function (el, j) { if (j === i) el.removeAttribute('aria-hidden'); else el.setAttribute('aria-hidden', 'true'); });
+  var live = document.getElementById('cx-live'), pos = n, settle;
+  function centre(k) { var c = cards[k]; return c.offsetLeft - (track.clientWidth - c.offsetWidth) / 2; }
+  function mark(k) {
+    pos = k; var i = k % n;
+    cards.forEach(function (c, j) { c.classList.toggle('is-active', j === k); });
+    bgs.forEach(function (b, j) { b.classList.toggle('is-active', j === i); });
     dots.forEach(function (d, j) { d.setAttribute('aria-current', String(j === i)); });
-    cta.href = slides[i].querySelector('.cx-shot').getAttribute('href');
-    live.textContent = slides[i].getAttribute('aria-label');
+    var label = cards[n + i].getAttribute('aria-label'); if (live.textContent !== label) live.textContent = label;
   }
   function nearest() {
-    var mid = track.getBoundingClientRect().left + track.clientWidth / 2, best = 0, d = Infinity;
-    slides.forEach(function (s, j) { var r = s.getBoundingClientRect(), x = Math.abs(r.left + r.width / 2 - mid); if (x < d) { d = x; best = j; } });
+    var mid = track.scrollLeft + track.clientWidth / 2, best = 0, d = Infinity;
+    cards.forEach(function (c, j) { var x = Math.abs(c.offsetLeft + c.offsetWidth / 2 - mid); if (x < d) { d = x; best = j; } });
     return best;
   }
+  function recentre() { // jump, without animation, from a copy at either end to the same card in the middle copy
+    var k = nearest(); if (k < n || k >= 2 * n) { var m = n + (k % n); track.style.scrollSnapType = 'none'; track.scrollLeft = centre(m); track.style.scrollSnapType = ''; mark(m); }
+  }
   var ticking = false;
-  track.addEventListener('scroll', function () { if (!ticking) { ticking = true; requestAnimationFrame(function () { ticking = false; set(nearest()); }); } }, { passive: true });
-  function go(i) { i = Math.max(0, Math.min(slides.length - 1, i)); var s = slides[i]; track.scrollTo({ left: s.offsetLeft - (track.clientWidth - s.offsetWidth) / 2, behavior: reduce ? 'auto' : 'smooth' }); set(i); }
-  hero.querySelector('[data-cx="prev"]').addEventListener('click', function () { go(active - 1); });
-  hero.querySelector('[data-cx="next"]').addEventListener('click', function () { go(active + 1); });
-  dots.forEach(function (d, j) { d.addEventListener('click', function () { go(j); }); });
-  track.addEventListener('keydown', function (e) { if (e.key === 'ArrowRight') { e.preventDefault(); go(active + 1); } if (e.key === 'ArrowLeft') { e.preventDefault(); go(active - 1); } });
-  // Clicking a peeking neighbour brings it to the centre instead of following its link
-  slides.forEach(function (s, j) { s.querySelector('.cx-shot').addEventListener('click', function (e) { if (j !== active) { e.preventDefault(); go(j); } }); });
+  track.addEventListener('scroll', function () {
+    if (!ticking) { ticking = true; requestAnimationFrame(function () { ticking = false; var k = nearest(); if (k !== pos) mark(k); }); }
+    clearTimeout(settle); settle = setTimeout(recentre, 160);
+  }, { passive: true });
+  if ('onscrollend' in window) track.addEventListener('scrollend', function () { clearTimeout(settle); recentre(); });
+  function go(k) { track.scrollTo({ left: centre(k), behavior: reduce ? 'auto' : 'smooth' }); mark(k); }
+  hero.querySelector('[data-cx="prev"]').addEventListener('click', function () { go(pos - 1); });
+  hero.querySelector('[data-cx="next"]').addEventListener('click', function () { go(pos + 1); });
+  dots.forEach(function (d, i) { d.addEventListener('click', function () { go(n + i); }); });
+  track.addEventListener('keydown', function (e) { if (e.key === 'ArrowRight') { e.preventDefault(); go(pos + 1); } if (e.key === 'ArrowLeft') { e.preventDefault(); go(pos - 1); } });
+  cards.forEach(function (c, j) { c.addEventListener('click', function (e) { if (j !== pos) { e.preventDefault(); go(j); } }); });
+  // Start on the first project in the middle copy
+  track.style.scrollSnapType = 'none'; track.scrollLeft = centre(n); track.style.scrollSnapType = ''; mark(n);
+  addEventListener('resize', function () { track.scrollLeft = centre(pos); });
 
   // Timeline: same reveal as landing.html, replayed each time it comes into view
   var tl = document.querySelector('.lp-tl');
@@ -160,8 +178,10 @@ SCRIPT = r"""
 """
 
 n = len(PROJECTS)
-bgs = ''.join(f'<span class="{"is-active" if i == 0 else ""}" style="--base:{HERO[p[0]][0]};--glow:{HERO[p[0]][1]}"></span>' for i, p in enumerate(PROJECTS))
+bgs = ''.join(f'<span class="{"is-active" if i == 0 else ""}" style="--page:{HERO[p[0]]["page"]}"></span>' for i, p in enumerate(PROJECTS))
 dots = ''.join(f'<li><button type="button" class="cx-dot" aria-label="Show {p[1]}" aria-current="{"true" if i == 0 else "false"}"></button></li>' for i, p in enumerate(PROJECTS))
+cards = (''.join(card(i, p, clone=True) for i, p in enumerate(PROJECTS)) + ''.join(card(i, p) for i, p in enumerate(PROJECTS))
+         + ''.join(card(i, p, clone=True) for i, p in enumerate(PROJECTS)))
 roles = ''.join(L.tl_item(len(L.ROLES) - 1 - j, len(L.ROLES), *r) for j, r in enumerate(L.ROLES))
 socials = ''.join(f'<li><a class="pm-link pm-link--subtle" href="{h}" target="_blank" rel="noopener">{l}<span class="pm-sr"> (opens in a new tab)</span></a></li>' for l, h in L.SOCIAL)
 
@@ -202,14 +222,12 @@ page = f'''<title>Portfolio Carousel Idea</title>
 <section class="cx" id="work" aria-roledescription="carousel" aria-labelledby="cx-h">
   <h2 class="pm-sr" id="cx-h">Featured work</h2>
   <div class="cx-bg" aria-hidden="true">{bgs}</div>
-  <div class="cx-copy">{''.join(text(i, p) for i, p in enumerate(PROJECTS))}</div>
-  <div class="cx-track" tabindex="0" aria-label="Project screenshots. Use the left and right arrow keys to move between projects.">{''.join(slide(i, p) for i, p in enumerate(PROJECTS))}</div>
+  <div class="cx-track" tabindex="0" aria-label="Projects. Use the left and right arrow keys to move between them.">{cards}</div>
   <div class="cx-controls">
     <button type="button" class="pm-btn pm-btn--ghost pm-btn--icon" data-cx="prev" aria-label="Previous project">{I["prev"]}</button>
     <ul class="cx-dots">{dots}</ul>
     <button type="button" class="pm-btn pm-btn--ghost pm-btn--icon" data-cx="next" aria-label="Next project">{I["next"]}</button>
   </div>
-  <div class="cx-cta"><a href="{PROJECTS[0][5]}">View case study{I["arrow"]}</a></div>
   <p class="pm-sr" aria-live="polite" id="cx-live"></p>
 </section>
 
