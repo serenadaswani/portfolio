@@ -12,7 +12,7 @@ FEATURED = [  # strongest first: full width. Heading + a one-line summary, writt
     ('procense', 'Digitizing manufacturing QA forms to increase batch execution speed by 10%', 'Unified batch records and SOPs into a traceable digital workflow.', ['Product design', 'End-to-end', 'Tablet'], '', 'https://serenadaswani.framer.website/project-detail-procense-digital-forms-application')]
 MORE = [  # two-up below
     ('apple', 'Redesigning QA reporting for Apple’s internal teams', 'Simplified report creation, organization, and review across internal QA teams.', ['Product design', 'Redesign', 'Internal'], '', 'https://serenadaswani.framer.website/project-detail-apple-internal-reporting-tool'),
-    ('omni', 'Introducing AI autofill to reduce e-commerce listing input by 50%', 'Helped sellers generate, refine, and customize product listings with AI.', ['AI', 'Feature enhancement', 'Web'], '', 'https://serenadaswani.framer.website/project-detail-omnisynkai-ai-autofill-feature')]
+    ('omni', 'Introducing AI autofill to reduce e-commerce listing input by 50%', 'Helped sellers generate, refine, and customize product listings with AI.', ['Product design', 'AI', 'Enhancement', 'Web'], '', 'https://serenadaswani.framer.website/project-detail-omnisynkai-ai-autofill-feature')]
 ROLES = [('D', 'Deploy', 'Product designer', 'Jan 2026 – Present', True, 'Product design for Mensio, and a design system adopted across Deploy’s products.'),
          ('A', 'Apple', 'UI/UX designer, contract', 'Aug 2024 – Dec 2025', False, 'Sole designer on an internal QA reporting tool.'),
          ('O', 'OmniSynkAI', 'Product design intern', 'Jul – Sep 2024', False, 'Designed an AI autofill feature for inventory listings.'),
@@ -210,6 +210,8 @@ body { background: var(--color-bg-canvas); }
   .lp-tint .pm-card__copy > .lp-card-logo { position: absolute; z-index: 1; right: var(--space-8); margin: 0;
     top: calc(var(--space-8) + (var(--type-h3) * var(--line-h3) - var(--lp-logo-h)) / 2); }
   .lp-tint .pm-card__copy { padding-right: calc(var(--space-8) + var(--lp-logo-w-max, 140px) + var(--space-6)) !important; }
+  /* Tags sit below the logo, so they may use the space kept free for it and stay on one row */
+  .lp-tint .pm-card__meta { margin-right: calc(-1 * (var(--lp-logo-w-max, 140px) + var(--space-6))); }
 }
 @container pm-showcase (min-width: 768px) { .lp-tint .pm-card__copy { padding-right: var(--space-8) !important; } }
 @media (prefers-reduced-motion: no-preference) {
