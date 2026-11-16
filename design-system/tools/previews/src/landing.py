@@ -46,9 +46,12 @@ def white_logo(k):
     svg = svg.replace('<svg ', f'<svg class="lp-card-logo" style="height:{hgt}px;--lp-logo-h:{hgt}px;--lp-logo-w:{wid}px" role="img" aria-label="{name}" focusable="false" ', 1)
     return svg
 
+# Card summaries are kept in FEATURED/MORE but not shown (2026-11-16: heading + tags carry the card; details live on the case study)
+SHOW_SUMMARY = False
+
 def card(p):
     k, t, sub, badges, eyebrow, href = p
-    html = showcase('white', t, sub, badges, eyebrow, href=href or '#work', more='')
+    html = showcase('white', t, sub if SHOW_SUMMARY else '', badges, eyebrow, href=href or '#work', more='')
     html = html.replace('class="pm-card pm-card--showcase"', f'class="pm-card pm-card--showcase lp-tint" style="--lp-bg:{BRAND[k]["bg"]};--lp-glow:{BRAND[k]["glow"]}"', 1)
     html = html.replace('<div class="pm-card__copy">', f'<div class="pm-card__copy">{white_logo(k)}', 1)
     # Placeholder asset: a white 8px-rounded rectangle until the real (white) screenshot exists

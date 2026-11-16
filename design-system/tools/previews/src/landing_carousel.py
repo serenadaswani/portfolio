@@ -32,9 +32,10 @@ def card(i, p, clone=False):
     k, title, sub, badges, _, href = p
     c = HERO[k]
     tags = ''.join(f'<li class="pm-badge">{b}</li>' for b in badges)
+    subp = f'<p class="cx-sub">{sub}</p>' if L.SHOW_SUMMARY else ''
     a11y = ' aria-hidden="true" inert' if clone else f' role="group" aria-roledescription="slide" aria-label="{i + 1} of {len(PROJECTS)}: {title}"'
     return (f'<article class="cx-card" data-i="{i}"{a11y} style="--card:{c["card"]};--glow:{c["glow"]}">'
-            f'<div class="cx-copy">{L.white_logo(k)}<h3 class="cx-title">{title}</h3><p class="cx-sub">{sub}</p>'
+            f'<div class="cx-copy">{L.white_logo(k)}<h3 class="cx-title">{title}</h3>{subp}'
             f'<ul class="cx-tags" aria-label="Disciplines">{tags}</ul>'
             f'<a class="cx-cta" href="{href}">View case study{I["arrow"]}</a></div>'
             '<div class="cx-slot"></div></article>')
