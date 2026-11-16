@@ -93,76 +93,80 @@ def shot(art, cap, n):
             f'<figcaption class="pm-frame__caption"><span class="pm-frame__index">Fig. {n:02d}</span><span>{cap}</span></figcaption></figure>')
 
 # ---------- content ----------
-SECTIONS = [('overview', 'Overview'), ('challenge', 'The challenge'), ('discovery', 'Discovery'), ('goals', 'Design goals'), ('ideation', 'Ideation'),
-            ('tablet', 'Tablet-first'), ('solution', 'The solution'), ('feedback', 'User feedback'), ('impact', 'Impact'), ('reflection', 'Reflection')]
+SECTIONS = [('overview', 'Overview'), ('problem', 'The problem'), ('discovery', 'Discovery'), ('goals', 'Design goals'), ('ideation', 'Ideation'),
+            ('tablet', 'Tablet-first'), ('solution', 'The solution'), ('feedback', 'User feedback'), ('reflection', 'Impact &amp; reflection')]
+
+STATS_FULL = [('10%', 'Faster batch execution, from weighing ingredients to quality sign-off'), ('100%', 'Automated traceability, so audits take less digging'), ('100%', 'Data accuracy, with nothing copied over from paper')]
 
 BODY = ''.join([
-    section('overview', 'Overview', 'Going digital let the floor move faster and focus on what matters.',
-        lede('Procense gives chemical manufacturers an integrated platform for running and monitoring production. Even so, the plants it served still recorded every batch on paper forms.',
-             'I designed the Digital Forms application, a module within that platform that replaces those forms with a single tablet flow. It streamlined and modernized how plants record each batch: batches run 10% faster, every record is accurate and traceable from the start, and operators spend less time on paperwork and more on the work in front of them.')
-        + stats([('10%', 'Faster batch execution, from weighing ingredients to quality sign-off'), ('100%', 'Automated traceability, so audits take less digging'), ('100%', 'Data accuracy, with nothing copied over from paper')], ' pm-stats--sm cs-stats')),
+    section('overview', 'Overview', 'We replaced paper batch records with one guided tablet flow.',
+        lede('Procense’s integrated platform helps chemical manufacturers run and monitor production, but every batch was still recorded on paper. I designed the Digital Forms application to change that, moving quality checks and manufacturing steps onto the tablets operators already carry.',
+             'Batches now run 10% faster, every record is traceable and accurate, and operators spend their time on the batch instead of the paperwork.')
+        + stats(STATS_FULL, ' pm-stats--sm cs-stats')),
 
-    section('challenge', 'The challenge', 'Every batch was tracked on paper.',
-        lede('Chemical plants make products in batches, combining set amounts of ingredients and testing them step by step. In many plants, each batch is recorded by hand on two paper forms: one for the manufacturing steps and one for the quality checks.',
-             'Once complete, the forms go to directors and engineers, who decide whether the batch meets the standard. Every handwritten value is a chance for error, and decisions on the floor stall while the paperwork moves.',
-             'Digitizing the forms was a chance to give frontline workers a faster, more reliable way to record production data, tailored to each client’s workflow. It also had to feel familiar to operators who had filled in these forms by hand for years, which led to our guiding question.')
-        + panel('How might we', '<p class="cs-goal">How might we streamline batch manufacturing by digitizing its forms, while keeping them intuitive for operators used to filling them in by hand?</p>', ' pm-panel--tonal', 'p-hmw')),
+    section('problem', 'The problem', 'Every batch was recorded by hand, then checked on paper.',
+        lede('In many chemical plants, each batch is recorded on two paper forms: one for the manufacturing steps and one for the quality checks. Once complete, the forms go to directors and engineers, who decide whether the batch meets the standard. The process is slow, invites human error and holds up decisions on the floor.',
+             'We saw an opportunity to give frontline workers a faster, more reliable way to record production data, tailored to each client’s workflow. It also had to feel familiar to operators who had filled in these forms by hand for years.')
+        + panel('How might we', '<p class="cs-goal">How might we streamline batch manufacturing by digitizing its forms, while keeping them intuitive for operators used to filling them in by hand?</p>', ' pm-panel--tonal', 'p-hmw')
+        + '<h3 class="cs-h3">The solution, in short</h3>'
+        + lede('A guided tablet flow, built into the Procense platform, that walks operators through each batch.')
+        + items([('Two forms, one flow', 'Batch details, manufacturing steps and quality tests in three steps, in the order operators work.'),
+                 ('Fields that fill themselves', 'Dates, times and signatures fill in automatically, so there’s less to write and less to get wrong.'),
+                 ('Instructions in the form', 'Each step’s instructions and critical limits sit right where the data is entered.')])),
 
-    section('discovery', 'Discovery', 'The forms hid what mattered most.',
-        lede('I started by taking the paper forms apart. They captured a great deal of data, but made it hard to spot what mattered and slow to fill in.')
-        + shot(paper_form(), 'The paper QC form, reconstructed. Hover over or tap a number to see each pain point.', 1)
-        + '<h3 class="cs-h3">What I learned about the floor</h3>'
-        + lede('To understand how the forms are used on the floor, I interviewed Procense’s co-founder, a former process engineer who has both written and filled in these forms. Four insights stood out, and each became a design goal.')
+    section('discovery', 'Discovery', 'I started by taking the paper forms apart.',
+        lede('The forms captured a great deal of data, but made it hard to spot what mattered and slow to fill in.')
+        + shot(paper_form(), 'The paper quality form, reconstructed. Hover over or tap a number to see each pain point.', 1)
+        + '<h3 class="cs-h3">Then I learned how the forms are used on the floor.</h3>'
+        + lede('I interviewed Procense’s co-founder, a former process engineer who has both written and filled in these forms. Four insights stood out, and each became a design goal.')
         + insights()),
 
-    section('goals', 'Design goals', 'Faster, without cutting corners.',
-        lede('Together, the pain points and interviews gave the Digital Forms application four goals.')
+    section('goals', 'Design goals', 'Four goals kept the forms fast and safe.',
+        lede('Together, the pain points and interviews gave the Digital Forms application a clear brief: move faster without cutting corners.')
         + items([('Fewer taps', 'Every tap removed is one less chance to make a mistake.'),
-               ('Built-in guardrails', 'Fields fill themselves in where they can, and the same parts repeat across forms.'),
-               ('At home in Procense', 'The forms work like the rest of the platform, so there’s nothing new to learn.'),
-               ('Faster, not looser', 'Speed can’t come at the cost of the checks the forms exist for.')], grid=True)),
+                 ('Built-in guardrails', 'Fields fill themselves in where they can, and the same parts repeat across forms.'),
+                 ('At home in Procense', 'The forms work like the rest of the platform, so there’s nothing new to learn.'),
+                 ('Faster, not looser', 'Speed can’t come at the cost of the checks the forms exist for.')], grid=True)),
 
-    section('ideation', 'Ideation', 'I sketched how crowded tables could become simple steps.',
+    section('ideation', 'Ideation', 'I explored how crowded tables could become simple steps.',
         lede('I studied how other products turn paper forms into software and organise large tables, then sketched layouts and noted what each form needed.')
-        + shot(f'<div class="pm-media pm-media--16x10 pr-well" role="img" aria-label="Image to come: annotated layout sketches"><div class="pm-media__fallback">{I["image"]}<span>Image to come</span><span>Annotated layout sketches</span></div></div>', 'Early sketches of the digitized QC and SOP forms.', 2)),
+        + shot(f'<div class="pm-media pm-media--16x10 pr-well" role="img" aria-label="Image to come: annotated layout sketches"><div class="pm-media__fallback">{I["image"]}<span>Image to come</span><span>Annotated layout sketches</span></div></div>', 'Early sketches of the digital quality and manufacturing forms.', 2)),
 
-    section('tablet', 'Shifting gears', 'We designed for desktop. The floor ran on tablets.',
+    section('tablet', 'Tablet-first', 'We designed for desktop. The floor ran on tablets.',
         '<div class="cs-pair">'
         + panel('What we assumed', '<p>Operators would use desktops or laptops, like the rest of Procense’s web-first platform.</p>', ' pm-panel--tonal', 'p-assumed')
         + panel('What we found', '<p>Operators carry tablets as they work through each step and run quality tests on the floor.</p>', '', 'p-found')
         + '</div>'
         + lede('That discovery reshaped the project. We moved to a tablet-first design with new layouts and a new flow. The smaller screen meant breaking long forms into steps, which adds a tap or two, but in return operators got larger text, cleaner sections and a flow that matches how they actually work.')),
 
-    section('solution', 'The solution', 'Two paper forms became one simple flow.',
-        lede('The final design merges both forms into one flow of three steps: batch details, then the manufacturing steps and ingredients, then the quality tests. Each screen shows only what that step needs, so operators can keep their attention on the batch.')
+    section('solution', 'The solution', 'Two paper forms became one guided flow.',
+        lede('The final design merges both forms into three steps: batch details, then the manufacturing steps and ingredients, then the quality tests. Each screen shows only what that step needs, so operators can keep their attention on the batch.')
         + shot(screen1(), 'Batch information, the first step. Date, time and signature fill in on their own.', 3)
         + shot(screen2(), 'Manufacturing steps and ingredients. Instructions in blue, ingredients in grey, critical conditions in bold.', 4)
         + shot(screen3(), 'Quality tests, the last step. Each result is checked against its target range as it’s entered.', 5)
         + items([('Fields that fill themselves', 'Date and time fill in automatically, and signatures come from the operator’s login.'),
-                  ('The same patterns everywhere', 'Buttons and layouts behave the same at every step.'),
-                  ('Clear sections', 'Colour sets them apart: blue for instructions, grey for ingredients.'),
-                  ('Familiar icons', 'Icons like date and time mark the inputs that are required.'),
-                  ('Built for dense data', 'One left-aligned column that’s easy to read and move through.'),
-                  ('Instructions in the form', 'The steps for each stage sit right inside the form, so there’s no binder to check.'),
-                  ('Critical steps stand out', 'Conditions that can ruin a batch are bold and hard to miss.')], grid=True)),
+                 ('The same patterns everywhere', 'Buttons and layouts behave the same at every step.'),
+                 ('Clear sections', 'Colour sets them apart: blue for instructions, grey for ingredients.'),
+                 ('Familiar icons', 'Icons like date and time mark the inputs that are required.'),
+                 ('Built for dense data', 'One left-aligned column that’s easy to read and move through.'),
+                 ('Instructions in the form', 'The steps for each stage sit right inside the form, so there’s no binder to check.'),
+                 ('Critical steps stand out', 'Conditions that can ruin a batch are bold and hard to miss.')], grid=True)),
 
-    section('feedback', 'User feedback', 'A QA manager walked us through every section.',
+    section('feedback', 'User feedback', 'A QA manager’s review cut even more typing.',
         lede('We reviewed the first design of the quality test form with a QA manager, section by section, and their feedback led to two changes.')
         + '<div class="cs-pair">'
         + panel('What we heard', '<p>Operators still typed too much, and choosing batch and order numbers from a list added unnecessary steps.</p>', ' pm-panel--tonal', 'p-heard')
         + panel('What we changed', '<p>More fields now fill in automatically from the sample type, and batch and order numbers are typed in directly.</p>', '', 'p-changed')
         + '</div>'),
 
-    section('impact', 'Impact', 'Faster batches, and more time for what matters.',
-        lede('Moving from paper to the Digital Forms application streamlined the whole batch process. Operators record data as they work instead of copying it later, reviewers see it as soon as it’s entered, and every value carries who entered it and when. With the paperwork out of the way, teams can focus on running safe, consistent batches.')
-        + stats([('10%', 'Faster batch execution, from weighing ingredients to quality sign-off'), ('100%', 'Automated traceability, so audits take less digging'), ('100%', 'Data accuracy, so frontline teams can focus on key insights')], ' pm-stats--sm cs-stats')),
-
-    section('reflection', 'Reflection', 'Designing without direct access to operators.',
-        lede('The hardest part was researching without access to operators on the floor. I relied on the team and Procense’s in-house experts, and learned manufacturing forms from scratch.',
-             'The project showed how much a well-designed form can change. By modernizing a process operators already knew, rather than replacing it with something unfamiliar, the plants moved faster without losing the checks that keep every batch safe.')
-        + '<h3 class="cs-h3">What I’d do next</h3>'
-        + items([('Observe operators on the floor', 'Watch the forms in use to find the next steps worth removing.'),
-                 ('Bring more forms over', 'Apply the same patterns to the other paper processes in the plant.')])),
+    section('reflection', 'Impact &amp; reflection', 'Operators now record each batch as they work.',
+        lede('Moving from paper to the Digital Forms application streamlined the whole batch process. Operators record data as they go instead of copying it later, reviewers see it as soon as it’s entered, and every value carries who entered it and when. With the paperwork out of the way, teams can focus on running safe, consistent batches.')
+        + stats(STATS_FULL, ' pm-stats--sm cs-stats')
+        + '<h3 class="cs-h3">What I learned</h3>'
+        + '<div class="cs-pair">'
+        + panel('Design for the device in their hands', '<p>Learning that operators carry tablets changed every layout decision, and made the forms easier to use, not harder.</p>', ' pm-panel--tonal', 'p-l1')
+        + panel('Modernize what people already know', '<p>Keeping the forms familiar, rather than reinventing them, let the plants move faster without losing the checks that keep every batch safe.</p>', ' pm-panel--tonal', 'p-l2')
+        + '</div>'),
 ])
 
 HEADER = f'''  <header class="cs-head">
