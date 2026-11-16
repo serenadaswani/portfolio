@@ -148,6 +148,9 @@ BODY = ''.join([
 
 TOC = ''.join(f'<li><a class="pm-toc__item" href="#{sid}"{" aria-current=\"location\"" if i == 0 else ""} data-spy>{label}</a></li>' for i, (sid, label) in enumerate(SECTIONS))
 
+# The landing page the case study links back to (2026-11-16: the carousel is the landing)
+LANDING = 'landing-carousel.html'
+
 MORE = [('chart', 'Placeholder project', 'Your second strongest project.', ['Product design'], 'Placeholder'),
         ('queue', 'Placeholder project', 'A supporting project.', ['Product design'], 'Placeholder')]
 
@@ -278,7 +281,7 @@ page = f'''<title>Mensio Case Study</title>
 <div class="cs" id="top">
 <div class="cs-wrap">
   <div class="cs-bar">
-    <a class="pm-link cs-back" href="landing.html#work">{I["prev"]}All work</a>
+    <a class="pm-link cs-back" href="{LANDING}">{I["prev"]}All work</a>
     <span class="pm-tooltip-anchor">
       <button type="button" class="pm-btn pm-btn--ghost pm-btn--icon pm-btn--xs" id="cs-theme" aria-pressed="false" aria-labelledby="cs-theme-tip">{I["moon"]}</button>
       <span role="tooltip" id="cs-theme-tip" class="pm-tooltip" style="left:auto;right:0;transform:none">Dark theme</span>
@@ -320,7 +323,7 @@ page = f'''<title>Mensio Case Study</title>
 
   <section class="cs-more" aria-labelledby="cs-more-h">
     <h2 class="cs-h2" id="cs-more-h">More case studies</h2>
-    <ul class="pm-showcase-grid">{''.join(f'<li>{showcase(k, t, s, b, e, href="landing.html#work", more="")}</li>' for k, t, s, b, e in MORE)}</ul>
+    <ul class="pm-showcase-grid">{''.join(f'<li>{showcase(k, t, s, b, e, href=LANDING, more="")}</li>' for k, t, s, b, e in MORE)}</ul>
   </section>
 
   <p class="pm-meta-text cs-colophon">© 2026 {NAME} · Built on Paper × Midnight {VER}</p>
