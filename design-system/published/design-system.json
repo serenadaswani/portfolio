@@ -13,13 +13,13 @@
   "groups": [],
   "lastChange": {
     "by": "Claude",
-    "at": "2026-11-10T21:10:00Z",
+    "at": "2026-11-16T00:30:00Z",
     "via": "Claude Code",
-    "note": "v1.9: Badge tag is frosted (color-badge-bg + color-badge-border tokens) instead of a silver outline; no blur."
+    "note": "v1.9.1: tag rows (Card meta, Badge rows) wrap with a space-2 (8px) gap instead of space-1. No token changes."
   },
   "layout": "files",
   "libraries": [],
   "namespace": "PaperMidnight",
   "sections": {},
-  "title": "Paper × Midnight"
+  "title": "Paper \u00d7 Midnight"
 }

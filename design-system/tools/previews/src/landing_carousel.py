@@ -334,7 +334,7 @@ page = f'''<title>Portfolio Carousel Idea</title>
   <div class="pm-topnav__bar">
     <a class="pm-topnav__brand" href="#work">{L.NAME}</a>
     <nav class="pm-topnav__nav" id="cx-nav" aria-label="Primary"><ul class="pm-topnav__list">
-      <li><a class="pm-topnav__item" href="#work" aria-current="page">Work</a></li>
+      <li><a class="pm-topnav__item" href="#work">Work</a></li>
       <li><a class="pm-topnav__item" href="#about">About</a></li>
       <li><a class="pm-topnav__item" href="#resume" data-soon>Resume{I["ext"]}</a></li>
     </ul></nav>
