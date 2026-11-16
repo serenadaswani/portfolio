@@ -8,12 +8,11 @@ Run: python3 design-system/tools/previews/src/casestudy.py  ->  prototypes/mensi
 """
 import sys, os
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from lib import I, S, showcase
-import cs_parts as P
+from lib import I, showcase
 REPO = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '..', '..'))
 tokens = open(os.path.join(REPO, 'design-system', 'css', 'tokens.css')).read()
 comps = open(os.path.join(REPO, 'design-system', 'css', 'components.css')).read()
-VER = 'v1.9.1'
+VER = 'v1.9'
 NAME = 'Serena Daswani'
 
 _fig = [0]
@@ -28,8 +27,7 @@ def fig(caption, planned, ratio='16x10', variant=''):
             f'<figcaption class="pm-frame__caption"><span class="pm-frame__index">Fig. {n}</span><span>{caption}</span></figcaption></figure>')
 
 def stats(items, cls=''):
-    out = f'<dl class="pm-stats{cls}">' + ''.join(f'<div class="pm-stats__item"><dt class="pm-stats__label">{l}</dt><dd class="pm-stats__value">{v}</dd></div>' for v, l in items) + '</dl>'
-    return f'<div class="cs-stats-wrap">{out}</div>' if 'cs-stats' in cls else out
+    return f'<dl class="pm-stats{cls}">' + ''.join(f'<div class="pm-stats__item"><dt class="pm-stats__label">{l}</dt><dd class="pm-stats__value">{v}</dd></div>' for v, l in items) + '</dl>'
 
 def meta(rows):
     return '<dl class="pm-meta">' + ''.join(f'<dt>{k}</dt><dd>{v}</dd>' for k, v in rows) + '</dl>'
@@ -42,37 +40,28 @@ def panel(title, body, cls='', pid=''):
     return (f'<section class="pm-panel{cls}" aria-labelledby="{pid}"><div class="pm-panel__header"><h4 class="pm-panel__title" id="{pid}">{title}</h4></div>'
             f'<div class="pm-panel__body">{body}</div></section>')
 
-SECTIONS = [  # id, TOC label (top-level sections only, as in the handoff)
-    ('overview', 'Overview'), ('assumption', 'Starting assumption'), ('problem', 'The problem'), ('insight', 'The insight'),
-    ('interviews', 'Analyst interviews'), ('roadmap', 'Wishlist to roadmap'), ('exploration', 'Navigating the mess'),
-    ('solution', 'The solution'), ('engineering', 'Design × engineering'), ('reflection', 'Impact &amp; reflection')]
+SECTIONS = [  # id, TOC label
+    ('overview', 'Overview'), ('problem', 'The problem'), ('research', 'Research'), ('roadmap', 'Roadmap'),
+    ('iterations', 'Iterations'), ('solution', 'The solution'), ('engineering', 'Design × engineering'), ('impact', 'Impact')]
 
 def section(sid, eyebrow, title, body):
     return (f'<section class="cs-section" id="{sid}" aria-labelledby="h-{sid}">'
             f'<p class="cs-eyebrow">{eyebrow}</p><h2 class="cs-h2" id="h-{sid}">{title}</h2>{body}</section>')
 
-def sub(eyebrow, title):
-    return f'<div class="cs-sub"><p class="cs-eyebrow">{eyebrow}</p><h3 class="cs-h3">{title}</h3></div>'
-
 def lede(*ps):
     return '<div class="cs-prose">' + ''.join(f'<p>{p}</p>' for p in ps) + '</div>'
 
-def labelled(label, inner):
-    """A component with a short label above it (the handoff's grey panels, here as a plain caption)."""
-    return f'<figure class="cs-fig"><figcaption class="cs-fig__label">{label}</figcaption>{inner}</figure>'
+STEPS = ['Client emails one line', 'Analyst follows up', 'Call if too complex', 'Analyst builds the pull',
+         'Manager reviews', 'Export, clean in Excel', 'Send to client', 'Revise']
 
 BODY = ''.join([
-    section('overview', 'Overview', 'Mensio is a powerful tool that tracks brand exposure across TV and social…',
+    section('overview', 'Overview', 'Mensio tracks brand exposure across TV and social…',
         lede('Brands, teams and networks use it for sponsorship and ad intelligence. It watches every second of 185 TV networks and 2,000+ social handles, and catches 13,000+ brand logos at 99%+ accuracy.')
-        + '<h3 class="cs-h3 cs-h3--lead">…but customers couldn’t get the data out on their own.</h3>'
-        + lede('Data Explorer showed every metric, grouping and filter at once. Customers didn’t know which combination answered their question, so they leaned on Mensio’s analysts to pull the data for them.',
-               'We redesigned chart building into Guided Setup, a step-by-step wizard with presets, and shipped it in 14 weeks.')
-        + P.before_after(P.A + 'screens/old-addmetric.webp', 'Before: the Add Metric dialog listing every metric at once',
-                         P.A + 'screens/metrics-expanded.webp', 'After: Guided Setup on the Metrics step, with a metric group chosen and its usual metrics pre-selected',
-                         'Every metric in one dialog, with no order and no guidance.', 'Five steps in a fixed order, with the usual metrics pre-selected.')),
-
-    section('assumption', 'Starting assumption', 'We assumed customers were our primary users. We were wrong.',
-        lede('New to Mensio, we planned to start with customer pain points. Our first stakeholder conversations changed that.')
+        + fig('Mensio Data Explorer, before the redesign.', 'Screenshot of the old Data Explorer', variant=' pm-frame--browser')
+        + '<h3 class="cs-h3">…but customers couldn’t get the data out on their own.</h3>'
+        + lede('Data Explorer showed every metric, grouping and filter at once. Customers didn’t know which combination answered their question, so they leaned on Mensio’s analysts to pull the data for them. We redesigned chart building into Guided Setup, a step-by-step wizard with presets, and shipped it in 14 weeks.')
+        + '<h3 class="cs-h3">We assumed customers were our primary users. We were wrong.</h3>'
+        + lede('New to Mensio, we planned to start with customer pain points. Our first stakeholder conversations changed that.')
         + '<div class="cs-pair">'
         + panel('What we assumed', '<p>Customers built their own charts, and their pain points would show us what to fix.</p>', ' pm-panel--tonal', 'p-assumed')
         + panel('What we found', '<p>There were no documented customer pain points. Analysts were doing the work, so their workflow was what we needed to study.</p>', '', 'p-found')
@@ -80,66 +69,77 @@ BODY = ''.join([
 
     section('problem', 'The problem', 'Every custom chart went through an analyst.',
         lede('A one-line customer email became an eight-step process across two people and three tools.')
-        + labelled('A custom request, step by step', P.timeline())
-        + labelled('Customers asked analysts to check their own pulls', P.emails())
-        + P.todo('Session clip', 'A frustrated session in the old explorer (draft video, not final)')
-        + sub('Impact on analysts', 'Analysts spent most of their day fulfilling requests.')
-        + stats([('~1 day', 'End to end, per request'), ('85%', 'Of an analyst’s day on requests, exports and cleanup'), ('1 in 3', 'Requests came back for rework')], ' pm-stats--sm cs-stats')
-        + sub('Impact on the business', 'Customers couldn’t see Mensio’s value or potential unless they used it themselves.')
-        + P.icon_cards([('trending-down', 'Low adoption', 'Customers stopped using Mensio or relied on analysts.'),
-                        ('calendar-x', 'Weak renewals', 'Buyers rarely used the product after the demo, so they couldn’t speak to its value at renewal.'),
-                        ('lock', 'Capped value', 'Mensio’s full value was only reachable through the analytics team.')])),
+        + '<figure class="pm-frame"><div class="pm-frame__stage"><ol class="cs-steps">'
+        + ''.join(f'<li><span class="pm-meta-text">{i+1:02d}</span>{s}</li>' for i, s in enumerate(STEPS))
+        + '</ol></div><figcaption class="pm-frame__caption"><span class="pm-frame__index">Process</span><span>A custom request: 8 steps, 2 people, 3 tools.</span></figcaption></figure>'
+        + '<div class="cs-pair">' + fig('Customer emails asking for one-off pulls.', 'Collage of anonymized customer emails', '4x3')
+        + fig('A frustrated session in the old explorer.', 'Anonymized session clip', '4x3') + '</div>'
+        + '<h3 class="cs-h3">Analysts spent most of their day fulfilling requests.</h3>'
+        + stats([('~1 day', 'end-to-end per request'), ('85%', 'of an analyst’s day on requests, exports and cleanup'), ('1 in 3', 'requests came back for rework')], ' pm-stats--sm')
+        + '<h3 class="cs-h3">Customers couldn’t see Mensio’s value unless they used it themselves.</h3>'
+        + points([('Low adoption', 'Customers stopped using Mensio or relied on analysts.'),
+                  ('Weak renewals', 'Buyers rarely used the product after the demo, so they couldn’t speak to its value at renewal.'),
+                  ('Capped value', 'Mensio’s full value was only reachable through the analytics team.')])),
 
-    section('insight', 'The insight', 'The process lived in analysts’ heads.',
+    section('research', 'The insight', 'The process lived in analysts’ heads.',
         lede('Accurate pulls depend on knowing which filters and exclusions go together. Adding teams, for example, requires home, neutral and non-game filters to avoid double-counting. None of it was documented.')
-        + P.callout('Design goal', 'Have the product ask the questions an analyst would.')),
-
-    section('interviews', 'Analyst interviews', 'We studied the analyst workflow to rebuild it for customers.',
-        lede('Since analysts were doing the work, we studied their workflow to understand what customers actually received. We used Mensio daily and interviewed the media analysts who handled customer requests.')
-        + P.todo('Affinity map', 'What analysts told us: four clusters of sticky notes')
+        + panel('Design goal', '<p class="cs-goal">Have the product ask the questions an analyst would.</p>', ' pm-panel--tonal', 'p-goal')
+        + '<h3 class="cs-h3">We studied the analyst workflow to rebuild it for customers.</h3>'
+        + lede('We used Mensio daily and interviewed the media analysts who handled customer requests.')
+        + fig('What analysts told us.', 'Interview synthesis: affinity map or key quotes')
         + points([('Follow-up questions were consistent', 'Date range, live vs. replay, competitors, asset breakdown. Customers rarely specified these upfront.'),
                   ('Analysts over-pulled data', 'To avoid missing something, they pulled extra and filtered it in Excel.'),
                   ('Errors surfaced a month later', 'Finding a missing filter took about an hour, plus explaining the change to the customer.'),
                   ('Customers didn’t understand the data model', 'Groupings and filters, such as programs vs. episodes, caused the most confusion.')])
-        + '<figure class="cs-quote"><blockquote><p>“There is no checklist, so you are trying to remember off the top of your head…”</p></blockquote><figcaption>Analyst</figcaption></figure>'
-        + P.callout('Insight', 'The analysts’ follow-up questions became the structure of the wizard.')),
+        + '<figure class="cs-quote"><blockquote><p>“There is no checklist, so you are trying to remember off the top of your head…”</p></blockquote>'
+          '<figcaption>The analysts’ follow-up questions became the structure of the wizard.</figcaption></figure>'),
 
     section('roadmap', 'Wishlist to roadmap', 'We merged stakeholder requests and research findings into one roadmap.',
-        lede('Stakeholders brought a wishlist, led by a left-to-right flow. We validated each item against the interviews and prioritized what to build.')
-        + P.todo('Wizard animation', 'The stakeholders’ left-to-right vision: a six-step stepper that plays through')
-        + P.roadmap([('Streamlined left-to-right flow', 'Build a chart in sequence, not all at once', 'Same questions, every request', 'Analysts asked the same follow-ups, in the same order', 'Guided Setup', 'Five sequential steps, from metrics to review'),
-                     ('Show only what’s relevant', 'Guide customers through filter choices', 'Hidden nuances in data', 'Filters confused customers; 1 in 3 requests needed rework', 'Progressive options', 'Each step shows only what fits, with tooltips and guardrails'),
-                     ('Offer pre-set views', 'Answers to the questions customers ask most', 'Repeated requests', 'Most were a metric plus a brand or program', 'Six presets', 'Based on the most common use cases')])
+        lede('Stakeholders brought a wishlist, led by a left-to-right flow: data type, visualization, metrics, groupings, filters, date range. We validated each item against the interviews and prioritized what to build.')
+        + '<div class="cs-table-wrap" tabindex="0" role="region" aria-labelledby="t-roadmap"><table class="cs-table"><caption id="t-roadmap" class="pm-sr">Stakeholder wishes, interview evidence and what we built</caption>'
+          '<thead><tr><th scope="col">Stakeholder wish</th><th scope="col">Interview evidence</th><th scope="col">What we built</th></tr></thead><tbody>'
+        + ''.join(f'<tr><td><b>{a}</b>{a2}</td><td><b>{b}</b>{b2}</td><td><b>{c}</b>{c2}</td></tr>' for a, a2, b, b2, c, c2 in [
+            ('Streamlined left-to-right flow', 'Build a chart in sequence, not all at once', 'Same questions, every request', 'Analysts asked the same follow-ups, in the same order', 'Guided Setup', 'Five sequential steps, from metrics to review'),
+            ('Show only what’s relevant', 'Guide customers through filter choices', 'Hidden nuances in data', 'Filters confused customers; 1 in 3 requests needed rework', 'Progressive options', 'Each step shows only what fits, with tooltips and guardrails'),
+            ('Offer pre-set views', 'Answers to the questions customers ask most', 'Repeated requests', 'Most were a metric plus a brand or program', 'Six presets', 'Based on the most common use cases')])
+        + '</tbody></table></div>'
         + lede('We chose a wizard as the core pattern. It matched the stakeholders’ left-to-right vision and mirrored how analysts already worked.')
-        + sub('Customer groups', 'Customer groups shaped the wizard’s two branches.')
-        + lede('Usage and common requests varied by group. From one entry point, people choose how to build a chart: a preset for recurring questions, or Guided Setup for everything else.')
-        + P.todo('Customer map', 'How often they use Mensio vs. how much they trust themselves: four groups on a 2×2')),
+        + '<h3 class="cs-h3">Customer groups shaped the wizard’s two branches.</h3>'
+        + lede('From one entry point, people choose how to build a chart: a preset for recurring questions, or Guided Setup for everything else.')
+        + fig('How often they use Mensio vs. how much they trust themselves.', 'Customer map: four groups plotted on a 2×2', '4x3')
+        + meta([('Super users', 'Live in Data Explorer, still make mistakes they don’t know about'),
+                ('Power users', 'Tweak custom dashboards, wouldn’t build from scratch'),
+                ('High-involvement', 'Settle for core modules, email the team every couple of weeks'),
+                ('New users', 'Need the most guidance, and are often the budget owners')])),
 
-    section('exploration', 'Navigating the mess', 'Three flow variations led to our final wizard.',
+    section('iterations', 'Navigating the mess', 'Three flow variations led to our final wizard.',
         lede('Feedback from analysts, engineers and stakeholders shaped each version.')
-        + ''.join('<div class="cs-iter">' + P.todo(cap, planned) + f'<div><p class="cs-eyebrow cs-eyebrow--flat">{k}</p><h3 class="cs-h4">{t}</h3><p>{d}</p></div></div>' for cap, planned, k, t, d in [
-            ('Three separate flows', 'Explored vs. final wireframes, crossfading', 'Key turn 1', 'Three paths became two', 'Presets, Guided and Custom confused the analytics team. We folded Custom into Guided Setup as “Frequently Selected Options.”'),
-            ('Full-page wizard', 'Explored vs. final wireframes, crossfading', 'Key turn 2', 'A full-page wizard became a modal', 'Backend constraints required a modal, so we redesigned the micro-interactions to avoid modal-on-modal.'),
-            ('Six-step flow', 'Explored vs. final wireframes, crossfading', 'Key turn 3', 'Six steps became five', 'We moved scheduling to the nav bar to keep the modal focused on building a chart.')])),
+        + ''.join('<div class="cs-iter">' + fig(cap, planned) + f'<div><h3 class="cs-h4">{t}</h3><p>{d}</p></div></div>' for cap, planned, t, d in [
+            ('Three separate flows.', 'Discarded design: three entry points', 'Three paths became two', 'Presets, Guided and Custom confused the analytics team. We folded Custom into Guided Setup as “Frequently Selected Options.”'),
+            ('Full-page wizard.', 'Discarded design: full-page wizard', 'A full-page wizard became a modal', 'Backend constraints required a modal, so we redesigned the micro-interactions to avoid modal-on-modal.'),
+            ('Six-step flow.', 'Discarded design: six steps with scheduling', 'Six steps became five', 'We moved scheduling to the nav bar to keep the modal focused on building a chart.')])),
 
     section('solution', 'The solution', 'Six design decisions shaped Guided Setup.',
-        P.todo('Bento grid', 'Seven cards: stepper, presets, smart defaults, duplicate, guardrails, chart types, seasons')
-        + sub('Select screens', 'Building a chart, from first click to the finished table.')
-        + P.todo('Select screens carousel', 'Five UX moments with numbered progress segments')),
+        fig('After: the customer builds it.', 'Diagram: preset or Guided Setup → 5 steps with defaults → Save &amp; Fetch')
+        + fig('Building a chart with Guided Setup.', 'Prototype video: the guided flow and a preset', '16x9', ' pm-frame--browser')
+        + points([('One entry, two paths', 'Six presets for common questions; Guided Setup for everything else.'),
+                  ('A linear flow', 'Metrics → Date range → Grouping → Filters → Review, showing only options that fit.'),
+                  ('Smart defaults', 'Picking a metric group pre-selects the usual metrics.'),
+                  ('Built-in guardrails', 'Tooltips explain exclusion and double-counting rules; invalid combinations are blocked.'),
+                  ('Advanced features, surfaced', 'Multiple date ranges, a Seasons date picker, scatterplot and heatmap presets.'),
+                  ('Shortcuts for power users', 'Duplicate Chart, Add to Dashboard and Pin cut repeated work.')], 'cs-points cs-points--grid')),
 
     section('engineering', 'Design × engineering', 'We designed within the backend’s rules.',
         lede('We acted as our own PMs, worked within the rules for valid chart combinations, asked for a Seasons API, and triaged QA by priority across a 14-week build.',
-             'In parallel, we built a new design system now adopted across all Deploy products, and mapped its components to Mensio’s production screens.',
-             'Along the way, we found capabilities, like multiple date ranges, that neither the analytics team nor the engineers knew existed, and turned them into features.')
-        + P.qa_board([('To fix', [('P0', 'Save &amp; Fetch stays enabled with no date range', 'Guided Setup'), ('P1', 'Tooltip covers the Next button on small screens', 'Metrics')]),
-                      ('In review', [('P1', 'Seasons dates don’t fill in after picking a year', 'Date range'), ('P2', 'Selection pills overflow without Show less', 'Edit chart')]),
-                      ('Done', [('P2', 'Stepper spacing differs between steps', 'Guided Setup'), ('P3', 'Preset tags use the wrong text style', 'Presets'), ('P4', 'Icon size in the chart bar', 'Chart bar')])])),
+             'In parallel, we built a new design system now adopted across all Deploy products, and mapped its components to Mensio’s production screens. Along the way, we found capabilities, like multiple date ranges, that neither the analytics team nor the engineers knew existed, and turned them into features.')
+        + fig('Design QA, triaged P0–P4.', 'Screenshot of the QA tracker', variant=' pm-frame--browser')),
 
-    section('reflection', 'Impact &amp; reflection', 'Customers now build their own charts.',
+    section('impact', 'Impact &amp; reflection', 'Customers now build their own charts.',
         points([('New chart types', 'Clients now use scatterplots and heatmaps the team never built for them before.'),
                 ('No more stitching', 'Multiple date ranges replace stitching several charts together in Excel.'),
                 ('Filters understood', 'Customers know where the exclusion filters are, and why they matter.')])
-        + P.todo('Impact charts', 'Scatterplot and heatmap presets with tooltips (illustrative data)')
+        + '<div class="cs-pair">' + fig('Scatterplot preset.', 'Customer-built scatterplot', '4x3') + fig('Heatmap preset.', 'Customer-built heatmap', '4x3') + '</div>'
+        + '<h3 class="cs-h3">What I learned</h3>'
         + '<div class="cs-pair">'
         + panel('Encode expert knowledge into the product', '<p>Presets, defaults and tooltips now ask what analysts used to ask over email.</p>', ' pm-panel--tonal', 'p-l1')
         + panel('Design with constraints, not against them', '<p>Working within the backend’s rules shaped a simpler flow.</p>', ' pm-panel--tonal', 'p-l2')
@@ -197,16 +197,14 @@ body { margin: 0; font-family: var(--font-sans); background: var(--color-bg-canv
 .cs-tldr__row dt { font-size: var(--type-body-sm); line-height: var(--line-body-md); color: var(--color-text-tertiary); }
 .cs-tldr__row dd { margin: 0; font-size: var(--type-body-md); line-height: var(--line-body-md); color: var(--color-text-primary); text-wrap: pretty; }
 @container cs-tldr (min-width: 560px) { .cs-tldr__row { grid-template-columns: 9rem minmax(0, 1fr); column-gap: var(--space-6); } }
-/* StatRow in the case study (TL;DR and body): one column with rules between on narrow containers; three across with vertical rules
-   from 420px; values share a top line even when labels wrap. A wrapper gives it its own container. */
-.cs-stats-wrap { container: cs-stats / inline-size; }
-.pm-stats.cs-stats { grid-template-columns: minmax(0, 1fr); gap: 0; padding-top: 0; border-top: 0; }
-.cs-stats .pm-stats__item { justify-content: flex-end; padding: var(--space-5) 0; border-top: 1px solid var(--color-border-subtle); }
-.cs-stats .pm-stats__item:last-child { padding-bottom: 0; }
-@container cs-stats (min-width: 420px) {
-  .pm-stats.cs-stats { grid-template-columns: repeat(3, minmax(0, 1fr)); padding-top: var(--space-8); border-top: 1px solid var(--color-border-subtle); }
-  .cs-stats .pm-stats__item { padding: 0 var(--space-6); border-top: 0; border-left: 1px solid var(--color-border-subtle); }
-  .cs-stats .pm-stats__item:first-child { padding-left: 0; border-left: 0; }
+/* Numbers: one column with rules between on narrow bodies; three across with vertical rules from 420px; StatRow --sm (h2-size values), like the stats in the case-study body */
+.pm-stats.cs-tldr__stats { grid-template-columns: minmax(0, 1fr); gap: 0; padding-top: 0; }
+.cs-tldr__stats .pm-stats__item { justify-content: flex-end; padding: var(--space-5) 0; border-top: 1px solid var(--color-border-subtle); } /* values share a top line even when labels wrap */
+.cs-tldr__stats .pm-stats__item:last-child { padding-bottom: 0; }
+@container cs-tldr (min-width: 420px) {
+  .pm-stats.cs-tldr__stats { grid-template-columns: repeat(3, minmax(0, 1fr)); padding-top: var(--space-8); border-top: 1px solid var(--color-border-subtle); }
+  .cs-tldr__stats .pm-stats__item { padding: 0 var(--space-6); border-top: 0; border-left: 1px solid var(--color-border-subtle); }
+  .cs-tldr__stats .pm-stats__item:first-child { padding-left: 0; border-left: 0; }
 }
 @container (min-width: 768px) {
   /* The heading takes only its own width; the rows get the rest, 48px from it */
@@ -265,15 +263,7 @@ body { margin: 0; font-family: var(--font-sans); background: var(--color-bg-canv
 .cs-more { margin-top: var(--space-24); padding-top: var(--space-10); border-top: 1px solid var(--color-border-subtle); display: grid; gap: var(--space-6); }
 .cs-more .cs-h2 { font-size: var(--type-h3); line-height: var(--line-h3); }
 .cs-colophon { margin: var(--space-16) 0 0; }
-.cs-sub { display: grid; gap: var(--space-1); margin-top: var(--space-6); }
-.cs-sub .cs-eyebrow { margin: 0; }
-.cs-sub .cs-h3 { margin: 0; }
-.cs-h3--lead { margin-top: var(--space-4); }
-.cs-eyebrow--flat { margin: 0 0 var(--space-1) !important; }
-.cs-fig { margin: var(--space-2) 0; display: grid; gap: var(--space-3); min-width: 0; }
-.cs-fig__label { font-size: var(--type-body-sm); line-height: var(--line-body-sm); color: var(--color-text-secondary); }
-.cs-quote figcaption { font-family: var(--font-meta); font-size: var(--type-label); color: var(--color-text-tertiary); }
-""" + P.PARTS_CSS
+"""
 
 page = f'''<title>Mensio Case Study</title>
 <meta name="claude:viewport-fit-sides" content="cover">
@@ -301,10 +291,8 @@ page = f'''<title>Mensio Case Study</title>
   <header class="cs-head">
     <p class="pm-card__eyebrow"><span class="pm-meta-text">2026</span> · Mensio</p>
     <h1 class="cs-title">Redesigning Mensio’s custom chart builder for self-serve data analysis</h1>
-    <ul class="cs-badges" aria-label="Status and disciplines"><li class="pm-badge pm-badge--success">{S["success"]}Shipped</li><li class="pm-badge">Product design</li><li class="pm-badge">Redesign</li><li class="pm-badge">Web</li></ul>
+    <ul class="cs-badges" aria-label="Disciplines"><li class="pm-badge">Product design</li><li class="pm-badge">User research</li><li class="pm-badge">Analytics</li></ul>
   </header>
-
-  {P.hero(P.A + "01-hero.mp4", P.A + "01-hero-poster.jpg", "A chart being built in Guided Setup, from Create to the finished table")}
 
   <section class="cs-facts" aria-label="Project details"><dl class="cs-facts__list">
     <div><dt>Role</dt><dd>Product designer</dd><dd>Acting PM</dd></div>
@@ -319,12 +307,12 @@ page = f'''<title>Mensio Case Study</title>
     </div>
     <div class="cs-tldr__body">
       <dl class="cs-tldr__rows">
-        <div class="cs-tldr__row"><dt>Background</dt><dd>Mensio tracks brand exposure across 185 TV networks and 2,000+ social handles.</dd></div>
-        <div class="cs-tldr__row"><dt>Problem</dt><dd>Customers couldn’t build charts on their own, so every custom request went through an analyst.</dd></div>
-        <div class="cs-tldr__row"><dt>Approach</dt><dd>We studied the analysts’ workflow and built their follow-up questions into a guided chart builder.</dd></div>
-        <div class="cs-tldr__row"><dt>Outcome</dt><dd>Guided Setup shipped in 14 weeks. Customers now build their own charts.</dd></div>
+        <div class="cs-tldr__row"><dt>Background</dt><dd>Mensio tracks brand exposure across 185 TV networks and 2,000+ social handles. Data Explorer is where customers pull that data into charts.</dd></div>
+        <div class="cs-tldr__row"><dt>Problem</dt><dd>Data Explorer showed every metric, grouping and filter at once, so customers relied on analysts for every custom chart.</dd></div>
+        <div class="cs-tldr__row"><dt>Approach</dt><dd>We studied the analysts’ workflow and turned their follow-up questions into Guided Setup, a step-by-step wizard with presets.</dd></div>
+        <div class="cs-tldr__row"><dt>Outcome</dt><dd>Shipped in 14 weeks. Customers now build their own charts, including chart types the team never built for them before.</dd></div>
       </dl>
-      {stats([('8 → 5', 'Steps to a custom chart'), ('6', 'Presets for common requests'), ('14 wks', 'From research to ship')], ' pm-stats--sm cs-stats')}
+      {stats([('14 wks', 'from research to ship'), ('8 → 5', 'steps from question to chart'), ('6', 'presets for common questions')], ' pm-stats--sm cs-tldr__stats')}
     </div>
   </section>
 
@@ -364,7 +352,6 @@ page = f'''<title>Mensio Case Study</title>
   // Focus moves to the section after a jump
   links.forEach(function (a) {{ a.addEventListener('click', function () {{ var s = document.querySelector(a.getAttribute('href')); if (s) {{ s.setAttribute('tabindex', '-1'); setTimeout(function () {{ s.focus({{ preventScroll: true }}); }}, 0); }} }}); }});
   // Other pages aren't in this prototype yet
-{P.PARTS_JS}
   document.querySelectorAll(".cs-more .pm-card__title a").forEach(function (a) {{ a.addEventListener('click', function (e) {{ e.preventDefault(); }}); }});
 }})();
 </script>
