@@ -72,19 +72,33 @@ def screen3():
 
 # Small thumbnails for the solution cards: close-ups of the reconstructed tablet UI (project art)
 THUMBS = {
-    'flow': '<div class="pr-th pr-th--flow"><span class="is-done">✓</span><i></i><span class="is-on">2</span><i></i><span>3</span>'
-            '<b>Batch</b><b class="is-on">Steps</b><b>Tests</b></div>',
-    'auto': '<div class="pr-th pr-th--auto"><div class="pr-th__f"><span>06/14/2023</span><em>Auto</em></div><div class="pr-th__f"><span>09:42</span><em>Auto</em></div>'
-            '<div class="pr-th__f"><span>Signed as J. Rivera</span><em>Auto</em></div></div>',
-    'sop': '<div class="pr-th pr-th--sop"><p>SOP 3.2</p><span></span><span></span><b>Keep below 40 °C</b><div class="pr-th__in"></div></div>',
+    # A complete three-step wizard: each step goes active, then done, and the line fills between them
+    'flow': ('<div class="pr-th pr-th--flow">'
+             + '<i class="pr-l pr-l1"><u></u></i><i class="pr-l pr-l2"><u></u></i>'
+             + ''.join(f'<span class="pr-c pr-c{n}"><em>{n}</em><strong>✓</strong></span>' for n in (1, 2, 3))
+             + '<b class="pr-t1">Batch details</b><b class="pr-t2">SOP</b><b class="pr-t3">QA checks</b></div>'),
+    # Values appear on their own: date and time from the clock, the verifier from the operator's login
+    'auto': ('<div class="pr-th pr-th--auto">'
+             '<div class="pr-af"><span class="pr-lbl">Date</span><div class="pr-th__f"><span class="pr-v pr-v1">06/14/2023</span></div></div>'
+             '<div class="pr-af"><span class="pr-lbl">Time</span><div class="pr-th__f"><span class="pr-v pr-v2">09:42</span></div></div>'
+             '<div class="pr-af pr-af--w"><span class="pr-lbl">Verified by</span><div class="pr-th__f"><span class="pr-v pr-v3">J. Rivera, Operator</span><em class="pr-v pr-v3">Auto</em></div></div>'
+             '</div>'),
+    # The SOP's requirements get ticked off one by one
+    'sop': ('<div class="pr-th pr-th--sop"><p>SOP 3.2 · Charge the reactor</p>'
+            '<span class="pr-ck pr-k1"><i></i>Vessel clean and dry</span>'
+            '<span class="pr-ck pr-k2"><i></i>Water added, mixing</span>'
+            '<span class="pr-ck pr-k3"><i></i><b>Kept below 40 °C</b></span></div>'),
 }
 
 def feature_cards(rows, cols=3):
     """Solution features as design-system cards (Card --outlined), lifted so they stand out. rows: (icon or '', title, text)."""
-    return (f'<ul class="pr-cards pr-cards--{cols}">' + ''.join(
+    anim = any(ic for ic, t, d in rows)
+    return (f'<div class="pr-cards-wrap"{" data-anim" if anim else ""}><ul class="pr-cards pr-cards--{cols}">' + ''.join(
         f'<li><article class="pm-card pm-card--outlined pr-card">'
         + (f'<div class="pr-card__thumb" aria-hidden="true">{THUMBS[ic]}</div>' if ic else '')
-        + f'<h4 class="pm-card__title">{t}</h4><p class="pm-card__summary">{d}</p></article></li>' for ic, t, d in rows) + '</ul>')
+        + f'<h4 class="pm-card__title">{t}</h4><p class="pm-card__summary">{d}</p></article></li>' for ic, t, d in rows) + '</ul>'
+        + (f'<button type="button" class="pm-btn pm-btn--ghost pm-btn--xs pr-anim-btn" aria-pressed="false" data-anim-toggle>{I["pause"]}<span>Pause animations</span></button>' if anim else '')
+        + '</div>')
 
 def items(rows, grid=False):
     """Title + description list, no numbering (Serena, 2026-11-16)."""
@@ -166,7 +180,7 @@ BODY = ''.join([
           '<p class="pr-ns__text">Streamline batch manufacturing by digitizing its forms, while keeping them intuitive for operators used to filling them in by hand.</p></section>'
         + '<h3 class="cs-h3">The solution, in short</h3>'
         + lede('A guided tablet flow, built into the Procense platform. It gives operators a faster, more reliable way to record each batch, and still feels as familiar as paper.')
-        + feature_cards([('flow', 'Two forms, one flow', 'Batch details, manufacturing steps and quality tests in three steps, in the order operators work.'),
+        + feature_cards([('flow', 'Two forms, one flow', 'Batch details, the SOP and QA checks in three steps, in the order operators work.'),
                          ('auto', 'Fields that fill themselves', 'Dates, times and signatures fill in automatically, so there’s less to write and less to get wrong.'),
                          ('sop', 'Instructions in the form', 'Each step’s instructions and critical limits sit right where the data is entered.')])),
 
@@ -242,6 +256,15 @@ TLDR = f'''      <dl class="cs-tldr__rows">
       {stats([('10%', 'Faster batch execution'), ('100%', 'Automated traceability'), ('100%', 'Data accuracy')], ' pm-stats--sm cs-tldr__stats')}'''
 
 JS = r"""
+  // Solution card animations loop; the button pauses them (WCAG 2.2.2), and they also rest while off screen
+  document.querySelectorAll('[data-anim]').forEach(function (w) {
+    var btn = w.querySelector('[data-anim-toggle]'), user = false, PAUSE = '<svg class="pm-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="14" y="4" width="4" height="16" rx="1"/><rect x="6" y="4" width="4" height="16" rx="1"/></svg>', PLAY = '<svg class="pm-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><polygon points="6 3 20 12 6 21 6 3"/></svg>';
+    function sync() { btn.setAttribute('aria-pressed', String(user)); btn.innerHTML = (user ? PLAY : PAUSE) + '<span>' + (user ? 'Play animations' : 'Pause animations') + '</span>'; }
+    btn.addEventListener('click', function () { user = !user; w.classList.toggle('is-paused', user); sync(); });
+    if ('IntersectionObserver' in window) new IntersectionObserver(function (es) { if (!user) w.classList.toggle('is-paused', !es[0].isIntersecting); }).observe(w);
+    sync();
+  });
+
   // Fig. 1 batch workflow: hover, focus or tap a step to show what happens there and its error risk
   document.querySelectorAll('[data-flow]').forEach(function (w) {
     var btns = [].slice.call(w.querySelectorAll('[data-step]')), wEl = w.querySelector('[data-fn-w]'), t = w.querySelector('[data-fn-t]'), d = w.querySelector('[data-fn-d]'), r = w.querySelector('[data-fn-r]');
@@ -298,24 +321,70 @@ CSS = r"""
 .pr-card .pm-card__title, .pr-card .pm-card__summary { padding-inline: var(--space-2); }
 /* Thumbnail: a close-up of the tablet UI on the app's own light background in both themes (project art; nested radius = outer - padding) */
 .pr-card__thumb { aspect-ratio: 16 / 10; margin-bottom: var(--space-3); border-radius: var(--radius-sm); background: #F6F7F9; box-shadow: inset 0 0 0 1px var(--color-border-subtle); container-type: inline-size; overflow: hidden; display: grid; place-items: center; }
-.pr-th { width: 78%; font-family: var(--font-sans); font-size: 5.4cqw; line-height: 1.3; color: #1B2026; }
-.pr-th--flow { display: grid; grid-template-columns: auto 1fr auto 1fr auto; align-items: center; row-gap: 3cqw; column-gap: 2cqw; }
-.pr-th--flow span { display: grid; place-items: center; width: 11cqw; height: 11cqw; border-radius: 50%; background: #FFFFFF; box-shadow: inset 0 0 0 1px #C9CED6; color: #6B7280; font-size: 5cqw; }
-.pr-th--flow span.is-on { background: #2483FF; box-shadow: none; color: #FFFFFF; font-weight: 600; }
-.pr-th--flow span.is-done { background: #E6F0FF; box-shadow: none; color: #2483FF; }
-.pr-th--flow i { height: 1px; background: #C9CED6; }
-.pr-th--flow b { font-weight: 400; color: #6B7280; text-align: center; }
-.pr-th--flow b:nth-of-type(1) { grid-column: 1; } .pr-th--flow b:nth-of-type(2) { grid-column: 3; } .pr-th--flow b:nth-of-type(3) { grid-column: 5; }
-.pr-th--flow b.is-on { color: #1B2026; font-weight: 600; }
-.pr-th--auto { display: grid; gap: 3cqw; }
-.pr-th__f { display: flex; align-items: center; gap: 2cqw; padding: 2.6cqw 3cqw; border-radius: 1.6cqw; background: #FFFFFF; box-shadow: inset 0 0 0 1px #D6DAE1; }
-.pr-th__f em { margin-left: auto; font-style: normal; font-size: 4.4cqw; padding: .4cqw 2cqw; border-radius: 1.2cqw; background: #E6F0FF; color: #1559C9; }
-.pr-th--sop { display: grid; gap: 2.4cqw; padding: 4cqw; border-radius: 2cqw; background: #E6F0FF; border-left: 1.4cqw solid #2483FF; }
-.pr-th--sop p { margin: 0; font-weight: 600; color: #1559C9; }
-.pr-th--sop span { height: 2.6cqw; border-radius: 2cqw; background: #BFD6FB; }
-.pr-th--sop span + span { width: 70%; }
-.pr-th--sop b { font-weight: 600; }
-.pr-th__in { height: 9cqw; border-radius: 1.6cqw; background: #FFFFFF; box-shadow: inset 0 0 0 1px #D6DAE1; }
+.pr-th { width: 84%; font-family: var(--font-sans); font-size: 4.6cqw; line-height: 1.3; color: #1B2026; }
+/* Default styles are the finished state (also what reduced motion shows); the loops run only without reduced motion */
+/* Stepper */
+.pr-th--flow { position: relative; display: grid; grid-template-columns: repeat(3, 1fr); row-gap: 3cqw; justify-items: center; }
+.pr-c { position: relative; z-index: 1; display: grid; place-items: center; width: 11cqw; height: 11cqw; border-radius: 50%; background: #E6F0FF; color: #2483FF; font-size: 4.6cqw; font-weight: 600; }
+.pr-c em, .pr-c strong { grid-area: 1 / 1; font-style: normal; }
+.pr-c em { opacity: 0; } .pr-c strong { opacity: 1; }
+.pr-l { position: absolute; top: 5.5cqw; height: 1px; width: calc(33.33% - 11cqw); background: #C9CED6; }
+.pr-l1 { left: calc(16.67% + 5.5cqw); } .pr-l2 { left: calc(50% + 5.5cqw); }
+.pr-l u { display: block; height: 100%; width: 100%; background: #2483FF; }
+.pr-th--flow b { font-weight: 400; color: #4B5563; text-align: center; white-space: nowrap; }
+.pr-c1 { grid-column: 1; } .pr-c2 { grid-column: 2; } .pr-c3 { grid-column: 3; }
+.pr-t1 { grid-column: 1; } .pr-t2 { grid-column: 2; } .pr-t3 { grid-column: 3; }
+/* Auto-filled fields */
+.pr-th--auto { display: grid; grid-template-columns: 1fr 1fr; gap: 2.6cqw 3cqw; }
+.pr-af { display: grid; gap: 1cqw; min-width: 0; } .pr-af--w { grid-column: 1 / -1; }
+.pr-lbl { font-size: 3.8cqw; color: #4B5563; }
+.pr-th__f { display: flex; align-items: center; gap: 2cqw; min-height: 9cqw; padding: 0 3cqw; border-radius: 1.6cqw; background: #FFFFFF; box-shadow: inset 0 0 0 1px #D6DAE1; white-space: nowrap; overflow: hidden; }
+.pr-th__f em { margin-left: auto; font-style: normal; font-size: 3.8cqw; padding: .4cqw 2cqw; border-radius: 1.2cqw; background: #E6F0FF; color: #1559C9; }
+/* SOP checklist */
+.pr-th--sop { display: grid; gap: 2.2cqw; padding: 4cqw; border-radius: 2cqw; background: #E6F0FF; border-left: 1.4cqw solid #2483FF; }
+.pr-th--sop p { margin: 0 0 .6cqw; font-weight: 600; color: #1559C9; }
+.pr-ck { display: flex; align-items: center; gap: 2.4cqw; }
+.pr-ck b { font-weight: 600; }
+.pr-ck i { flex: none; display: grid; place-items: center; width: 6cqw; height: 6cqw; border-radius: 1.2cqw; background: #2483FF; box-shadow: inset 0 0 0 1px #2483FF; }
+.pr-ck i::after { content: ""; width: 1.6cqw; height: 3cqw; margin-top: -.6cqw; border: solid #FFFFFF; border-width: 0 .7cqw .7cqw 0; transform: rotate(45deg); }
+@media (prefers-reduced-motion: no-preference) {
+  .pr-c1 { animation: pr-c1 7s infinite; } .pr-c2 { animation: pr-c2 7s infinite; } .pr-c3 { animation: pr-c3 7s infinite; }
+  .pr-c1 em { animation: pr-n1 7s infinite; } .pr-c1 strong { animation: pr-d1 7s infinite; }
+  .pr-c2 em { animation: pr-n2 7s infinite; } .pr-c2 strong { animation: pr-d2 7s infinite; }
+  .pr-c3 em { animation: pr-n3 7s infinite; } .pr-c3 strong { animation: pr-d3 7s infinite; }
+  .pr-l1 u { animation: pr-l1 7s infinite; } .pr-l2 u { animation: pr-l2 7s infinite; }
+  .pr-t1 { animation: pr-t1 7s infinite; } .pr-t2 { animation: pr-t2 7s infinite; } .pr-t3 { animation: pr-t3 7s infinite; }
+  .pr-v1 { animation: pr-v1 6s infinite; } .pr-v2 { animation: pr-v2 6s infinite; } .pr-v3 { animation: pr-v3 6s infinite; }
+  .pr-k1 i { animation: pr-k1 6s infinite; } .pr-k2 i { animation: pr-k2 6s infinite; } .pr-k3 i { animation: pr-k3 6s infinite; }
+  .pr-k1 i::after { animation: pr-m1 6s infinite; } .pr-k2 i::after { animation: pr-m2 6s infinite; } .pr-k3 i::after { animation: pr-m3 6s infinite; }
+  .pr-cards-wrap.is-paused .pr-th, .pr-cards-wrap.is-paused .pr-th *, .pr-cards-wrap.is-paused .pr-th *::after { animation-play-state: paused !important; }
+}
+@media (prefers-reduced-motion: reduce) { .pr-anim-btn { display: none; } }
+/* step states: idle (white, grey ring) · active (blue, number) · done (pale blue, check) */
+@keyframes pr-c1 { 0%, 28% { background: #2483FF; color: #FFFFFF; } 32%, 100% { background: #E6F0FF; color: #2483FF; } }
+@keyframes pr-c2 { 0%, 28% { background: #FFFFFF; color: #6B7280; box-shadow: inset 0 0 0 1px #C9CED6; } 32%, 58% { background: #2483FF; color: #FFFFFF; box-shadow: none; } 62%, 100% { background: #E6F0FF; color: #2483FF; box-shadow: none; } }
+@keyframes pr-c3 { 0%, 58% { background: #FFFFFF; color: #6B7280; box-shadow: inset 0 0 0 1px #C9CED6; } 62%, 84% { background: #2483FF; color: #FFFFFF; box-shadow: none; } 88%, 100% { background: #E6F0FF; color: #2483FF; box-shadow: none; } }
+@keyframes pr-n1 { 0%, 28% { opacity: 1; } 32%, 100% { opacity: 0; } } @keyframes pr-d1 { 0%, 28% { opacity: 0; } 32%, 100% { opacity: 1; } }
+@keyframes pr-n2 { 0%, 58% { opacity: 1; } 62%, 100% { opacity: 0; } } @keyframes pr-d2 { 0%, 58% { opacity: 0; } 62%, 100% { opacity: 1; } }
+@keyframes pr-n3 { 0%, 84% { opacity: 1; } 88%, 100% { opacity: 0; } } @keyframes pr-d3 { 0%, 84% { opacity: 0; } 88%, 100% { opacity: 1; } }
+@keyframes pr-l1 { 0%, 22% { width: 0; } 30%, 100% { width: 100%; } }
+@keyframes pr-l2 { 0%, 52% { width: 0; } 60%, 100% { width: 100%; } }
+@keyframes pr-t1 { 0%, 28% { color: #1B2026; font-weight: 600; } 32%, 100% { color: #4B5563; font-weight: 400; } }
+@keyframes pr-t2 { 0%, 28% { color: #6B7280; } 32%, 58% { color: #1B2026; font-weight: 600; } 62%, 100% { color: #4B5563; font-weight: 400; } }
+@keyframes pr-t3 { 0%, 58% { color: #6B7280; } 62%, 84% { color: #1B2026; font-weight: 600; } 88%, 100% { color: #4B5563; font-weight: 400; } }
+/* fields fill in one after another, hold, then clear for the next loop */
+@keyframes pr-v1 { 0%, 10% { opacity: 0; transform: translateY(2cqw); } 18%, 88% { opacity: 1; transform: none; } 96%, 100% { opacity: 0; } }
+@keyframes pr-v2 { 0%, 26% { opacity: 0; transform: translateY(2cqw); } 34%, 88% { opacity: 1; transform: none; } 96%, 100% { opacity: 0; } }
+@keyframes pr-v3 { 0%, 44% { opacity: 0; transform: translateY(2cqw); } 52%, 88% { opacity: 1; transform: none; } 96%, 100% { opacity: 0; } }
+/* boxes tick in order, hold, then clear */
+@keyframes pr-k1 { 0%, 14% { background: #FFFFFF; box-shadow: inset 0 0 0 1px #9AA3AF; } 18%, 90% { background: #2483FF; box-shadow: inset 0 0 0 1px #2483FF; } 95%, 100% { background: #FFFFFF; box-shadow: inset 0 0 0 1px #9AA3AF; } }
+@keyframes pr-k2 { 0%, 34% { background: #FFFFFF; box-shadow: inset 0 0 0 1px #9AA3AF; } 38%, 90% { background: #2483FF; box-shadow: inset 0 0 0 1px #2483FF; } 95%, 100% { background: #FFFFFF; box-shadow: inset 0 0 0 1px #9AA3AF; } }
+@keyframes pr-k3 { 0%, 54% { background: #FFFFFF; box-shadow: inset 0 0 0 1px #9AA3AF; } 58%, 90% { background: #2483FF; box-shadow: inset 0 0 0 1px #2483FF; } 95%, 100% { background: #FFFFFF; box-shadow: inset 0 0 0 1px #9AA3AF; } }
+@keyframes pr-m1 { 0%, 14% { opacity: 0; } 18%, 90% { opacity: 1; } 95%, 100% { opacity: 0; } }
+@keyframes pr-m2 { 0%, 34% { opacity: 0; } 38%, 90% { opacity: 1; } 95%, 100% { opacity: 0; } }
+@keyframes pr-m3 { 0%, 54% { opacity: 0; } 58%, 90% { opacity: 1; } 95%, 100% { opacity: 0; } }
+.pr-cards-wrap { display: grid; gap: var(--space-3); justify-items: end; }
+.pr-cards-wrap > .pr-cards { justify-self: stretch; }
 /* North Star: the one accent-tinted surface on the page, so it reads first */
 .pr-ns { display: grid; gap: var(--space-2); padding: var(--space-6); border-radius: var(--radius-md); background: var(--color-action-selected-bg); box-shadow: inset 0 0 0 1px var(--color-border-subtle), var(--shadow-sm); }
 @container (min-width: 768px) { .pr-ns { padding: var(--space-8); } }
