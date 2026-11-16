@@ -194,7 +194,7 @@ body { margin: 0; font-family: var(--font-sans); background: var(--color-bg-canv
 .cs-tldr__row dt { font-size: var(--type-body-sm); line-height: var(--line-body-md); color: var(--color-text-tertiary); }
 .cs-tldr__row dd { margin: 0; font-size: var(--type-body-md); line-height: var(--line-body-md); color: var(--color-text-primary); text-wrap: pretty; }
 @container cs-tldr (min-width: 560px) { .cs-tldr__row { grid-template-columns: 9rem minmax(0, 1fr); column-gap: var(--space-6); } }
-/* Numbers: one column with rules between on narrow bodies; three across with vertical rules from 420px (h2-size values until 560px) */
+/* Numbers: one column with rules between on narrow bodies; three across with vertical rules from 420px; StatRow --sm (h2-size values), like the stats in the case-study body */
 .pm-stats.cs-tldr__stats { grid-template-columns: minmax(0, 1fr); gap: 0; padding-top: 0; }
 .cs-tldr__stats .pm-stats__item { justify-content: flex-end; padding: var(--space-5) 0; border-top: 1px solid var(--color-border-subtle); } /* values share a top line even when labels wrap */
 .cs-tldr__stats .pm-stats__item:last-child { padding-bottom: 0; }
@@ -203,7 +203,6 @@ body { margin: 0; font-family: var(--font-sans); background: var(--color-bg-canv
   .cs-tldr__stats .pm-stats__item { padding: 0 var(--space-6); border-top: 0; border-left: 1px solid var(--color-border-subtle); }
   .cs-tldr__stats .pm-stats__item:first-child { padding-left: 0; border-left: 0; }
 }
-@container cs-tldr (min-width: 420px) and (max-width: 559px) { .cs-tldr__stats .pm-stats__value { font-size: var(--type-h2); line-height: var(--line-h2); letter-spacing: var(--tracking-heading); } }
 @container (min-width: 768px) {
   /* The heading takes only its own width; the rows get the rest, 48px from it */
   .cs-tldr { grid-template-columns: max-content minmax(0, 1fr); column-gap: var(--space-12); }
@@ -310,7 +309,7 @@ page = f'''<title>Mensio Case Study</title>
         <div class="cs-tldr__row"><dt>Approach</dt><dd>We studied the analysts’ workflow and turned their follow-up questions into Guided Setup, a step-by-step wizard with presets.</dd></div>
         <div class="cs-tldr__row"><dt>Outcome</dt><dd>Shipped in 14 weeks. Customers now build their own charts, including chart types the team never built for them before.</dd></div>
       </dl>
-      {stats([('14 wks', 'from research to ship'), ('8 → 5', 'steps from question to chart'), ('6', 'presets for common questions')], ' cs-tldr__stats')}
+      {stats([('14 wks', 'from research to ship'), ('8 → 5', 'steps from question to chart'), ('6', 'presets for common questions')], ' pm-stats--sm cs-tldr__stats')}
     </div>
   </section>
 
