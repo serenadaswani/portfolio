@@ -146,7 +146,7 @@ BODY = ''.join([
         + '</div>'),
 ])
 
-TOC = ''.join(f'<li><a class="pm-toc__item" href="#{sid}"{" aria-current=\"location\"" if i == 0 else ""} data-spy><span class="pm-toc__num">{i+1:02d}</span>{label}</a></li>' for i, (sid, label) in enumerate(SECTIONS))
+TOC = ''.join(f'<li><a class="pm-toc__item" href="#{sid}"{" aria-current=\"location\"" if i == 0 else ""} data-spy>{label}</a></li>' for i, (sid, label) in enumerate(SECTIONS))
 
 MORE = [('chart', 'Placeholder project', 'Your second strongest project.', ['Product design'], 'Placeholder'),
         ('queue', 'Placeholder project', 'A supporting project.', ['Product design'], 'Placeholder')]
