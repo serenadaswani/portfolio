@@ -176,7 +176,13 @@ body { margin: 0; font-family: var(--font-sans); background: var(--color-bg-canv
 .cs-badges { display: flex; flex-wrap: wrap; gap: var(--space-2); list-style: none; margin: 0; padding: 0; }
 /* TL;DR panel, after leahkim.design's table-redesign case: the heading on the left like the landing's "About me"
    (h3 size, 500), the background / problem / approach / outcome rows on the right with a hairline between them,
-   and the numbers underneath in the same container, divided by vertical rules. Side by side from 1024px. */
+   and the numbers underneath in the same container, divided by vertical rules. Side by side from 768px, the heading 48px from the rows. */
+/* Project facts: their own row above the TL;DR, four across from 768px (two across on phones), label over text */
+.cs-facts { margin-top: var(--space-10); }
+.cs-facts__list { margin: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-6) var(--space-6); }
+@container (min-width: 768px) { .cs-facts__list { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--space-8); } }
+.cs-facts__list dt { margin-bottom: var(--space-1); font-size: var(--type-body-sm); line-height: var(--line-body-sm); color: var(--color-text-tertiary); }
+.cs-facts__list dd { margin: 0; font-size: var(--type-body-md); line-height: var(--line-body-md); color: var(--color-text-primary); text-wrap: pretty; }
 .cs-tldr { margin-top: var(--space-10); padding: var(--panel-p); display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-8); }
 .cs-tldr__head { display: grid; gap: var(--space-6); align-content: start; }
 .cs-tldr__h { margin: 0; font-size: var(--type-h3); line-height: var(--line-h3); font-weight: var(--weight-medium); letter-spacing: var(--tracking-h3); color: var(--color-text-primary); }
@@ -198,9 +204,9 @@ body { margin: 0; font-family: var(--font-sans); background: var(--color-bg-canv
   .cs-tldr__stats .pm-stats__item:first-child { padding-left: 0; border-left: 0; }
 }
 @container cs-tldr (min-width: 420px) and (max-width: 559px) { .cs-tldr__stats .pm-stats__value { font-size: var(--type-h2); line-height: var(--line-h2); letter-spacing: var(--tracking-heading); } }
-@container (min-width: 1024px) {
-  .cs-tldr { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); column-gap: var(--space-10); }
-  .cs-tldr__head .pm-meta { max-width: 20rem; }
+@container (min-width: 768px) {
+  /* The heading takes only its own width; the rows get the rest, 48px from it */
+  .cs-tldr { grid-template-columns: max-content minmax(0, 1fr); column-gap: var(--space-12); }
 }
 
 .cs-body { display: grid; gap: var(--space-8); margin-top: var(--space-16); grid-template-columns: minmax(0, 1fr); }
@@ -286,10 +292,16 @@ page = f'''<title>Mensio Case Study</title>
     <ul class="cs-badges" aria-label="Disciplines"><li class="pm-badge">Product design</li><li class="pm-badge">User research</li><li class="pm-badge">Analytics</li></ul>
   </header>
 
+  <section class="cs-facts" aria-label="Project details"><dl class="cs-facts__list">
+    <div><dt>Role</dt><dd>Product designer, acting PM</dd></div>
+    <div><dt>Team</dt><dd>Enterprise Analytics team, frontend and backend engineers</dd></div>
+    <div><dt>Timeline</dt><dd>June – September 2026</dd></div>
+    <div><dt>Skills</dt><dd>User research, product design, design QA</dd></div>
+  </dl></section>
+
   <section class="pm-panel pm-panel--lg cs-tldr" aria-labelledby="cs-tldr-h">
     <div class="cs-tldr__head">
-      <h2 class="cs-tldr__h" id="cs-tldr-h">TLDR</h2>
-      {meta([('Collaborators', 'Enterprise Analytics team, frontend and backend engineers'), ('Timeline', '<span class="pm-meta-text">June – September 2026</span>'), ('Scope', 'User research, product design, design QA, acting PM')])}
+      <h2 class="cs-tldr__h" id="cs-tldr-h">TL;DR</h2>
     </div>
     <div class="cs-tldr__body">
       <dl class="cs-tldr__rows">
