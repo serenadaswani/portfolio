@@ -8,11 +8,11 @@ NAME = 'Serena Daswani'
 VER = 'v1.9'
 # Real content comes from site.js (see CLAUDE.md). Anything marked Placeholder or TBC is still to replace.
 FEATURED = [  # strongest first: full width. Heading + a one-line summary, written by Serena; details live on the case study.
-    ('mensio', 'Redesigning Mensio’s custom chart builder for self-serve data analysis', 'Empowered customers to explore and visualize data without analyst support.', ['Product design', 'Analytics'], '', 'mensio.html'),
-    ('procense', 'Digitizing QA forms for chemical batch manufacturing', 'Unified batch records and SOPs into a traceable digital workflow.', ['Product design', 'Manufacturing'], '', 'https://serenadaswani.framer.website/project-detail-procense-digital-forms-application')]
+    ('mensio', 'Redesigning Mensio’s custom chart builder for self-serve data analysis', 'Empowered customers to explore and visualize data without analyst support.', ['Entertainment analytics', 'Redesign'], '', 'mensio.html'),
+    ('procense', 'Digitizing manufacturing QA forms to increase batch execution speed by 10%', 'Unified batch records and SOPs into a traceable digital workflow.', ['Manufacturing', 'End-to-end'], '', 'https://serenadaswani.framer.website/project-detail-procense-digital-forms-application')]
 MORE = [  # two-up below
-    ('apple', 'Redesigning QA reporting for Apple’s internal teams', 'Simplified report creation, organization, and review across internal QA teams.', ['Product design'], '', 'https://serenadaswani.framer.website/project-detail-apple-internal-reporting-tool'),
-    ('omni', 'Introducing AI autofill to reduce e-commerce listing input by 50%', 'Helped sellers generate, refine, and customize product listings with AI.', ['Product design', 'AI'], '', 'https://serenadaswani.framer.website/project-detail-omnisynkai-ai-autofill-feature')]
+    ('apple', 'Redesigning QA reporting for Apple’s internal teams', 'Simplified report creation, organization, and review across internal QA teams.', ['Internal', 'Redesign'], '', 'https://serenadaswani.framer.website/project-detail-apple-internal-reporting-tool'),
+    ('omni', 'Introducing AI autofill to reduce e-commerce listing input by 50%', 'Helped sellers generate, refine, and customize product listings with AI.', ['E-commerce', 'AI'], '', 'https://serenadaswani.framer.website/project-detail-omnisynkai-ai-autofill-feature')]
 ROLES = [('D', 'Deploy', 'Product designer', 'Jan 2026 – Present', True, 'Product design for Mensio, and a design system adopted across Deploy’s products.'),
          ('A', 'Apple', 'UI/UX designer, contract', 'Aug 2024 – Dec 2025', False, 'Sole designer on an internal QA reporting tool.'),
          ('O', 'OmniSynkAI', 'Product design intern', 'Jul – Sep 2024', False, 'Designed an AI autofill feature for inventory listings.'),
