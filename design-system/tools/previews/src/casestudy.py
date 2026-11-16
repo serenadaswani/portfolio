@@ -15,6 +15,27 @@ comps = open(os.path.join(REPO, 'design-system', 'css', 'components.css')).read(
 VER = 'v1.9'
 NAME = 'Serena Daswani'
 
+import re
+A = '../assets/mensio/'  # project media, relative to prototypes/
+
+def mensio_logo(h=40):
+    """Mensio's wordmark in white (fills forced to currentColor), sized by height."""
+    svg = open(os.path.join(REPO, 'assets', 'logos', 'mensio.svg')).read().strip()
+    svg = re.sub(r'<defs>.*?</defs>', '', svg, flags=re.S)
+    svg = re.sub(r'fill="(?!none)[^"]*"', 'fill="currentColor"', svg)
+    svg = re.sub(r'\s(width|height)="[^"]*"', '', svg, count=2)
+    return svg.replace('<svg ', f'<svg class="cs-hero__logo" aria-hidden="true" focusable="false" ', 1)
+
+# Hero (after a product-launch banner): a Mensio-blue stage (project art) with the logo and the feature name in the
+# middle, and real Figma screens tilted along the bottom edge, cropped by the stage. Screens are project media.
+HERO_SHOTS = [  # file, class (position), rotation
+    ('screens/editchart.webp', 'cs-hero__shot--1', -7), ('bento/screen-charts.webp', 'cs-hero__shot--2', 4),
+    ('screens/tooltip.webp', 'cs-hero__shot--3', -4), ('screens/viewchart.webp', 'cs-hero__shot--4', 7)]
+def hero():
+    shots = ''.join(f'<img class="cs-hero__shot {c}" src="{A}{f}" alt="" loading="eager" width="1440" height="1024" style="--rot:{r}deg">' for f, c, r in HERO_SHOTS)
+    return ('<figure class="cs-hero" role="img" aria-label="Mensio Guided Setup: screens from the redesigned chart builder">'
+            f'<div class="cs-hero__copy" aria-hidden="true">{mensio_logo()}<p class="cs-hero__h">Guided Setup</p></div>{shots}</figure>')
+
 _fig = [0]
 def fig(caption, planned, ratio='16x10', variant=''):
     """ImageFrame with an empty slot. Swap the fallback div for <img alt="..."> once the asset exists."""
@@ -169,7 +190,7 @@ body { margin: 0; font-family: var(--font-sans); background: var(--color-bg-canv
 .cs-wrap { max-width: var(--content-max-width); margin: 0 auto; padding: var(--space-6) var(--space-4) var(--space-16); }
 @container (min-width: 768px) { .cs-wrap { padding: var(--space-10) var(--space-10) var(--space-24); } }
 
-.cs-bar { display: flex; align-items: center; justify-content: space-between; gap: var(--space-4); margin-bottom: var(--space-12); }
+.cs-bar { display: flex; align-items: center; justify-content: space-between; gap: var(--space-4); margin-bottom: var(--space-6); }
 .cs-back { display: inline-flex; align-items: center; gap: var(--space-1); }
 .cs-back .pm-icon { flex: none; width: 16px; height: 16px; }
 
@@ -263,6 +284,31 @@ body { margin: 0; font-family: var(--font-sans); background: var(--color-bg-canv
 .cs-more { margin-top: var(--space-24); padding-top: var(--space-10); border-top: 1px solid var(--color-border-subtle); display: grid; gap: var(--space-6); }
 .cs-more .cs-h2 { font-size: var(--type-h3); line-height: var(--line-h3); }
 .cs-colophon { margin: var(--space-16) 0 0; }
+
+/* Hero banner: project art. The blue is Mensio's (as on the landing card); the screens are real Figma exports */
+.cs-hero { position: relative; overflow: hidden; margin: 0 0 var(--space-10); aspect-ratio: 16 / 7; border-radius: var(--radius-lg);
+  background: radial-gradient(70% 90% at 50% 120%, #3693F9 0%, rgb(54 147 249 / 0) 70%), linear-gradient(180deg, #175CFF 0%, #206CFD 100%); color: var(--white);
+  container-type: inline-size; isolation: isolate; }
+.cs-hero__copy { position: absolute; z-index: 2; left: 50%; top: 38%; transform: translate(-50%, -50%); display: grid; justify-items: center; gap: 3cqw; width: max-content; text-align: center; }
+.cs-hero__logo { height: clamp(22px, 4.2cqw, 48px); width: auto; }
+.cs-hero__h { margin: 0; font-size: clamp(36px, 9cqw, 112px); line-height: 0.95; font-weight: var(--weight-medium); letter-spacing: -0.035em; font-stretch: var(--font-width-display); }
+.cs-hero__shot { position: absolute; z-index: 1; width: 30cqw; height: auto; aspect-ratio: 1440 / 1024; object-fit: cover; object-position: left top;
+  border-radius: var(--radius-md); background: var(--white); transform: rotate(var(--rot)); box-shadow: 0 1px 2px rgb(0 0 0 / 12%), 0 18px 40px rgb(0 20 80 / 28%); }
+.cs-hero__shot--1 { left: -4cqw; bottom: -10cqw; }
+.cs-hero__shot--2 { left: 21cqw; bottom: -16cqw; z-index: 0; }
+.cs-hero__shot--3 { right: 19cqw; bottom: -17cqw; z-index: 0; }
+.cs-hero__shot--4 { right: -5cqw; bottom: -8cqw; }
+@container (max-width: 560px) { .cs-hero { aspect-ratio: 4 / 3; } }
+@container (max-width: 560px) { .cs-hero__shot { width: 52cqw; } .cs-hero__shot--2, .cs-hero__shot--3 { display: none; } .cs-hero__shot--1 { bottom: -14cqw; } .cs-hero__shot--4 { bottom: -12cqw; } .cs-hero__copy { top: 36%; } }
+
+/* View toggle: Tabs --segmented as a full-width block; panels hold page content, so they keep the page's own type */
+.cs-views { margin-top: var(--space-10); }
+.cs-views > .pm-tabs__list { display: flex; width: 100%; box-sizing: border-box; }
+.cs-views > .pm-tabs__list > .pm-tabs__tab { flex: 1 1 0; justify-content: center; }
+.cs-views > .pm-tabs__panel { padding-top: var(--space-8); font-size: inherit; line-height: inherit; color: inherit; }
+.cs-views > .pm-tabs__panel:focus-visible { outline-offset: var(--space-2); }
+.cs-views .cs-tldr { margin-top: 0; }
+.cs-views .cs-body { margin-top: 0; }
 """
 
 page = f'''<title>Mensio Case Study</title>
@@ -288,10 +334,11 @@ page = f'''<title>Mensio Case Study</title>
     </span>
   </div>
 
+  {hero()}
+
   <header class="cs-head">
-    <p class="pm-card__eyebrow"><span class="pm-meta-text">2026</span> · Mensio</p>
-    <h1 class="cs-title">Redesigning Mensio’s custom chart builder for self-serve data analysis</h1>
     <ul class="cs-badges" aria-label="Disciplines"><li class="pm-badge">Product design</li><li class="pm-badge">User research</li><li class="pm-badge">Analytics</li></ul>
+    <h1 class="cs-title">Redesigning Mensio’s custom chart builder for self-serve data analysis</h1>
   </header>
 
   <section class="cs-facts" aria-label="Project details"><dl class="cs-facts__list">
@@ -301,6 +348,12 @@ page = f'''<title>Mensio Case Study</title>
     <div><dt>Skills</dt><dd>User research</dd><dd>Product design</dd><dd>Design QA</dd></div>
   </dl></section>
 
+  <div class="pm-tabs pm-tabs--segmented cs-views" data-views>
+  <div role="tablist" aria-label="Case study view" class="pm-tabs__list">
+    <button type="button" role="tab" class="pm-tabs__tab" id="tab-tldr" aria-controls="view-tldr" aria-selected="true" tabindex="0">TL;DR</button>
+    <button type="button" role="tab" class="pm-tabs__tab" id="tab-detailed" aria-controls="view-detailed" aria-selected="false" tabindex="-1">Detailed</button>
+  </div>
+  <div role="tabpanel" class="pm-tabs__panel cs-view" id="view-tldr" aria-labelledby="tab-tldr" tabindex="0">
   <section class="pm-panel pm-panel--lg cs-tldr" aria-labelledby="cs-tldr-h">
     <div class="cs-tldr__head">
       <h2 class="cs-tldr__h" id="cs-tldr-h">TL;DR</h2>
@@ -315,10 +368,14 @@ page = f'''<title>Mensio Case Study</title>
       {stats([('14 wks', 'from research to ship'), ('8 → 5', 'steps from question to chart'), ('6', 'presets for common questions')], ' pm-stats--sm cs-tldr__stats')}
     </div>
   </section>
+  </div>
 
+  <div role="tabpanel" class="pm-tabs__panel cs-view" id="view-detailed" aria-labelledby="tab-detailed" tabindex="0" hidden>
   <div class="cs-body">
     <nav class="pm-toc cs-toc" aria-labelledby="cs-toc-h"><p class="pm-toc__heading" id="cs-toc-h">On this page</p><ol class="pm-toc__list">{TOC}</ol></nav>
     <main class="cs-main">{BODY}</main>
+  </div>
+  </div>
   </div>
 
   <section class="cs-more" aria-labelledby="cs-more-h">
@@ -338,6 +395,24 @@ page = f'''<title>Mensio Case Study</title>
   function sync() {{ themeBtn.setAttribute('aria-pressed', String(isDark())); }}
   themeBtn.addEventListener('click', function () {{ root.setAttribute('data-theme', isDark() ? 'light' : 'dark'); sync(); }});
   sync();
+
+  // View toggle (WAI-ARIA tabs, automatic activation)
+  var tabs = [].slice.call(document.querySelectorAll('[data-views] [role="tab"]'));
+  function select(t, focus) {{
+    tabs.forEach(function (x) {{ var on = x === t; x.setAttribute('aria-selected', String(on)); x.tabIndex = on ? 0 : -1;
+      document.getElementById(x.getAttribute('aria-controls')).hidden = !on; }});
+    if (focus) t.focus();
+    if (links) spy();
+  }}
+  tabs.forEach(function (t, i) {{
+    t.addEventListener('click', function () {{ select(t); }});
+    t.addEventListener('keydown', function (e) {{
+      var k = {{ ArrowRight: i + 1, ArrowLeft: i - 1, Home: 0, End: tabs.length - 1 }}[e.key];
+      if (k === undefined) return; e.preventDefault(); select(tabs[(k + tabs.length) % tabs.length], true);
+    }});
+  }});
+  function openFromHash() {{ var h = location.hash && document.querySelector(location.hash); if (h && h.closest('#view-detailed')) {{ select(document.getElementById('tab-detailed')); h.scrollIntoView(); }} }}
+  window.addEventListener('hashchange', openFromHash); openFromHash();
 
   // Scroll-spy on the "On this page" index; the current item scrolls into view in the narrow strip
   var links = [].slice.call(document.querySelectorAll('[data-spy]')), last = null;
