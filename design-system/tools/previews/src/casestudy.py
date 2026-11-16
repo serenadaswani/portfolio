@@ -8,7 +8,7 @@ Run: python3 design-system/tools/previews/src/casestudy.py  ->  prototypes/mensi
 """
 import sys, os
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from lib import I, showcase
+from lib import I, S, showcase
 REPO = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '..', '..'))
 tokens = open(os.path.join(REPO, 'design-system', 'css', 'tokens.css')).read()
 comps = open(os.path.join(REPO, 'design-system', 'css', 'components.css')).read()
@@ -194,9 +194,9 @@ body { margin: 0; font-family: var(--font-sans); background: var(--color-bg-canv
 .cs-back { display: inline-flex; align-items: center; gap: var(--space-1); }
 .cs-back .pm-icon { flex: none; width: 16px; height: 16px; }
 
-.cs-head { display: grid; gap: var(--space-5); max-width: 880px; }
+.cs-head { display: grid; gap: var(--space-5); }
 .cs-head .pm-card__eyebrow { margin: 0; }
-.cs-title { margin: 0; font-size: var(--type-display-lg); line-height: var(--line-display-lg); font-weight: var(--weight-display-lg); letter-spacing: var(--tracking-display-lg); font-stretch: var(--font-width-display); text-wrap: balance; }
+.cs-title { margin: 0; font-size: var(--type-display-lg); line-height: var(--line-display-lg); font-weight: var(--weight-display-lg); letter-spacing: var(--tracking-display-lg); font-stretch: var(--font-width-display); text-wrap: pretty; }
 .cs-badges { display: flex; flex-wrap: wrap; gap: var(--space-2); list-style: none; margin: 0; padding: 0; }
 /* TL;DR panel, after leahkim.design's table-redesign case: the heading on the left like the landing's "About me"
    (h3 size, 500), the background / problem / approach / outcome rows on the right with a hairline between them,
@@ -284,6 +284,9 @@ body { margin: 0; font-family: var(--font-sans); background: var(--color-bg-canv
 .cs-more { margin-top: var(--space-24); padding-top: var(--space-10); border-top: 1px solid var(--color-border-subtle); display: grid; gap: var(--space-6); }
 .cs-more .cs-h2 { font-size: var(--type-h3); line-height: var(--line-h3); }
 .cs-colophon { margin: var(--space-16) 0 0; }
+/* Hero: an empty ImageContainer well (21:9, 16:9 under 768px) until the hero art is ready; hero() above is kept for later */
+.cs-hero-well { margin-bottom: var(--space-10); }
+.cs-nowrap { white-space: nowrap; }
 
 /* Hero banner: project art. The blue is Mensio's (as on the landing card); the screens are real Figma exports */
 .cs-hero { position: relative; overflow: hidden; margin: 0 0 var(--space-10); aspect-ratio: 16 / 7; border-radius: var(--radius-lg);
@@ -334,11 +337,13 @@ page = f'''<title>Mensio Case Study</title>
     </span>
   </div>
 
-  {hero()}
+  <div class="pm-media pm-media--21x9 cs-hero-well" role="img" aria-label="Hero image to come">
+    <div class="pm-media__fallback">{I["image"]}<span>Hero image to come</span></div>
+  </div>
 
   <header class="cs-head">
-    <ul class="cs-badges" aria-label="Disciplines"><li class="pm-badge">Product design</li><li class="pm-badge">User research</li><li class="pm-badge">Analytics</li></ul>
-    <h1 class="cs-title">Redesigning Mensio’s custom chart builder for self-serve data analysis</h1>
+    <ul class="cs-badges" aria-label="Status and disciplines"><li class="pm-badge pm-badge--success">{S["success"]}Shipped</li><li class="pm-badge">Product design</li><li class="pm-badge">User research</li><li class="pm-badge">Analytics</li></ul>
+    <h1 class="cs-title">Redesigning Mensio’s custom chart builder for <span class="cs-nowrap">self-serve</span> data analysis</h1>
   </header>
 
   <section class="cs-facts" aria-label="Project details"><dl class="cs-facts__list">
