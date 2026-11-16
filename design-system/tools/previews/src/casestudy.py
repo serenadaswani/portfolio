@@ -419,6 +419,7 @@ def render(p):
   window.addEventListener('scroll', spy, {{ passive: true }}); window.addEventListener('resize', spy); spy();
   // Focus moves to the section after a jump
   links.forEach(function (a) {{ a.addEventListener('click', function () {{ var s = document.querySelector(a.getAttribute('href')); if (s) {{ s.setAttribute('tabindex', '-1'); setTimeout(function () {{ s.focus({{ preventScroll: true }}); }}, 0); }} }}); }});
+{p.get("js", "")}
   // Other pages aren't in this prototype yet
   document.querySelectorAll(".cs-more .pm-card__title a").forEach(function (a) {{ a.addEventListener('click', function (e) {{ e.preventDefault(); }}); }});
 }})();

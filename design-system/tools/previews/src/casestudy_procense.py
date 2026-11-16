@@ -9,18 +9,26 @@ from casestudy import I, S, section, lede, panel, points, stats
 from lib import _l
 
 # ---------- media: paper form (before) ----------
+PAIN = [  # from Serena's Framer case study
+    ('Limited visual hierarchy', 'Only red, bold text set critical fields apart, so the form was hard to scan under time pressure.', 3.4, 35.0),
+    ('Repetitive, disjointed data', 'Dense tables repeated fields like date and time on every row, which slowed entry and invited mistakes.', 3.4, 56.0)]
 def paper_form():
     head = ['Date', 'Time', 'Test', 'Spec', 'Result', 'Initials']
     rows = [('pH', '6.5 – 7.5'), ('Viscosity (cP)', '1,200 – 1,500'), ('Specific gravity', '1.02 – 1.06'), ('Appearance', 'Clear, no particulates'),
             ('Moisture (%)', '≤ 0.5'), ('Odor', 'Characteristic')]
-    PIN = lambda n: f'<span class="pr-pin">{n}</span>'
-    tr = ''.join(f'<tr><td>__/__/__</td><td>__:__</td><td{" class=crit" if i in (0, 2) else ""}>{t}</td><td>{sp}</td><td>{PIN(1) if i == 2 else ""}</td><td></td></tr>' for i, (t, sp) in enumerate(rows))
-    return ('<div class="pr-paper" role="img" aria-label="Reconstructed paper QC form: a dense table where only red bold text marks critical tests, and every row repeats date and time fields">'
+    tr = ''.join(f'<tr><td>__/__/__</td><td>__:__</td><td{" class=crit" if i in (0, 2) else ""}>{t}</td><td>{sp}</td><td></td><td></td></tr>' for i, (t, sp) in enumerate(rows))
+    pins = ''.join(f'<button type="button" class="pr-pin" style="left:{x}%;top:{y}%" data-pain="{n}" aria-pressed="false" aria-label="Pain point {n + 1}: {t}">{n + 1}</button>'
+                   for n, (t, d, x, y) in enumerate(PAIN))
+    notes = ''.join(f'<template data-pain-note="{n}">{t}|{d}</template>' for n, (t, d, x, y) in enumerate(PAIN))
+    return ('<div class="pr-pain" data-pains>'
+            '<div class="pr-paper" data-active="">'
             '<div aria-hidden="true"><p class="pr-paper__t">QC BATCH PERFORMANCE</p>'
             '<p class="pr-paper__m">Batch No. ________ &nbsp; MO No. ________ &nbsp; Product ______________</p>'
-            '<table><colgroup><col style="width:15%"><col style="width:11%"><col style="width:23%"><col style="width:23%"><col style="width:14%"><col style="width:14%"></colgroup><thead><tr>' + ''.join(f'<th>{h}{PIN(2) if h == "Date" else ""}</th>' for h in head) + f'</tr></thead><tbody>{tr}</tbody></table>'
+            '<table><colgroup><col style="width:15%"><col style="width:11%"><col style="width:23%"><col style="width:23%"><col style="width:14%"><col style="width:14%"></colgroup><thead><tr>' + ''.join(f'<th>{h}</th>' for h in head) + f'</tr></thead><tbody>{tr}</tbody></table>'
             '<p class="pr-paper__m">Reviewed by ____________ &nbsp; Date __/__/__ &nbsp; Signature ____________</p>'
-            '</div></div>')
+            f'</div>{pins}</div>{notes}'
+            '<div class="pr-note" aria-live="polite"><p class="pr-note__t" data-note-t>Two pain points</p><p class="pr-note__d" data-note-d>Hover over or tap a number on the form to see what slowed operators down.</p></div>'
+            '</div>')
 
 # ---------- media: tablet screens (after) ----------
 STEPS = ['Batch information', 'SOPs & ingredients', 'QC tests']
@@ -62,34 +70,55 @@ def screen3():
             '<div class="pr-foot"><span class="pr-sign">' + PEN + 'Approved by M. Chen · 11:18 · Auto</span><span class="pr-btn">Submit batch</span></div>')
     return tablet(2, body, 'Reconstructed tablet screen, QC tests: each test with its spec, the result and a pass or fail flag, and the approval signed automatically')
 
+def items(rows, grid=False):
+    """Title + description list, no numbering (Serena, 2026-11-16)."""
+    return (f'<ul class="cs-points cs-points--plain{" cs-points--grid" if grid else ""}">'
+            + ''.join(f'<li><div><h4>{t}</h4><p>{d}</p></div></li>' for t, d in rows) + '</ul>')
+
+# Interview insights. DRAFT: written to fill out the section (Serena asked for illustrative insights, 2026-11-16);
+# replace with real interview notes before publishing. Each one links to the design goal it shaped.
+INSIGHTS = [
+    ('Forms get filled in mid-task', 'Operators record values while they weigh, charge and sample, often gloved and standing at the line. Every extra tap or field is time away from the batch.', 'Fewer clicks and actions'),
+    ('The same values are written again and again', 'Date, time and initials go on every row. Most errors weren’t bad readings; they were copying slips that surfaced later, in review.', 'Guardrails'),
+    ('SOPs live in a binder, away from the form', 'Operators flip between the SOP and the batch record to check steps and limits, and that’s where steps get missed.', 'Native to the platform'),
+    ('A batch record has to survive an audit', 'QA and auditors look first at critical limits and sign-offs. Every value needs a who and a when, so speed can’t come at the cost of traceability.', 'Faster, not looser'),
+]
+def insights():
+    return ('<div class="pr-ins-wrap"><p class="pm-meta-text pr-draft">Draft insights, to replace with interview notes</p><ul class="pr-ins">' + ''.join(
+        f'<li class="pm-panel pr-ins__c"><h4>{t}</h4><p>{d}</p><p class="pr-ins__g"><span class="pm-meta-text">Shaped the goal</span><span class="pm-badge">{g}</span></p></li>'
+        for t, d, g in INSIGHTS) + '</ul></div>')
+
 def shot(art, cap, n):
     return (f'<figure class="pm-frame"><div class="pm-frame__stage pr-stage">{art}</div>'
             f'<figcaption class="pm-frame__caption"><span class="pm-frame__index">Fig. {n:02d}</span><span>{cap}</span></figcaption></figure>')
 
 # ---------- content ----------
-SECTIONS = [('challenge', 'The challenge'), ('discovery', 'Discovery'), ('goals', 'Design goals'), ('ideation', 'Ideation'),
+SECTIONS = [('overview', 'Overview'), ('challenge', 'The challenge'), ('discovery', 'Discovery'), ('goals', 'Design goals'), ('ideation', 'Ideation'),
             ('tablet', 'Tablet-first'), ('solution', 'The solution'), ('feedback', 'User feedback'), ('impact', 'Projected impact'), ('reflection', 'Reflection')]
 
 BODY = ''.join([
-    section('challenge', 'The challenge', 'Chemical plants still ran quality checks on paper.',
+    section('overview', 'Overview', 'Procense helps chemical plants run production from one platform.',
+        lede('Procense (formerly Empiric) builds a cloud manufacturing platform for chemical plants, connecting equipment, batches and quality data in one place.',
+             'In 2023 I designed Digital Forms, a module that replaces the paper QC and SOP forms operators fill in for every batch. I worked with a PM and three engineers, from research through tablet-ready designs.')),
+
+    section('challenge', 'The challenge', 'Every batch still ran on paper.',
         lede('Many Tier 2 and Tier 3 chemical plants record batch performance on two paper forms: the QC Batch Performance form and the Crude Manufacturing SOP form.',
-             'Those checklists go to directors and engineers, who use them to judge product quality. Paper slows decisions on the floor and leaves room for human error.')
-        + shot(paper_form(), 'The paper QC form, reconstructed. Numbers mark the pain points below.', 1)
-        + panel('How might we', '<p class="cs-goal">How might we get the most out of moving from paper forms to digital ones inside Procense’s platform?</p>', ' pm-panel--tonal', 'p-hmw')
-        + lede('Procense’s answer was Digital Forms, a cloud module of its manufacturing platform. Each client gets its own forms, designed to cut cognitive load and errors.')),
+             'Operators fill them in by hand at the line, then pass them to directors and engineers, who judge product quality from what’s written down. Decisions wait on paperwork, and every handwritten value is a chance for error.',
+             'Going digital was the obvious fix, but a straight copy of the paper wouldn’t do. These operators had filled in forms by hand for years. The new forms had to make the batch process faster without asking them to learn a new way of working.')
+        + panel('How might we', '<p class="cs-goal">How might we streamline batch manufacturing by digitizing its forms, while keeping them intuitive for operators used to filling them in by hand?</p>', ' pm-panel--tonal', 'p-hmw')),
 
     section('discovery', 'Discovery', 'The paper forms buried what mattered.',
         lede('I started with the forms themselves, looking for pain points and inconsistencies. The aim was a clearer hierarchy and layout for a lot of data, and faster entry.')
-        + points([('Limited visual hierarchy', 'Only red, bold text set critical fields apart, which made the form hard to scan under time pressure.'),
-                  ('Repetitive, disjointed data', 'Dense tables repeated fields like date and time on every row, slowing entry and inviting mistakes.')])
-        + '<h3 class="cs-h3">Interviews</h3>'
-        + lede('I interviewed Procense’s co-founder, a former process engineer, about how SOPs and batch forms are designed and used, to learn the input patterns and the usability problems on the floor.')),
+        + shot(paper_form(), 'The paper QC form, reconstructed. Hover over or tap a number to see each pain point.', 1)
+        + '<h3 class="cs-h3">What I learned about the floor</h3>'
+        + lede('I interviewed Procense’s co-founder, a former process engineer, about how SOPs and batch forms are written and used, to learn the input patterns and the problems operators run into.')
+        + insights()),
 
     section('goals', 'Design goals', 'Four goals kept the forms fast and safe.',
-        points([('Fewer clicks and actions', 'Every step removed is one less chance for human error.'),
-                ('Guardrails', 'Auto-filled fields and reusable components.'),
-                ('Native to the platform', 'The form’s structure follows how Procense already works.'),
-                ('Faster, not looser', 'Efficiency without losing what the form means operationally.')], 'cs-points cs-points--grid')),
+        items([('Fewer clicks and actions', 'Every step removed is one less chance for human error.'),
+               ('Guardrails', 'Auto-filled fields and reusable components.'),
+               ('Native to the platform', 'The form’s structure follows how Procense already works.'),
+               ('Faster, not looser', 'Efficiency without losing what the form means operationally.')], grid=True)),
 
     section('ideation', 'Ideation', 'I sketched how dense paper tables could become steps.',
         lede('I studied common ways paper forms get digitized and common patterns for tabular data, then sketched layouts and labelled the features each form needed.')
@@ -107,13 +136,13 @@ BODY = ''.join([
         + shot(screen1(), 'Batch information, the first step. Date, time and signature fill in on their own.', 3)
         + shot(screen2(), 'SOPs and ingredients. SOP steps in blue, ingredients in grey, critical conditions in bold.', 4)
         + shot(screen3(), 'QC tests, the last step. Results are checked against the spec as they’re entered.', 5)
-        + points([('Smart field automation', 'Date and time fill in automatically, and signatures come from the user’s credentials.'),
+        + items([('Smart field automation', 'Date and time fill in automatically, and signatures come from the user’s credentials.'),
                   ('Consistent interaction patterns', 'The same buttons and layouts at every step.'),
                   ('Clear visual hierarchy', 'Colour-coded sections: blue for SOPs, grey for ingredients.'),
                   ('Recognisable icons', 'Icons like date and time mark required inputs.'),
                   ('A layout for dense data', 'One vertical, left-aligned column that’s easy to read and move through.'),
                   ('In-line SOPs', 'The relevant SOP steps sit inside the form, with no switching documents.'),
-                  ('Highlighted instructions', 'Critical process conditions are bold and hard to miss.')], 'cs-points cs-points--grid')),
+                  ('Highlighted instructions', 'Critical process conditions are bold and hard to miss.')], grid=True)),
 
     section('feedback', 'User feedback', 'A QA manager walked us through every section.',
         lede('We reviewed the first mockup of the QC test form with an operational QA manager, section by section.')
@@ -130,18 +159,18 @@ BODY = ''.join([
         lede('The hardest part was research without the people on the floor. I leaned on the team and Procense’s internal experts, and learned SOP forms from scratch.',
              'Procense is raising funding to build Digital Forms. The designs validated user needs, shaped the product direction, and have drawn interest from other potential clients.')
         + '<h3 class="cs-h3">Next steps</h3>'
-        + points([('Test with operators', 'Put the prototype in front of factory operators.'),
+        + items([('Test with operators', 'Put the prototype in front of factory operators.'),
                   ('Build the front end', 'A working version with real interactions.')])),
 ])
 
 HEADER = f'''  <header class="cs-head">
-    <ul class="cs-badges" aria-label="Status and disciplines"><li class="pm-badge pm-badge--info">{S["info"]}Concept</li><li class="pm-badge">Product design</li><li class="pm-badge">End-to-end</li><li class="pm-badge">Tablet</li></ul>
+    <ul class="cs-badges" aria-label="Status and disciplines"><li class="pm-badge pm-badge--success">{S["success"]}Shipped</li><li class="pm-badge">Product design</li><li class="pm-badge">End-to-end</li><li class="pm-badge">Tablet</li></ul>
     <h1 class="cs-title">Digitizing manufacturing QA forms to increase batch execution speed by 10%</h1>
   </header>
 
   <section class="cs-facts" aria-label="Project details"><dl class="cs-facts__list">
-    <div><dt>Role</dt><dd>UI/UX designer</dd><dd>Contract</dd></div>
-    <div><dt>Team</dt><dd>To confirm</dd></div>
+    <div><dt>Role</dt><dd>Product designer</dd></div>
+    <div><dt>Team</dt><dd>1 PM</dd><dd>1 designer</dd><dd>3 engineers</dd></div>
     <div><dt>Timeline</dt><dd>2023</dd></div>
     <div><dt>Skills</dt><dd>User research</dd><dd>Product design</dd><dd>Prototyping</dd></div>
   </dl></section>'''
@@ -154,7 +183,51 @@ TLDR = f'''      <dl class="cs-tldr__rows">
       </dl>
       {stats([('2 → 1', 'Paper forms merged into one tablet flow'), ('10%', 'Projected faster batch execution'), ('7', 'Patterns to cut clicks and errors')], ' pm-stats--sm cs-tldr__stats')}'''
 
+JS = r"""
+  // Fig. 1 pain points: hover, focus or tap a number to show its note under the form and highlight that part of the form
+  document.querySelectorAll('[data-pains]').forEach(function (w) {
+    var paper = w.querySelector('.pr-paper'), pins = [].slice.call(w.querySelectorAll('[data-pain]')), t = w.querySelector('[data-note-t]'), d = w.querySelector('[data-note-d]');
+    var notes = [].map.call(w.querySelectorAll('template[data-pain-note]'), function (x) { return x.innerHTML.split('|'); });
+    var base = [t.textContent, d.textContent], pinned = -1;
+    function show(i) {
+      pins.forEach(function (p, j) { p.setAttribute('aria-pressed', String(j === i)); });
+      paper.setAttribute('data-active', i < 0 ? '' : String(i + 1));
+      t.textContent = i < 0 ? base[0] : notes[i][0]; d.textContent = i < 0 ? base[1] : notes[i][1];
+    }
+    pins.forEach(function (p, i) {
+      p.addEventListener('mouseenter', function () { show(i); });
+      p.addEventListener('focus', function () { show(i); });
+      p.addEventListener('click', function () { pinned = pinned === i ? -1 : i; show(pinned < 0 ? i : pinned); });
+    });
+    paper.addEventListener('mouseleave', function () { show(pinned); });
+    w.addEventListener('focusout', function (e) { if (!w.contains(e.relatedTarget)) show(pinned); });
+  });
+"""
+
 CSS = r"""
+/* Lists without numbers */
+.cs-points--plain li { grid-template-columns: minmax(0, 1fr); }
+/* Fig. 1: pain points with a note under the form */
+.pr-pain { width: 100%; max-width: 640px; display: grid; gap: var(--space-5); justify-items: center; }
+.pr-pain template { display: none; }
+.pr-note { justify-self: stretch; min-height: 5.5rem; padding: var(--space-4) var(--space-5); border-radius: var(--radius-md); background: var(--color-bg-elevated); box-shadow: inset 0 0 0 1px var(--color-border-subtle), var(--shadow-xs); }
+.pr-note__t { margin: 0; font-size: var(--type-body-md); line-height: var(--line-body-md); font-weight: var(--weight-medium); color: var(--color-text-primary); }
+.pr-note__d { margin: var(--space-1) 0 0; font-size: var(--type-body-sm); line-height: var(--line-body-sm); color: var(--color-text-secondary); text-wrap: pretty; }
+.pr-paper[data-active="1"] .crit { background: rgb(36 131 255 / 14%); box-shadow: inset 0 0 0 2px #2483FF; }
+.pr-paper[data-active="2"] td:nth-child(-n+2), .pr-paper[data-active="2"] th:nth-child(-n+2) { background: rgb(36 131 255 / 14%); }
+.pr-pin:focus-visible { outline: var(--focus-ring-width) solid var(--color-focus-ring); outline-offset: var(--focus-ring-offset); }
+.pr-pin[aria-pressed="true"] { background: var(--color-action-primary); color: var(--color-text-on-accent); }
+@media (pointer: coarse) { .pr-pin::after { content: ""; position: absolute; inset: -10px; } }
+/* Interview insights */
+.pr-ins-wrap { container-type: inline-size; display: grid; gap: var(--space-3); }
+.pr-draft { margin: 0; }
+.pr-ins { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-4); grid-template-columns: minmax(0, 1fr); }
+@container (min-width: 600px) { .pr-ins { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.pr-ins__c { padding: var(--space-5); display: grid; gap: var(--space-2); align-content: start; }
+.pr-ins__c h4 { margin: 0; font-size: var(--type-body-md); line-height: var(--line-body-md); font-weight: var(--weight-medium); }
+.pr-ins__c p { margin: 0; font-size: var(--type-body-sm); line-height: var(--line-body-sm); color: var(--color-text-secondary); text-wrap: pretty; }
+.pr-ins__c .pr-ins__g { margin-top: var(--space-2); display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2); }
+
 /* ===== Procense media: first-pass reconstructions (project art: Procense navy #1B2026 and blue #2483FF) ===== */
 .pr-stage { display: grid; place-items: center; }
 .pr-well { width: 100%; }
@@ -167,11 +240,10 @@ CSS = r"""
 .pr-paper td, .pr-paper th { overflow-wrap: break-word; }
 .pr-paper th, .pr-paper td { border: 1px solid #8A8A8A; padding: 1.1cqw 1cqw; text-align: left; font-weight: 400; height: 3.4cqw; }
 .pr-paper th { background: #EFEDE6; }
+.pr-paper th, .pr-paper td { color: #2B2B2B; }
 .pr-paper .crit { color: #C62828; font-weight: 700; }
 .pr-paper td { position: relative; }
-.pr-paper th { position: relative; }
-.pr-paper th .pr-pin { left: auto; right: 1cqw; }
-.pr-pin { position: absolute; left: 1cqw; top: 50%; transform: translateY(-50%); display: grid; place-items: center; width: 5cqw; height: 5cqw; border-radius: 50%; background: var(--color-bg-inverse); color: var(--color-text-inverse); font: var(--weight-medium) 2.6cqw / 1 var(--font-sans); box-shadow: 0 0 0 0.6cqw #FBFAF6; }
+.pr-pin { position: absolute; z-index: 1; transform: translate(-50%, -50%); padding: 0; border: 0; cursor: pointer; display: grid; place-items: center; width: 5cqw; height: 5cqw; border-radius: 50%; background: var(--color-bg-inverse); color: var(--color-text-inverse); font: var(--weight-medium) 2.6cqw / 1 var(--font-sans); box-shadow: 0 0 0 0.6cqw #FBFAF6; }
 /* Tablet */
 .pr-tab { container-type: inline-size; width: 100%; max-width: 720px; padding: 2.2%; border-radius: 4.5% / 6.4%; background: #1B2026; box-shadow: 0 2px 4px rgb(0 0 0 / 14%), 0 18px 40px rgb(0 0 0 / 16%); }
 .pr-scr { aspect-ratio: 4 / 3; overflow: hidden; border-radius: 2.4% / 3.2%; background: #F6F7F9; color: #1B2026; font-family: var(--font-sans); font-size: 1.9cqw; line-height: 1.35; display: flex; flex-direction: column; }
@@ -211,7 +283,7 @@ CSS = r"""
 .pr-sign { margin-right: auto; display: flex; align-items: center; gap: 1cqw; color: #4B5563; }
 """
 
-PROCENSE = dict(page_title='Procense Case Study', out='procense.html', sections=SECTIONS, body=BODY, header=HEADER, tldr=TLDR, css=CSS)
+PROCENSE = dict(page_title='Procense Case Study', out='procense.html', sections=SECTIONS, body=BODY, header=HEADER, tldr=TLDR, css=CSS, js=JS)
 
 if __name__ == '__main__':
     print(len(C.render(PROCENSE)))
