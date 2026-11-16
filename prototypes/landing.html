@@ -1310,6 +1310,10 @@ body { font-family: var(--font-sans); }
   function tick() { try { t.textContent = new Intl.DateTimeFormat('en-US', { hour: 'numeric', minute: '2-digit', timeZone: 'America/Los_Angeles' }).format(new Date()) + ' PT'; } catch (e) { t.textContent = ''; } }
   tick(); setInterval(tick, 15000);
 
+  // Work goes to the very top of the page (no shift when already there); smooth unless reduced motion (CSS scroll-behavior)
+  var work = document.querySelector('[data-spy][href="#work"]');
+  if (work) work.addEventListener('click', function (e) { e.preventDefault(); if (window.scrollY > 0) window.scrollTo({ top: 0 }); });
+
   // Links to pages that aren't in this prototype stay put
   document.querySelectorAll('[data-soon], a[href="#work"]:not([data-spy])').forEach(function (a) { a.addEventListener('click', function (e) { e.preventDefault(); }); });
 })();
