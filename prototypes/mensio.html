@@ -1101,14 +1101,34 @@ body { margin: 0; font-family: var(--font-sans); background: var(--color-bg-canv
 .cs-head .pm-card__eyebrow { margin: 0; }
 .cs-title { margin: 0; font-size: var(--type-display-lg); line-height: var(--line-display-lg); font-weight: var(--weight-display-lg); letter-spacing: var(--tracking-display-lg); font-stretch: var(--font-width-display); text-wrap: balance; }
 .cs-badges { display: flex; flex-wrap: wrap; gap: var(--space-2); list-style: none; margin: 0; padding: 0; }
-.cs-summary { margin-top: var(--space-10); }
-.cs-summary__body { display: grid; gap: var(--space-8); }
-.cs-summary + .pm-stats { margin-top: var(--space-8); }
-.cs-summary__grid { display: grid; gap: var(--space-5); grid-template-columns: minmax(0, 1fr); }
-@container (min-width: 768px) { .cs-summary__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-6) var(--space-8); } }
-.cs-summary__grid h3 { margin: 0 0 var(--space-1); font-size: var(--type-body-sm); line-height: var(--line-body-sm); font-weight: var(--weight-medium); color: var(--color-text-primary); }
-.cs-summary__grid p { margin: 0; }
-.cs-summary .pm-stats { margin-top: var(--space-2); }
+/* TL;DR panel, after leahkim.design's table-redesign case: the heading on the left like the landing's "About me"
+   (h3 size, 500), the background / problem / approach / outcome rows on the right with a hairline between them,
+   and the numbers underneath in the same container, divided by vertical rules. Side by side from 1024px. */
+.cs-tldr { margin-top: var(--space-10); padding: var(--panel-p); display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-8); }
+.cs-tldr__head { display: grid; gap: var(--space-6); align-content: start; }
+.cs-tldr__h { margin: 0; font-size: var(--type-h3); line-height: var(--line-h3); font-weight: var(--weight-medium); letter-spacing: var(--tracking-h3); color: var(--color-text-primary); }
+.cs-tldr__body { container: cs-tldr / inline-size; min-width: 0; display: grid; gap: var(--space-8); }
+.cs-tldr__rows { margin: 0; display: grid; }
+.cs-tldr__row { display: grid; gap: var(--space-1); padding: var(--space-5) 0; border-top: 1px solid var(--color-border-subtle); }
+.cs-tldr__row:first-child { border-top: 0; padding-top: 0; }
+.cs-tldr__row:last-child { padding-bottom: 0; }
+.cs-tldr__row dt { font-size: var(--type-body-sm); line-height: var(--line-body-md); color: var(--color-text-tertiary); }
+.cs-tldr__row dd { margin: 0; font-size: var(--type-body-md); line-height: var(--line-body-md); color: var(--color-text-primary); text-wrap: pretty; }
+@container cs-tldr (min-width: 560px) { .cs-tldr__row { grid-template-columns: 9rem minmax(0, 1fr); column-gap: var(--space-6); } }
+/* Numbers: one column with rules between on narrow bodies; three across with vertical rules from 420px (h2-size values until 560px) */
+.pm-stats.cs-tldr__stats { grid-template-columns: minmax(0, 1fr); gap: 0; padding-top: 0; }
+.cs-tldr__stats .pm-stats__item { justify-content: flex-end; padding: var(--space-5) 0; border-top: 1px solid var(--color-border-subtle); } /* values share a top line even when labels wrap */
+.cs-tldr__stats .pm-stats__item:last-child { padding-bottom: 0; }
+@container cs-tldr (min-width: 420px) {
+  .pm-stats.cs-tldr__stats { grid-template-columns: repeat(3, minmax(0, 1fr)); padding-top: var(--space-8); border-top: 1px solid var(--color-border-subtle); }
+  .cs-tldr__stats .pm-stats__item { padding: 0 var(--space-6); border-top: 0; border-left: 1px solid var(--color-border-subtle); }
+  .cs-tldr__stats .pm-stats__item:first-child { padding-left: 0; border-left: 0; }
+}
+@container cs-tldr (min-width: 420px) and (max-width: 559px) { .cs-tldr__stats .pm-stats__value { font-size: var(--type-h2); line-height: var(--line-h2); letter-spacing: var(--tracking-heading); } }
+@container (min-width: 1024px) {
+  .cs-tldr { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); column-gap: var(--space-10); }
+  .cs-tldr__head .pm-meta { max-width: 20rem; }
+}
 
 .cs-body { display: grid; gap: var(--space-8); margin-top: var(--space-16); grid-template-columns: minmax(0, 1fr); }
 .cs-toc { position: sticky; top: 0; z-index: 1; background: var(--color-bg-canvas); padding-block: var(--space-2); margin-inline: calc(var(--space-4) * -1); padding-inline: var(--space-4); }
@@ -1181,19 +1201,21 @@ body { margin: 0; font-family: var(--font-sans); background: var(--color-bg-canv
     <ul class="cs-badges" aria-label="Disciplines"><li class="pm-badge">Product design</li><li class="pm-badge">User research</li><li class="pm-badge">Analytics</li></ul>
   </header>
 
-  <section class="pm-panel pm-panel--lg cs-summary" aria-labelledby="cs-sum-h">
-    <div class="pm-panel__header"><h2 class="pm-panel__title" id="cs-sum-h">Summary</h2></div>
-    <div class="pm-panel__body cs-summary__body"><div class="cs-summary__grid">
-      <div><h3>Background</h3><p>Mensio tracks brand exposure across 185 TV networks and 2,000+ social handles. Data Explorer is where customers pull that data into charts.</p></div>
-      <div><h3>Problem</h3><p>Data Explorer showed every metric, grouping and filter at once, so customers relied on analysts for every custom chart.</p></div>
-      <div><h3>Approach</h3><p>We studied the analysts’ workflow and turned their follow-up questions into Guided Setup, a step-by-step wizard with presets.</p></div>
-      <div><h3>Outcome</h3><p>Shipped in 14 weeks. Customers now build their own charts, including chart types the team never built for them before.</p></div>
+  <section class="pm-panel pm-panel--lg cs-tldr" aria-labelledby="cs-tldr-h">
+    <div class="cs-tldr__head">
+      <h2 class="cs-tldr__h" id="cs-tldr-h">TLDR</h2>
+      <dl class="pm-meta"><dt>Collaborators</dt><dd>Enterprise Analytics team, frontend and backend engineers</dd><dt>Timeline</dt><dd><span class="pm-meta-text">June – September 2026</span></dd><dt>Scope</dt><dd>User research, product design, design QA, acting PM</dd></dl>
     </div>
-    <dl class="pm-meta"><dt>Collaborators</dt><dd>Enterprise Analytics team, frontend and backend engineers</dd><dt>Timeline</dt><dd><span class="pm-meta-text">June – September 2026</span></dd><dt>Scope</dt><dd>User research, product design, design QA, acting PM</dd></dl>
+    <div class="cs-tldr__body">
+      <dl class="cs-tldr__rows">
+        <div class="cs-tldr__row"><dt>Background</dt><dd>Mensio tracks brand exposure across 185 TV networks and 2,000+ social handles. Data Explorer is where customers pull that data into charts.</dd></div>
+        <div class="cs-tldr__row"><dt>Problem</dt><dd>Data Explorer showed every metric, grouping and filter at once, so customers relied on analysts for every custom chart.</dd></div>
+        <div class="cs-tldr__row"><dt>Approach</dt><dd>We studied the analysts’ workflow and turned their follow-up questions into Guided Setup, a step-by-step wizard with presets.</dd></div>
+        <div class="cs-tldr__row"><dt>Outcome</dt><dd>Shipped in 14 weeks. Customers now build their own charts, including chart types the team never built for them before.</dd></div>
+      </dl>
+      <dl class="pm-stats cs-tldr__stats"><div class="pm-stats__item"><dt class="pm-stats__label">from research to ship</dt><dd class="pm-stats__value">14 wks</dd></div><div class="pm-stats__item"><dt class="pm-stats__label">steps from question to chart</dt><dd class="pm-stats__value">8 → 5</dd></div><div class="pm-stats__item"><dt class="pm-stats__label">presets for common questions</dt><dd class="pm-stats__value">6</dd></div></dl>
     </div>
   </section>
-
-  <dl class="pm-stats"><div class="pm-stats__item"><dt class="pm-stats__label">from research to ship</dt><dd class="pm-stats__value">14 wks</dd></div><div class="pm-stats__item"><dt class="pm-stats__label">steps from question to chart</dt><dd class="pm-stats__value">8 → 5</dd></div><div class="pm-stats__item"><dt class="pm-stats__label">presets for common questions</dt><dd class="pm-stats__value">6</dd></div></dl>
 
   <div class="cs-body">
     <nav class="pm-toc cs-toc" aria-labelledby="cs-toc-h"><p class="pm-toc__heading" id="cs-toc-h">On this page</p><ol class="pm-toc__list"><li><a class="pm-toc__item" href="#overview" aria-current="location" data-spy><span class="pm-toc__num">01</span>Overview</a></li><li><a class="pm-toc__item" href="#problem" data-spy><span class="pm-toc__num">02</span>The problem</a></li><li><a class="pm-toc__item" href="#research" data-spy><span class="pm-toc__num">03</span>Research</a></li><li><a class="pm-toc__item" href="#roadmap" data-spy><span class="pm-toc__num">04</span>Roadmap</a></li><li><a class="pm-toc__item" href="#iterations" data-spy><span class="pm-toc__num">05</span>Iterations</a></li><li><a class="pm-toc__item" href="#solution" data-spy><span class="pm-toc__num">06</span>The solution</a></li><li><a class="pm-toc__item" href="#engineering" data-spy><span class="pm-toc__num">07</span>Design × engineering</a></li><li><a class="pm-toc__item" href="#impact" data-spy><span class="pm-toc__num">08</span>Impact</a></li></ol></nav>
