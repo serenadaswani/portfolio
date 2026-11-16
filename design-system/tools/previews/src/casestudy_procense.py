@@ -33,7 +33,7 @@ def paper_form():
 # ---------- media: tablet screens (after) ----------
 STEPS = ['Batch information', 'SOPs & ingredients', 'QC tests']
 def tablet(active, body, label):
-    step = ''.join(f'<li class="{"is-on" if i == active else ("is-done" if i < active else "")}"><span>{"✓" if i < active else i + 1}</span>{t}</li>' for i, t in enumerate(STEPS))
+    step = ''.join(f'<li class="{"is-on" if i == active else ("is-done" if i < active else "")}"><span>{_l("check") if i < active else i + 1}</span>{t}</li>' for i, t in enumerate(STEPS))
     return (f'<div class="pr-tab" role="img" aria-label="{label}"><div class="pr-scr" aria-hidden="true">'
             '<div class="pr-bar"><b>Procense</b><span>Digital Forms</span><i>Batch A-2291 · Line 2</i></div>'
             f'<ol class="pr-steps">{step}</ol><div class="pr-body">{body}</div></div></div>')
@@ -58,7 +58,7 @@ def screen2():
            '<li>Add water, then start agitation at low speed.</li><li><b>Keep the temperature below 40 °C while adding the surfactant.</b></li>'
            '<li>Add the preservative once the blend is uniform.</li><li>Hold for 15 minutes, then pull a sample for QC.</li></ol></div>')
     ing = ('<div class="pr-ing"><p class="pr-ing__h">Ingredients</p>' + ''.join(
-        f'<div class="pr-ing__r"><span>{n}</span><span>{t}</span><span class="pr-in">{a}</span><span class="pr-ok">{"✓" if a else ""}</span></div>'
+        f'<div class="pr-ing__r"><span>{n}</span><span>{t}</span><span class="pr-in">{a}</span><span class="pr-ok">{_l("check") if a else ""}</span></div>'
         for n, t, a in [('Deionized water', '420.0 kg', '420.2'), ('Surfactant LAS-96', '180.0 kg', '179.8'), ('Preservative P-2', '2.5 kg', ''), ('Fragrance F-11', '1.2 kg', ''), ('Citric acid (50%)', 'As needed', '')]) + '</div>')
     return tablet(1, f'<div class="pr-two">{sop}{ing}</div><div class="pr-foot"><span class="pr-btn pr-btn--2">Back</span><span class="pr-btn">Next</span></div>',
                   'Reconstructed tablet screen, SOPs and ingredients: the SOP step in a blue block with the critical instruction in bold, and an ingredients list in grey with target and actual weights')
@@ -75,7 +75,7 @@ THUMBS = {
     # A complete three-step wizard: each step goes active, then done, and the line fills between them
     'flow': ('<div class="pr-th pr-th--flow">'
              + '<i class="pr-l pr-l1"><u></u></i><i class="pr-l pr-l2"><u></u></i>'
-             + ''.join(f'<span class="pr-c pr-c{n}"><em>{n}</em><strong>✓</strong></span>' for n in (1, 2, 3))
+             + ''.join(f'<span class="pr-c pr-c{n}"><em>{n}</em><strong>{_l("check")}</strong></span>' for n in (1, 2, 3))
              + '<b class="pr-t1">Batch details</b><b class="pr-t2">SOP</b><b class="pr-t3">QA checks</b></div>'),
     # Values appear on their own: date and time from the clock, the verifier from the operator's login
     'auto': ('<div class="pr-th pr-th--auto">'
@@ -146,7 +146,7 @@ def flow():
                                           f'<span class="pr-flow__rt" data-fn-rt>{text}</span></div>')
     steps = ''.join(
         f'<li class="pr-flow__s"><button type="button" class="pr-flow__b" data-step="{i}" aria-pressed="{"true" if i == 0 else "false"}">'
-        f'<span class="pr-flow__n" aria-hidden="true"><em>{i + 1}</em><strong>✓</strong></span><span class="pr-flow__t">{t}</span></button>'
+        f'<span class="pr-flow__n" aria-hidden="true"><em>{i + 1}</em><strong>{_l("check")}</strong></span><span class="pr-flow__t">{t}</span></button>'
         f'<div class="pr-flow__d"><p class="pm-meta-text">{who}</p><p>{d}</p>{risk(kind(i), r)}</div></li>'
         for i, (t, who, d, r) in enumerate(FLOW))
     notes = ''.join(f'<template data-step-note="{i}">{t}|{who}|{d}|{r}|{kind(i)}</template>' for i, (t, who, d, r) in enumerate(FLOW))
@@ -351,8 +351,9 @@ CSS = r"""
 /* Default styles are the finished state (also what reduced motion shows); the loops run only without reduced motion */
 /* Stepper */
 .pr-th--flow { position: relative; display: grid; grid-template-columns: repeat(3, 1fr); row-gap: 3cqw; justify-items: center; }
-.pr-c { position: relative; z-index: 1; display: grid; place-items: center; width: 11cqw; height: 11cqw; border-radius: 50%; background: #E6F0FF; color: #2483FF; font-size: 4.6cqw; font-weight: 600; }
+.pr-c { position: relative; z-index: 1; display: grid; place-items: center; width: 11cqw; height: 11cqw; border-radius: 50%; background: #2483FF; color: #FFFFFF; font-size: 4.6cqw; font-weight: 600; }
 .pr-c em, .pr-c strong { grid-area: 1 / 1; font-style: normal; }
+.pr-c strong { display: grid; place-items: center; } .pr-c strong .pm-icon { width: 6cqw; height: 6cqw; }
 .pr-c em { opacity: 0; } .pr-c strong { opacity: 1; }
 .pr-l { position: absolute; top: 5.5cqw; height: 1px; width: calc(33.33% - 11cqw); background: #C9CED6; }
 .pr-l1 { left: calc(16.67% + 5.5cqw); } .pr-l2 { left: calc(50% + 5.5cqw); }
@@ -386,10 +387,10 @@ CSS = r"""
   .pr-cards-wrap.is-paused .pr-th, .pr-cards-wrap.is-paused .pr-th *, .pr-cards-wrap.is-paused .pr-th *::after { animation-play-state: paused !important; }
 }
 @media (prefers-reduced-motion: reduce) { .pr-anim-btn { display: none; } }
-/* step states: idle (white, grey ring) · active (blue, number) · done (pale blue, check) */
-@keyframes pr-c1 { 0%, 28% { background: #2483FF; color: #FFFFFF; } 32%, 100% { background: #E6F0FF; color: #2483FF; } }
-@keyframes pr-c2 { 0%, 28% { background: #FFFFFF; color: #6B7280; box-shadow: inset 0 0 0 1px #C9CED6; } 32%, 58% { background: #2483FF; color: #FFFFFF; box-shadow: none; } 62%, 100% { background: #E6F0FF; color: #2483FF; box-shadow: none; } }
-@keyframes pr-c3 { 0%, 58% { background: #FFFFFF; color: #6B7280; box-shadow: inset 0 0 0 1px #C9CED6; } 62%, 84% { background: #2483FF; color: #FFFFFF; box-shadow: none; } 88%, 100% { background: #E6F0FF; color: #2483FF; box-shadow: none; } }
+/* step states: idle (white, grey ring) · active (blue, number) · done (blue, white Lucide check) */
+@keyframes pr-c1 { 0%, 28% { background: #2483FF; color: #FFFFFF; } 32%, 100% { background: #2483FF; color: #FFFFFF; } }
+@keyframes pr-c2 { 0%, 28% { background: #FFFFFF; color: #6B7280; box-shadow: inset 0 0 0 1px #C9CED6; } 32%, 58% { background: #2483FF; color: #FFFFFF; box-shadow: none; } 62%, 100% { background: #2483FF; color: #FFFFFF; box-shadow: none; } }
+@keyframes pr-c3 { 0%, 58% { background: #FFFFFF; color: #6B7280; box-shadow: inset 0 0 0 1px #C9CED6; } 62%, 84% { background: #2483FF; color: #FFFFFF; box-shadow: none; } 88%, 100% { background: #2483FF; color: #FFFFFF; box-shadow: none; } }
 @keyframes pr-n1 { 0%, 28% { opacity: 1; } 32%, 100% { opacity: 0; } } @keyframes pr-d1 { 0%, 28% { opacity: 0; } 32%, 100% { opacity: 1; } }
 @keyframes pr-n2 { 0%, 58% { opacity: 1; } 62%, 100% { opacity: 0; } } @keyframes pr-d2 { 0%, 58% { opacity: 0; } 62%, 100% { opacity: 1; } }
 @keyframes pr-n3 { 0%, 84% { opacity: 1; } 88%, 100% { opacity: 0; } } @keyframes pr-d3 { 0%, 84% { opacity: 0; } 88%, 100% { opacity: 1; } }
@@ -429,7 +430,8 @@ CSS = r"""
 /* Number for upcoming and current steps, a check once a step is behind the tour (like the solution stepper) */
 .pr-flow__n em, .pr-flow__n strong { grid-area: 1 / 1; font-style: normal; }
 .pr-flow__n strong { opacity: 0; }
-.pr-flow__b.is-done .pr-flow__n { background: var(--color-action-selected-bg); color: var(--color-action-selected-text); box-shadow: 0 0 0 4px var(--ring, var(--color-bg-sunken)); }
+.pr-flow__n strong { display: grid; place-items: center; } .pr-flow__n strong .pm-icon { width: 16px; height: 16px; }
+.pr-flow__b.is-done .pr-flow__n { background: var(--color-action-primary); color: var(--color-text-on-accent); box-shadow: 0 0 0 4px var(--ring, var(--color-bg-sunken)); }
 .pr-flow__b.is-done .pr-flow__n em { opacity: 0; } .pr-flow__b.is-done .pr-flow__n strong { opacity: 1; }
 .pr-flow__prog { display: none; }
 @media (prefers-reduced-motion: no-preference) {
@@ -520,7 +522,8 @@ CSS = r"""
 .pr-steps li { display: flex; align-items: center; gap: 1cqw; }
 .pr-steps span { display: grid; place-items: center; width: 3cqw; height: 3cqw; border-radius: 50%; border: 1px solid #C9CED6; font-size: 1.6cqw; }
 .pr-steps .is-on { color: #1B2026; font-weight: 600; } .pr-steps .is-on span { background: #2483FF; border-color: #2483FF; color: #FFFFFF; }
-.pr-steps .is-done span { background: #E6F0FF; border-color: #E6F0FF; color: #2483FF; }
+.pr-steps .is-done span { background: #2483FF; border-color: #2483FF; color: #FFFFFF; }
+.pr-steps span .pm-icon { width: 2cqw; height: 2cqw; }
 .pr-body { flex: 1; padding: 2.4cqw 2.6cqw; display: flex; flex-direction: column; gap: 1.8cqw; min-height: 0; }
 .pr-h { margin: 0; font-size: 2.6cqw; font-weight: 600; }
 .pr-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.6cqw 2cqw; }
@@ -541,7 +544,7 @@ CSS = r"""
 .pr-ing__h { margin: 0; font-weight: 600; }
 .pr-ing__r, .pr-qc__r { display: grid; grid-template-columns: 1.6fr 1fr 1fr auto; gap: 1.2cqw; align-items: center; }
 .pr-in { padding: .8cqw 1cqw; border: 1px solid #D6DAE1; border-radius: .6cqw; background: #FFFFFF; min-height: 2.4cqw; }
-.pr-ok { color: #1E8E5A; font-weight: 700; width: 2cqw; }
+.pr-ok { display: grid; place-items: center; color: #1E8E5A; width: 2.4cqw; } .pr-ok .pm-icon { width: 2.4cqw; height: 2.4cqw; }
 .pr-qc { display: grid; gap: 1.2cqw; padding: 2cqw; border-radius: 1cqw; background: #FFFFFF; border: 1px solid #E3E6EB; }
 .pr-qc__r { grid-template-columns: 1.6fr 1.2fr 1fr 6cqw; }
 .pr-qc__hd { color: #6B7280; font-size: 1.6cqw; }
