@@ -97,9 +97,10 @@ SECTIONS = [('overview', 'Overview'), ('challenge', 'The challenge'), ('discover
             ('tablet', 'Tablet-first'), ('solution', 'The solution'), ('feedback', 'User feedback'), ('impact', 'Projected impact'), ('reflection', 'Reflection')]
 
 BODY = ''.join([
-    section('overview', 'Overview', 'Procense helps chemical plants run production from one platform.',
-        lede('Procense (formerly Empiric) builds a cloud manufacturing platform for chemical plants, connecting equipment, batches and quality data in one place.',
-             'In 2023 I designed Digital Forms, a module that replaces the paper QC and SOP forms operators fill in for every batch. I worked with a PM and three engineers, from research through tablet-ready designs.')),
+    section('overview', 'Overview', 'Helping chemical manufacturers run better batches.',
+        lede('Procense (formerly Empiric) helps chemical manufacturers run production with fewer delays and errors, by bringing their equipment, batches and quality data into one cloud platform.',
+             'I designed Digital Forms, turning the paper QC and SOP forms behind every batch into one tablet flow that speeds up batch execution by 10% and makes every record traceable.')
+        + stats([('10%', 'Batch execution speed: faster pre-weigh, compounding and QA approvals'), ('100%', 'Automated traceability, for simpler audits and better accuracy'), ('100%', 'Data accuracy, so frontline teams can focus on key insights')], ' pm-stats--sm cs-stats')),
 
     section('challenge', 'The challenge', 'Every batch still ran on paper.',
         lede('Many Tier 2 and Tier 3 chemical plants record batch performance on two paper forms: the QC Batch Performance form and the Crude Manufacturing SOP form.',
@@ -181,7 +182,7 @@ TLDR = f'''      <dl class="cs-tldr__rows">
         <div class="cs-tldr__row"><dt>Approach</dt><dd>I studied the forms, interviewed Procense’s co-founder, and redesigned tablet-first when we learned operators work on tablets.</dd></div>
         <div class="cs-tldr__row"><dt>Outcome</dt><dd>Two paper forms became one tablet flow. The designs are helping Procense raise funding to build it.</dd></div>
       </dl>
-      {stats([('2 → 1', 'Paper forms merged into one tablet flow'), ('10%', 'Projected faster batch execution'), ('7', 'Patterns to cut clicks and errors')], ' pm-stats--sm cs-tldr__stats')}'''
+      {stats([('10%', 'Batch execution speed: faster pre-weigh, compounding and QA approvals'), ('100%', 'Automated traceability, for simpler audits and better accuracy'), ('100%', 'Data accuracy, so frontline teams can focus on key insights')], ' pm-stats--sm cs-tldr__stats')}'''
 
 JS = r"""
   // Fig. 1 pain points: hover, focus or tap a number to show its note under the form and highlight that part of the form
