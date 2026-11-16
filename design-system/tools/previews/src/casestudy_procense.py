@@ -70,11 +70,20 @@ def screen3():
             '<div class="pr-foot"><span class="pr-sign">' + PEN + 'Approved by M. Chen · 11:18 · Auto</span><span class="pr-btn">Submit batch</span></div>')
     return tablet(2, body, 'Reconstructed tablet screen, QC tests: each test with its spec, the result and a pass or fail flag, and the approval signed automatically')
 
+# Small thumbnails for the solution cards: close-ups of the reconstructed tablet UI (project art)
+THUMBS = {
+    'flow': '<div class="pr-th pr-th--flow"><span class="is-done">✓</span><i></i><span class="is-on">2</span><i></i><span>3</span>'
+            '<b>Batch</b><b class="is-on">Steps</b><b>Tests</b></div>',
+    'auto': '<div class="pr-th pr-th--auto"><div class="pr-th__f"><span>06/14/2023</span><em>Auto</em></div><div class="pr-th__f"><span>09:42</span><em>Auto</em></div>'
+            '<div class="pr-th__f"><span>Signed as J. Rivera</span><em>Auto</em></div></div>',
+    'sop': '<div class="pr-th pr-th--sop"><p>SOP 3.2</p><span></span><span></span><b>Keep below 40 °C</b><div class="pr-th__in"></div></div>',
+}
+
 def feature_cards(rows, cols=3):
     """Solution features as design-system cards (Card --outlined), lifted so they stand out. rows: (icon or '', title, text)."""
     return (f'<ul class="pr-cards pr-cards--{cols}">' + ''.join(
         f'<li><article class="pm-card pm-card--outlined pr-card">'
-        + (f'<span class="pr-card__ic" aria-hidden="true">{_l(ic)}</span>' if ic else '')
+        + (f'<div class="pr-card__thumb" aria-hidden="true">{THUMBS[ic]}</div>' if ic else '')
         + f'<h4 class="pm-card__title">{t}</h4><p class="pm-card__summary">{d}</p></article></li>' for ic, t, d in rows) + '</ul>')
 
 def items(rows, grid=False):
@@ -84,16 +93,27 @@ def items(rows, grid=False):
 
 # Interview insights. DRAFT: written to fill out the section (Serena asked for illustrative insights, 2026-11-16);
 # replace with real interview notes before publishing. Each one links to the design goal it shaped.
-INSIGHTS = [
-    ('Forms get filled in mid-task', 'Operators record values while they weigh ingredients, mix and take samples, often wearing gloves. Every extra tap is time away from the batch.', 'Fewer taps'),
-    ('The same values are written again and again', 'Date, time and initials go on every row. Most errors weren’t bad readings, they were copying slips that only surfaced in review.', 'Built-in guardrails'),
-    ('The instructions live in a binder', 'Operators flip between the step-by-step instructions and the form to check limits. That’s where steps get missed.', 'At home in Procense'),
-    ('Every record has to survive an audit', 'Auditors check critical limits and sign-offs first. Every value needs a who and a when, so speed can’t cost traceability.', 'Faster, not looser'),
+# Interview insights (DRAFT, written at Serena's request; replace with real notes) and the goal each one set.
+INSIGHT_GOALS = [  # insight title, insight, goal title, goal
+    ('Forms get filled in mid-task', 'Operators record values while they weigh ingredients, mix and take samples, often wearing gloves.',
+     'Fewer taps', 'Every tap removed is one less chance to make a mistake.'),
+    ('The same values are written again and again', 'Date, time and initials go on every row. Most errors were copying slips that only surfaced in review.',
+     'Built-in guardrails', 'Fields fill themselves in where they can, and the same parts repeat across forms.'),
+    ('The platform already knows the batch', 'Batch numbers, products and operators already live in Procense, yet operators copied them onto paper by hand.',
+     'At home in Procense', 'The forms draw on what the platform already knows and work like the rest of it.'),
+    ('Every record has to survive an audit', 'Auditors check critical limits and sign-offs first. Every value needs a who and a when.',
+     'Faster, not looser', 'Speed can’t come at the cost of the checks the forms exist for.'),
 ]
-def insights():
-    return ('<div class="pr-ins-wrap"><p class="pm-meta-text pr-draft">Draft insights, to replace with interview notes</p><ul class="pr-ins">' + ''.join(
-        f'<li class="pm-panel pr-ins__c"><h4>{t}</h4><p>{d}</p><p class="pr-ins__g"><span class="pm-meta-text">Shaped the goal</span><span class="pm-badge">{g}</span></p></li>'
-        for t, d, g in INSIGHTS) + '</ul></div>')
+def insight_goals():
+    """One graphic: each interview insight on the left, the design goal it set on the right."""
+    arrow = f'<span class="pr-ig__arrow" aria-hidden="true">{_l("arrow-right")}</span>'
+    rows = ''.join(
+        f'<li class="pr-ig__row"><div class="pr-ig__in"><p class="pr-ig__k">What I learned</p><h4>{it}</h4><p>{idesc}</p></div>{arrow}'
+        f'<div class="pm-card pm-card--outlined pr-ig__goal"><p class="pr-ig__k">Design goal</p><h4 class="pm-card__title">{gt}</h4><p class="pm-card__summary">{gd}</p></div></li>'
+        for it, idesc, gt, gd in INSIGHT_GOALS)
+    return (f'<figure class="pr-ig"><div class="pr-ig__head" aria-hidden="true"><span>What I learned</span><span></span><span>Design goal</span></div>'
+            f'<ol class="pr-ig__list">{rows}</ol>'
+            '<figcaption class="pm-meta-text">Draft insights, to replace with interview notes.</figcaption></figure>')
 
 # The paper batch workflow, with the points where errors creep in (Serena, 2026-11-16).
 FLOW = [  # title, who, what happens, error risk
@@ -145,24 +165,20 @@ BODY = ''.join([
         + f'<section class="pr-ns" aria-labelledby="p-ns"><p class="pr-ns__label" id="p-ns">{_l("compass")}Our North Star</p>'
           '<p class="pr-ns__text">Streamline batch manufacturing by digitizing its forms, while keeping them intuitive for operators used to filling them in by hand.</p></section>'
         + '<h3 class="cs-h3">The solution, in short</h3>'
-        + lede('We saw an opportunity to give frontline workers a faster, more reliable way to record production data, tailored to each client’s workflow, while keeping it familiar to operators who had filled in these forms by hand for years. The answer was a guided tablet flow, built into the Procense platform, that walks operators through each batch.')
-        + feature_cards([('layers', 'Two forms, one flow', 'Batch details, manufacturing steps and quality tests in three steps, in the order operators work.'),
-                         ('sparkles', 'Fields that fill themselves', 'Dates, times and signatures fill in automatically, so there’s less to write and less to get wrong.'),
-                         ('book-open', 'Instructions in the form', 'Each step’s instructions and critical limits sit right where the data is entered.')])),
+        + lede('A guided tablet flow, built into the Procense platform. It gives operators a faster, more reliable way to record each batch, and still feels as familiar as paper.')
+        + feature_cards([('flow', 'Two forms, one flow', 'Batch details, manufacturing steps and quality tests in three steps, in the order operators work.'),
+                         ('auto', 'Fields that fill themselves', 'Dates, times and signatures fill in automatically, so there’s less to write and less to get wrong.'),
+                         ('sop', 'Instructions in the form', 'Each step’s instructions and critical limits sit right where the data is entered.')])),
 
     section('discovery', 'Approach', 'I started by taking the paper forms apart.',
         lede('The forms captured a great deal of data, but made it hard to spot what mattered and slow to fill in.')
         + shot(paper_form(), 'The paper quality form, reconstructed. Hover over or tap a number to see each pain point.', 2)
         + '<h3 class="cs-h3">Then I learned how the forms are used on the floor.</h3>'
-        + lede('I interviewed Procense’s co-founder, a former process engineer who has both written and filled in these forms. Four insights stood out, and each became a design goal.')
-        + insights()),
+        + lede('I interviewed Procense’s co-founder, a former process engineer who has both written and filled in these forms. Four insights stood out, and each one set a design goal.')),
 
-    section('goals', 'Design goals', 'Four goals kept the forms fast and safe.',
-        lede('Together, the pain points and interviews gave the Digital Forms application a clear brief: move faster without cutting corners.')
-        + items([('Fewer taps', 'Every tap removed is one less chance to make a mistake.'),
-                 ('Built-in guardrails', 'Fields fill themselves in where they can, and the same parts repeat across forms.'),
-                 ('At home in Procense', 'The forms work like the rest of the platform, so there’s nothing new to learn.'),
-                 ('Faster, not looser', 'Speed can’t come at the cost of the checks the forms exist for.')], grid=True)),
+    section('goals', 'Design goals', 'Four things I learned became four goals.',
+        lede('Each insight from the floor set one goal for the Digital Forms application, so every design decision traced back to how operators really work.')
+        + insight_goals()),
 
     section('ideation', 'Ideation', 'I explored how crowded tables could become simple steps.',
         lede('I studied how other products turn paper forms into software and organise large tables, then sketched layouts and noted what each form needed.')
@@ -278,8 +294,28 @@ CSS = r"""
 .pr-card.pm-card--outlined, .pr-card.pm-card--outlined:hover { flex: 1; padding: var(--space-5); gap: var(--space-2); box-shadow: inset 0 0 0 1px var(--color-border-subtle), var(--shadow-sm); }
 .pr-card .pm-card__title { font-size: var(--type-body-md); line-height: var(--line-body-md); letter-spacing: 0; }
 .pr-card .pm-card__summary { margin: 0; font-size: var(--type-body-sm); line-height: var(--line-body-sm); color: var(--color-text-secondary); text-wrap: pretty; }
-.pr-card__ic { display: grid; place-items: center; width: 36px; height: 36px; margin-bottom: var(--space-2); border-radius: var(--radius-sm); background: var(--color-action-selected-bg); color: var(--color-action-selected-text); }
-.pr-card__ic .pm-icon { width: 20px; height: 20px; }
+.pr-card.pm-card--outlined, .pr-card.pm-card--outlined:hover { padding: var(--space-3) var(--space-3) var(--space-5); }
+.pr-card .pm-card__title, .pr-card .pm-card__summary { padding-inline: var(--space-2); }
+/* Thumbnail: a close-up of the tablet UI on the app's own light background in both themes (project art; nested radius = outer - padding) */
+.pr-card__thumb { aspect-ratio: 16 / 10; margin-bottom: var(--space-3); border-radius: var(--radius-sm); background: #F6F7F9; box-shadow: inset 0 0 0 1px var(--color-border-subtle); container-type: inline-size; overflow: hidden; display: grid; place-items: center; }
+.pr-th { width: 78%; font-family: var(--font-sans); font-size: 5.4cqw; line-height: 1.3; color: #1B2026; }
+.pr-th--flow { display: grid; grid-template-columns: auto 1fr auto 1fr auto; align-items: center; row-gap: 3cqw; column-gap: 2cqw; }
+.pr-th--flow span { display: grid; place-items: center; width: 11cqw; height: 11cqw; border-radius: 50%; background: #FFFFFF; box-shadow: inset 0 0 0 1px #C9CED6; color: #6B7280; font-size: 5cqw; }
+.pr-th--flow span.is-on { background: #2483FF; box-shadow: none; color: #FFFFFF; font-weight: 600; }
+.pr-th--flow span.is-done { background: #E6F0FF; box-shadow: none; color: #2483FF; }
+.pr-th--flow i { height: 1px; background: #C9CED6; }
+.pr-th--flow b { font-weight: 400; color: #6B7280; text-align: center; }
+.pr-th--flow b:nth-of-type(1) { grid-column: 1; } .pr-th--flow b:nth-of-type(2) { grid-column: 3; } .pr-th--flow b:nth-of-type(3) { grid-column: 5; }
+.pr-th--flow b.is-on { color: #1B2026; font-weight: 600; }
+.pr-th--auto { display: grid; gap: 3cqw; }
+.pr-th__f { display: flex; align-items: center; gap: 2cqw; padding: 2.6cqw 3cqw; border-radius: 1.6cqw; background: #FFFFFF; box-shadow: inset 0 0 0 1px #D6DAE1; }
+.pr-th__f em { margin-left: auto; font-style: normal; font-size: 4.4cqw; padding: .4cqw 2cqw; border-radius: 1.2cqw; background: #E6F0FF; color: #1559C9; }
+.pr-th--sop { display: grid; gap: 2.4cqw; padding: 4cqw; border-radius: 2cqw; background: #E6F0FF; border-left: 1.4cqw solid #2483FF; }
+.pr-th--sop p { margin: 0; font-weight: 600; color: #1559C9; }
+.pr-th--sop span { height: 2.6cqw; border-radius: 2cqw; background: #BFD6FB; }
+.pr-th--sop span + span { width: 70%; }
+.pr-th--sop b { font-weight: 600; }
+.pr-th__in { height: 9cqw; border-radius: 1.6cqw; background: #FFFFFF; box-shadow: inset 0 0 0 1px #D6DAE1; }
 /* North Star: the one accent-tinted surface on the page, so it reads first */
 .pr-ns { display: grid; gap: var(--space-2); padding: var(--space-6); border-radius: var(--radius-md); background: var(--color-action-selected-bg); box-shadow: inset 0 0 0 1px var(--color-border-subtle), var(--shadow-sm); }
 @container (min-width: 768px) { .pr-ns { padding: var(--space-8); } }
@@ -332,15 +368,25 @@ CSS = r"""
 .pr-pin:focus-visible { outline: var(--focus-ring-width) solid var(--color-focus-ring); outline-offset: var(--focus-ring-offset); }
 .pr-pin[aria-pressed="true"] { background: var(--color-action-primary); color: var(--color-text-on-accent); }
 @media (pointer: coarse) { .pr-pin::after { content: ""; position: absolute; inset: -10px; } }
-/* Interview insights */
-.pr-ins-wrap { container-type: inline-size; display: grid; gap: var(--space-3); }
-.pr-draft { margin: 0; }
-.pr-ins { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-4); grid-template-columns: minmax(0, 1fr); }
-@container (min-width: 600px) { .pr-ins { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-.pr-ins__c { padding: var(--space-5); display: grid; gap: var(--space-2); align-content: start; }
-.pr-ins__c h4 { margin: 0; font-size: var(--type-body-md); line-height: var(--line-body-md); font-weight: var(--weight-medium); }
-.pr-ins__c p { margin: 0; font-size: var(--type-body-sm); line-height: var(--line-body-sm); color: var(--color-text-secondary); text-wrap: pretty; }
-.pr-ins__c .pr-ins__g { margin-top: var(--space-2); display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2); }
+/* Insights -> goals: one row per pair, the insight on a tint, an arrow, then the goal as a lifted card */
+.pr-ig { container: pr-ig / inline-size; margin: var(--space-2) 0; display: grid; gap: var(--space-3); }
+.pr-ig__head { display: none; }
+.pr-ig__list { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-4); }
+.pr-ig__row { display: grid; gap: var(--space-2); justify-items: center; }
+.pr-ig__row > div { justify-self: stretch; }
+.pr-ig__in { padding: var(--space-5); border-radius: var(--radius-md); background: var(--color-bg-surface); display: grid; gap: var(--space-1); align-content: start; }
+.pr-ig h4 { margin: 0; font-size: var(--type-body-md); line-height: var(--line-body-md); font-weight: var(--weight-medium); letter-spacing: 0; color: var(--color-text-primary); }
+.pr-ig__in p:not(.pr-ig__k), .pr-ig__goal .pm-card__summary { margin: 0; font-size: var(--type-body-sm); line-height: var(--line-body-sm); color: var(--color-text-secondary); text-wrap: pretty; }
+.pr-ig__goal.pm-card--outlined, .pr-ig__goal.pm-card--outlined:hover { padding: var(--space-5); gap: var(--space-1); box-shadow: inset 0 0 0 1px var(--color-border-subtle), var(--shadow-sm); }
+.pr-ig__k { margin: 0 0 var(--space-1); font-family: var(--font-meta); font-size: var(--type-label); line-height: var(--line-label); color: var(--color-text-tertiary); }
+.pr-ig__arrow { color: var(--color-text-tertiary); transform: rotate(90deg); }
+.pr-ig__arrow .pm-icon { width: 20px; height: 20px; }
+@container pr-ig (min-width: 600px) {
+  .pr-ig__head { display: grid; grid-template-columns: minmax(0, 1fr) 40px minmax(0, 1fr); font-family: var(--font-meta); font-size: var(--type-label); line-height: var(--line-label); color: var(--color-text-tertiary); }
+  .pr-ig__row { grid-template-columns: minmax(0, 1fr) 40px minmax(0, 1fr); align-items: stretch; gap: 0; }
+  .pr-ig__arrow { align-self: center; transform: none; }
+  .pr-ig__k { display: none; }
+}
 
 /* ===== Procense media: first-pass reconstructions (project art: Procense navy #1B2026 and blue #2483FF) ===== */
 .pr-stage { display: grid; place-items: center; }
