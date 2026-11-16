@@ -288,7 +288,7 @@ page = f'''<title>Mensio Case Study</title>
 
   <header class="cs-head">
     <p class="pm-card__eyebrow"><span class="pm-meta-text">2026</span> · Mensio</p>
-    <h1 class="cs-title">Redesigning Mensio’s Data Explorer for self-serve analysis</h1>
+    <h1 class="cs-title">Redesigning Mensio’s custom chart builder for self-serve data analysis</h1>
     <ul class="cs-badges" aria-label="Disciplines"><li class="pm-badge">Product design</li><li class="pm-badge">User research</li><li class="pm-badge">Analytics</li></ul>
   </header>
 
