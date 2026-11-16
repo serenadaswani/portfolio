@@ -178,7 +178,6 @@ body { background: var(--color-bg-canvas); }
   @media (hover: hover) { .pm-card--showcase.lp-tint:hover { transform: translateY(calc(-1 * var(--space-1))); } }
 }
 .lp-tint .pm-card__copy { min-width: 0; gap: var(--space-2); }
-.lp-tint .pm-card__meta { gap: var(--space-2); } /* 8px between tags (the Card component uses space-1) */
 .lp-card-logo { display: block; width: auto; margin-bottom: var(--space-6); color: var(--color-text-on-image); }
 /* Heading and summary share one fixed width on every card (16.5rem: what the half-width cards have beside their logo), so they wrap the same way everywhere */
 .lp-tint .pm-card__title, .lp-tint .pm-card__sub { width: min(100%, 16.5rem); max-width: none; }

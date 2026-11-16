@@ -436,7 +436,7 @@ body { margin: 0; background: var(--color-bg-canvas); color: var(--color-text-pr
 .pm-card__title a::after { content: ""; position: absolute; inset: 0; border-radius: inherit; }
 .pm-card__title a:focus-visible { outline: none; }
 .pm-card__summary { margin: var(--space-2) 0 0; max-width: 48ch; font-size: var(--type-body-sm); line-height: var(--line-body-sm); color: var(--color-text-secondary); text-wrap: pretty; }
-.pm-card__meta { display: flex; flex-wrap: wrap; gap: var(--space-1); list-style: none; margin: var(--space-4) 0 0; padding: 0; }
+.pm-card__meta { display: flex; flex-wrap: wrap; gap: var(--space-2); list-style: none; margin: var(--space-4) 0 0; padding: 0; }
 .pm-card.is-hover .pm-card__media { box-shadow: 0 0 0 1px var(--color-border-default), var(--shadow-sm); }
 @media (hover: hover) { .pm-card:hover .pm-card__media { box-shadow: 0 0 0 1px var(--color-border-default), var(--shadow-sm); } }
 .pm-card.is-hover .pm-card__title a { text-decoration-line: underline; }
@@ -1162,7 +1162,6 @@ body { background: var(--color-bg-canvas); }
   @media (hover: hover) { .pm-card--showcase.lp-tint:hover { transform: translateY(calc(-1 * var(--space-1))); } }
 }
 .lp-tint .pm-card__copy { min-width: 0; gap: var(--space-2); }
-.lp-tint .pm-card__meta { gap: var(--space-2); } /* 8px between tags (the Card component uses space-1) */
 .lp-card-logo { display: block; width: auto; margin-bottom: var(--space-6); color: var(--color-text-on-image); }
 /* Heading and summary share one fixed width on every card (16.5rem: what the half-width cards have beside their logo), so they wrap the same way everywhere */
 .lp-tint .pm-card__title, .lp-tint .pm-card__sub { width: min(100%, 16.5rem); max-width: none; }

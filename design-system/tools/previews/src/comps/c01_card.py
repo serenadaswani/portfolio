@@ -53,7 +53,7 @@ The project card. By default it's frameless: an image well with a hairline edge,
 3. **Eyebrow**: metadata voice (`font-meta`, 13px regular), tertiary, year first ("2024 · AI tooling"). It's metadata, so it's set as metadata.
 4. **Title**: `<h3>` + stretched link, `type-h4` at 500, `tracking-h4`, balanced wrapping.
 5. **Summary**: `type-body-sm`, `color-text-secondary`, max 48ch.
-6. **Tags**: Badges, 1px outline, `space-1` apart.
+6. **Tags**: frosted Badges, `space-2` (8px) apart.
 
 Rhythm: well → `space-4` → eyebrow → `space-1` → title → `space-2` → summary → `space-4` → tags. Tight inside each group, more space between groups.
 

@@ -16,7 +16,7 @@ BODY = (h('Variants') + '<div class="pm-spec__row">' +
         h('Sizes') + '<div class="pm-spec__row" style="align-items:center">' +
         cell('<span class="pm-badge pm-badge--sm pm-badge--meta">2024</span>', 'sm · 20px') + cell('<span class="pm-badge">Interaction</span>', 'md · 24px') + '</div>' +
         h('On every surface') + '<div class="pm-spec__row">' +
-        ''.join(cell(f'<span style="display:inline-flex;gap:var(--space-1);padding:var(--space-3);background:var(--color-bg-{s});border-radius:var(--radius-md)"><span class="pm-badge">Research</span><span class="pm-badge pm-badge--meta">2024</span><span class="pm-badge pm-badge--accent">Featured</span></span>', s) for s in ['canvas', 'surface', 'elevated', 'sunken']) +
+        ''.join(cell(f'<span style="display:inline-flex;gap:var(--space-2);padding:var(--space-3);background:var(--color-bg-{s});border-radius:var(--radius-md)"><span class="pm-badge">Research</span><span class="pm-badge pm-badge--meta">2024</span><span class="pm-badge pm-badge--accent">Featured</span></span>', s) for s in ['canvas', 'surface', 'elevated', 'sunken']) +
         '</div>')
 PAIRS = [('tag', '--color-text-secondary', '--color-bg-canvas', 4.5), ('tag/sunken', '--color-text-secondary', '--color-bg-sunken', 4.5),
          ('accent', '--color-action-selected-text', '--color-action-selected-bg', 4.5), ('success', '--color-state-success', '--color-state-success-bg', 4.5),
@@ -53,7 +53,7 @@ None. Badges aren't interactive. A clickable filter is a chip (not yet in the sy
 The tag fill is translucent, so it takes on the surface beneath it. Its text is secondary on any surface (≥6.45:1 light, ≥8.64:1 dark); the fill only lightens light surfaces and barely shifts dark ones. With `prefers-contrast: more` the edge becomes `color-border-default`. Status pairs are ≥5.75:1 (light) and ≥6.12:1 (dark).
 
 ## Responsive behavior
-Rows wrap with a `space-1` gap. Badges never truncate.
+Rows wrap with a `space-2` (8px) gap, the minimum between atoms in a molecule. Badges never truncate.
 
 ## Accessibility
 Plain text · status glyphs are decorative and the word carries the meaning · wrap live-changing badges in `role="status"`.

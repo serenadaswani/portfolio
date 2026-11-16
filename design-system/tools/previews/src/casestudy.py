@@ -173,7 +173,7 @@ body { margin: 0; font-family: var(--font-sans); background: var(--color-bg-canv
 .cs-head { display: grid; gap: var(--space-5); max-width: 880px; }
 .cs-head .pm-card__eyebrow { margin: 0; }
 .cs-title { margin: 0; font-size: var(--type-display-lg); line-height: var(--line-display-lg); font-weight: var(--weight-display-lg); letter-spacing: var(--tracking-display-lg); font-stretch: var(--font-width-display); text-wrap: balance; }
-.cs-badges { display: flex; flex-wrap: wrap; gap: var(--space-1); list-style: none; margin: 0; padding: 0; }
+.cs-badges { display: flex; flex-wrap: wrap; gap: var(--space-2); list-style: none; margin: 0; padding: 0; }
 .cs-summary { margin-top: var(--space-10); }
 .cs-summary__body { display: grid; gap: var(--space-8); }
 .cs-summary + .pm-stats { margin-top: var(--space-8); }

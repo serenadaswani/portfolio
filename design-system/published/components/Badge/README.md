@@ -27,7 +27,7 @@ None. Badges aren't interactive. A clickable filter is a chip (not yet in the sy
 The tag fill is translucent, so it takes on the surface beneath it. Its text is secondary on any surface (≥6.45:1 light, ≥8.64:1 dark); the fill only lightens light surfaces and barely shifts dark ones. With `prefers-contrast: more` the edge becomes `color-border-default`. Status pairs are ≥5.75:1 (light) and ≥6.12:1 (dark).
 
 ## Responsive behavior
-Rows wrap with a `space-1` gap. Badges never truncate.
+Rows wrap with a `space-2` (8px) gap, the minimum between atoms in a molecule. Badges never truncate.
 
 ## Accessibility
 Plain text · status glyphs are decorative and the word carries the meaning · wrap live-changing badges in `role="status"`.

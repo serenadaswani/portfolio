@@ -1,5 +1,8 @@
 # Changes applied
 
+## v1.9.1 tag spacing
+- Badge rows (Card `pm-card__meta`, the case-study header) wrap with a `space-2` (8px) gap instead of `space-1`, matching the rule that atoms in a molecule keep at least `space-2` apart. No token changes.
+
 ## v1.9 frosted badge (approved from the badge review)
 - Badge tag: the silver outline is replaced by a frosted fill, `color-badge-bg` (white at 55% light, 6% dark) with a 1px `color-badge-border` (ink at 8% light, white at 10% dark). No backdrop blur, so the flat-but-dimensional rule holds. `prefers-contrast: more` restores a `color-border-default` edge.
 - New tokens: `color-badge-bg`, `color-badge-border`.
