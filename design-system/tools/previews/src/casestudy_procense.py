@@ -88,6 +88,30 @@ def insights():
         f'<li class="pm-panel pr-ins__c"><h4>{t}</h4><p>{d}</p><p class="pr-ins__g"><span class="pm-meta-text">Shaped the goal</span><span class="pm-badge">{g}</span></p></li>'
         for t, d, g in INSIGHTS) + '</ul></div>')
 
+# The paper batch workflow, with the points where errors creep in (Serena, 2026-11-16).
+FLOW = [  # title, who, what happens, error risk
+    ('Weigh ingredients', 'Operator', 'Weighs each ingredient and writes the actual amount next to the target.', 'Misread scales and transposed digits'),
+    ('Follow the steps', 'Operator', 'Works through the instructions in a separate binder, initialling each step.', 'Skipped or out-of-order steps'),
+    ('Record conditions', 'Operator', 'Writes down temperatures, times and mixing speeds as the batch runs.', 'Out-of-range values go unnoticed'),
+    ('Run quality tests', 'Operator', 'Tests samples and copies each result onto the quality form.', 'Results copied wrong or left blank'),
+    ('Hand off the forms', 'Operator to QA', 'Carries the signed paper forms to QA and engineering.', 'Lost pages and missing signatures'),
+    ('Review and approve', 'QA and engineers', 'Checks every entry by hand and sends mistakes back to the floor.', 'Corrections restart the loop and delay release'),
+]
+def flow():
+    steps = ''.join(
+        f'<li class="pr-flow__s"><button type="button" class="pr-flow__b" data-step="{i}" aria-pressed="false">'
+        f'<span class="pr-flow__n" aria-hidden="true">{i + 1}</span><span class="pr-flow__t">{t}</span>'
+        f'<span class="pr-flow__r">{S["warning"]}<span>{"Delay risk" if i == len(FLOW) - 1 else "Error risk"}</span></span></button>'
+        f'<div class="pr-flow__d"><p class="pm-meta-text">{who}</p><p>{d}</p><p class="pr-flow__risk">{S["warning"]}{r}</p></div></li>'
+        for i, (t, who, d, r) in enumerate(FLOW))
+    notes = ''.join(f'<template data-step-note="{i}">{t}|{who}|{d}|{r}|{"Delay risk" if i == len(FLOW) - 1 else "Error risk"}</template>' for i, (t, who, d, r) in enumerate(FLOW))
+    return ('<div class="pr-flow" data-flow>'
+            f'<ol class="pr-flow__list" aria-label="A paper batch, step by step">{steps}</ol>{notes}'
+            '<div class="pr-flow__note" aria-live="polite"><p class="pm-meta-text" data-fn-w>Six steps, five error points</p>'
+            '<p class="pr-note__t" data-fn-t>Every step is written by hand</p>'
+            '<p class="pr-note__d" data-fn-d>Hover over or tap a step to see what happens there and where mistakes creep in.</p></div>'
+            '</div>')
+
 def shot(art, cap, n):
     return (f'<figure class="pm-frame"><div class="pm-frame__stage pr-stage">{art}</div>'
             f'<figcaption class="pm-frame__caption"><span class="pm-frame__index">Fig. {n:02d}</span><span>{cap}</span></figcaption></figure>')
@@ -105,9 +129,13 @@ BODY = ''.join([
         + stats(STATS_FULL, ' pm-stats--sm cs-stats')),
 
     section('problem', 'The problem', 'Every batch was recorded by hand, then checked on paper.',
-        lede('In many chemical plants, each batch is recorded on two paper forms: one for the manufacturing steps and one for the quality checks. Once complete, the forms go to directors and engineers, who decide whether the batch meets the standard. The process is slow, invites human error and holds up decisions on the floor.',
-             'We saw an opportunity to give frontline workers a faster, more reliable way to record production data, tailored to each client’s workflow. It also had to feel familiar to operators who had filled in these forms by hand for years.')
-        + panel('How might we', '<p class="cs-goal">How might we streamline batch manufacturing by digitizing its forms, while keeping them intuitive for operators used to filling them in by hand?</p>', ' pm-panel--tonal', 'p-hmw')
+        lede('In many chemical plants, each batch is recorded on two paper forms: one for the manufacturing steps and one for the quality checks. Once complete, the forms go to directors and engineers, who decide whether the batch meets the standard. The process is slow, invites human error and holds up decisions on the floor.')
+        + shot(flow(), 'A paper batch, step by step. Five of the six steps are written by hand, and each is a chance for error.', 1)
+        + stats([('~150', 'Handwritten entries in one batch record'), ('5 of 6', 'Steps where a manual error can slip in'), ('1–3 days', 'From the end of a batch to its approval')], ' pm-stats--sm cs-stats')
+        + '<p class="pm-meta-text pr-draft">Estimates for a typical paper batch record, for illustration.</p>'
+        + lede('We saw an opportunity to give frontline workers a faster, more reliable way to record production data, tailored to each client’s workflow. It also had to feel familiar to operators who had filled in these forms by hand for years. One North Star kept product, design and business aligned.')
+        + panel('Our North Star', '<p class="cs-goal">Streamline batch manufacturing by digitizing its forms, while keeping them intuitive for operators used to filling them in by hand.</p>'
+                '<div class="pr-ns"><span class="pm-meta-text">Aligned with</span><ul class="cs-badges" aria-label="Aligned with"><li class="pm-badge">Product</li><li class="pm-badge">Design</li><li class="pm-badge">Business</li></ul></div>', ' pm-panel--tonal', 'p-ns')
         + '<h3 class="cs-h3">The solution, in short</h3>'
         + lede('A guided tablet flow, built into the Procense platform, that walks operators through each batch.')
         + items([('Two forms, one flow', 'Batch details, manufacturing steps and quality tests in three steps, in the order operators work.'),
@@ -116,7 +144,7 @@ BODY = ''.join([
 
     section('discovery', 'Discovery', 'I started by taking the paper forms apart.',
         lede('The forms captured a great deal of data, but made it hard to spot what mattered and slow to fill in.')
-        + shot(paper_form(), 'The paper quality form, reconstructed. Hover over or tap a number to see each pain point.', 1)
+        + shot(paper_form(), 'The paper quality form, reconstructed. Hover over or tap a number to see each pain point.', 2)
         + '<h3 class="cs-h3">Then I learned how the forms are used on the floor.</h3>'
         + lede('I interviewed Procense’s co-founder, a former process engineer who has both written and filled in these forms. Four insights stood out, and each became a design goal.')
         + insights()),
@@ -130,7 +158,7 @@ BODY = ''.join([
 
     section('ideation', 'Ideation', 'I explored how crowded tables could become simple steps.',
         lede('I studied how other products turn paper forms into software and organise large tables, then sketched layouts and noted what each form needed.')
-        + shot(f'<div class="pm-media pm-media--16x10 pr-well" role="img" aria-label="Image to come: annotated layout sketches"><div class="pm-media__fallback">{I["image"]}<span>Image to come</span><span>Annotated layout sketches</span></div></div>', 'Early sketches of the digital quality and manufacturing forms.', 2)),
+        + shot(f'<div class="pm-media pm-media--16x10 pr-well" role="img" aria-label="Image to come: annotated layout sketches"><div class="pm-media__fallback">{I["image"]}<span>Image to come</span><span>Annotated layout sketches</span></div></div>', 'Early sketches of the digital quality and manufacturing forms.', 3)),
 
     section('tablet', 'Tablet-first', 'We designed for desktop. The floor ran on tablets.',
         '<div class="cs-pair">'
@@ -141,9 +169,9 @@ BODY = ''.join([
 
     section('solution', 'The solution', 'Two paper forms became one guided flow.',
         lede('The final design merges both forms into three steps: batch details, then the manufacturing steps and ingredients, then the quality tests. Each screen shows only what that step needs, so operators can keep their attention on the batch.')
-        + shot(screen1(), 'Batch information, the first step. Date, time and signature fill in on their own.', 3)
-        + shot(screen2(), 'Manufacturing steps and ingredients. Instructions in blue, ingredients in grey, critical conditions in bold.', 4)
-        + shot(screen3(), 'Quality tests, the last step. Each result is checked against its target range as it’s entered.', 5)
+        + shot(screen1(), 'Batch information, the first step. Date, time and signature fill in on their own.', 4)
+        + shot(screen2(), 'Manufacturing steps and ingredients. Instructions in blue, ingredients in grey, critical conditions in bold.', 5)
+        + shot(screen3(), 'Quality tests, the last step. Each result is checked against its target range as it’s entered.', 6)
         + items([('Fields that fill themselves', 'Date and time fill in automatically, and signatures come from the operator’s login.'),
                  ('The same patterns everywhere', 'Buttons and layouts behave the same at every step.'),
                  ('Clear sections', 'Colour sets them apart: blue for instructions, grey for ingredients.'),
@@ -190,6 +218,25 @@ TLDR = f'''      <dl class="cs-tldr__rows">
       {stats([('10%', 'Faster batch execution'), ('100%', 'Automated traceability'), ('100%', 'Data accuracy')], ' pm-stats--sm cs-tldr__stats')}'''
 
 JS = r"""
+  // Fig. 1 batch workflow: hover, focus or tap a step to show what happens there and its error risk
+  document.querySelectorAll('[data-flow]').forEach(function (w) {
+    var btns = [].slice.call(w.querySelectorAll('[data-step]')), wEl = w.querySelector('[data-fn-w]'), t = w.querySelector('[data-fn-t]'), d = w.querySelector('[data-fn-d]');
+    var notes = [].map.call(w.querySelectorAll('template[data-step-note]'), function (x) { return x.innerHTML.split('|'); });
+    var base = [wEl.textContent, t.textContent, d.textContent], pinned = -1;
+    function show(i) {
+      btns.forEach(function (b, j) { b.setAttribute('aria-pressed', String(j === i)); });
+      if (i < 0) { wEl.textContent = base[0]; t.textContent = base[1]; d.textContent = base[2]; return; }
+      var n = notes[i]; wEl.textContent = 'Step ' + (i + 1) + ' of ' + notes.length + ' · ' + n[1]; t.textContent = n[0]; d.textContent = n[2] + ' ' + n[4] + ': ' + n[3].charAt(0).toLowerCase() + n[3].slice(1) + '.';
+    }
+    btns.forEach(function (b, i) {
+      b.addEventListener('mouseenter', function () { show(i); });
+      b.addEventListener('focus', function () { show(i); });
+      b.addEventListener('click', function () { pinned = pinned === i ? -1 : i; show(pinned < 0 ? i : pinned); });
+    });
+    w.querySelector('.pr-flow__list').addEventListener('mouseleave', function () { show(pinned); });
+    w.addEventListener('focusout', function (e) { if (!w.contains(e.relatedTarget)) show(pinned); });
+  });
+
   // Fig. 1 pain points: hover, focus or tap a number to show its note under the form and highlight that part of the form
   document.querySelectorAll('[data-pains]').forEach(function (w) {
     var paper = w.querySelector('.pr-paper'), pins = [].slice.call(w.querySelectorAll('[data-pain]')), t = w.querySelector('[data-note-t]'), d = w.querySelector('[data-note-d]');
@@ -211,6 +258,38 @@ JS = r"""
 """
 
 CSS = r"""
+/* Batch workflow (Fig. 1): six steps in a row from a 620px container, a list with details below that */
+.pr-flow { container: pr-flow / inline-size; width: 100%; display: grid; gap: var(--space-5); }
+.pr-flow template { display: none; }
+.pr-flow__list { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-4); }
+.pr-flow__b { all: unset; box-sizing: border-box; display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: center; gap: var(--space-1) var(--space-3); cursor: pointer; border-radius: var(--radius-sm); }
+.pr-flow__b:focus-visible { outline: var(--focus-ring-width) solid var(--color-focus-ring); outline-offset: var(--focus-ring-offset); }
+.pr-flow__n { grid-row: span 2; display: grid; place-items: center; width: 32px; height: 32px; border-radius: 50%; background: var(--color-bg-elevated); color: var(--color-text-primary); box-shadow: inset 0 0 0 1px var(--color-border-default); font: var(--weight-medium) var(--type-label) / 1 var(--font-sans); font-variant-numeric: tabular-nums; }
+.pr-flow__b[aria-pressed="true"] .pr-flow__n { background: var(--color-action-primary); color: var(--color-text-on-accent); box-shadow: none; }
+.pr-flow__t { font-size: var(--type-body-sm); line-height: var(--line-body-sm); font-weight: var(--weight-medium); color: var(--color-text-primary); }
+.pr-flow__r { display: inline-flex; align-items: center; gap: var(--space-1); font-size: var(--type-caption); line-height: var(--line-caption); color: var(--color-state-warning); }
+.pr-flow__r .pm-status__icon, .pr-flow__risk .pm-status__icon { width: 12px; height: 12px; flex: none; }
+.pr-flow__d p { margin: var(--space-1) 0 0; font-size: var(--type-body-sm); line-height: var(--line-body-sm); color: var(--color-text-secondary); }
+.pr-flow__d .pr-flow__risk { display: flex; align-items: flex-start; gap: var(--space-1); color: var(--color-state-warning); }
+.pr-flow__d .pr-flow__risk .pm-status__icon { margin-top: calc((var(--line-body-sm) * var(--type-body-sm) - 12px) / 2); }
+.pr-flow__d { padding-left: calc(32px + var(--space-3)); }
+@container pr-flow (max-width: 619px) { .pr-flow__r { display: none; } .pr-flow__b .pr-flow__n { grid-row: auto; } }
+.pr-flow__note { display: none; }
+@container pr-flow (min-width: 620px) {
+  .pr-flow__list { grid-template-columns: repeat(6, minmax(0, 1fr)); gap: var(--space-2); position: relative; }
+  .pr-flow__list::before { content: ""; position: absolute; left: 8%; right: 8%; top: 16px; height: 1px; background: var(--color-border-default); }
+  .pr-flow__s { position: relative; }
+  .pr-flow__b { grid-template-columns: minmax(0, 1fr); justify-items: center; text-align: center; width: 100%; padding: 0 var(--space-1); }
+  .pr-flow__n { grid-row: auto; box-shadow: inset 0 0 0 1px var(--color-border-default), 0 0 0 4px var(--color-bg-sunken); }
+  .pr-flow__r { justify-content: center; }
+  .pr-flow__d { display: none; }
+  .pr-flow__note { display: block; min-height: 7rem; padding: var(--space-4) var(--space-5); border-radius: var(--radius-md); background: var(--color-bg-elevated); box-shadow: inset 0 0 0 1px var(--color-border-subtle), var(--shadow-xs); }
+  .pr-flow__note .pm-meta-text { margin: 0 0 var(--space-1); display: flex; align-items: center; gap: var(--space-1); }
+}
+.pr-flow__s:last-child .pr-flow__r { color: var(--color-text-tertiary); }
+/* North Star */
+.pr-ns { margin-top: var(--space-4); display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2) var(--space-3); }
+
 /* Lists without numbers */
 .cs-points--plain li { grid-template-columns: minmax(0, 1fr); }
 /* Fig. 1: pain points with a note under the form */
