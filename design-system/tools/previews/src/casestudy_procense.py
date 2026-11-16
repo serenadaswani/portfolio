@@ -182,7 +182,7 @@ TLDR = f'''      <dl class="cs-tldr__rows">
         <div class="cs-tldr__row"><dt>Approach</dt><dd>I studied the forms, interviewed Procense’s co-founder, and redesigned tablet-first when we learned operators work on tablets.</dd></div>
         <div class="cs-tldr__row"><dt>Outcome</dt><dd>Two paper forms became one tablet flow. The designs are helping Procense raise funding to build it.</dd></div>
       </dl>
-      {stats([('10%', 'Batch execution speed: faster pre-weigh, compounding and QA approvals'), ('100%', 'Automated traceability, for simpler audits and better accuracy'), ('100%', 'Data accuracy, so frontline teams can focus on key insights')], ' pm-stats--sm cs-tldr__stats')}'''
+      {stats([('10%', 'Faster batch execution'), ('100%', 'Automated traceability'), ('100%', 'Data accuracy')], ' pm-stats--sm cs-tldr__stats')}'''
 
 JS = r"""
   // Fig. 1 pain points: hover, focus or tap a number to show its note under the form and highlight that part of the form
