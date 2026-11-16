@@ -308,6 +308,8 @@ body { margin: 0; font-family: var(--font-sans); background: var(--color-bg-canv
 .cs-views { margin-top: var(--space-10); }
 .cs-views > .pm-tabs__list { display: flex; width: 100%; box-sizing: border-box; }
 .cs-views > .pm-tabs__list > .pm-tabs__tab { flex: 1 1 0; justify-content: center; }
+/* Selected tab: elevated fill and shadow-xs, no ring (Serena, 2026-11-16) */
+.cs-views > .pm-tabs__list > .pm-tabs__tab[aria-selected="true"] { box-shadow: var(--shadow-xs); }
 .cs-views > .pm-tabs__panel { padding-top: var(--space-8); font-size: inherit; line-height: inherit; color: inherit; }
 .cs-views > .pm-tabs__panel:focus-visible { outline-offset: var(--space-2); }
 .cs-views .cs-tldr { margin-top: 0; }
