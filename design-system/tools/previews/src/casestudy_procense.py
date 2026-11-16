@@ -101,15 +101,16 @@ def flow():
     steps = ''.join(
         f'<li class="pr-flow__s"><button type="button" class="pr-flow__b" data-step="{i}" aria-pressed="false">'
         f'<span class="pr-flow__n" aria-hidden="true">{i + 1}</span><span class="pr-flow__t">{t}</span>'
-        f'<span class="pr-flow__r">{S["warning"]}<span>{"Delay risk" if i == len(FLOW) - 1 else "Error risk"}</span></span></button>'
-        f'<div class="pr-flow__d"><p class="pm-meta-text">{who}</p><p>{d}</p><p class="pr-flow__risk">{S["warning"]}{r}</p></div></li>'
+        f'<span class="pr-flow__r">{S["warning"]}<span class="pm-sr">{"Delay risk" if i == len(FLOW) - 1 else "Error risk"}</span></span></button>'
+        f'<div class="pr-flow__d"><p class="pm-meta-text">{who}</p><p>{d}</p><p class="pr-flow__risk"><span class="pr-flow__rl">{"Delay risk" if i == len(FLOW) - 1 else "Error risk"}</span><span>{r}</span></p></div></li>'
         for i, (t, who, d, r) in enumerate(FLOW))
     notes = ''.join(f'<template data-step-note="{i}">{t}|{who}|{d}|{r}|{"Delay risk" if i == len(FLOW) - 1 else "Error risk"}</template>' for i, (t, who, d, r) in enumerate(FLOW))
     return ('<div class="pr-flow" data-flow>'
             f'<ol class="pr-flow__list" aria-label="A paper batch, step by step">{steps}</ol>{notes}'
             '<div class="pr-flow__note" aria-live="polite"><p class="pm-meta-text" data-fn-w>Six steps, five error points</p>'
             '<p class="pr-note__t" data-fn-t>Every step is written by hand</p>'
-            '<p class="pr-note__d" data-fn-d>Hover over or tap a step to see what happens there and where mistakes creep in.</p></div>'
+            '<p class="pr-note__d" data-fn-d>Hover over or tap a step to see what happens there and where mistakes creep in.</p>'
+            '<p class="pr-flow__risk" data-fn-r hidden><span class="pr-flow__rl" data-fn-rl></span><span data-fn-rt></span></p></div>'
             '</div>')
 
 def shot(art, cap, n):
@@ -220,13 +221,13 @@ TLDR = f'''      <dl class="cs-tldr__rows">
 JS = r"""
   // Fig. 1 batch workflow: hover, focus or tap a step to show what happens there and its error risk
   document.querySelectorAll('[data-flow]').forEach(function (w) {
-    var btns = [].slice.call(w.querySelectorAll('[data-step]')), wEl = w.querySelector('[data-fn-w]'), t = w.querySelector('[data-fn-t]'), d = w.querySelector('[data-fn-d]');
+    var btns = [].slice.call(w.querySelectorAll('[data-step]')), wEl = w.querySelector('[data-fn-w]'), t = w.querySelector('[data-fn-t]'), d = w.querySelector('[data-fn-d]'), r = w.querySelector('[data-fn-r]');
     var notes = [].map.call(w.querySelectorAll('template[data-step-note]'), function (x) { return x.innerHTML.split('|'); });
     var base = [wEl.textContent, t.textContent, d.textContent], pinned = -1;
     function show(i) {
       btns.forEach(function (b, j) { b.setAttribute('aria-pressed', String(j === i)); });
-      if (i < 0) { wEl.textContent = base[0]; t.textContent = base[1]; d.textContent = base[2]; return; }
-      var n = notes[i]; wEl.textContent = 'Step ' + (i + 1) + ' of ' + notes.length + ' · ' + n[1]; t.textContent = n[0]; d.textContent = n[2] + ' ' + n[4] + ': ' + n[3].charAt(0).toLowerCase() + n[3].slice(1) + '.';
+      if (i < 0) { wEl.textContent = base[0]; t.textContent = base[1]; d.textContent = base[2]; r.hidden = true; return; }
+      var n = notes[i]; wEl.textContent = 'Step ' + (i + 1) + ' of ' + notes.length + ' · ' + n[1]; t.textContent = n[0]; d.textContent = n[2]; r.hidden = false; r.querySelector('[data-fn-rl]').textContent = n[4]; r.querySelector('[data-fn-rt]').textContent = n[3] + '.';
     }
     btns.forEach(function (b, i) {
       b.addEventListener('mouseenter', function () { show(i); });
@@ -267,13 +268,15 @@ CSS = r"""
 .pr-flow__n { grid-row: span 2; display: grid; place-items: center; width: 32px; height: 32px; border-radius: 50%; background: var(--color-bg-elevated); color: var(--color-text-primary); box-shadow: inset 0 0 0 1px var(--color-border-default); font: var(--weight-medium) var(--type-label) / 1 var(--font-sans); font-variant-numeric: tabular-nums; }
 .pr-flow__b[aria-pressed="true"] .pr-flow__n { background: var(--color-action-primary); color: var(--color-text-on-accent); box-shadow: none; }
 .pr-flow__t { font-size: var(--type-body-sm); line-height: var(--line-body-sm); font-weight: var(--weight-medium); color: var(--color-text-primary); }
-.pr-flow__r { display: inline-flex; align-items: center; gap: var(--space-1); font-size: var(--type-caption); line-height: var(--line-caption); color: var(--color-state-warning); }
-.pr-flow__r .pm-status__icon, .pr-flow__risk .pm-status__icon { width: 12px; height: 12px; flex: none; }
+.pr-flow__r { display: inline-flex; align-items: center; color: var(--color-state-warning); }
+.pr-flow__r .pm-status__icon { width: 16px; height: 16px; flex: none; margin: 0; }
 .pr-flow__d p { margin: var(--space-1) 0 0; font-size: var(--type-body-sm); line-height: var(--line-body-sm); color: var(--color-text-secondary); }
-.pr-flow__d .pr-flow__risk { display: flex; align-items: flex-start; gap: var(--space-1); color: var(--color-state-warning); }
-.pr-flow__d .pr-flow__risk .pm-status__icon { margin-top: calc((var(--line-body-sm) * var(--type-body-sm) - 12px) / 2); }
+/* Risk: the label in the warning colour under the description, then the risk itself */
+.pr-flow__risk { display: grid; gap: 2px; margin: var(--space-2) 0 0 !important; font-size: var(--type-body-sm); line-height: var(--line-body-sm); color: var(--color-text-secondary); }
+.pr-flow__risk[hidden] { display: none; }
+.pr-flow__rl { font-weight: var(--weight-medium); color: var(--color-state-warning); }
 .pr-flow__d { padding-left: calc(32px + var(--space-3)); }
-@container pr-flow (max-width: 619px) { .pr-flow__r { display: none; } .pr-flow__b .pr-flow__n { grid-row: auto; } }
+
 .pr-flow__note { display: none; }
 @container pr-flow (min-width: 620px) {
   .pr-flow__list { grid-template-columns: repeat(6, minmax(0, 1fr)); gap: var(--space-2); position: relative; }
@@ -286,7 +289,6 @@ CSS = r"""
   .pr-flow__note { display: block; min-height: 7rem; padding: var(--space-4) var(--space-5); border-radius: var(--radius-md); background: var(--color-bg-elevated); box-shadow: inset 0 0 0 1px var(--color-border-subtle), var(--shadow-xs); }
   .pr-flow__note .pm-meta-text { margin: 0 0 var(--space-1); display: flex; align-items: center; gap: var(--space-1); }
 }
-.pr-flow__s:last-child .pr-flow__r { color: var(--color-text-tertiary); }
 /* North Star */
 .pr-ns { margin-top: var(--space-4); display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2) var(--space-3); }
 
