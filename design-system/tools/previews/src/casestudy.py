@@ -177,7 +177,7 @@ body { margin: 0; font-family: var(--font-sans); background: var(--color-bg-canv
 /* TL;DR panel, after leahkim.design's table-redesign case: the heading on the left like the landing's "About me"
    (h3 size, 500), the background / problem / approach / outcome rows on the right with a hairline between them,
    and the numbers underneath in the same container, divided by vertical rules. Side by side from 768px, the heading 48px from the rows. */
-/* Project facts: their own row above the TL;DR, four across from 768px (two across on phones), label over text */
+/* Project facts: their own row above the TL;DR, four across from 768px (two across on phones), label over text; each list item is its own dd, one per line */
 .cs-facts { margin-top: var(--space-10); }
 .cs-facts__list { margin: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-6) var(--space-6); }
 @container (min-width: 768px) { .cs-facts__list { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--space-8); } }
@@ -293,10 +293,10 @@ page = f'''<title>Mensio Case Study</title>
   </header>
 
   <section class="cs-facts" aria-label="Project details"><dl class="cs-facts__list">
-    <div><dt>Role</dt><dd>Product designer, acting PM</dd></div>
-    <div><dt>Team</dt><dd>Enterprise Analytics team, frontend and backend engineers</dd></div>
+    <div><dt>Role</dt><dd>Product designer</dd><dd>Acting PM</dd></div>
+    <div><dt>Team</dt><dd>2 designers</dd><dd>2 engineers</dd></div>
     <div><dt>Timeline</dt><dd>June – September 2026</dd></div>
-    <div><dt>Skills</dt><dd>User research, product design, design QA</dd></div>
+    <div><dt>Skills</dt><dd>User research</dd><dd>Product design</dd><dd>Design QA</dd></div>
   </dl></section>
 
   <section class="pm-panel pm-panel--lg cs-tldr" aria-labelledby="cs-tldr-h">
