@@ -146,13 +146,13 @@ def flow():
                                           f'<span class="pr-flow__rt" data-fn-rt>{text}</span></div>')
     steps = ''.join(
         f'<li class="pr-flow__s"><button type="button" class="pr-flow__b" data-step="{i}" aria-pressed="{"true" if i == 0 else "false"}">'
-        f'<span class="pr-flow__n" aria-hidden="true">{i + 1}</span><span class="pr-flow__t">{t}</span></button>'
+        f'<span class="pr-flow__n" aria-hidden="true"><em>{i + 1}</em><strong>✓</strong></span><span class="pr-flow__t">{t}</span></button>'
         f'<div class="pr-flow__d"><p class="pm-meta-text">{who}</p><p>{d}</p>{risk(kind(i), r)}</div></li>'
         for i, (t, who, d, r) in enumerate(FLOW))
     notes = ''.join(f'<template data-step-note="{i}">{t}|{who}|{d}|{r}|{kind(i)}</template>' for i, (t, who, d, r) in enumerate(FLOW))
     t0, who0, d0, r0 = FLOW[0]
     return ('<div class="pr-flow" data-flow>'
-            f'<ol class="pr-flow__list" aria-label="A paper batch, step by step">{steps}</ol>{notes}'
+            f'<ol class="pr-flow__list" aria-label="A paper batch, step by step"><span class="pr-flow__prog" aria-hidden="true"></span>{steps}</ol>{notes}'
             '<div class="pr-flow__note" aria-live="off" data-fn-live>'
             f'<div class="pr-flow__txt"><p class="pm-meta-text" data-fn-w>Step 1 of {len(FLOW)} · {who0}</p><p class="pr-note__t" data-fn-t>{t0}</p><p class="pr-note__d" data-fn-d>{d0}</p></div>'
             f'{risk(kind(0), r0, " data-fn-r")}</div>'
@@ -278,15 +278,22 @@ JS = r"""
     var r = w.querySelector('[data-fn-r]'), live = w.querySelector('[data-fn-live]'), tog = w.querySelector('[data-flow-toggle]');
     var notes = [].map.call(w.querySelectorAll('template[data-step-note]'), function (x) { return x.innerHTML.split('|'); });
     var cur = 0, stopped = false, hold = false, offscreen = false, timer = null, STEP = 3500, PAUSE = '<svg class="pm-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="14" y="4" width="4" height="16" rx="1"/><rect x="6" y="4" width="4" height="16" rx="1"/></svg>', PLAY = '<svg class="pm-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><polygon points="6 3 20 12 6 21 6 3"/></svg>';
-    function show(i) {
-      cur = i;
-      btns.forEach(function (b, j) { b.setAttribute('aria-pressed', String(j === i)); });
-      var n = notes[i]; wEl.textContent = 'Step ' + (i + 1) + ' of ' + notes.length + ' · ' + n[1]; t.textContent = n[0]; d.textContent = n[2];
+    var prog = w.querySelector('.pr-flow__prog'), body = [w.querySelector('.pr-flow__txt'), r], N = notes.length;
+    // The line runs from step 1's centre; at step i it reaches step i's centre (i / N of the list's width)
+    function line(frac, ms, ease) { prog.style.transition = reduce ? 'none' : 'width ' + ms + 'ms ' + ease; prog.style.width = (frac / N * 100) + '%'; }
+    function show(i, fill) {
+      var changed = i !== cur; cur = i;
+      btns.forEach(function (b, j) { b.setAttribute('aria-pressed', String(j === i)); b.classList.toggle('is-done', j < i); });
+      var n = notes[i]; wEl.textContent = 'Step ' + (i + 1) + ' of ' + N + ' · ' + n[1]; t.textContent = n[0]; d.textContent = n[2];
       r.querySelector('[data-fn-rl]').textContent = n[4]; r.querySelector('[data-fn-rt]').textContent = n[3];
+      line(i, 450, 'cubic-bezier(.22,1,.36,1)');
+      if (changed && !reduce && body[0].animate) body.forEach(function (el, k) { el.animate([{ opacity: 0, transform: 'translateY(6px)' }, { opacity: 1, transform: 'none' }], { duration: 380, delay: k * 60, easing: 'cubic-bezier(.22,1,.36,1)', fill: 'backwards' }); });
+      // While the tour runs, the line keeps creeping toward the next step, arriving just as it opens
+      if (fill && i < N - 1) setTimeout(function () { if (cur === i && canRun()) line(i + 1, STEP - 500, 'linear'); }, 460);
     }
     function wide() { return w.querySelector('.pr-flow__note').offsetParent !== null; }
     function canRun() { return !reduce && !stopped && !hold && !offscreen && wide(); }
-    function tick() { clearTimeout(timer); if (canRun()) timer = setTimeout(function () { if (canRun()) show((cur + 1) % notes.length); tick(); }, STEP); }
+    function tick() { clearTimeout(timer); if (!canRun()) { line(cur, 300, 'ease-out'); return; } if (cur < N - 1) setTimeout(function () { if (canRun()) line(cur + 1, STEP - 500, 'linear'); }, 460); timer = setTimeout(function () { if (canRun()) show((cur + 1) % N); tick(); }, STEP); }
     function syncBtn() { tog.setAttribute('aria-pressed', String(stopped)); tog.innerHTML = (stopped ? PLAY : PAUSE) + '<span>' + (stopped ? 'Play' : 'Pause') + '</span>'; }
     function interact() { live.setAttribute('aria-live', 'polite'); }
     btns.forEach(function (b, i) {
@@ -418,7 +425,16 @@ CSS = r"""
 .pr-flow__b { all: unset; box-sizing: border-box; display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: center; gap: var(--space-1) var(--space-3); cursor: pointer; border-radius: var(--radius-sm); }
 .pr-flow__b:focus-visible { outline: var(--focus-ring-width) solid var(--color-focus-ring); outline-offset: var(--focus-ring-offset); }
 .pr-flow__n { display: grid; place-items: center; width: 32px; height: 32px; border-radius: 50%; background: var(--color-bg-elevated); color: var(--color-text-primary); box-shadow: inset 0 0 0 1px var(--color-border-default); font: var(--weight-medium) var(--type-label) / 1 var(--font-sans); font-variant-numeric: tabular-nums; }
-.pr-flow__b[aria-pressed="true"] .pr-flow__n { background: var(--color-action-primary); color: var(--color-text-on-accent); box-shadow: none; }
+.pr-flow__b[aria-pressed="true"] .pr-flow__n { background: var(--color-action-primary); color: var(--color-text-on-accent); box-shadow: 0 0 0 4px var(--ring, var(--color-bg-sunken)); }
+/* Number for upcoming and current steps, a check once a step is behind the tour (like the solution stepper) */
+.pr-flow__n em, .pr-flow__n strong { grid-area: 1 / 1; font-style: normal; }
+.pr-flow__n strong { opacity: 0; }
+.pr-flow__b.is-done .pr-flow__n { background: var(--color-action-selected-bg); color: var(--color-action-selected-text); box-shadow: 0 0 0 4px var(--ring, var(--color-bg-sunken)); }
+.pr-flow__b.is-done .pr-flow__n em { opacity: 0; } .pr-flow__b.is-done .pr-flow__n strong { opacity: 1; }
+.pr-flow__prog { display: none; }
+@media (prefers-reduced-motion: no-preference) {
+  .pr-flow__n, .pr-flow__n em, .pr-flow__n strong, .pr-flow__t { transition: background-color .35s ease, color .35s ease, box-shadow .35s ease, opacity .25s ease; }
+}
 .pr-flow__t { font-size: var(--type-body-sm); line-height: var(--line-body-sm); font-weight: var(--weight-medium); color: var(--color-text-primary); }
 .pr-flow__d p { margin: var(--space-1) 0 0; font-size: var(--type-body-sm); line-height: var(--line-body-sm); color: var(--color-text-secondary); }
 /* Risk: a filled, outlined box (warning tint + warning ring) with the label and icon, then the risk itself */
@@ -434,7 +450,9 @@ CSS = r"""
 .pr-flow__note { display: none; }
 @container pr-flow (min-width: 620px) {
   .pr-flow__list { grid-template-columns: repeat(6, minmax(0, 1fr)); gap: var(--space-2); position: relative; }
-  .pr-flow__list::before { content: ""; position: absolute; left: 8%; right: 8%; top: 16px; height: 1px; background: var(--color-border-default); }
+  .pr-flow__prog { display: block; position: absolute; z-index: 0; left: calc(100% / 12); top: 15.5px; width: 0; height: 2px; border-radius: 1px; background: var(--color-action-primary); pointer-events: none; }
+  .pr-flow__s { z-index: 1; }
+  .pr-flow__list::before { content: ""; position: absolute; left: calc(100% / 12); right: calc(100% / 12); top: 16px; height: 1px; background: var(--color-border-default); }
   .pr-flow__s { position: relative; }
   .pr-flow__b { grid-template-columns: minmax(0, 1fr); justify-items: center; text-align: center; width: 100%; padding: 0 var(--space-1); }
   .pr-flow__n { grid-row: auto; box-shadow: inset 0 0 0 1px var(--color-border-default), 0 0 0 4px var(--ring, var(--color-bg-sunken)); }
