@@ -90,7 +90,7 @@ body { margin: 0; font-family: var(--font-sans); background: var(--color-bg-canv
 .cx-title, .cx-sub { width: min(100%, 30rem); }
 .cx-title { margin: 0; font-size: var(--type-h3); line-height: var(--line-h3); font-weight: var(--weight-medium); letter-spacing: var(--tracking-h3); text-wrap: balance; }
 .cx-sub { margin: 0; font-size: var(--type-body-md); line-height: var(--line-body-md); text-wrap: pretty; }
-.cx-tags { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--space-1); list-style: none; margin: var(--space-2) 0 0; padding: 0; }
+.cx-tags { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--space-2); list-style: none; margin: var(--space-2) 0 0; padding: 0; }
 .cx .pm-badge { background: color-mix(in srgb, var(--color-text-on-image) 16%, transparent); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--color-text-on-image) 30%, transparent); color: var(--color-text-on-image); }
 .cx-slot { width: var(--cx-img); aspect-ratio: 16 / 10; margin: var(--space-4) 0 var(--space-1); }
 /* Stacked (narrow or tall windows): copy, screenshot, then the link */

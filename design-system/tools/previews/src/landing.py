@@ -12,7 +12,7 @@ FEATURED = [  # strongest first: full width. Heading + a one-line summary, writt
     ('procense', 'Digitizing manufacturing QA forms to increase batch execution speed by 10%', 'Unified batch records and SOPs into a traceable digital workflow.', ['Product design', 'End-to-end', 'Tablet'], '', 'https://serenadaswani.framer.website/project-detail-procense-digital-forms-application')]
 MORE = [  # two-up below
     ('apple', 'Redesigning QA reporting for Apple’s internal teams', 'Simplified report creation, organization, and review across internal QA teams.', ['Product design', 'Redesign', 'Internal'], '', 'https://serenadaswani.framer.website/project-detail-apple-internal-reporting-tool'),
-    ('omni', 'Introducing AI autofill to reduce e-commerce listing input by 50%', 'Helped sellers generate, refine, and customize product listings with AI.', ['Product design', 'AI', 'Enhancement', 'Web'], '', 'https://serenadaswani.framer.website/project-detail-omnisynkai-ai-autofill-feature')]
+    ('omni', 'Introducing AI autofill to reduce e-commerce listing input by 50%', 'Helped sellers generate, refine, and customize product listings with AI.', ['Product design', 'AI', 'Web'], '', 'https://serenadaswani.framer.website/project-detail-omnisynkai-ai-autofill-feature')]
 ROLES = [('D', 'Deploy', 'Product designer', 'Jan 2026 – Present', True, 'Product design for Mensio, and a design system adopted across Deploy’s products.'),
          ('A', 'Apple', 'UI/UX designer, contract', 'Aug 2024 – Dec 2025', False, 'Sole designer on an internal QA reporting tool.'),
          ('O', 'OmniSynkAI', 'Product design intern', 'Jul – Sep 2024', False, 'Designed an AI autofill feature for inventory listings.'),
@@ -178,6 +178,7 @@ body { background: var(--color-bg-canvas); }
   @media (hover: hover) { .pm-card--showcase.lp-tint:hover { transform: translateY(calc(-1 * var(--space-1))); } }
 }
 .lp-tint .pm-card__copy { min-width: 0; gap: var(--space-2); }
+.lp-tint .pm-card__meta { gap: var(--space-2); } /* 8px between tags (the Card component uses space-1) */
 .lp-card-logo { display: block; width: auto; margin-bottom: var(--space-6); color: var(--color-text-on-image); }
 /* Heading and summary share one fixed width on every card (16.5rem: what the half-width cards have beside their logo), so they wrap the same way everywhere */
 .lp-tint .pm-card__title, .lp-tint .pm-card__sub { width: min(100%, 16.5rem); max-width: none; }
