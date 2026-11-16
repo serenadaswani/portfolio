@@ -167,7 +167,6 @@ BODY = ''.join([
         + '</div>'),
 ])
 
-TOC = ''.join(f'<li><a class="pm-toc__item" href="#{sid}"{" aria-current=\"location\"" if i == 0 else ""} data-spy>{label}</a></li>' for i, (sid, label) in enumerate(SECTIONS))
 
 # The landing page the case study links back to (2026-11-16: the carousel is the landing)
 LANDING = 'landing-carousel.html'
@@ -316,7 +315,10 @@ body { margin: 0; font-family: var(--font-sans); background: var(--color-bg-canv
 .cs-views .cs-body { margin-top: 0; }
 """
 
-page = f'''<title>Mensio Case Study</title>
+def render(p):
+    """Write one case study. p: page_title, header (badges, title, facts), tldr (rows + stats), sections [(id, label)], body, out."""
+    toc = ''.join(f'<li><a class="pm-toc__item" href="#{sid}"{" aria-current=\"location\"" if i == 0 else ""} data-spy>{label}</a></li>' for i, (sid, label) in enumerate(p['sections']))
+    page = f'''<title>{p["page_title"]}</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -326,7 +328,7 @@ page = f'''<title>Mensio Case Study</title>
 {tokens}
 /* ===== Paper × Midnight {VER} · components.css (verbatim) ===== */
 {comps}
-{PAGE_CSS}
+{PAGE_CSS}{p.get("css", "")}
 </style>
 
 <div class="cs" id="top">
@@ -343,17 +345,7 @@ page = f'''<title>Mensio Case Study</title>
     <div class="pm-media__fallback">{I["image"]}<span>Hero image to come</span></div>
   </div>
 
-  <header class="cs-head">
-    <ul class="cs-badges" aria-label="Status and disciplines"><li class="pm-badge pm-badge--success">{S["success"]}Shipped</li><li class="pm-badge">Product design</li><li class="pm-badge">User research</li><li class="pm-badge">Analytics</li></ul>
-    <h1 class="cs-title">Redesigning Mensio’s custom chart builder for <span class="cs-nowrap">self-serve</span> data analysis</h1>
-  </header>
-
-  <section class="cs-facts" aria-label="Project details"><dl class="cs-facts__list">
-    <div><dt>Role</dt><dd>Product designer</dd><dd>Acting PM</dd></div>
-    <div><dt>Team</dt><dd>2 designers</dd><dd>2 engineers</dd></div>
-    <div><dt>Timeline</dt><dd>June – September 2026</dd></div>
-    <div><dt>Skills</dt><dd>User research</dd><dd>Product design</dd><dd>Design QA</dd></div>
-  </dl></section>
+{p["header"]}
 
   <div class="pm-tabs pm-tabs--segmented cs-views" data-views>
   <div role="tablist" aria-label="Case study view" class="pm-tabs__list">
@@ -366,21 +358,15 @@ page = f'''<title>Mensio Case Study</title>
       <h2 class="cs-tldr__h" id="cs-tldr-h">TL;DR</h2>
     </div>
     <div class="cs-tldr__body">
-      <dl class="cs-tldr__rows">
-        <div class="cs-tldr__row"><dt>Background</dt><dd>Mensio tracks brand exposure across 185 TV networks and 2,000+ social handles. Data Explorer is where customers pull that data into charts.</dd></div>
-        <div class="cs-tldr__row"><dt>Problem</dt><dd>Data Explorer showed every metric, grouping and filter at once, so customers relied on analysts for every custom chart.</dd></div>
-        <div class="cs-tldr__row"><dt>Approach</dt><dd>We studied the analysts’ workflow and turned their follow-up questions into Guided Setup, a step-by-step wizard with presets.</dd></div>
-        <div class="cs-tldr__row"><dt>Outcome</dt><dd>Shipped in 14 weeks. Customers now build their own charts, including chart types the team never built for them before.</dd></div>
-      </dl>
-      {stats([('14 wks', 'from research to ship'), ('8 → 5', 'steps from question to chart'), ('6', 'presets for common questions')], ' pm-stats--sm cs-tldr__stats')}
+{p["tldr"]}
     </div>
   </section>
   </div>
 
   <div role="tabpanel" class="pm-tabs__panel cs-view" id="view-detailed" aria-labelledby="tab-detailed" tabindex="0" hidden>
   <div class="cs-body">
-    <nav class="pm-toc cs-toc" aria-labelledby="cs-toc-h"><p class="pm-toc__heading" id="cs-toc-h">On this page</p><ol class="pm-toc__list">{TOC}</ol></nav>
-    <main class="cs-main">{BODY}</main>
+    <nav class="pm-toc cs-toc" aria-labelledby="cs-toc-h"><p class="pm-toc__heading" id="cs-toc-h">On this page</p><ol class="pm-toc__list">{toc}</ol></nav>
+    <main class="cs-main">{p["body"]}</main>
   </div>
   </div>
   </div>
@@ -438,5 +424,29 @@ page = f'''<title>Mensio Case Study</title>
 }})();
 </script>
 '''
-open(os.path.join(REPO, 'prototypes/mensio.html'), 'w').write(page)
-print(len(page))
+    open(os.path.join(REPO, 'prototypes', p['out']), 'w').write(page)
+    return page
+
+MENSIO = dict(page_title='Mensio Case Study', out='mensio.html', sections=SECTIONS, body=BODY,
+    header=f'''  <header class="cs-head">
+    <ul class="cs-badges" aria-label="Status and disciplines"><li class="pm-badge pm-badge--success">{S["success"]}Shipped</li><li class="pm-badge">Product design</li><li class="pm-badge">User research</li><li class="pm-badge">Analytics</li></ul>
+    <h1 class="cs-title">Redesigning Mensio’s custom chart builder for <span class="cs-nowrap">self-serve</span> data analysis</h1>
+  </header>
+
+  <section class="cs-facts" aria-label="Project details"><dl class="cs-facts__list">
+    <div><dt>Role</dt><dd>Product designer</dd><dd>Acting PM</dd></div>
+    <div><dt>Team</dt><dd>2 designers</dd><dd>2 engineers</dd></div>
+    <div><dt>Timeline</dt><dd>June – September 2026</dd></div>
+    <div><dt>Skills</dt><dd>User research</dd><dd>Product design</dd><dd>Design QA</dd></div>
+  </dl></section>''',
+    tldr=f'''      <dl class="cs-tldr__rows">
+        <div class="cs-tldr__row"><dt>Background</dt><dd>Mensio tracks brand exposure across 185 TV networks and 2,000+ social handles. Data Explorer is where customers pull that data into charts.</dd></div>
+        <div class="cs-tldr__row"><dt>Problem</dt><dd>Data Explorer showed every metric, grouping and filter at once, so customers relied on analysts for every custom chart.</dd></div>
+        <div class="cs-tldr__row"><dt>Approach</dt><dd>We studied the analysts’ workflow and turned their follow-up questions into Guided Setup, a step-by-step wizard with presets.</dd></div>
+        <div class="cs-tldr__row"><dt>Outcome</dt><dd>Shipped in 14 weeks. Customers now build their own charts, including chart types the team never built for them before.</dd></div>
+      </dl>
+      {stats([('14 wks', 'from research to ship'), ('8 → 5', 'steps from question to chart'), ('6', 'presets for common questions')], ' pm-stats--sm cs-tldr__stats')}''')
+
+if __name__ == '__main__':
+    print(len(render(MENSIO)))
+

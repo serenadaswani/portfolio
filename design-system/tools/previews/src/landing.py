@@ -9,7 +9,7 @@ VER = 'v1.9'
 # Real content comes from site.js (see CLAUDE.md). Anything marked Placeholder or TBC is still to replace.
 FEATURED = [  # strongest first: full width. Heading + a one-line summary, written by Serena; details live on the case study.
     ('mensio', 'Redesigning Mensio’s custom chart builder for self-serve data analysis', 'Empowered customers to explore and visualize data without analyst support.', ['Product design', 'Redesign', 'Web'], '', 'mensio.html'),
-    ('procense', 'Digitizing manufacturing QA forms to increase batch execution speed by 10%', 'Unified batch records and SOPs into a traceable digital workflow.', ['Product design', 'End-to-end', 'Tablet'], '', 'https://serenadaswani.framer.website/project-detail-procense-digital-forms-application')]
+    ('procense', 'Digitizing manufacturing QA forms to increase batch execution speed by 10%', 'Unified batch records and SOPs into a traceable digital workflow.', ['Product design', 'End-to-end', 'Tablet'], '', 'procense.html')]
 MORE = [  # two-up below
     ('apple', 'Redesigning QA reporting for Apple’s internal teams', 'Simplified report creation, organization, and review across internal QA teams.', ['Product design', 'Redesign', 'Internal'], '', 'https://serenadaswani.framer.website/project-detail-apple-internal-reporting-tool'),
     ('omni', 'Introducing AI autofill to reduce e-commerce listing input by 50%', 'Helped sellers generate, refine, and customize product listings with AI.', ['Product design', 'AI', 'Web'], '', 'https://serenadaswani.framer.website/project-detail-omnisynkai-ai-autofill-feature')]
