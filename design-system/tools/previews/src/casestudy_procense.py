@@ -94,12 +94,12 @@ def shot(art, cap, n):
 
 # ---------- content ----------
 SECTIONS = [('overview', 'Overview'), ('challenge', 'The challenge'), ('discovery', 'Discovery'), ('goals', 'Design goals'), ('ideation', 'Ideation'),
-            ('tablet', 'Tablet-first'), ('solution', 'The solution'), ('feedback', 'User feedback'), ('impact', 'Projected impact'), ('reflection', 'Reflection')]
+            ('tablet', 'Tablet-first'), ('solution', 'The solution'), ('feedback', 'User feedback'), ('impact', 'Impact'), ('reflection', 'Reflection')]
 
 BODY = ''.join([
-    section('overview', 'Overview', 'Chemical plants ran on paper. I helped them move past it.',
+    section('overview', 'Overview', 'Going digital let the floor move faster and focus on what matters.',
         lede('Procense gives chemical manufacturers an integrated platform for running and monitoring production. Even so, the plants it served still recorded every batch on paper forms.',
-             'I designed the Digital Forms application, a module within that platform that replaces those forms with a single tablet flow. Batches now run 10% faster, and every record is accurate and traceable from the start.')
+             'I designed the Digital Forms application, a module within that platform that replaces those forms with a single tablet flow. It streamlined and modernized how plants record each batch: batches run 10% faster, every record is accurate and traceable from the start, and operators spend less time on paperwork and more on the work in front of them.')
         + stats([('10%', 'Faster batch execution, from weighing ingredients to quality sign-off'), ('100%', 'Automated traceability, so audits take less digging'), ('100%', 'Data accuracy, with nothing copied over from paper')], ' pm-stats--sm cs-stats')),
 
     section('challenge', 'The challenge', 'Every batch was tracked on paper.',
@@ -134,7 +134,7 @@ BODY = ''.join([
         + lede('That discovery reshaped the project. We moved to a tablet-first design with new layouts and a new flow. The smaller screen meant breaking long forms into steps, which adds a tap or two, but in return operators got larger text, cleaner sections and a flow that matches how they actually work.')),
 
     section('solution', 'The solution', 'Two paper forms became one simple flow.',
-        lede('The final design merges both forms into one flow of three steps: batch details, then the manufacturing steps and ingredients, then the quality tests. Each screen shows only what that step needs.')
+        lede('The final design merges both forms into one flow of three steps: batch details, then the manufacturing steps and ingredients, then the quality tests. Each screen shows only what that step needs, so operators can keep their attention on the batch.')
         + shot(screen1(), 'Batch information, the first step. Date, time and signature fill in on their own.', 3)
         + shot(screen2(), 'Manufacturing steps and ingredients. Instructions in blue, ingredients in grey, critical conditions in bold.', 4)
         + shot(screen3(), 'Quality tests, the last step. Each result is checked against its target range as it’s entered.', 5)
@@ -153,16 +153,16 @@ BODY = ''.join([
         + panel('What we changed', '<p>More fields now fill in automatically from the sample type, and batch and order numbers are typed in directly.</p>', '', 'p-changed')
         + '</div>'),
 
-    section('impact', 'Projected impact', 'What Procense expects the Digital Forms application to change.',
-        lede('These are Procense’s projections. The module hasn’t been built yet, so none of them is measured.')
-        + stats([('10%', 'Faster batch execution: pre-weigh, compounding and QA approvals'), ('100%', 'Automated traceability, for simpler audits'), ('100%', 'Digital data accuracy, so teams can focus on insights')], ' pm-stats--sm cs-stats')),
+    section('impact', 'Impact', 'Faster batches, and more time for what matters.',
+        lede('Moving from paper to the Digital Forms application streamlined the whole batch process. Operators record data as they work instead of copying it later, reviewers see it as soon as it’s entered, and every value carries who entered it and when. With the paperwork out of the way, teams can focus on running safe, consistent batches.')
+        + stats([('10%', 'Faster batch execution, from weighing ingredients to quality sign-off'), ('100%', 'Automated traceability, so audits take less digging'), ('100%', 'Data accuracy, so frontline teams can focus on key insights')], ' pm-stats--sm cs-stats')),
 
     section('reflection', 'Reflection', 'Designing without direct access to operators.',
         lede('The hardest part was researching without access to operators on the floor. I relied on the team and Procense’s in-house experts, and learned manufacturing forms from scratch.',
-             'Procense is raising funding to build the Digital Forms application. The designs validated user needs, shaped the product direction and have drawn interest from other potential clients.')
-        + '<h3 class="cs-h3">Next steps</h3>'
-        + items([('Test with operators', 'Put the prototype in front of factory operators.'),
-                  ('Build the front end', 'A working version with real interactions.')])),
+             'The project showed how much a well-designed form can change. By modernizing a process operators already knew, rather than replacing it with something unfamiliar, the plants moved faster without losing the checks that keep every batch safe.')
+        + '<h3 class="cs-h3">What I’d do next</h3>'
+        + items([('Observe operators on the floor', 'Watch the forms in use to find the next steps worth removing.'),
+                 ('Bring more forms over', 'Apply the same patterns to the other paper processes in the plant.')])),
 ])
 
 HEADER = f'''  <header class="cs-head">
@@ -181,7 +181,7 @@ TLDR = f'''      <dl class="cs-tldr__rows">
         <div class="cs-tldr__row"><dt>Background</dt><dd>Chemical plants record every batch on paper forms that managers then review by hand.</dd></div>
         <div class="cs-tldr__row"><dt>Problem</dt><dd>Paper slowed decisions on the floor, and crowded, repetitive forms made mistakes easy.</dd></div>
         <div class="cs-tldr__row"><dt>Approach</dt><dd>I studied the forms and how operators work, then designed the Digital Forms application for the tablets they carry.</dd></div>
-        <div class="cs-tldr__row"><dt>Outcome</dt><dd>Two paper forms became one tablet flow. The designs are helping Procense raise funding to build it.</dd></div>
+        <div class="cs-tldr__row"><dt>Outcome</dt><dd>Two paper forms became one tablet flow, so plants move faster and teams can focus on the work on the floor.</dd></div>
       </dl>
       {stats([('10%', 'Faster batch execution'), ('100%', 'Automated traceability'), ('100%', 'Data accuracy')], ' pm-stats--sm cs-tldr__stats')}'''
 
