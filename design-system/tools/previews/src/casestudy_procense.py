@@ -340,10 +340,17 @@ def _tl_block(key, label, title, text, visual, href, link, wide=False):
             f'<a class="pm-link pr-tl__more" href="{href}">{link}{I["arrow"]}</a></div>'
             f'<div class="pr-tl__vis">{visual}</div></section>')
 
+_TWO = {'Weigh ingredients': ('Weigh', 'ingredients'), 'Follow the steps': ('Follow', 'the steps'), 'Record conditions': ('Record', 'conditions'),
+        'Run quality tests': ('Run quality', 'tests'), 'Hand off the forms': ('Hand off', 'the forms'), 'Review and approve': ('Review and', 'approve')}
+def _two(t):
+    """A step title set on exactly two lines, so every step lines up."""
+    a, b = _TWO[t]
+    return f'<span>{a}</span> <span>{b}</span>'
+
 def tldr_story():
     risk = lambda i: 'Delay risk' if i == len(FLOW) - 1 else 'Error risk'
     flow_c = ('<ol class="pr-tlf" aria-label="The paper process, step by step">' + ''.join(
-        f'<li><span class="pr-tlf__n" aria-hidden="true">{i + 1}</span><p class="pr-tlf__who">{"Operator" if who.startswith("Operator") else who}</p><p class="pr-tlf__t">{t}</p>'
+        f'<li><span class="pr-tlf__n" aria-hidden="true">{i + 1}</span><p class="pr-tlf__who">{"Operator" if who.startswith("Operator") else who}</p><p class="pr-tlf__t">{_two(t)}</p>'
         f'<p class="pr-tlf__r">{S["warning"]}{risk(i)}</p></li>' for i, (t, who, d, r) in enumerate(FLOW)) + '</ol>')
     goals = ('<ul class="pr-tlg">' + ''.join(
         f'<li class="pm-card pm-card--outlined pr-card"><h4 class="pm-card__title">{g}</h4><p class="pm-card__summary">{it}</p></li>'
@@ -795,14 +802,15 @@ PT_CSS = """
 @container pr-tlv (min-width: 640px) { .pr-tlf { grid-template-columns: repeat(6, minmax(0, 1fr)); } }
 .pr-tlf li { display: grid; grid-template-rows: auto auto auto 1fr; gap: var(--space-1); align-content: start; }
 .pr-tlf__n { display: grid; place-items: center; width: 28px; height: 28px; margin-bottom: var(--space-2); border-radius: 50%; background: var(--color-bg-elevated); box-shadow: inset 0 0 0 1px var(--color-border-default); font-family: var(--font-meta); font-size: var(--type-label); font-variant-numeric: tabular-nums; color: var(--color-text-primary); }
+.pr-tlf__t > span { display: block; white-space: nowrap; }
 .pr-tlf__t { margin: 0; min-height: calc(2 * var(--line-body-sm) * var(--type-body-sm)); font-size: var(--type-body-sm); line-height: var(--line-body-sm); font-weight: var(--weight-medium); color: var(--color-text-primary); }  /* two lines for every title, so the risk badges line up */
 .pr-tlf__who { margin: 0; white-space: nowrap; font-family: var(--font-meta); font-size: var(--type-label); line-height: var(--line-label); color: var(--color-text-tertiary); }
 .pr-tlf__r { display: inline-flex; align-items: center; gap: var(--space-1); justify-self: start; align-self: start; margin: var(--space-2) 0 0; padding: 2px var(--space-2); border-radius: var(--radius-sm); background: var(--color-state-warning-bg); box-shadow: inset 0 0 0 1px var(--color-state-warning); font-size: var(--type-label); line-height: var(--line-label); color: var(--color-state-warning); white-space: nowrap; }
-.pr-tlf__r .pm-icon { width: 12px; height: 12px; }
+.pr-tlf__r svg { flex: none; width: 12px; height: 12px; margin: 0; }  /* drop the status icon's text-line offset so it centres in the badge */
 /* Four goals: two by two from a 480px stage */
 .pr-tlg { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-3); grid-template-columns: minmax(0, 1fr); }
 @container pr-tlv (min-width: 480px) { .pr-tlg { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-.pr-tlg .pm-card { padding: var(--space-4); cursor: default; }
+.pr-tlg .pm-card.pm-card--outlined, .pr-tlg .pm-card.pm-card--outlined:hover { padding: var(--space-4); gap: var(--space-2); cursor: default; }  /* outranks the shared .pr-card hover padding, so nothing moves */
 .pr-tlg .pm-card--outlined, .pr-tlg .pm-card--outlined:hover, .pr-tlsc__note.pm-card--outlined, .pr-tlsc__note.pm-card--outlined:hover { box-shadow: inset 0 0 0 1px var(--color-border-subtle), var(--shadow-xs); }  /* static: no hover */
 .pr-tlg .pm-card__title, .pr-tlg .pm-card__summary { padding-inline: 0; }
 /* Sketches side by side, then the assumed / found panels from the Detailed view */
@@ -815,7 +823,7 @@ PT_CSS = """
 .pr-tlsc li { display: grid; gap: var(--space-4); grid-template-columns: minmax(0, 1fr); align-items: center; }
 @container pr-tlv (min-width: 640px) { .pr-tlsc li { grid-template-columns: minmax(0, 3fr) minmax(0, 2fr); gap: var(--space-6); } }
 .pr-tlsc__img { min-width: 0; }
-.pr-tlsc__note.pm-card--outlined { flex-direction: row; padding: var(--space-4); cursor: default; }
+.pr-tlsc__note.pm-card.pm-card--outlined, .pr-tlsc__note.pm-card.pm-card--outlined:hover { flex-direction: row; padding: var(--space-4); gap: var(--space-2); cursor: default; }
 .pr-tlsc__note .pm-card__title, .pr-tlsc__note .pm-card__summary { padding-inline: 0; }
 .pr-tlsc__note .pm-card__title { font-size: var(--type-body-sm); line-height: var(--line-body-sm); }
 .pr-tl__q { margin: 0; }
