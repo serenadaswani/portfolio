@@ -343,7 +343,7 @@ def _tl_block(key, label, title, text, visual, href, link, wide=False):
 def tldr_story():
     risk = lambda i: 'Delay risk' if i == len(FLOW) - 1 else 'Error risk'
     flow_c = ('<ol class="pr-tlf" aria-label="The paper process, step by step">' + ''.join(
-        f'<li><span class="pr-tlf__n" aria-hidden="true">{i + 1}</span><p class="pr-tlf__t">{t}</p><p class="pr-tlf__who">{who}</p>'
+        f'<li><span class="pr-tlf__n" aria-hidden="true">{i + 1}</span><p class="pr-tlf__who">{"Operator" if who.startswith("Operator") else who}</p><p class="pr-tlf__t">{t}</p>'
         f'<p class="pr-tlf__r">{S["warning"]}{risk(i)}</p></li>' for i, (t, who, d, r) in enumerate(FLOW)) + '</ol>')
     goals = ('<ul class="pr-tlg">' + ''.join(
         f'<li class="pm-card pm-card--outlined pr-card"><h4 class="pm-card__title">{g}</h4><p class="pm-card__summary">{it}</p></li>'
@@ -351,29 +351,34 @@ def tldr_story():
     sketches = ('<div class="pr-tls__sk">'
                 '<img src="assets/sketch-qc-report.webp" width="1400" height="1535" loading="lazy" alt="Hand-drawn sketch of the quality report’s test section, reorganized into sections with pass values as ranges.">'
                 '<img src="assets/sketch-sop-form.webp" width="1400" height="2255" loading="lazy" alt="Hand-drawn sketch of the manufacturing form, with operators picked from a list and a procedure table.">'
-                '</div><p class="pr-tls__pivot"><span><b>Assumed</b> Desktops and laptops</span>' + _l('arrow-right') + '<span><b>Found</b> Tablets on the floor</span></p>')
-    screens = ('<ul class="pr-tlsc">' + ''.join(
-        f'<li>{TS.render(sid, frame=True, scroll=False)}<p class="pr-tlsc__c">{cap}</p></li>'
-        for sid, cap in [('landscape-forms-dashboard', 'Every batch starts from the forms dashboard.'),
-                         ('landscape-sop-step', 'One instruction at a time, with the full procedure a tap away.'),
-                         ('landscape-qc-tests', 'Quality tests, with the date and time filled in.')]) + '</ul>')
+                '</div><div class="cs-pair pr-tls__pair">'
+                + panel('What we assumed', '<p>Operators would use desktops or laptops, like the rest of the platform.</p>', ' pm-panel--tonal', 'tl-assumed')
+                + panel('What we found', '<p>Operators carry tablets as they work through each step on the floor.</p>', '', 'tl-found')
+                + '</div>')
+    shots = [('landscape-forms-dashboard', 'Forms dashboard', 'Every batch starts here, grouped by stage with live counts.'),
+             ('landscape-sop-step', 'SOP step', 'One instruction at a time, with the full procedure a tap away.'),
+             ('landscape-qc-tests', 'QC tests', 'Quality tests last, with the date and time filled in for you.')]
+    screens = ('<ol class="pr-tlsc">' + ''.join(
+        f'<li><div class="pr-tlsc__img">{TS.render(sid, frame=True, scroll=False)}</div>'
+        f'<div class="pm-card pm-card--outlined pr-card pr-note-card pr-tlsc__note"><div><h4 class="pm-card__title">{t}</h4><p class="pm-card__summary">{d}</p></div></div></li>'
+        for sid, t, d in shots) + '</ol>')
     impact = (f'<figure class="cs-quote pr-quote pr-tl__q"><blockquote><p>“We’re saving time and gaining confidence.”</p></blockquote>'
               f'<figcaption>Leticia Rodriguez, Lead Operator at Dr. Squatch, in <a class="pm-link" href="{SOURCE_URL}" target="_blank" rel="noopener" aria-label="Procense’s Dr. Squatch case study (opens in a new tab)">Procense’s case study{I["ext"]}</a></figcaption></figure>')
     return ('<div class="pr-tls">'
             + _tl_block('problem', 'The problem', 'Every batch ran on paper.',
                         'Operators recorded each batch by hand across two forms, then reviewers checked every entry. Five of the six steps were a chance for error.',
                         flow_c, '#problem', 'See the paper process')
-            + _tl_block('goals', 'Research', 'Four insights became four goals.',
+            + _tl_block('goals', 'Design goals', 'Four insights became four goals.',
                         'Taking the forms apart and talking to someone who had filled them in showed where paper slowed people down.',
                         goals, '#goals', 'See the insights')
-            + _tl_block('ideas', 'Exploration', 'Sketches first, then a pivot to tablets.',
+            + _tl_block('ideas', 'Ideation', 'Sketches first, then a pivot to tablets.',
                         'I sketched how crowded tables could become simple steps. When we learned operators carry tablets, I designed tablet-first.',
                         sketches, '#ideation', 'See the sketches')
             + _tl_block('solution', 'The solution', 'One guided tablet flow.',
                         'A forms dashboard leads into four steps: batch information, special precautions, the manufacturing steps and quality tests, with dates, times and batch details filled in.',
-                        screens, '#solution', 'See every screen', wide=True)
-            + _tl_block('impact', 'Impact', 'Faster batches, records you can trust.',
-                        'At Dr. Squatch, batches run 10% faster, about 30 minutes saved per batch, and every value carries who entered it and when.',
+                        screens, '#solution', 'See every screen')
+            + _tl_block('impact', 'Impact', 'A customer runs batches 10% faster.',
+                        'Procense reports that Dr. Squatch, a personal care manufacturer using the Digital Forms application, saves about 30 minutes per batch, with every value traceable.',
                         impact, '#reflection', 'Read the reflection')
             + '<p class="pr-tls__cta"><a class="pm-btn pm-btn--secondary" href="#overview">Read the full case study</a></p>'
             '</div>')
@@ -382,7 +387,7 @@ TLDR = f'''      <dl class="cs-tldr__rows">
         <div class="cs-tldr__row"><dt>Background</dt><dd>Process plants, from chemicals to personal care, record every batch on paper forms that reviewers then check by hand.</dd></div>
         <div class="cs-tldr__row"><dt>Problem</dt><dd>Paper slowed decisions on the floor, and crowded, repetitive forms made mistakes easy.</dd></div>
         <div class="cs-tldr__row"><dt>Approach</dt><dd>I studied the forms and how they’re used, then designed the Digital Forms application for the tablets they carry.</dd></div>
-        <div class="cs-tldr__row"><dt>Outcome</dt><dd>Two paper forms became one tablet flow, so plants move faster and teams can focus on the work on the floor.</dd></div>
+        <div class="cs-tldr__row"><dt>Outcome</dt><dd>Two paper forms became one guided tablet flow. At Dr. Squatch, a Procense customer, batches now run 10% faster.</dd></div>
       </dl>
       {stats([('10%', 'Faster batch execution'), ('100%', 'Automated traceability'), ('100%', 'Data accuracy')], ' pm-stats--sm cs-tldr__stats')}
       {source(" pr-source--tldr")}'''
@@ -788,28 +793,31 @@ PT_CSS = """
 .pr-tlf { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-5) var(--space-4); grid-template-columns: repeat(2, minmax(0, 1fr)); }
 @container pr-tlv (min-width: 420px) { .pr-tlf { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
 @container pr-tlv (min-width: 640px) { .pr-tlf { grid-template-columns: repeat(6, minmax(0, 1fr)); } }
-.pr-tlf li { display: grid; gap: var(--space-1); align-content: start; }
+.pr-tlf li { display: grid; grid-template-rows: auto auto auto 1fr; gap: var(--space-1); align-content: start; }
 .pr-tlf__n { display: grid; place-items: center; width: 28px; height: 28px; margin-bottom: var(--space-2); border-radius: 50%; background: var(--color-bg-elevated); box-shadow: inset 0 0 0 1px var(--color-border-default); font-family: var(--font-meta); font-size: var(--type-label); font-variant-numeric: tabular-nums; color: var(--color-text-primary); }
-.pr-tlf__t { margin: 0; font-size: var(--type-body-sm); line-height: var(--line-body-sm); font-weight: var(--weight-medium); color: var(--color-text-primary); }
-.pr-tlf__who { margin: 0; font-family: var(--font-meta); font-size: var(--type-label); line-height: var(--line-label); color: var(--color-text-tertiary); }
-.pr-tlf__r { display: inline-flex; align-items: center; gap: var(--space-1); justify-self: start; margin: var(--space-2) 0 0; padding: 2px var(--space-2); border-radius: var(--radius-sm); background: var(--color-state-warning-bg); box-shadow: inset 0 0 0 1px var(--color-state-warning); font-size: var(--type-label); line-height: var(--line-label); color: var(--color-state-warning); white-space: nowrap; }
+.pr-tlf__t { margin: 0; min-height: calc(2 * var(--line-body-sm) * var(--type-body-sm)); font-size: var(--type-body-sm); line-height: var(--line-body-sm); font-weight: var(--weight-medium); color: var(--color-text-primary); }  /* two lines for every title, so the risk badges line up */
+.pr-tlf__who { margin: 0; white-space: nowrap; font-family: var(--font-meta); font-size: var(--type-label); line-height: var(--line-label); color: var(--color-text-tertiary); }
+.pr-tlf__r { display: inline-flex; align-items: center; gap: var(--space-1); justify-self: start; align-self: start; margin: var(--space-2) 0 0; padding: 2px var(--space-2); border-radius: var(--radius-sm); background: var(--color-state-warning-bg); box-shadow: inset 0 0 0 1px var(--color-state-warning); font-size: var(--type-label); line-height: var(--line-label); color: var(--color-state-warning); white-space: nowrap; }
 .pr-tlf__r .pm-icon { width: 12px; height: 12px; }
 /* Four goals: two by two from a 480px stage */
 .pr-tlg { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-3); grid-template-columns: minmax(0, 1fr); }
 @container pr-tlv (min-width: 480px) { .pr-tlg { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-.pr-tlg .pm-card { padding: var(--space-4); }
+.pr-tlg .pm-card { padding: var(--space-4); cursor: default; }
+.pr-tlg .pm-card--outlined, .pr-tlg .pm-card--outlined:hover, .pr-tlsc__note.pm-card--outlined, .pr-tlsc__note.pm-card--outlined:hover { box-shadow: inset 0 0 0 1px var(--color-border-subtle), var(--shadow-xs); }  /* static: no hover */
 .pr-tlg .pm-card__title, .pr-tlg .pm-card__summary { padding-inline: 0; }
-/* Sketches side by side, then the pivot */
+/* Sketches side by side, then the assumed / found panels from the Detailed view */
 .pr-tls__sk { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-4); align-items: start; }
 .pr-tls__sk img { display: block; width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: cover; object-position: top; border-radius: var(--radius-sm); }  /* tops of the sketches, as previews */
-.pr-tls__pivot { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-3); margin: var(--space-5) 0 0; font-size: var(--type-body-sm); line-height: var(--line-body-sm); color: var(--color-text-primary); }
-.pr-tls__pivot b { display: block; font-family: var(--font-meta); font-size: var(--type-label); font-weight: 400; color: var(--color-text-tertiary); }
-.pr-tls__pivot .pm-icon { width: 16px; height: 16px; color: var(--color-text-tertiary); }
-/* Three final screens, static: across from a 640px stage */
-.pr-tlsc { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-5); grid-template-columns: minmax(0, 1fr); }
-@container pr-tlv (min-width: 640px) { .pr-tlsc { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-4); } }
-.pr-tlsc li { display: grid; gap: var(--space-3); align-content: start; min-width: 0; }
-.pr-tlsc__c { margin: 0; font-size: var(--type-body-sm); line-height: var(--line-body-sm); color: var(--color-text-secondary); }
+.pr-tls__pair { margin-top: var(--space-4); }
+@container pr-tlv (min-width: 520px) { .pr-tls__pair { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+/* Final screens, one per row: the screen on the left, its note card on the right (stacked below a 640px stage) */
+.pr-tlsc { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-6); }
+.pr-tlsc li { display: grid; gap: var(--space-4); grid-template-columns: minmax(0, 1fr); align-items: center; }
+@container pr-tlv (min-width: 640px) { .pr-tlsc li { grid-template-columns: minmax(0, 3fr) minmax(0, 2fr); gap: var(--space-6); } }
+.pr-tlsc__img { min-width: 0; }
+.pr-tlsc__note.pm-card--outlined { flex-direction: row; padding: var(--space-4); cursor: default; }
+.pr-tlsc__note .pm-card__title, .pr-tlsc__note .pm-card__summary { padding-inline: 0; }
+.pr-tlsc__note .pm-card__title { font-size: var(--type-body-sm); line-height: var(--line-body-sm); }
 .pr-tl__q { margin: 0; }
 .pr-tls__cta { margin: 0; }
 
