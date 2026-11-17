@@ -42,7 +42,7 @@
     "landscape-qc-tests": {
       "label": "QC tests",
       "scroll": true, "box": "default",
-      "alt": "QC tests screen on a landscape tablet: an Add sample button, fields for actual yield, date and time finished with calendar and clock pickers, made by and packaged by, comments, a table of quality tests with a result field for each, and approve, reject and review sign-offs; Submit for review at the bottom."
+      "alt": "QC tests screen on a landscape tablet: an Add sample button, fields for actual yield, date and time finished (filled in automatically from line tracking), made by and packaged by, comments, a table of quality tests with a result field for each, and approve, reject and review sign-offs; Submit for review at the bottom."
     },
     "landscape-all-steps-drawer": {
       "label": "All steps",
@@ -76,7 +76,7 @@
     "portrait-qc-tests": {
       "label": "QC tests",
       "scroll": true, "box": "default",
-      "alt": "QC tests screen on a portrait tablet: yield, date and time fields reflow to fit the narrower screen, followed by the test table and sign-offs, with Submit for review at the bottom."
+      "alt": "QC tests screen on a portrait tablet: yield and the auto-filled date and time fields reflow to fit the narrower screen, followed by the test table and sign-offs, with Submit for review at the bottom."
     },
     "portrait-all-steps-drawer": {
       "label": "All steps",
