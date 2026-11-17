@@ -254,9 +254,9 @@ def screen_rows(start):
                         f'<div><h4 class="pm-card__title">{t}</h4><p class="pm-card__summary" id="{slug}-ann-{i}">{d}</p></div></li>' for i, (x, y, t, d) in enumerate(notes))
         out += (f'<figure class="pm-frame pr-sfig" data-ann-fig><div class="pm-frame__stage pr-zoom" data-lb-item data-lb-caption="Fig. {n:02d}. {cap}">'
                 f'<p class="pr-slabel">{label}</p>'
+                f'<ol class="pr-notes" aria-label="Design patterns in the {label} screen">{cards}</ol>'
                 f'<div class="pr-device"><div class="pr-device__screen"><img src="assets/{f}" width="{w}" height="{h}" loading="lazy" alt="{alt}">'
                 f'<div class="pr-mks">{pins}</div></div></div>'
-                f'<ol class="pr-notes" aria-label="Design patterns in the {label} screen">{cards}</ol>'
                 + expand(f'Fig. {n:02d}, {label}') + '</div>'
                 f'<figcaption class="pm-frame__caption"><span class="pm-frame__index">Fig. {n:02d}</span><span>{cap}</span></figcaption></figure>')
     return out
@@ -492,7 +492,7 @@ CSS = r"""
 .pr-mk--btn:focus-visible, .pr-mk--btn.is-hover { transform: translate(-50%, -50%) scale(1.17); box-shadow: 0 0 0 2px var(--paper), 0 2px 6px rgb(11 18 32 / 30%); }
 @media (hover: hover) { .pr-mk--btn:hover { transform: translate(-50%, -50%) scale(1.17); box-shadow: 0 0 0 2px var(--paper), 0 2px 6px rgb(11 18 32 / 30%); } }
 .pr-mk--btn:focus-visible { outline: var(--focus-ring-width) solid var(--color-focus-ring); outline-offset: 3px; }
-.pr-notes { list-style: none; margin: var(--space-5) 0 0; padding: 0; display: grid; gap: var(--space-3); grid-template-columns: minmax(0, 1fr); }
+.pr-notes { list-style: none; margin: 0 0 var(--space-5); padding: 0; display: grid; gap: var(--space-3); grid-template-columns: minmax(0, 1fr); }
 @container pr-sfig (min-width: 720px) { .pr-notes { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
 .pr-note-card.pm-card--outlined, .pr-note-card.pm-card--outlined:hover { flex-direction: row; align-items: flex-start; gap: var(--space-3); padding: var(--space-4); cursor: default;
   box-shadow: inset 0 0 0 1px var(--color-border-subtle), var(--shadow-xs); }
