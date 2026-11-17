@@ -321,7 +321,8 @@ HERO_WELL = f'''  <div class="pm-media pm-media--21x9 cs-hero-well" role="img" a
 
 def render(p):
     """Write one case study. p: page_title, header (badges, title, facts), tldr (rows + stats), sections [(id, label)], body, out;
-    optional hero (markup replacing the empty hero well) and head_extra (extra <head> tags, e.g. a font)."""
+    optional hero (markup replacing the empty hero well), head_extra (extra <head> tags, e.g. a font) and tldr_after
+    (content after the TL;DR panel, inside the TL;DR view)."""
     cur = ' aria-current="location"'
     toc = ''.join(f'<li><a class="pm-toc__item" href="#{sid}"{cur if i == 0 else ""} data-spy>{label}</a></li>' for i, (sid, label) in enumerate(p['sections']))
     page = f'''<title>{p["page_title"]}</title>
@@ -365,6 +366,7 @@ def render(p):
 {p["tldr"]}
     </div>
   </section>
+{p.get("tldr_after", "")}
   </div>
 
   <div role="tabpanel" class="pm-tabs__panel cs-view" id="view-detailed" aria-labelledby="tab-detailed" tabindex="0" hidden>

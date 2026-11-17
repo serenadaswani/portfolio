@@ -332,6 +332,52 @@ HEADER = f'''  <header class="cs-head">
     <div><dt>Skills</dt><dd>User research</dd><dd>Product design</dd><dd>Prototyping</dd></div>
   </dl></section>'''
 
+
+# ---------- TL;DR view: the story in five quick blocks, each linking to its Detailed section ----------
+def _tl_block(key, label, title, text, visual, href, link, wide=False):
+    return (f'<section class="pr-tl{" pr-tl--wide" if wide else ""}" aria-labelledby="tl-{key}"><div class="pr-tl__txt">'
+            f'<p class="pr-tl__k">{label}</p><h3 class="pr-tl__h" id="tl-{key}">{title}</h3><p class="pr-tl__p">{text}</p>'
+            f'<a class="pm-link pr-tl__more" href="{href}">{link}{I["arrow"]}</a></div>'
+            f'<div class="pr-tl__vis">{visual}</div></section>')
+
+def tldr_story():
+    risk = lambda i: 'Delay risk' if i == len(FLOW) - 1 else 'Error risk'
+    flow_c = ('<ol class="pr-tlf" aria-label="The paper process, step by step">' + ''.join(
+        f'<li><span class="pr-tlf__n" aria-hidden="true">{i + 1}</span><p class="pr-tlf__t">{t}</p><p class="pr-tlf__who">{who}</p>'
+        f'<p class="pr-tlf__r">{S["warning"]}{risk(i)}</p></li>' for i, (t, who, d, r) in enumerate(FLOW)) + '</ol>')
+    goals = ('<ul class="pr-tlg">' + ''.join(
+        f'<li class="pm-card pm-card--outlined pr-card"><h4 class="pm-card__title">{g}</h4><p class="pm-card__summary">{it}</p></li>'
+        for it, i_text, g, g_text in INSIGHT_GOALS) + '</ul>')
+    sketches = ('<div class="pr-tls__sk">'
+                '<img src="assets/sketch-qc-report.webp" width="1400" height="1535" loading="lazy" alt="Hand-drawn sketch of the quality report’s test section, reorganized into sections with pass values as ranges.">'
+                '<img src="assets/sketch-sop-form.webp" width="1400" height="2255" loading="lazy" alt="Hand-drawn sketch of the manufacturing form, with operators picked from a list and a procedure table.">'
+                '</div><p class="pr-tls__pivot"><span><b>Assumed</b> Desktops and laptops</span>' + _l('arrow-right') + '<span><b>Found</b> Tablets on the floor</span></p>')
+    screens = ('<ul class="pr-tlsc">' + ''.join(
+        f'<li>{TS.render(sid, frame=True, scroll=False)}<p class="pr-tlsc__c">{cap}</p></li>'
+        for sid, cap in [('landscape-forms-dashboard', 'Every batch starts from the forms dashboard.'),
+                         ('landscape-sop-step', 'One instruction at a time, with the full procedure a tap away.'),
+                         ('landscape-qc-tests', 'Quality tests, with the date and time filled in.')]) + '</ul>')
+    impact = (f'<figure class="cs-quote pr-quote pr-tl__q"><blockquote><p>“We’re saving time and gaining confidence.”</p></blockquote>'
+              f'<figcaption>Leticia Rodriguez, Lead Operator at Dr. Squatch, in <a class="pm-link" href="{SOURCE_URL}" target="_blank" rel="noopener" aria-label="Procense’s Dr. Squatch case study (opens in a new tab)">Procense’s case study{I["ext"]}</a></figcaption></figure>')
+    return ('<div class="pr-tls">'
+            + _tl_block('problem', 'The problem', 'Every batch ran on paper.',
+                        'Operators recorded each batch by hand across two forms, then reviewers checked every entry. Five of the six steps were a chance for error.',
+                        flow_c, '#problem', 'See the paper process')
+            + _tl_block('goals', 'Research', 'Four insights became four goals.',
+                        'Taking the forms apart and talking to someone who had filled them in showed where paper slowed people down.',
+                        goals, '#goals', 'See the insights')
+            + _tl_block('ideas', 'Exploration', 'Sketches first, then a pivot to tablets.',
+                        'I sketched how crowded tables could become simple steps. When we learned operators carry tablets, I designed tablet-first.',
+                        sketches, '#ideation', 'See the sketches')
+            + _tl_block('solution', 'The solution', 'One guided tablet flow.',
+                        'A forms dashboard leads into four steps: batch information, special precautions, the manufacturing steps and quality tests, with dates, times and batch details filled in.',
+                        screens, '#solution', 'See every screen', wide=True)
+            + _tl_block('impact', 'Impact', 'Faster batches, records you can trust.',
+                        'At Dr. Squatch, batches run 10% faster, about 30 minutes saved per batch, and every value carries who entered it and when.',
+                        impact, '#reflection', 'Read the reflection')
+            + '<p class="pr-tls__cta"><a class="pm-btn pm-btn--secondary" href="#overview">Read the full case study</a></p>'
+            '</div>')
+
 TLDR = f'''      <dl class="cs-tldr__rows">
         <div class="cs-tldr__row"><dt>Background</dt><dd>Process plants, from chemicals to personal care, record every batch on paper forms that reviewers then check by hand.</dd></div>
         <div class="cs-tldr__row"><dt>Problem</dt><dd>Paper slowed decisions on the floor, and crowded, repetitive forms made mistakes easy.</dd></div>
@@ -723,6 +769,50 @@ CSS = r"""
 """
 
 PT_CSS = """
+/* ===== TL;DR view: five quick blocks (text left, visual right from a 900px column; stacked below) ===== */
+.pr-tls { container: pr-tls / inline-size; display: grid; gap: var(--space-16); margin-top: var(--space-16); }
+.pr-tl { display: grid; gap: var(--space-6); grid-template-columns: minmax(0, 1fr); }
+@container pr-tls (min-width: 900px) { .pr-tl { grid-template-columns: 17rem minmax(0, 1fr); column-gap: var(--space-12); align-items: start; }
+  .pr-tl--wide { grid-template-columns: minmax(0, 1fr); }
+  .pr-tl--wide .pr-tl__txt { grid-template-columns: 17rem minmax(0, 36rem); column-gap: var(--space-12); }
+  .pr-tl--wide .pr-tl__k, .pr-tl--wide .pr-tl__h { grid-column: 1; } .pr-tl--wide .pr-tl__p, .pr-tl--wide .pr-tl__more { grid-column: 2; }
+  .pr-tl--wide .pr-tl__p { grid-row: 1 / span 2; align-self: end; } }
+.pr-tl__txt { display: grid; gap: var(--space-3); align-content: start; }
+.pr-tl__k { margin: 0; font-family: var(--font-meta); font-size: var(--type-label); line-height: var(--line-label); color: var(--color-text-tertiary); }
+.pr-tl__h { margin: 0; font-size: var(--type-h3); line-height: var(--line-h3); font-weight: var(--weight-medium); letter-spacing: var(--tracking-h3); color: var(--color-text-primary); text-wrap: balance; }
+.pr-tl__p { margin: 0; font-size: var(--type-body-md); line-height: var(--line-body-md); color: var(--color-text-secondary); text-wrap: pretty; }
+.pr-tl__more { justify-self: start; display: inline-flex; align-items: center; gap: var(--space-1); margin-top: var(--space-1); }
+.pr-tl__more .pm-icon { width: 16px; height: 16px; }
+.pr-tl__vis { container: pr-tlv / inline-size; min-width: 0; padding: var(--space-6); border-radius: var(--radius-lg); background: var(--color-bg-surface); }
+/* The paper process, compact: six steps across from a 640px stage, three or two across below */
+.pr-tlf { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-5) var(--space-4); grid-template-columns: repeat(2, minmax(0, 1fr)); }
+@container pr-tlv (min-width: 420px) { .pr-tlf { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+@container pr-tlv (min-width: 640px) { .pr-tlf { grid-template-columns: repeat(6, minmax(0, 1fr)); } }
+.pr-tlf li { display: grid; gap: var(--space-1); align-content: start; }
+.pr-tlf__n { display: grid; place-items: center; width: 28px; height: 28px; margin-bottom: var(--space-2); border-radius: 50%; background: var(--color-bg-elevated); box-shadow: inset 0 0 0 1px var(--color-border-default); font-family: var(--font-meta); font-size: var(--type-label); font-variant-numeric: tabular-nums; color: var(--color-text-primary); }
+.pr-tlf__t { margin: 0; font-size: var(--type-body-sm); line-height: var(--line-body-sm); font-weight: var(--weight-medium); color: var(--color-text-primary); }
+.pr-tlf__who { margin: 0; font-family: var(--font-meta); font-size: var(--type-label); line-height: var(--line-label); color: var(--color-text-tertiary); }
+.pr-tlf__r { display: inline-flex; align-items: center; gap: var(--space-1); justify-self: start; margin: var(--space-2) 0 0; padding: 2px var(--space-2); border-radius: var(--radius-sm); background: var(--color-state-warning-bg); box-shadow: inset 0 0 0 1px var(--color-state-warning); font-size: var(--type-label); line-height: var(--line-label); color: var(--color-state-warning); white-space: nowrap; }
+.pr-tlf__r .pm-icon { width: 12px; height: 12px; }
+/* Four goals: two by two from a 480px stage */
+.pr-tlg { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-3); grid-template-columns: minmax(0, 1fr); }
+@container pr-tlv (min-width: 480px) { .pr-tlg { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.pr-tlg .pm-card { padding: var(--space-4); }
+.pr-tlg .pm-card__title, .pr-tlg .pm-card__summary { padding-inline: 0; }
+/* Sketches side by side, then the pivot */
+.pr-tls__sk { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-4); align-items: start; }
+.pr-tls__sk img { display: block; width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: cover; object-position: top; border-radius: var(--radius-sm); }  /* tops of the sketches, as previews */
+.pr-tls__pivot { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-3); margin: var(--space-5) 0 0; font-size: var(--type-body-sm); line-height: var(--line-body-sm); color: var(--color-text-primary); }
+.pr-tls__pivot b { display: block; font-family: var(--font-meta); font-size: var(--type-label); font-weight: 400; color: var(--color-text-tertiary); }
+.pr-tls__pivot .pm-icon { width: 16px; height: 16px; color: var(--color-text-tertiary); }
+/* Three final screens, static: across from a 640px stage */
+.pr-tlsc { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-5); grid-template-columns: minmax(0, 1fr); }
+@container pr-tlv (min-width: 640px) { .pr-tlsc { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-4); } }
+.pr-tlsc li { display: grid; gap: var(--space-3); align-content: start; min-width: 0; }
+.pr-tlsc__c { margin: 0; font-size: var(--type-body-sm); line-height: var(--line-body-sm); color: var(--color-text-secondary); }
+.pr-tl__q { margin: 0; }
+.pr-tls__cta { margin: 0; }
+
 /* Portrait screens: two by two from a 600px stage, stacked below; each cell opens in the lightbox */
 .pr-pts { container-type: inline-size; width: 100%; display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-6); }
 @container (min-width: 600px) { .pr-pts { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-6) var(--space-5); } }
@@ -736,7 +826,7 @@ PT_CSS = """
 
 PROCENSE = dict(page_title='Procense Case Study', out='procense/index.html', sections=SECTIONS, body=BODY, header=HEADER, tldr=TLDR,
                 css=TS.CSS + CSS + BA_CSS + PT_CSS + PH.CSS, js=TS.JS + JS + BA_JS + PH.JS,
-                hero=PH.html(), head_extra=PH.HEAD)
+                hero=PH.html(), head_extra=PH.HEAD, tldr_after=tldr_story())
 
 if __name__ == '__main__':
     print(len(C.render(PROCENSE)))

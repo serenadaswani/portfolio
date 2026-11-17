@@ -76,9 +76,11 @@ def screen(sid):
     return s
 
 
-def render(sid, frame=False, pins=(), lazy=True):
-    """The screen's markup. frame=True wraps it in a tablet bezel (off by default)."""
+def render(sid, frame=False, pins=(), lazy=True, scroll=True):
+    """The screen's markup. frame=True wraps it in a tablet bezel (off by default); scroll=False shows the base image only."""
     s = screen(sid)
+    if not scroll:
+        s['scroll'] = None
     nw, nh = s['native']
     load = ' loading="lazy"' if lazy else ''
     bw, bh = s['base_px']
