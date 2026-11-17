@@ -130,7 +130,7 @@ _CSS = r"""
 .ph-m--table th { background: #EFEDE4; font-weight: 600; font-size: .75u; }
 /* Paper-only parts (header line, footer), in content-box coordinates */
 .ph-po { position: absolute; margin: 0; font-size: .9u; color: #4A473F; opacity: 0; }
-.ph-meta { left: -3%; right: -3%; top: 4.5%; display: flex; justify-content: space-between; align-items: baseline; }
+.ph-meta { left: -3%; right: 5.4%; top: 4.5%;  /* 5% paper margins on both sides of the sheet (content-box coordinates) */  display: flex; justify-content: space-between; align-items: baseline; }
 .ph-meta .ph-hw { font-size: 1.9u; margin-left: .4u; }
 .ph-foot { left: -3%; top: 107%; }
 .ph-hw { display: inline-block; font-family: Caveat, "Bradley Hand", cursive; font-weight: 600; line-height: 1; color: #22356F; white-space: nowrap; }
