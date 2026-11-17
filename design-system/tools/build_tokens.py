@@ -32,7 +32,7 @@ def cssname_sem(grp,key):
   name={('action','selectedBackground'):'action-selected-bg',('action','selectedText'):'action-selected-text',('action','selectedIndicator'):'selected-indicator',
         ('focus','ring'):'focus-ring',('state','successBackground'):'state-success-bg',('state','warningBackground'):'state-warning-bg',
         ('state','errorBackground'):'state-error-bg',('state','infoBackground'):'state-info-bg',('disabled','background'):'disabled-bg',
-        ('text','onAccent'):'text-on-accent',('text','onImage'):'text-on-image'}.get((grp,key))
+        ('text','onAccent'):'text-on-accent',('annotation','fill'):'annotation',('annotation','text'):'text-on-annotation',('text','onImage'):'text-on-image'}.get((grp,key))
   return 'color-'+(name or f'{g}-{k}')
 primcss={k:kebab(k) for k in prim}
 for k in list(primcss):

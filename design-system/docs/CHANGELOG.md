@@ -1,5 +1,10 @@
 # Changes applied
 
+## v1.10 annotation coral
+- New role for marking up mockups and screenshots in case studies: `color-annotation` (`--coral`, #F26B4A, both themes) with `color-text-on-annotation` (ink). A warm coral, chosen to stand apart from blue-and-black product UI without reading as an error or warning. Only for annotations (numbered badges, the stroke that links a note to its badge); never for UI, actions or status, so cobalt stays the one accent.
+- Contrast: ink number on coral 6.2:1; coral on white 3.0:1, on dark surfaces about 5:1.
+- New tokens: `coral` (primitive), `color-annotation`, `color-text-on-annotation`. First used on the Procense solution figures.
+
 ## v1.9.1 tag spacing
 - Badge rows (Card `pm-card__meta`, the case-study header) wrap with a `space-2` (8px) gap instead of `space-1`, matching the rule that atoms in a molecule keep at least `space-2` apart. No token changes.
 

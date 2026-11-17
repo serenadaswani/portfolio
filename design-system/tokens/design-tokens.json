@@ -186,6 +186,11 @@
       "infoDarkBg": {
         "$type": "color",
         "$value": "#23365B"
+      },
+      "coral": {
+        "$type": "color",
+        "$value": "#F26B4A",
+        "$description": "Annotation coral. Only for marking up mockups and screenshots in case studies; never for UI, actions or status."
       }
     },
     "semantic": {
@@ -371,6 +376,16 @@
             "$type": "color",
             "$value": "rgba(17, 24, 39, 0.08)"
           }
+        },
+        "annotation": {
+          "fill": {
+            "$type": "color",
+            "$value": "{color.primitive.coral}"
+          },
+          "text": {
+            "$type": "color",
+            "$value": "{color.primitive.ink}"
+          }
         }
       },
       "dark": {
@@ -554,6 +569,16 @@
           "border": {
             "$type": "color",
             "$value": "rgba(255, 255, 255, 0.10)"
+          }
+        },
+        "annotation": {
+          "fill": {
+            "$type": "color",
+            "$value": "{color.primitive.coral}"
+          },
+          "text": {
+            "$type": "color",
+            "$value": "{color.primitive.ink}"
           }
         }
       }

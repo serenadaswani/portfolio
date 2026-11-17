@@ -365,7 +365,7 @@ TLDR = f'''      <dl class="cs-tldr__rows">
       {stats([('10%', 'Faster batch execution'), ('100%', 'Automated traceability'), ('100%', 'Data accuracy')], ' pm-stats--sm cs-tldr__stats')}'''
 
 JS = r"""
-  // Final-screen annotations: hovering or focusing a badge lifts its card; hovering a card shows its badge's hover state
+  // Final-screen annotations: hovering or focusing a badge lifts its card and gives it a coral stroke; hovering a card strokes it and shows its badge's hover state
   document.querySelectorAll('[data-ann-fig]').forEach(function (fig) {
     var btns = [].slice.call(fig.querySelectorAll('[data-ann]')), cards = [].slice.call(fig.querySelectorAll('[data-ann-card]'));
     btns.forEach(function (b, i) {
@@ -481,23 +481,23 @@ CSS = r"""
 .pr-device { padding: 1.6%; border-radius: var(--radius-lg); background: #1B2026; box-shadow: 0 2px 4px rgb(0 0 0 / 12%), 0 14px 32px rgb(0 0 0 / 14%); }
 .pr-device__screen { position: relative; overflow: hidden; border-radius: var(--radius-sm); }
 .pr-device__screen img { display: block; width: 100%; height: auto; }
-/* Annotation badges: solid cobalt with an on-accent number, the same as Fig. 1's step numbers, so they stand out on the screens.
-   On the screens they're pinned to the light-theme pair (the mockups are always light); in the cards they follow the theme.
-   Hover/focus: a little larger with a paper ring. */
+/* Annotation badges: the system's annotation coral with an ink number, so they stand apart from the screens' blue and black
+   without reading as an error. Same in both themes. On the screens a soft shadow lifts them off the UI.
+   Hover/focus (or hovering the badge's card): larger, with a paper ring. Its card gets a coral stroke. */
 .pr-mk { display: grid; place-items: center; width: 24px; height: 24px; padding: 0; border: 0; border-radius: 50%;
-  background: var(--color-action-primary); color: var(--color-text-on-accent);
+  background: var(--color-annotation); color: var(--color-text-on-annotation);
   font: var(--weight-medium) 12px / 1 var(--font-sans); font-variant-numeric: tabular-nums; }
-.pr-mk--btn { position: absolute; transform: translate(-50%, -50%); cursor: default; background: var(--cobalt-500); color: var(--white); }
+.pr-mk--btn { position: absolute; transform: translate(-50%, -50%); cursor: default; box-shadow: 0 1px 3px rgb(11 18 32 / 28%); }
 @media (pointer: coarse) { .pr-mk--btn::after { content: ""; position: absolute; inset: -10px; border-radius: 50%; } }
-.pr-mk--btn:focus-visible, .pr-mk--btn.is-hover { transform: translate(-50%, -50%) scale(1.17); box-shadow: 0 0 0 2px var(--paper), 0 2px 6px rgb(11 18 32 / 30%); }
-@media (hover: hover) { .pr-mk--btn:hover { transform: translate(-50%, -50%) scale(1.17); box-shadow: 0 0 0 2px var(--paper), 0 2px 6px rgb(11 18 32 / 30%); } }
+.pr-mk--btn:focus-visible, .pr-mk--btn.is-hover { transform: translate(-50%, -50%) scale(1.25); box-shadow: 0 0 0 2px var(--paper), 0 2px 6px rgb(11 18 32 / 30%); }
+@media (hover: hover) { .pr-mk--btn:hover { transform: translate(-50%, -50%) scale(1.25); box-shadow: 0 0 0 2px var(--paper), 0 2px 6px rgb(11 18 32 / 30%); } }
 .pr-mk--btn:focus-visible { outline: var(--focus-ring-width) solid var(--color-focus-ring); outline-offset: 3px; }
 .pr-notes { list-style: none; margin: 0 0 var(--space-5); padding: 0; display: grid; gap: var(--space-3); grid-template-columns: minmax(0, 1fr); }
 @container pr-sfig (min-width: 720px) { .pr-notes { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
 .pr-note-card.pm-card--outlined, .pr-note-card.pm-card--outlined:hover { flex-direction: row; align-items: flex-start; gap: var(--space-3); padding: var(--space-4); cursor: default;
   box-shadow: inset 0 0 0 1px var(--color-border-subtle), var(--shadow-xs); }
-@media (hover: hover) { .pr-note-card.pm-card--outlined:hover { box-shadow: inset 0 0 0 1px var(--color-border-default), var(--shadow-sm); } }
-.pr-note-card.pm-card--outlined.is-on, .pr-note-card.pm-card--outlined.is-on:hover { box-shadow: inset 0 0 0 1px var(--color-border-default), var(--shadow-md); }
+@media (hover: hover) { .pr-note-card.pm-card--outlined:hover { box-shadow: inset 0 0 0 2px var(--color-annotation), var(--shadow-sm); } }
+.pr-note-card.pm-card--outlined.is-on, .pr-note-card.pm-card--outlined.is-on:hover { box-shadow: inset 0 0 0 2px var(--color-annotation), var(--shadow-md); }
 .pr-note-card .pr-mk--key { flex: none; margin-top: 0; }
 .pr-note-card .pm-card__title, .pr-note-card .pm-card__summary { padding-inline: 0; }
 .pr-note-card .pm-card__title { font-size: var(--type-body-sm); line-height: var(--line-body-sm); }
