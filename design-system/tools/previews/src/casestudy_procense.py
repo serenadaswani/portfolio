@@ -434,7 +434,7 @@ CSS = r"""
 /* Annotation markers. Key badge (in the cards) and buttons (on the screen) share the look:
    default white with a cobalt number and ring · hover pale cobalt · selected solid cobalt with a white number */
 .pr-mk { display: grid; place-items: center; width: 24px; height: 24px; padding: 0; border: 0; border-radius: 50%;
-  background: var(--color-bg-elevated); color: var(--color-action-primary); box-shadow: inset 0 0 0 1.5px var(--color-action-primary), 0 1px 3px rgb(0 0 0 / 18%);
+  background: var(--color-bg-elevated); color: var(--color-action-primary); box-shadow: inset 0 0 0 1.5px var(--color-action-primary);
   font: var(--weight-medium) 12px / 1 var(--font-sans); font-variant-numeric: tabular-nums; }
 .pr-mk--btn { position: absolute; transform: translate(-50%, -50%); cursor: pointer; }
 @media (pointer: coarse) { .pr-mk--btn::after { content: ""; position: absolute; inset: -10px; border-radius: 50%; } }
@@ -448,14 +448,14 @@ CSS = r"""
 .pr-note-card.pm-card--outlined, .pr-note-card.pm-card--outlined:hover { flex-direction: row; align-items: flex-start; gap: var(--space-3); padding: var(--space-4); cursor: pointer;
   box-shadow: inset 0 0 0 1px var(--color-border-subtle), var(--shadow-xs); }
 @media (hover: hover) { .pr-note-card.pm-card--outlined:hover { box-shadow: inset 0 0 0 1px var(--color-border-default), var(--shadow-sm); } }
-.pr-note-card.pm-card--outlined.is-on { box-shadow: inset 0 0 0 1.5px var(--color-action-primary), var(--shadow-md); }
+.pr-note-card.pm-card--outlined.is-on, .pr-note-card.pm-card--outlined.is-on:hover { box-shadow: inset 0 0 0 1.5px var(--color-action-primary), var(--shadow-md); }
 .pr-note-card .pr-mk--key { flex: none; margin-top: 0; }
 .pr-note-card .pm-card__title, .pr-note-card .pm-card__summary { padding-inline: 0; }
 .pr-note-card .pm-card__title { font-size: var(--type-body-sm); line-height: var(--line-body-sm); }
 @media (prefers-reduced-motion: no-preference) {
   .pr-mk { transition: background-color .2s ease, color .2s ease, box-shadow .2s ease; }
   .pr-note-card { transition: transform .25s cubic-bezier(.22,1,.36,1), box-shadow .25s ease; }
-  .pr-note-card.is-on { transform: translateY(-4px) scale(1.02); }
+  .pr-note-card.is-on { transform: translateY(-8px) scale(1.03); }
 }
 
 /* Expand control (ImageFrame) in each well's top-right corner; the shared Lightbox shows images and mockups contained */
