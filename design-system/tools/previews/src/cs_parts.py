@@ -18,15 +18,15 @@ def hero(src, poster, label):
             f'</div></figure>')
 
 # ---------- Before/after slider ----------
-def before_after(before, before_alt, after, after_alt, before_note, after_note):
+def before_after(before, before_alt, after, after_alt, before_note, after_note, w=1440, h=1024):
     return ('<div class="cs-ba" data-ba>'
             '<div class="cs-ba__head">'
             f'<div class="cs-ba__side"><button type="button" class="pm-btn pm-btn--secondary pm-btn--sm" data-go="100" aria-pressed="false">{_l("arrow-left")}Before</button><p>{before_note}</p></div>'
             f'<div class="cs-ba__side cs-ba__side--r"><button type="button" class="pm-btn pm-btn--secondary pm-btn--sm" data-go="0" aria-pressed="false">After{_l("arrow-right")}</button><p>{after_note}</p></div>'
             '</div>'
-            '<div class="cs-ba__frame" style="--pos:50%">'
-            f'<img class="cs-ba__img" src="{after}" alt="{after_alt}" loading="lazy" width="1440" height="1024">'
-            f'<div class="cs-ba__before"><img class="cs-ba__img" src="{before}" alt="{before_alt}" loading="lazy" width="1440" height="1024"></div>'
+            f'<div class="cs-ba__frame" style="--pos:50%;--ar:{w} / {h}">'
+            f'<img class="cs-ba__img" src="{after}" alt="{after_alt}" loading="lazy" width="{w}" height="{h}">'
+            f'<div class="cs-ba__before"><img class="cs-ba__img" src="{before}" alt="{before_alt}" loading="lazy" width="{w}" height="{h}"></div>'
             f'<div class="cs-ba__line" aria-hidden="true"><span class="cs-ba__knob">{_l("chevrons-left-right")}</span></div>'
             '<input class="cs-ba__range" type="range" min="0" max="100" value="50" step="0.5" aria-label="Compare before and after: drag left to show more of the redesign">'
             '</div></div>')
@@ -173,7 +173,7 @@ PARTS_CSS = r"""
 .cs-ba__side--r { justify-items: end; text-align: right; }
 .cs-ba__side p { margin: 0; font-size: var(--type-body-sm); line-height: var(--line-body-sm); color: var(--color-text-secondary); text-wrap: pretty; }
 .cs-ba__side .pm-btn[aria-pressed="true"] { background: var(--color-action-selected-bg); color: var(--color-action-selected-text); }
-.cs-ba__frame { --pos: 50%; position: relative; overflow: hidden; aspect-ratio: 1440 / 1024; border-radius: var(--radius-lg); box-shadow: 0 0 0 1px var(--color-border-subtle), var(--shadow-sm); background: var(--color-bg-sunken); touch-action: pan-y; }
+.cs-ba__frame { --pos: 50%; position: relative; overflow: hidden; aspect-ratio: var(--ar, 1440 / 1024); border-radius: var(--radius-lg); box-shadow: 0 0 0 1px var(--color-border-subtle), var(--shadow-sm); background: var(--color-bg-sunken); touch-action: pan-y; }
 .cs-ba__img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: left top; user-select: none; -webkit-user-drag: none; }
 .cs-ba__before { position: absolute; inset: 0; clip-path: inset(0 calc(100% - var(--pos)) 0 0); }
 .cs-ba__line { position: absolute; top: 0; bottom: 0; left: var(--pos); width: 2px; margin-left: -1px; background: var(--color-bg-elevated); box-shadow: 0 0 0 1px var(--color-border-default); pointer-events: none; }

@@ -7,6 +7,14 @@ Run: python3 design-system/tools/previews/src/casestudy_procense.py  ->  prototy
 import casestudy as C
 from casestudy import I, S, section, lede, panel, points, stats
 from lib import _l
+import cs_parts
+from cs_parts import before_after
+
+def _between(text, start, end):
+    a = text.index(start); return text[a:text.index(end, a + len(start))]
+# The slider's CSS and JS come straight from the shared parts, so it stays the design-system version
+BA_CSS = _between(cs_parts.PARTS_CSS, '/* Before/after slider */', '/* Request timeline')
+BA_JS = _between(cs_parts.PARTS_JS, '  // Before/after slider', '  // Request timeline')
 
 # ---------- media: paper form (before) ----------
 PAIN = [  # from Serena's Framer case study
@@ -175,28 +183,63 @@ def lightbox():
             f'<div class="pm-lightbox__mobile-nav"><button type="button" class="pm-btn pm-btn--on-image pm-btn--sm" data-lb-prev>{I["prev"]}Previous</button>'
             f'<button type="button" class="pm-btn pm-btn--on-image pm-btn--sm" data-lb-next>Next{I["next"]}</button></div></div></dialog>')
 
-# The final screens: Serena's real designs from her Framer case study (branded Empiric, Procense's former name),
-# shown in a tablet frame. Small numbered markers point at the design patterns described in the cards beside them.
+# The final screens: Serena's revised tablet designs from Figma (landscape, 1024x768 at 1.5x), in a tablet frame.
+# Numbered badges point at the design patterns described in the cards under each screen.
 SCREENS = [  # label, file, w, h, alt, caption, [(x%, y%, pattern, description)]
-    ('Batch information', 'screen-batch-info.webp', 1440, 1211,
-     'Batch information screen: product name, description, number, formula code and version already filled in; inputs for lot number, batch number, due date with a calendar, work center, yields and remarks; a Next button.',
-     'Batch information, the first step. Product details arrive from the platform.',
-     [(53.5, 20.8, 'Auto-filled fields', 'Product details come straight from the platform.'),
-      (87.0, 30.4, 'Familiar icons', 'A calendar marks the date field at a glance.'),
-      (84.6, 77.9, 'Consistent controls', 'Next sits in the same spot on every step.')]),
-    ('SOP step', 'screen-sop-step.webp', 1440, 1193,
-     'Manufacturing step screen: Step 1 with a View BOM button, a Start Batch button, the instruction "Melt cocoa mass and cocoa butter together using a double boiler", the ingredient "50.5% coco mass", inputs for amount added, start and stop time, operator initials and lot number; Back, Save Draft and Next.',
-     'A manufacturing step. The instruction, ingredient and inputs share one screen.',
-     [(39.0, 16.2, 'Clear sections', 'Each step has its own header and a materials list.'),
-      (87.5, 38.0, 'Instructions in the form', 'The instruction sits right above its inputs.'),
-      (53.5, 45.4, 'Critical steps stand out', 'The amount to add is large and bold.')]),
-    ('QC tests', 'screen-qc-tests.webp', 1440, 1546,
-     'Quality tests screen: yield, finish date and time, made by and packaged by fields, comments, a table of five tests with their standard and a result field each, and sign-off with Add Signature and Add Initial buttons.',
-     'Quality tests, the last step. Every test, its standard and its result sit in one table.',
-     [(73.5, 50.0, 'Built for dense data', 'Test, standard and result line up in one table.'),
-      (40.0, 85.4, 'Auto-filled fields', 'Sign-off adds the operator’s signature in a tap.'),
-      (71.4, 95.0, 'Consistent controls', 'Back, Save Draft and Next match every step.')]),
+    ('Batch information', 'tl-batch-info.webp', 1536, 1152,
+     'Batch information screen on a landscape tablet: the Dark Chocolate batch QC form with Start, Log downtime and Downtime timer buttons, a four-step stepper on Batch information, and fields for lot number, batch number, work center, due date and yields; Save draft and Next at the bottom.',
+     'Batch information, the first of four steps.',
+     [(83.0, 46.3, 'Four clear steps', 'The stepper shows where the batch is at a glance.'),
+      (76.4, 14.0, 'Start to unlock', 'Fields open once the batch timer is running.'),
+      (81.6, 70.2, 'Required, marked', 'An asterisk flags what’s needed before Next.')]),
+    ('Special precautions', 'tl-precautions.webp', 1536, 1152,
+     'Special precautions screen on a landscape tablet: the stepper with Batch information checked, then safety precautions grouped in their own card, with Back, Save draft and Next at the bottom.',
+     'Special precautions, reviewed before any step starts.',
+     [(40.2, 70.0, 'Grouped by risk', 'Safety, special and critical items each get a section.'),
+      (69.6, 60.9, 'Read before you start', 'Every item is reviewed before the SOP steps.'),
+      (73.2, 94.8, 'Save at any point', 'Operators can go back or save a draft any time.')]),
+    ('SOP step', 'tl-sop-step.webp', 1536, 1152,
+     'SOP step screen on a landscape tablet: Step 1 of 4 marked In progress with a View all steps link, the instruction "Melt cocoa mass and cocoa butter together using a double boiler" in bold, and the coco mass measurement below.',
+     'A manufacturing step, one instruction at a time.',
+     [(37.4, 56.4, 'One step at a time', 'Each step shows its status; the full list is a tap away.'),
+      (73.2, 73.1, 'Instruction first', 'The instruction sits in bold above its inputs.'),
+      (82.6, 23.7, 'Details on demand', 'Show details opens batch info only when needed.')]),
+    ('QC tests', 'tl-qc-tests.webp', 1536, 1152,
+     'QC tests screen on a landscape tablet: an Add sample button, fields for actual yield, date and time finished with calendar and clock pickers, made by and packaged by, and Submit for review at the bottom.',
+     'Quality tests, the last step before review.',
+     [(78.3, 58.3, 'Samples as needed', 'Extra samples are one tap away.'),
+      (81.2, 70.2, 'Real date and time', 'Pickers for dates and times avoid typos.'),
+      (98.4, 91.2, 'Straight to review', 'The last step sends the batch for review.')]),
 ]
+PORTRAIT = [  # label, file, alt
+    ('Batch information', 'tp-batch-info.webp', 'Batch information screen on a portrait tablet: the same form with its fields stacked into fewer columns and the side navigation behind a menu button.'),
+    ('SOP step', 'tp-sop-step.webp', 'SOP step screen on a portrait tablet: the stepper collapses to numbered circles with only the current step named, and the amount, start time and stop time fields wrap into two columns.'),
+    ('QC tests', 'tp-qc-tests.webp', 'QC tests screen on a portrait tablet: yield, date and time fields reflow to fit the narrower screen, with Submit for review at the bottom.'),
+]
+
+def portrait(n):
+    """The three key screens on a portrait tablet, side by side (stacked on phones). Each opens in the lightbox."""
+    cells = ''.join(f'<div class="pr-pt" data-lb-item data-lb-caption="Fig. {n:02d}. {label} on a portrait tablet.">'
+                    f'<p class="pr-slabel">{label}</p><div class="pr-device pr-device--pt"><div class="pr-device__screen">'
+                    f'<img src="../assets/procense/{f}" width="1152" height="1536" loading="lazy" alt="{alt}"></div></div>'
+                    + expand(f'{label}, portrait') + '</div>' for label, f, alt in PORTRAIT)
+    return (f'<figure class="pm-frame"><div class="pm-frame__stage pr-stage pr-pts">{cells}</div>'
+            f'<figcaption class="pm-frame__caption"><span class="pm-frame__index">Fig. {n:02d}</span>'
+            '<span>The same flow on a portrait tablet. Navigation moves behind a menu, the stepper names only the current step, and fields reflow into fewer columns.</span></figcaption></figure>')
+
+def web_vs_tablet(n):
+    """Before/after slider from the design-system parts (cs_parts.before_after): the web form vs the tablet form."""
+    ba = before_after('../assets/procense/web-batch-info.webp',
+                      'Batch information on the web: a wide layout with a full sidebar, six batch details in a row and small controls.',
+                      '../assets/procense/tl-batch-info.webp',
+                      'Batch information on a tablet: a slim navigation rail, larger type and touch-sized buttons, with batch details behind Show details.',
+                      'Web: dense rows, a full sidebar and small controls.',
+                      'Tablet: a slim rail, larger type and touch-sized controls.',
+                      w=1536, h=1152)
+    return (f'<figure class="pm-frame"><div class="pm-frame__stage pr-stage">{ba}</div>'
+            f'<figcaption class="pm-frame__caption"><span class="pm-frame__index">Fig. {n:02d}</span>'
+            '<span>Batch information on the web and on a tablet. Drag the divider, or use Before and After, to compare.</span></figcaption></figure>')
+
 def screen_rows(start):
     """Each final screen full width in its figure stage: label, tablet frame with numbered annotation buttons, then the
     three pattern cards inside the same stage (across on wide screens, stacked on narrow ones). Hovering or focusing a
@@ -225,7 +268,7 @@ def shot(art, cap, n, zoom=False):
 
 # ---------- content ----------
 SECTIONS = [('overview', 'Overview'), ('problem', 'The problem'), ('discovery', 'Approach'), ('goals', 'Design goals'), ('ideation', 'Ideation'),
-            ('tablet', 'Tablet-first'), ('solution', 'The solution'), ('feedback', 'User feedback'), ('reflection', 'Impact &amp; reflection')]
+            ('tablet', 'Tablet-first'), ('solution', 'The solution'), ('portrait', 'Portrait'), ('feedback', 'User feedback'), ('reflection', 'Impact &amp; reflection')]
 
 STATS_FULL = [('10%', 'Faster batch execution, from weighing ingredients to quality sign-off'), ('100%', 'Automated traceability, so audits take less digging'), ('100%', 'Data accuracy, with nothing copied over from paper')]
 
@@ -271,11 +314,16 @@ BODY = ''.join([
         + panel('What we assumed', '<p>Operators would use desktops or laptops, like the rest of Procense’s web-first platform.</p>', ' pm-panel--tonal', 'p-assumed')
         + panel('What we found', '<p>Operators carry tablets as they work through each step and run quality tests on the floor.</p>', '', 'p-found')
         + '</div>'
-        + lede('That discovery reshaped the project. We moved to a tablet-first design with new layouts and a new flow. The smaller screen meant breaking long forms into steps, which adds a tap or two, but in return operators got larger text, cleaner sections and a flow that matches how they actually work.')),
+        + lede('That discovery reshaped the project. We moved to a tablet-first design with new layouts and a new flow. The smaller screen meant breaking long forms into steps, which adds a tap or two, but in return operators got larger text, cleaner sections and a flow that matches how they actually work.')
+        + web_vs_tablet(4)),
 
     section('solution', 'The solution', 'Two paper forms became one guided flow.',
-        lede('The final design merges both forms into three steps: batch details, then the manufacturing steps and ingredients, then the quality tests. Each screen shows only what that step needs, so operators can keep their attention on the batch.')
-        + screen_rows(4)),
+        lede('The final design merges both forms into one guided flow of four steps: batch information, special precautions, the manufacturing steps, then the quality tests. Each screen shows only what that step needs, so operators can keep their attention on the batch.')
+        + screen_rows(5)),
+
+    section('portrait', 'Portrait', 'It works however the tablet is held.',
+        lede('Operators flip tablets between landscape and portrait as they move around the line, so every screen reflows. Navigation tucks behind a menu, the stepper names only the current step, and fields wrap into fewer columns without losing any controls.')
+        + portrait(9)),
 
     section('feedback', 'User feedback', 'A QA manager’s review cut even more typing.',
         lede('We reviewed the first design of the quality test form with a QA manager, section by section, and their feedback led to two changes.')
@@ -700,7 +748,21 @@ CSS = r"""
 .pr-sign { margin-right: auto; display: flex; align-items: center; gap: 1cqw; color: #4B5563; }
 """
 
-PROCENSE = dict(page_title='Procense Case Study', out='procense.html', sections=SECTIONS, body=BODY, header=HEADER, tldr=TLDR, css=CSS, js=JS)
+PT_CSS = """
+/* Portrait screens: three across from a 600px stage, stacked below; each cell opens in the lightbox */
+.pr-pts { container-type: inline-size; display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-6); }
+@container (min-width: 600px) { .pr-pts { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-5); } }
+.pr-pt { position: relative; min-width: 0; }
+.pr-pt .pr-slabel { min-height: 32px; display: flex; align-items: center; margin-bottom: var(--space-3); }
+.pr-pt > .pr-expand { top: 0; right: 0; }
+.pr-device--pt { padding: 3.2%; }
+@container (max-width: 599px) { .pr-pt .pr-device { max-width: 420px; margin-inline: auto; } }
+/* Web vs tablet slider sits on the figure stage */
+.pr-stage .cs-ba__side p { max-width: 30ch; }
+"""
+
+PROCENSE = dict(page_title='Procense Case Study', out='procense.html', sections=SECTIONS, body=BODY, header=HEADER, tldr=TLDR,
+                css=CSS + BA_CSS + PT_CSS, js=JS + BA_JS)
 
 if __name__ == '__main__':
     print(len(C.render(PROCENSE)))
