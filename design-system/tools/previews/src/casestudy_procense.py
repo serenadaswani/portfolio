@@ -204,6 +204,12 @@ SCREENS = [  # label, file, w, h, alt, caption, [(x%, y%, pattern, description)]
      [(37.4, 56.4, 'One step at a time', 'Each step shows its status; the full list is a tap away.'),
       (73.2, 73.1, 'Instruction first', 'The instruction sits in bold above its inputs.'),
       (82.6, 23.7, 'Details on demand', 'Show details opens batch info only when needed.')]),
+    ('All steps', 'tl-steps-drawer.webp', 1536, 1152,
+     'All steps drawer on a landscape tablet, open over the SOP step: 4 of 14 steps complete with a 29% progress bar, a Search steps field, the Preparation steps checked off with who signed each and when, step 5 under Processing highlighted as In progress, and Close and Go to current step buttons at the bottom.',
+     'All steps, the full SOP in a drawer over the current step.',
+     [(75.6, 14.9, 'Progress at a glance', 'Steps done and the percent complete sit up top.'),
+      (69.0, 31.1, 'The whole SOP', 'Steps grouped by phase, with who signed each one.'),
+      (80.1, 91.7, 'Jump to any step', 'Open any step, or return to the current one.')]),
     ('QC tests', 'tl-qc-tests.webp', 1536, 1152,
      'QC tests screen on a landscape tablet: an Add sample button, fields for actual yield, date and time finished with calendar and clock pickers, made by and packaged by, and Submit for review at the bottom.',
      'Quality tests, the last step before review.',
@@ -214,18 +220,19 @@ SCREENS = [  # label, file, w, h, alt, caption, [(x%, y%, pattern, description)]
 PORTRAIT = [  # label, file, alt
     ('Batch information', 'tp-batch-info.webp', 'Batch information screen on a portrait tablet: the same form with its fields stacked into fewer columns and the side navigation behind a menu button.'),
     ('SOP step', 'tp-sop-step.webp', 'SOP step screen on a portrait tablet: the stepper collapses to numbered circles with only the current step named, and the amount, start time and stop time fields wrap into two columns.'),
+    ('All steps', 'tp-steps-drawer.webp', 'All steps drawer on a portrait tablet: it covers most of the screen, with progress, search, the Preparation steps checked off, step 5 In progress and the next steps listed with time estimates.'),
     ('QC tests', 'tp-qc-tests.webp', 'QC tests screen on a portrait tablet: yield, date and time fields reflow to fit the narrower screen, with Submit for review at the bottom.'),
 ]
 
 def portrait(n):
-    """The three key screens on a portrait tablet, side by side (stacked on phones). Each opens in the lightbox."""
+    """The four key screens on a portrait tablet, two by two (stacked on phones). Each opens in the lightbox."""
     cells = ''.join(f'<div class="pr-pt" data-lb-item data-lb-caption="Fig. {n:02d}. {label} on a portrait tablet.">'
                     f'<p class="pr-slabel">{label}</p><div class="pr-device pr-device--pt"><div class="pr-device__screen">'
                     f'<img src="assets/{f}" width="1152" height="1536" loading="lazy" alt="{alt}"></div></div>'
                     + expand(f'{label}, portrait') + '</div>' for label, f, alt in PORTRAIT)
     return (f'<figure class="pm-frame"><div class="pm-frame__stage pr-stage pr-pts">{cells}</div>'
             f'<figcaption class="pm-frame__caption"><span class="pm-frame__index">Fig. {n:02d}</span>'
-            '<span>The same flow on a portrait tablet. Navigation moves behind a menu, the stepper names only the current step, and fields reflow into fewer columns.</span></figcaption></figure>')
+            '<span>The same flow on a portrait tablet. Navigation moves behind a menu, the stepper names only the current step, the All steps drawer widens to fill the screen, and fields reflow into fewer columns.</span></figcaption></figure>')
 
 def web_vs_tablet(n):
     """Before/after slider from the design-system parts (cs_parts.before_after): the web form vs the tablet form."""
@@ -325,7 +332,7 @@ BODY = ''.join([
 
     section('portrait', 'Portrait', 'It works however the tablet is held.',
         lede('Operators flip tablets between landscape and portrait as they move around the line, so every screen reflows. Navigation tucks behind a menu, the stepper names only the current step, and fields wrap into fewer columns without losing any controls.')
-        + portrait(9)),
+        + portrait(10)),
 
     section('feedback', 'User feedback', 'A QA manager’s review cut even more typing.',
         lede('We reviewed the first design of the quality test form with a QA manager, section by section, and their feedback led to two changes.')
@@ -752,9 +759,9 @@ CSS = r"""
 """
 
 PT_CSS = """
-/* Portrait screens: three across from a 600px stage, stacked below; each cell opens in the lightbox */
+/* Portrait screens: two by two from a 600px stage, stacked below; each cell opens in the lightbox */
 .pr-pts { container-type: inline-size; display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-6); }
-@container (min-width: 600px) { .pr-pts { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-5); } }
+@container (min-width: 600px) { .pr-pts { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-6) var(--space-5); } }
 .pr-pt { position: relative; min-width: 0; }
 .pr-pt .pr-slabel { min-height: 32px; display: flex; align-items: center; margin-bottom: var(--space-3); }
 .pr-pt > .pr-expand { top: 0; right: 0; }
