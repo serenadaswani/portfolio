@@ -187,6 +187,11 @@ def lightbox():
 # The final screens: Serena's revised tablet designs from Figma (landscape, 1024x768 at 1.5x), in a tablet frame.
 # Numbered badges point at the design patterns described in the cards under each screen.
 SCREENS = [  # screen id in procense/screens.json, caption, [(x%, y% of the base image, pattern, description)]
+    ('landscape-forms-dashboard',
+     'The forms dashboard, where every batch starts.',
+     [(30.8, 26.7, 'Status at a glance', 'Counts show what’s ready, running and done.'),
+      (43.5, 49.4, 'Find any form fast', 'Search, filter, sort or group by product.'),
+      (65.4, 60.2, 'Grouped by stage', 'Forms sit under their stage, from ready to completed.')]),
     ('landscape-batch-information',
      'Batch information, the first of four steps.',
      [(83.0, 46.3, 'Four clear steps', 'The stepper shows where the batch is at a glance.'),
@@ -326,7 +331,7 @@ BODY = ''.join([
 
     section('portrait', 'Portrait', 'It works however the tablet is held.',
         lede('Operators flip tablets between landscape and portrait as they move around the line, so every screen reflows. Navigation tucks behind a menu, the stepper names only the current step, and fields wrap into fewer columns without losing any controls.')
-        + portrait(10)),
+        + portrait(11)),
 
     section('feedback', 'User feedback', 'A QA manager’s review cut even more typing.',
         lede('We reviewed the first design of the quality test form with a QA manager, section by section, and their feedback led to two changes.')
