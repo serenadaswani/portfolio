@@ -189,7 +189,7 @@
       },
       "coral": {
         "$type": "color",
-        "$value": "#F26B4A",
+        "$value": "#C0533A",
         "$description": "Annotation coral. Only for marking up mockups and screenshots in case studies; never for UI, actions or status."
       }
     },
@@ -384,7 +384,7 @@
           },
           "text": {
             "$type": "color",
-            "$value": "{color.primitive.ink}"
+            "$value": "{color.primitive.white}"
           }
         }
       },
@@ -578,7 +578,7 @@
           },
           "text": {
             "$type": "color",
-            "$value": "{color.primitive.ink}"
+            "$value": "{color.primitive.white}"
           }
         }
       }

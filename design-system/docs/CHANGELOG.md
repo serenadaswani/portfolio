@@ -1,8 +1,8 @@
 # Changes applied
 
 ## v1.10 annotation coral
-- New role for marking up mockups and screenshots in case studies: `color-annotation` (`--coral`, #F26B4A, both themes) with `color-text-on-annotation` (ink). A warm coral, chosen to stand apart from blue-and-black product UI without reading as an error or warning. Only for annotations (numbered badges, the stroke that links a note to its badge); never for UI, actions or status, so cobalt stays the one accent.
-- Contrast: ink number on coral 6.2:1; coral on white 3.0:1, on dark surfaces about 5:1.
+- New role for marking up mockups and screenshots in case studies: `color-annotation` (`--coral`, #C0533A, both themes) with `color-text-on-annotation` (white). A warm terracotta coral, chosen to stand apart from blue-and-black product UI without reading as an error or warning. Only for annotations (numbered badges, the stroke that links a note to its badge); never for UI, actions or status, so cobalt stays the one accent.
+- Contrast: white number on coral 4.6:1; coral as a stroke 4.6:1 on white cards and 3.1:1 on dark cards.
 - New tokens: `coral` (primitive), `color-annotation`, `color-text-on-annotation`. First used on the Procense solution figures.
 
 ## v1.9.1 tag spacing
