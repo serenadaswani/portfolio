@@ -240,16 +240,23 @@ def shot(art, cap, n, zoom=False):
 SECTIONS = [('overview', 'Overview'), ('problem', 'The problem'), ('discovery', 'Approach'), ('goals', 'Design goals'), ('ideation', 'Ideation'),
             ('tablet', 'Tablet-first'), ('solution', 'The solution'), ('portrait', 'Portrait'), ('feedback', 'User feedback'), ('reflection', 'Impact &amp; reflection')]
 
-STATS_FULL = [('10%', 'Faster batch execution, from weighing ingredients to quality sign-off'), ('100%', 'Automated traceability, so audits take less digging'), ('100%', 'Data accuracy, with nothing copied over from paper')]
+# Results Procense reported at Dr. Squatch (procense.ai/case-study/dr-squatch, read 2026-11-17): 30 minutes saved per batch
+# (10% faster batch execution), 100% automated traceability, 100% data accuracy. They cover the whole platform, so the page
+# attributes them to the customer and links the source wherever the stats appear.
+SOURCE_URL = 'https://www.procense.ai/case-study/dr-squatch'
+def source(extra=''):
+    return (f'<p class="pm-meta-text pr-source{extra}">Results Procense reported at Dr. Squatch, a personal care manufacturer using the platform and the Digital Forms application. '
+            f'<a class="pm-link" href="{SOURCE_URL}" target="_blank" rel="noopener" aria-label="Read the Dr. Squatch case study on procense.ai (opens in a new tab)">Read the case study{I["ext"]}</a></p>')
+STATS_FULL = [('10%', 'Faster batch execution, about 30 minutes saved per batch'), ('100%', 'Automated traceability, so audits take less digging'), ('100%', 'Data accuracy, with nothing copied over from paper')]
 
 BODY = ''.join([
     section('overview', 'Overview', 'We replaced paper batch records with one guided tablet flow.',
-        lede('Procense’s integrated platform helps chemical manufacturers run and monitor production, but every batch was still recorded on paper. I designed the Digital Forms application to change that, moving quality checks and manufacturing steps onto the tablets operators already carry.',
-             'Batches now run 10% faster, every record is traceable and accurate, and operators spend their time on the batch instead of the paperwork.')
-        + stats(STATS_FULL, ' pm-stats--sm cs-stats')),
+        lede('Procense’s integrated platform helps process manufacturers, from chemicals to personal care and food, run and monitor production, but every batch was still recorded on paper. I designed the Digital Forms application to change that, moving quality checks and manufacturing steps onto the tablets operators already carry.',
+             'At Dr. Squatch, a personal care brand that makes its products in-house, batches now run 10% faster, about 30 minutes saved per batch. Every record is traceable and accurate, and operators spend their time on the batch instead of the paperwork.')
+        + stats(STATS_FULL, ' pm-stats--sm cs-stats') + source()),
 
     section('problem', 'The problem', 'Every batch was recorded by hand, then checked on paper.',
-        lede('In many chemical plants, each batch is recorded on two paper forms: one for the manufacturing steps and one for the quality checks. Once complete, the forms go to reviewers in quality and engineering, who decide whether the batch meets the standard. The process is slow, invites human error and holds up decisions on the floor.')
+        lede('In many process plants, each batch is recorded on two paper forms: one for the manufacturing steps and one for the quality checks. Once complete, the forms go to reviewers in quality and engineering, who decide whether the batch meets the standard. The process is slow, invites human error and holds up decisions on the floor.')
         + shot(flow(), 'A paper batch, step by step. Five of the six steps are written by hand, and each is a chance for error.', 1)
         + stats([('~150', 'Handwritten entries in one batch record'), ('1–4%', 'Chance any handwritten entry is inaccurate'), ('1–3 days', 'From the end of a batch to its approval')], ' pm-stats--sm cs-stats')
         + '<p class="pm-meta-text pr-draft">Estimates for a typical paper batch record, for illustration.</p>'
@@ -265,11 +272,11 @@ BODY = ''.join([
     section('discovery', 'Approach', 'I started by taking the paper forms apart.',
         lede('The forms captured a great deal of data, but made it hard to spot what mattered and slow to fill in.')
         + shot(paper_form(), 'The paper quality form, reconstructed. Hover over or tap a number to see each pain point.', 2)
-        + '<h3 class="cs-h3">Then I learned how the forms are used on the floor.</h3>'
+        + '<h3 class="cs-h3">Then I learned how the forms are used, from someone who’d filled them in.</h3>'
         + lede('I interviewed Procense’s co-founder, a former process engineer who has both written and filled in these forms. Four insights stood out, and each one set a design goal.')),
 
     section('goals', 'Design goals', 'Four things I learned became four goals.',
-        lede('Each insight from the floor set one goal for the Digital Forms application, so every design decision traced back to how operators really work.')
+        lede('Each insight set one goal for the Digital Forms application, so every design decision traced back to what the forms and the people who fill them in revealed.')
         + insight_goals()),
 
     section('ideation', 'Ideation', 'I explored how crowded tables could become simple steps.',
@@ -304,7 +311,7 @@ BODY = ''.join([
 
     section('reflection', 'Impact &amp; reflection', 'Operators now record each batch as they work.',
         lede('Moving from paper to the Digital Forms application streamlined the whole batch process. Operators record data as they go instead of copying it later, reviewers see it as soon as it’s entered, and every value carries who entered it and when. With the paperwork out of the way, teams can focus on running safe, consistent batches.')
-        + stats(STATS_FULL, ' pm-stats--sm cs-stats')
+        + stats(STATS_FULL, ' pm-stats--sm cs-stats') + source()
         + '<h3 class="cs-h3">What I learned</h3>'
         + '<div class="cs-pair">'
         + panel('Design for the device in their hands', '<p>Learning that operators carry tablets changed every layout decision, and made the forms easier to use, not harder.</p>', ' pm-panel--tonal', 'p-l1')
@@ -325,12 +332,13 @@ HEADER = f'''  <header class="cs-head">
   </dl></section>'''
 
 TLDR = f'''      <dl class="cs-tldr__rows">
-        <div class="cs-tldr__row"><dt>Background</dt><dd>Chemical plants record every batch on paper forms that reviewers then check by hand.</dd></div>
+        <div class="cs-tldr__row"><dt>Background</dt><dd>Process plants, from chemicals to personal care, record every batch on paper forms that reviewers then check by hand.</dd></div>
         <div class="cs-tldr__row"><dt>Problem</dt><dd>Paper slowed decisions on the floor, and crowded, repetitive forms made mistakes easy.</dd></div>
-        <div class="cs-tldr__row"><dt>Approach</dt><dd>I studied the forms and how operators work, then designed the Digital Forms application for the tablets they carry.</dd></div>
+        <div class="cs-tldr__row"><dt>Approach</dt><dd>I studied the forms and how they’re used, then designed the Digital Forms application for the tablets they carry.</dd></div>
         <div class="cs-tldr__row"><dt>Outcome</dt><dd>Two paper forms became one tablet flow, so plants move faster and teams can focus on the work on the floor.</dd></div>
       </dl>
-      {stats([('10%', 'Faster batch execution'), ('100%', 'Automated traceability'), ('100%', 'Data accuracy')], ' pm-stats--sm cs-tldr__stats')}'''
+      {stats([('10%', 'Faster batch execution'), ('100%', 'Automated traceability'), ('100%', 'Data accuracy')], ' pm-stats--sm cs-tldr__stats')}
+      {source(" pr-source--tldr")}'''
 
 JS = r"""
   // Final-screen annotations: hovering or focusing a badge lifts its card and gives it a coral stroke ; hovering a card strokes it and lifts its badge
@@ -521,6 +529,10 @@ CSS = r"""
 .pr-sketches img { display: block; width: 100%; height: auto; border-radius: var(--radius-sm); }
 /* Body numbers share a top line even when a label wraps (as in the TL;DR) */
 .cs-stats .pm-stats__item { justify-content: flex-end; }
+/* Source line under the result stats (Procense's Dr. Squatch case study) */
+.pr-source { margin: var(--space-3) 0 0; max-width: 60ch; }
+.pr-source .pm-link { font-weight: var(--weight-regular, 400); text-decoration-line: underline; white-space: nowrap; }
+.pr-source .pm-icon { display: inline-block; width: 12px; height: 12px; margin-left: 2px; vertical-align: -1px; }
 /* Figure stages a step lighter on this page (surface instead of sunken) */
 .pm-frame__stage { background: var(--color-bg-surface); }
 .pr-flow__n { --ring: var(--color-bg-surface); }
