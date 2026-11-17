@@ -159,9 +159,27 @@ def flow():
             f'<div class="pr-flow__bar"><button type="button" class="pm-btn pm-btn--ghost pm-btn--xs" aria-pressed="false" data-flow-toggle>{I["pause"]}<span>Pause</span></button></div>'
             '</div>')
 
-def shot(art, cap, n):
-    return (f'<figure class="pm-frame"><div class="pm-frame__stage pr-stage">{art}</div>'
-            f'<figcaption class="pm-frame__caption"><span class="pm-frame__index">Fig. {n:02d}</span><span>{cap}</span></figcaption></figure>')
+def expand(label):
+    """ImageFrame's expand control, moved to the well's top-right corner; opens the shared Lightbox."""
+    return f'<button type="button" class="pm-btn pm-btn--on-image pm-btn--icon pm-btn--sm pm-frame__expand pr-expand" data-lb-open aria-label="View larger: {label}">{I["expand"]}</button>'
+
+def lightbox():
+    """One Lightbox (design-system component, dark-scoped) for every expandable figure, in page order."""
+    return ('<dialog class="pm-lightbox" data-theme="dark" data-lb aria-labelledby="lb-cap">'
+            f'<div class="pm-lightbox__bar"><span class="pm-lightbox__count" aria-live="polite"><span data-lb-n>1</span> of <span data-lb-total>1</span></span>'
+            f'<button type="button" class="pm-btn pm-btn--on-image pm-btn--icon" data-lb-close aria-label="Close">{I["close"]}</button></div>'
+            f'<div class="pm-lightbox__stage"><button type="button" class="pm-btn pm-btn--on-image pm-btn--icon pm-lightbox__prev" data-lb-prev aria-label="Previous image">{I["prev"]}</button>'
+            '<figure class="pm-lightbox__figure pr-lb__figure"><div class="pr-lb__slot" data-lb-slot></div></figure>'
+            f'<button type="button" class="pm-btn pm-btn--on-image pm-btn--icon pm-lightbox__next" data-lb-next aria-label="Next image">{I["next"]}</button></div>'
+            '<div class="pm-lightbox__footer"><p class="pm-lightbox__caption" id="lb-cap" data-lb-cap></p>'
+            f'<div class="pm-lightbox__mobile-nav"><button type="button" class="pm-btn pm-btn--on-image pm-btn--sm" data-lb-prev>{I["prev"]}Previous</button>'
+            f'<button type="button" class="pm-btn pm-btn--on-image pm-btn--sm" data-lb-next>Next{I["next"]}</button></div></div></dialog>')
+
+def shot(art, cap, n, zoom=False):
+    return (f'<figure class="pm-frame"><div class="pm-frame__stage pr-stage{" pr-zoom" if zoom else ""}"{f' data-lb-item data-lb-caption="Fig. {n:02d}. {cap}"' if zoom else ""}>{art}'
+            + (expand(f'Fig. {n:02d}') if zoom else '') + '</div>'
+
+            + f'<figcaption class="pm-frame__caption"><span class="pm-frame__index">Fig. {n:02d}</span><span>{cap}</span></figcaption></figure>')
 
 # ---------- content ----------
 SECTIONS = [('overview', 'Overview'), ('problem', 'The problem'), ('discovery', 'Approach'), ('goals', 'Design goals'), ('ideation', 'Ideation'),
@@ -202,8 +220,8 @@ BODY = ''.join([
     section('ideation', 'Ideation', 'I explored how crowded tables could become simple steps.',
         lede('I studied how other products turn paper forms into software and organise large tables, then sketched layouts and noted what each form needed.')
         + '<figure class="pm-frame pr-sketches"><div class="pm-frame__stage"><div class="pr-sketches__row">'
-          '<img src="../assets/procense/sketch-qc-report.webp" width="1400" height="1535" loading="lazy" alt="Hand-drawn sketch of the QC batch report’s test section: the table reorganized into colour-coded sections, a pass value entered as a range, and pass checkboxes that could be automated, with notes to use monochrome colours.">'
-          '<img src="../assets/procense/sketch-sop-form.webp" width="1400" height="2255" loading="lazy" alt="Hand-drawn sketch of the manufacturing SOP quality form: a heading with date, batch and order numbers and operators picked from the user database, inspection dates, then a procedure table with in-line SOP numbers, amounts to add and added, and a sub-table.">'
+          '<div class="pr-sk" data-lb-item data-lb-caption="Fig. 03. Early sketch of the quality report’s test section.">' + expand('quality report sketch') + '<img src="../assets/procense/sketch-qc-report.webp" width="1400" height="1535" loading="lazy" alt="Hand-drawn sketch of the QC batch report’s test section: the table reorganized into colour-coded sections, a pass value entered as a range, and pass checkboxes that could be automated, with notes to use monochrome colours."></div>'
+          '<div class="pr-sk" data-lb-item data-lb-caption="Fig. 03. Early sketch of the manufacturing form.">' + expand('manufacturing form sketch') + '<img src="../assets/procense/sketch-sop-form.webp" width="1400" height="2255" loading="lazy" alt="Hand-drawn sketch of the manufacturing SOP quality form: a heading with date, batch and order numbers and operators picked from the user database, inspection dates, then a procedure table with in-line SOP numbers, amounts to add and added, and a sub-table."></div>'
           '</div></div><figcaption class="pm-frame__caption"><span class="pm-frame__index">Fig. 03</span><span>Early sketches of the quality report (left) and the manufacturing form (right).</span></figcaption></figure>'),
 
     section('tablet', 'Tablet-first', 'We designed for desktop. The floor ran on tablets.',
@@ -215,9 +233,9 @@ BODY = ''.join([
 
     section('solution', 'The solution', 'Two paper forms became one guided flow.',
         lede('The final design merges both forms into three steps: batch details, then the manufacturing steps and ingredients, then the quality tests. Each screen shows only what that step needs, so operators can keep their attention on the batch.')
-        + shot(screen1(), 'Batch information, the first step. Date, time and signature fill in on their own.', 4)
-        + shot(screen2(), 'Manufacturing steps and ingredients. Instructions in blue, ingredients in grey, critical conditions in bold.', 5)
-        + shot(screen3(), 'Quality tests, the last step. Each result is checked against its target range as it’s entered.', 6)
+        + shot(screen1(), 'Batch information, the first step. Date, time and signature fill in on their own.', 4, zoom=True)
+        + shot(screen2(), 'Manufacturing steps and ingredients. Instructions in blue, ingredients in grey, critical conditions in bold.', 5, zoom=True)
+        + shot(screen3(), 'Quality tests, the last step. Each result is checked against its target range as it’s entered.', 6, zoom=True)
         + feature_cards([('', 'Fields that fill themselves', 'Date and time fill in automatically, and signatures come from the operator’s login.'),
                          ('', 'The same patterns everywhere', 'Buttons, fields and layouts behave the same at every step of the flow.'),
                          ('', 'Clear sections', 'Colour sets them apart: blue for instructions, grey for ingredients.'),
@@ -240,7 +258,7 @@ BODY = ''.join([
         + '<div class="cs-pair">'
         + panel('Design for the device in their hands', '<p>Learning that operators carry tablets changed every layout decision, and made the forms easier to use, not harder.</p>', ' pm-panel--tonal', 'p-l1')
         + panel('Modernize what people already know', '<p>Keeping the forms familiar, rather than reinventing them, let the plants move faster without losing the checks that keep every batch safe.</p>', ' pm-panel--tonal', 'p-l2')
-        + '</div>'),
+        + '</div>' + lightbox()),
 ])
 
 HEADER = f'''  <header class="cs-head">
@@ -264,6 +282,29 @@ TLDR = f'''      <dl class="cs-tldr__rows">
       {stats([('10%', 'Faster batch execution'), ('100%', 'Automated traceability'), ('100%', 'Data accuracy')], ' pm-stats--sm cs-tldr__stats')}'''
 
 JS = r"""
+  // Lightbox: every expand button opens the shared viewer at its own item; arrows, Previous/Next and the counter page
+  // through all of them. Native <dialog> traps focus and closes on Esc; focus returns to the button that opened it.
+  (function () {
+    var dlg = document.querySelector('[data-lb]'); if (!dlg) return;
+    var items = [].slice.call(document.querySelectorAll('[data-lb-item]')), opener = null, at = 0;
+    var slot = dlg.querySelector('[data-lb-slot]'), cap = dlg.querySelector('[data-lb-cap]'), n = dlg.querySelector('[data-lb-n]');
+    dlg.querySelector('[data-lb-total]').textContent = items.length;
+    function show(i) {
+      at = (i + items.length) % items.length; var it = items[at], img = it.querySelector('img'), node;
+      if (img) { node = new Image(); node.src = img.currentSrc || img.src; node.alt = img.alt; }
+      else { node = it.querySelector('.pr-tab').cloneNode(true); }
+      slot.replaceChildren(node); cap.textContent = it.getAttribute('data-lb-caption'); n.textContent = at + 1;
+      if (!reduce && node.animate) node.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 200, easing: 'ease-out' });
+    }
+    items.forEach(function (it, i) { var b = it.querySelector('[data-lb-open]'); if (b) b.addEventListener('click', function () { opener = b; show(i); dlg.showModal(); dlg.querySelector('[data-lb-close]').focus(); }); });
+    dlg.querySelectorAll('[data-lb-prev]').forEach(function (b) { b.addEventListener('click', function () { show(at - 1); }); });
+    dlg.querySelectorAll('[data-lb-next]').forEach(function (b) { b.addEventListener('click', function () { show(at + 1); }); });
+    dlg.querySelector('[data-lb-close]').addEventListener('click', function () { dlg.close(); });
+    dlg.addEventListener('keydown', function (e) { if (e.key === 'ArrowLeft') show(at - 1); if (e.key === 'ArrowRight') show(at + 1); });
+    dlg.addEventListener('click', function (e) { if (e.target === dlg || e.target.classList.contains('pm-lightbox__stage')) dlg.close(); });
+    dlg.addEventListener('close', function () { slot.replaceChildren(); if (opener) opener.focus(); });
+  })();
+
   // Solution card animations loop; the button pauses them (WCAG 2.2.2), and they also rest while off screen
   document.querySelectorAll('[data-anim]').forEach(function (w) {
     var btn = w.querySelector('[data-anim-toggle]'), user = false, PAUSE = '<svg class="pm-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="14" y="4" width="4" height="16" rx="1"/><rect x="6" y="4" width="4" height="16" rx="1"/></svg>', PLAY = '<svg class="pm-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><polygon points="6 3 20 12 6 21 6 3"/></svg>';
@@ -334,6 +375,18 @@ JS = r"""
 """
 
 CSS = r"""
+/* Expand control (ImageFrame) in each well's top-right corner; the shared Lightbox shows images and mockups contained */
+.pr-zoom, .pr-sk { position: relative; }
+.pr-expand { position: absolute; z-index: 2; top: var(--space-3); right: var(--space-3); bottom: auto; }
+.pr-zoom > .pr-expand { top: calc(var(--frame-p) + var(--space-2)); right: calc(var(--frame-p) + var(--space-2)); }
+.pr-sk .pr-expand { top: var(--space-2); right: var(--space-2); }
+.pr-lb__figure { display: grid; place-items: center; min-height: 0; overflow: hidden; }
+.pr-lb__slot { display: grid; place-items: center; width: 100%; height: min(calc(100svh - 190px), 1100px); }
+.pr-lb__slot img { display: block; max-width: 100%; max-height: min(calc(100svh - 190px), 1100px); width: auto; height: auto; object-fit: contain; border-radius: var(--radius-sm); }
+@media (max-width: 767px) { .pr-lb__slot img { max-height: min(calc(100svh - 220px), 900px); } }
+.pr-lb__slot .pr-tab { width: min(100%, calc((100svh - 190px) * 1.28), 1100px); max-width: none; }
+@media (max-width: 767px) { .pr-lb__slot { height: min(calc(100svh - 220px), 900px); } }
+
 /* Fig. 3 sketches: Serena's images side by side inside the usual figure stage, rounded (nested radius), no outline; stacked below 480px */
 .pr-sketches__row { container-type: inline-size; display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-4); align-items: start; }
 @container (min-width: 480px) { .pr-sketches__row { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
