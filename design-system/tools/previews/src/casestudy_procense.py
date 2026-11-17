@@ -334,11 +334,11 @@ HEADER = f'''  <header class="cs-head">
 
 
 # ---------- TL;DR view: the story in five quick blocks, each linking to its Detailed section ----------
-def _tl_block(key, label, title, text, visual, href, link, wide=False):
+def _tl_block(key, label, title, text, visual, href, link, wide=False, after=''):
     return (f'<section class="pr-tl{" pr-tl--wide" if wide else ""}" aria-labelledby="tl-{key}"><div class="pr-tl__txt">'
             f'<p class="pr-tl__k">{label}</p><h3 class="pr-tl__h" id="tl-{key}">{title}</h3><p class="pr-tl__p">{text}</p>'
             f'<a class="pm-link pr-tl__more" href="{href}">{link}{I["arrow"]}</a></div>'
-            f'<div class="pr-tl__vis">{visual}</div></section>')
+            f'<div class="pr-tl__col"><div class="pr-tl__vis">{visual}</div>{after}</div></section>')
 
 _TWO = {'Weigh ingredients': ('Weigh', 'ingredients'), 'Follow the steps': ('Follow', 'the steps'), 'Record conditions': ('Record', 'conditions'),
         'Run quality tests': ('Run quality', 'tests'), 'Hand off the forms': ('Hand off', 'the forms'), 'Review and approve': ('Review and', 'approve')}
@@ -358,10 +358,11 @@ def tldr_story():
     sketches = ('<div class="pr-tls__sk">'
                 '<img src="assets/sketch-qc-report.webp" width="1400" height="1535" loading="lazy" alt="Hand-drawn sketch of the quality report’s test section, reorganized into sections with pass values as ranges.">'
                 '<img src="assets/sketch-sop-form.webp" width="1400" height="2255" loading="lazy" alt="Hand-drawn sketch of the manufacturing form, with operators picked from a list and a procedure table.">'
-                '</div><div class="cs-pair pr-tls__pair">'
-                + panel('What we assumed', '<p>Operators would use desktops or laptops, like the rest of the platform.</p>', ' pm-panel--tonal', 'tl-assumed')
-                + panel('What we found', '<p>Operators carry tablets as they work through each step on the floor.</p>', '', 'tl-found')
-                + '</div>')
+                '</div>')
+    pivot = ('<div class="cs-pair pr-tls__pair">'
+             + panel('What we assumed', '<p>Operators would use desktops or laptops, like the rest of the platform.</p>', ' pm-panel--tonal', 'tl-assumed')
+             + panel('What we found', '<p>Operators carry tablets as they work through each step on the floor.</p>', '', 'tl-found')
+             + '</div>')
     shots = [('landscape-forms-dashboard', 'Forms dashboard', 'Every batch starts here, grouped by stage with live counts.'),
              ('landscape-sop-step', 'SOP step', 'One instruction at a time, with the full procedure a tap away.'),
              ('landscape-qc-tests', 'QC tests', 'Quality tests last, with the date and time filled in for you.')]
@@ -380,7 +381,7 @@ def tldr_story():
                         goals, '#goals', 'See the insights')
             + _tl_block('ideas', 'Ideation', 'Sketches first, then a pivot to tablets.',
                         'I sketched how crowded tables could become simple steps. When we learned operators carry tablets, I designed tablet-first.',
-                        sketches, '#ideation', 'See the sketches')
+                        sketches, '#ideation', 'See the sketches', after=pivot)
             + _tl_block('solution', 'The solution', 'One guided tablet flow.',
                         'A forms dashboard leads into four steps: batch information, special precautions, the manufacturing steps and quality tests, with dates, times and batch details filled in.',
                         screens, '#solution', 'See every screen')
@@ -795,6 +796,7 @@ PT_CSS = """
 .pr-tl__p { margin: 0; font-size: var(--type-body-md); line-height: var(--line-body-md); color: var(--color-text-secondary); text-wrap: pretty; }
 .pr-tl__more { justify-self: start; display: inline-flex; align-items: center; gap: var(--space-1); margin-top: var(--space-1); }
 .pr-tl__more .pm-icon { width: 16px; height: 16px; }
+.pr-tl__col { container: pr-tlv / inline-size; min-width: 0; display: grid; gap: var(--space-4); align-content: start; }  /* the visual, plus any separate container under it */
 .pr-tl__vis { container: pr-tlv / inline-size; min-width: 0; padding: var(--space-6); border-radius: var(--radius-lg); background: var(--color-bg-surface); }
 /* The paper process, compact: six steps across from a 640px stage, three or two across below */
 .pr-tlf { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-5) var(--space-4); grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -816,7 +818,7 @@ PT_CSS = """
 /* Sketches side by side, then the assumed / found panels from the Detailed view */
 .pr-tls__sk { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-4); align-items: start; }
 .pr-tls__sk img { display: block; width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: cover; object-position: top; border-radius: var(--radius-sm); }  /* tops of the sketches, as previews */
-.pr-tls__pair { margin-top: var(--space-4); }
+.pr-tls__pair { margin: 0; }  /* its own container under the sketches, on the page background */
 @container pr-tlv (min-width: 520px) { .pr-tls__pair { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 /* Final screens, one per row: the screen on the left, its note card on the right (stacked below a 640px stage) */
 .pr-tlsc { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-6); }
