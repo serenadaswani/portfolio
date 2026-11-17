@@ -1,7 +1,8 @@
 """Procense Digital Forms application case study, on the same structure as the revised Mensio case study (casestudy.render).
 Content: Serena's Framer case study (project-detail-procense-digital-forms-application, read 2026-11-16), rewritten in
-this site's voice. Media: first-pass mockups drawn in HTML (no Framer images were available): the paper QC form and
-three tablet screens. They are labelled as reconstructed and use Procense's navy and blue only as project art.
+this site's voice. Media: Serena's Figma screens as scrollable TabletScreens (tablet_screen.py, procense/screens.json),
+her sketches, and diagrams drawn in HTML with design-system tokens (Fig. 1, the paper form in Fig. 2, the solution
+thumbnails). Mockup annotations use the annotation coral.
 Run: python3 design-system/tools/previews/src/casestudy_procense.py  ->  procense/index.html
 """
 import casestudy as C
@@ -39,58 +40,18 @@ def paper_form():
             '<div class="pr-note" aria-live="polite"><p class="pr-note__t" data-note-t>Two pain points</p><p class="pr-note__d" data-note-d>Hover over or tap a number on the form to see what slowed operators down.</p></div>'
             '</div>')
 
-# ---------- media: tablet screens (after) ----------
-STEPS = ['Batch information', 'SOPs & ingredients', 'QC tests']
-def tablet(active, body, label):
-    step = ''.join(f'<li class="{"is-on" if i == active else ("is-done" if i < active else "")}"><span>{_l("check") if i < active else i + 1}</span>{t}</li>' for i, t in enumerate(STEPS))
-    return (f'<div class="pr-tab" role="img" aria-label="{label}"><div class="pr-scr" aria-hidden="true">'
-            '<div class="pr-bar"><b>Procense</b><span>Digital Forms</span><i>Batch A-2291 · Line 2</i></div>'
-            f'<ol class="pr-steps">{step}</ol><div class="pr-body">{body}</div></div></div>')
-
-def field(label, value, tag='', icon='', wide=False):
-    return (f'<div class="pr-f{" pr-f--wide" if wide else ""}"><span class="pr-f__l">{label}</span>'
-            f'<span class="pr-f__v">{icon}{value}{f"<em>{tag}</em>" if tag else ""}</span></div>')
-
-CAL = '<svg viewBox="0 0 24 24"><path d="M8 2v4M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg>'
-CLK = '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>'
-PEN = '<svg viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.4 3.6a2.1 2.1 0 1 1 3 3L7 19l-4 1 1-4Z"/></svg>'
-
-def screen1():
-    body = ('<p class="pr-h">Batch information</p><div class="pr-grid">'
-            + field('Batch number', 'A-2291') + field('MO number', 'MO-10482') + field('Product', 'Surfactant blend 40')
-            + field('Sample type', 'Finished product ▾') + field('Date', '06/14/2023', 'Auto', CAL) + field('Time', '09:42', 'Auto', CLK)
-            + field('Operator', 'Signed as J. Rivera', 'Auto', PEN, True) + '</div><div class="pr-foot"><span class="pr-btn">Next</span></div>')
-    return tablet(0, body, 'Reconstructed tablet screen, Batch information: batch and MO numbers typed in, date, time and operator signature filled in automatically')
-
-def screen2():
-    sop = ('<div class="pr-sop"><p class="pr-sop__n">SOP 3.2 · Charge the reactor</p><ol><li>Confirm the vessel is clean and dry.</li>'
-           '<li>Add water, then start agitation at low speed.</li><li><b>Keep the temperature below 40 °C while adding the surfactant.</b></li>'
-           '<li>Add the preservative once the blend is uniform.</li><li>Hold for 15 minutes, then pull a sample for QC.</li></ol></div>')
-    ing = ('<div class="pr-ing"><p class="pr-ing__h">Ingredients</p>' + ''.join(
-        f'<div class="pr-ing__r"><span>{n}</span><span>{t}</span><span class="pr-in">{a}</span><span class="pr-ok">{_l("check") if a else ""}</span></div>'
-        for n, t, a in [('Deionized water', '420.0 kg', '420.2'), ('Surfactant LAS-96', '180.0 kg', '179.8'), ('Preservative P-2', '2.5 kg', ''), ('Fragrance F-11', '1.2 kg', ''), ('Citric acid (50%)', 'As needed', '')]) + '</div>')
-    return tablet(1, f'<div class="pr-two">{sop}{ing}</div><div class="pr-foot"><span class="pr-btn pr-btn--2">Back</span><span class="pr-btn">Next</span></div>',
-                  'Reconstructed tablet screen, SOPs and ingredients: the SOP step in a blue block with the critical instruction in bold, and an ingredients list in grey with target and actual weights')
-
-def screen3():
-    rows = [('pH', '6.5 – 7.5', '7.1', 'Pass'), ('Viscosity (cP)', '1,200 – 1,500', '1,340', 'Pass'), ('Specific gravity', '1.02 – 1.06', '1.07', 'Fail'), ('Appearance', 'Clear', 'Clear', 'Pass'), ('Moisture (%)', '≤ 0.5', '0.3', 'Pass'), ('Odor', 'Characteristic', 'Characteristic', 'Pass')]
-    tb = ''.join(f'<div class="pr-qc__r"><span>{t}</span><span>{sp}</span><span class="pr-in">{r}</span><span class="pr-pf pr-pf--{st.lower()}">{st}</span></div>' for t, sp, r, st in rows)
-    body = ('<p class="pr-h">QC tests</p><div class="pr-qc"><div class="pr-qc__r pr-qc__hd"><span>Test</span><span>Spec</span><span>Result</span><span></span></div>' + tb + '</div>'
-            '<div class="pr-foot"><span class="pr-sign">' + PEN + 'Approved by M. Chen · 11:18 · Auto</span><span class="pr-btn">Submit batch</span></div>')
-    return tablet(2, body, 'Reconstructed tablet screen, QC tests: each test with its spec, the result and a pass or fail flag, and the approval signed automatically')
-
 # Small thumbnails for the solution cards: close-ups of the reconstructed tablet UI (project art)
 THUMBS = {
     # A complete three-step wizard: each step goes active, then done, and the line fills between them
     'flow': ('<div class="pr-th pr-th--flow">'
              + '<i class="pr-l pr-l1"><u></u></i><i class="pr-l pr-l2"><u></u></i>'
              + ''.join(f'<span class="pr-c pr-c{n}"><em>{n}</em><strong>{_l("check")}</strong></span>' for n in (1, 2, 3))
-             + '<b class="pr-t1">Batch details</b><b class="pr-t2">SOP</b><b class="pr-t3">QA checks</b></div>'),
-    # Values appear on their own: date and time from the clock, the verifier from the operator's login
+             + '<b class="pr-t1">Batch info</b><b class="pr-t2">Steps</b><b class="pr-t3">Quality tests</b></div>'),
+    # Values appear on their own: date and time from line tracking, the operator from their login (names and values match the final screens)
     'auto': ('<div class="pr-th pr-th--auto">'
-             '<div class="pr-af"><span class="pr-lbl">Date</span><div class="pr-th__f"><span class="pr-v pr-v1">06/14/2023</span></div></div>'
-             '<div class="pr-af"><span class="pr-lbl">Time</span><div class="pr-th__f"><span class="pr-v pr-v2">09:42</span></div></div>'
-             '<div class="pr-af pr-af--w"><span class="pr-lbl">Verified by</span><div class="pr-th__f"><span class="pr-v pr-v3">J. Rivera, Operator</span><em class="pr-v pr-v3">Auto</em></div></div>'
+             '<div class="pr-af"><span class="pr-lbl">Date</span><div class="pr-th__f"><span class="pr-v pr-v1">04/02/2024</span></div></div>'
+             '<div class="pr-af"><span class="pr-lbl">Time</span><div class="pr-th__f"><span class="pr-v pr-v2">14:36</span></div></div>'
+             '<div class="pr-af pr-af--w"><span class="pr-lbl">Operator</span><div class="pr-th__f"><span class="pr-v pr-v3">J. Fischer</span><em class="pr-v pr-v3">Auto</em></div></div>'
              '</div>'),
     # The SOP's requirements get ticked off one by one
     'sop': ('<div class="pr-th pr-th--sop"><p>SOP 3.2 · Charge the reactor</p>'
@@ -141,11 +102,11 @@ def insight_goals():
 # The paper batch workflow, with the points where errors creep in (Serena, 2026-11-16).
 FLOW = [  # title, who, what happens, error risk
     ('Weigh ingredients', 'Operator', 'Weighs each ingredient and writes the actual amount next to the target.', 'Misread scales and transposed digits'),
-    ('Follow the steps', 'Operator', 'Works through the instructions in a separate binder, initialling each step.', 'Skipped or out-of-order steps'),
+    ('Follow the steps', 'Operator', 'Works through the instructions in a separate binder, initialing each step.', 'Skipped or out-of-order steps'),
     ('Record conditions', 'Operator', 'Writes down temperatures, times and mixing speeds as the batch runs.', 'Out-of-range values go unnoticed'),
     ('Run quality tests', 'Operator', 'Tests samples and copies each result onto the quality form.', 'Results copied wrong or left blank'),
-    ('Hand off the forms', 'Operator to QA', 'Carries the signed paper forms to QA and engineering.', 'Lost pages and missing signatures'),
-    ('Review and approve', 'QA and engineers', 'Checks every entry by hand and sends mistakes back to the floor.', 'Corrections restart the loop and delay release'),
+    ('Hand off the forms', 'Operator to reviewers', 'Carries the signed paper forms to the reviewers.', 'Lost pages and missing signatures'),
+    ('Review and approve', 'Reviewers', 'Checks every entry by hand and sends mistakes back to the floor.', 'Corrections restart the loop and delay release'),
 ]
 def flow():
     """Fig. 1: plays through the six steps on its own; any step can be picked. The note shows the step on the left
@@ -209,9 +170,9 @@ SCREENS = [  # screen id in procense/screens.json, caption, [(x%, y% of the base
       (73.2, 73.1, 'Instruction first', 'The instruction sits in bold above its inputs.'),
       (82.6, 23.7, 'Details on demand', 'Show details opens batch info only when needed.')]),
     ('landscape-all-steps-drawer',
-     'All steps, the full SOP in a drawer over the current step.',
+     'All steps, the full procedure in a drawer over the current step.',
      [(75.6, 14.9, 'Progress at a glance', 'Steps done and the percent complete sit up top.'),
-      (69.0, 31.1, 'The whole SOP', 'Steps grouped by phase, with who signed each one.'),
+      (69.0, 31.1, 'The whole procedure', 'Steps grouped by phase, with who signed each one.'),
       (80.1, 91.7, 'Jump to any step', 'Open any step, or return to the current one.')]),
     ('landscape-qc-tests',
      'Quality tests, the last step before review.',
@@ -288,7 +249,7 @@ BODY = ''.join([
         + stats(STATS_FULL, ' pm-stats--sm cs-stats')),
 
     section('problem', 'The problem', 'Every batch was recorded by hand, then checked on paper.',
-        lede('In many chemical plants, each batch is recorded on two paper forms: one for the manufacturing steps and one for the quality checks. Once complete, the forms go to directors and engineers, who decide whether the batch meets the standard. The process is slow, invites human error and holds up decisions on the floor.')
+        lede('In many chemical plants, each batch is recorded on two paper forms: one for the manufacturing steps and one for the quality checks. Once complete, the forms go to reviewers in quality and engineering, who decide whether the batch meets the standard. The process is slow, invites human error and holds up decisions on the floor.')
         + shot(flow(), 'A paper batch, step by step. Five of the six steps are written by hand, and each is a chance for error.', 1)
         + stats([('~150', 'Handwritten entries in one batch record'), ('1–4%', 'Chance any handwritten entry is inaccurate'), ('1–3 days', 'From the end of a batch to its approval')], ' pm-stats--sm cs-stats')
         + '<p class="pm-meta-text pr-draft">Estimates for a typical paper batch record, for illustration.</p>'
@@ -297,8 +258,8 @@ BODY = ''.join([
           '<p class="pr-ns__text">Streamline batch manufacturing by digitizing its forms, while keeping them intuitive for operators used to filling them in by hand.</p></section>'
         + '<h3 class="cs-h3">The solution, in short</h3>'
         + lede('A guided tablet flow, built into the Procense platform. It gives operators a faster, more reliable way to record each batch, and still feels as familiar as paper.')
-        + feature_cards([('flow', 'Two forms, one flow', 'Batch details, SOP and QA checks, in order.'),
-                         ('auto', 'Fields that fill themselves', 'Dates, times and signatures fill in, so there’s less to get wrong.'),
+        + feature_cards([('flow', 'Two forms, one flow', 'Both paper forms become one guided, step-by-step flow.'),
+                         ('auto', 'Fields that fill themselves', 'Dates, times and the operator fill in, so there’s less to get wrong.'),
                          ('sop', 'Instructions in the form', 'Instructions and limits sit right where data is entered.')])),
 
     section('discovery', 'Approach', 'I started by taking the paper forms apart.',
@@ -312,9 +273,9 @@ BODY = ''.join([
         + insight_goals()),
 
     section('ideation', 'Ideation', 'I explored how crowded tables could become simple steps.',
-        lede('I studied how other products turn paper forms into software and organise large tables, then sketched layouts and noted what each form needed.')
+        lede('I studied how other products turn paper forms into software and organize large tables, then sketched layouts and noted what each form needed.')
         + '<figure class="pm-frame pr-sketches"><div class="pm-frame__stage"><div class="pr-sketches__row">'
-          '<div class="pr-sk" data-lb-item data-lb-caption="Fig. 03. Early sketch of the quality report’s test section.">' + expand('quality report sketch') + '<img src="assets/sketch-qc-report.webp" width="1400" height="1535" loading="lazy" alt="Hand-drawn sketch of the QC batch report’s test section: the table reorganized into colour-coded sections, a pass value entered as a range, and pass checkboxes that could be automated, with notes to use monochrome colours."></div>'
+          '<div class="pr-sk" data-lb-item data-lb-caption="Fig. 03. Early sketch of the quality report’s test section.">' + expand('quality report sketch') + '<img src="assets/sketch-qc-report.webp" width="1400" height="1535" loading="lazy" alt="Hand-drawn sketch of the QC batch report’s test section: the table reorganized into color-coded sections, a pass value entered as a range, and pass checkboxes that could be automated, with notes to use monochrome colors."></div>'
           '<div class="pr-sk" data-lb-item data-lb-caption="Fig. 03. Early sketch of the manufacturing form.">' + expand('manufacturing form sketch') + '<img src="assets/sketch-sop-form.webp" width="1400" height="2255" loading="lazy" alt="Hand-drawn sketch of the manufacturing SOP quality form: a heading with date, batch and order numbers and operators picked from the user database, inspection dates, then a procedure table with in-line SOP numbers, amounts to add and added, and a sub-table."></div>'
           '</div></div><figcaption class="pm-frame__caption"><span class="pm-frame__index">Fig. 03</span><span>Early sketches of the quality report (left) and the manufacturing form (right).</span></figcaption></figure>'),
 
@@ -323,19 +284,19 @@ BODY = ''.join([
         + panel('What we assumed', '<p>Operators would use desktops or laptops, like the rest of Procense’s web-first platform.</p>', ' pm-panel--tonal', 'p-assumed')
         + panel('What we found', '<p>Operators carry tablets as they work through each step and run quality tests on the floor.</p>', '', 'p-found')
         + '</div>'
-        + lede('That discovery reshaped the project. We moved to a tablet-first design with new layouts and a new flow. The smaller screen meant breaking long forms into steps, which adds a tap or two, but in return operators got larger text, cleaner sections and a flow that matches how they actually work.')
+        + lede('That discovery reshaped the project. I moved the design to tablet-first, with new layouts and a new flow. The smaller screen meant breaking long forms into steps, which adds a tap or two, but in return operators got larger text, cleaner sections and a flow that matches how they actually work.')
         + web_vs_tablet(4)),
 
     section('solution', 'The solution', 'Two paper forms became one guided flow.',
-        lede('The final design merges both forms into one guided flow of four steps: batch information, special precautions, the manufacturing steps, then the quality tests. Each screen shows only what that step needs, so operators can keep their attention on the batch.')
+        lede('The final design starts from a forms dashboard, then merges both paper forms into one guided flow of four steps: batch information, special precautions, the manufacturing steps, then the quality tests. Each screen shows only what that step needs, so operators can keep their attention on the batch.')
         + screen_rows(5)),
 
     section('portrait', 'Portrait', 'It works however the tablet is held.',
         lede('Operators flip tablets between landscape and portrait as they move around the line, so every screen reflows. Navigation tucks behind a menu, the stepper names only the current step, and fields wrap into fewer columns without losing any controls.')
         + portrait(11)),
 
-    section('feedback', 'User feedback', 'A QA manager’s review cut even more typing.',
-        lede('We reviewed the first design of the quality test form with a QA manager, section by section, and their feedback led to two changes.')
+    section('feedback', 'User feedback', 'A quality manager’s review cut even more typing.',
+        lede('We reviewed the first design of the quality test form with a quality manager, section by section, and their feedback led to two changes.')
         + '<div class="cs-pair">'
         + panel('What we heard', '<p>Operators still typed too much, and choosing batch and order numbers from a list added unnecessary steps.</p>', ' pm-panel--tonal', 'p-heard')
         + panel('What we changed', '<p>More fields now fill in automatically from the sample type, and batch and order numbers are typed in directly.</p>', '', 'p-changed')
@@ -364,7 +325,7 @@ HEADER = f'''  <header class="cs-head">
   </dl></section>'''
 
 TLDR = f'''      <dl class="cs-tldr__rows">
-        <div class="cs-tldr__row"><dt>Background</dt><dd>Chemical plants record every batch on paper forms that managers then review by hand.</dd></div>
+        <div class="cs-tldr__row"><dt>Background</dt><dd>Chemical plants record every batch on paper forms that reviewers then check by hand.</dd></div>
         <div class="cs-tldr__row"><dt>Problem</dt><dd>Paper slowed decisions on the floor, and crowded, repetitive forms made mistakes easy.</dd></div>
         <div class="cs-tldr__row"><dt>Approach</dt><dd>I studied the forms and how operators work, then designed the Digital Forms application for the tablets they carry.</dd></div>
         <div class="cs-tldr__row"><dt>Outcome</dt><dd>Two paper forms became one tablet flow, so plants move faster and teams can focus on the work on the floor.</dd></div>
@@ -410,7 +371,6 @@ JS = r"""
         [].forEach.call(node.querySelectorAll('img'), function (e) { e.loading = 'eager'; });
         [].forEach.call(node.querySelectorAll('.ts__scroll'), function (e) { e._ts = 0; e.scrollTop = 0; });
       } else if (img) { node = new Image(); node.src = img.currentSrc || img.src; node.alt = img.alt; }
-      else { node = it.querySelector('.pr-tab').cloneNode(true); }
       slot.replaceChildren(node); if (ts) window.TabletScreen.init(node); cap.textContent = it.getAttribute('data-lb-caption'); n.textContent = at + 1;
       if (!reduce && node.animate) node.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 200, easing: 'ease-out' });
     }
@@ -548,7 +508,6 @@ CSS = r"""
 .pr-lb__slot { display: grid; place-items: center; width: 100%; height: min(calc(100svh - 190px), 1100px); }
 .pr-lb__slot img { display: block; max-width: 100%; max-height: min(calc(100svh - 190px), 1100px); width: auto; height: auto; object-fit: contain; border-radius: var(--radius-sm); }
 @media (max-width: 767px) { .pr-lb__slot img { max-height: min(calc(100svh - 220px), 900px); } }
-.pr-lb__slot .pr-tab { width: min(100%, calc((100svh - 190px) * 1.28), 1100px); max-width: none; }
 /* Tablet screens in the viewer: as large as fits (framed landscape is 1.319x as wide as tall, framed portrait .762x); still scrollable */
 .pr-lb__slot .ts--landscape { width: min(100%, calc((100svh - 190px) * 1.319)); }
 .pr-lb__slot .ts--portrait { width: min(100%, calc((100svh - 190px) * .762)); }
@@ -704,10 +663,11 @@ CSS = r"""
 .pr-note__d { margin: var(--space-1) 0 0; font-size: var(--type-body-sm); line-height: var(--line-body-sm); color: var(--color-text-secondary); text-wrap: pretty; }
 /* The paper is always light, so its annotations use the light-theme values of the same tokens in both themes */
 .pr-paper { --color-action-selected-bg: var(--cobalt-50); --color-action-primary: var(--cobalt-500); --color-bg-inverse: var(--ink); --color-text-inverse: var(--paper); --color-text-on-accent: var(--white); --color-focus-ring: var(--cobalt-600); }
-.pr-paper[data-active="1"] .crit { background: var(--color-action-selected-bg); box-shadow: inset 0 0 0 2px var(--color-action-primary); }
-.pr-paper[data-active="2"] td:nth-child(-n+2), .pr-paper[data-active="2"] th:nth-child(-n+2) { background: var(--color-action-selected-bg); }
+/* Fig. 2 markers use the annotation coral, like every other mockup annotation; the part they point to gets a light coral tint */
+.pr-paper[data-active="1"] .crit { background: color-mix(in srgb, var(--color-annotation) 10%, transparent); box-shadow: inset 0 0 0 2px var(--color-annotation); }
+.pr-paper[data-active="2"] td:nth-child(-n+2), .pr-paper[data-active="2"] th:nth-child(-n+2) { background: color-mix(in srgb, var(--color-annotation) 10%, transparent); }
 .pr-pin:focus-visible { outline: var(--focus-ring-width) solid var(--color-focus-ring); outline-offset: var(--focus-ring-offset); }
-.pr-pin[aria-pressed="true"] { background: var(--color-action-primary); color: var(--color-text-on-accent); }
+.pr-pin[aria-pressed="true"] { transform: translate(-50%, -50%) scale(1.15); box-shadow: 0 0 0 0.6cqw #FBFAF6, 0 0 0 1cqw var(--color-annotation); }
 @media (pointer: coarse) { .pr-pin::after { content: ""; position: absolute; inset: -10px; } }
 /* Insights -> goals: one row per pair, the insight on a tint, an arrow, then the goal as a lifted card */
 .pr-ig { container: pr-ig / inline-size; margin: var(--space-2) 0; display: grid; gap: var(--space-3); }
@@ -731,7 +691,6 @@ CSS = r"""
 
 /* ===== Procense media: first-pass reconstructions (project art: Procense navy #1B2026 and blue #2483FF) ===== */
 .pr-stage { display: grid; place-items: center; }
-.pr-well { width: 100%; }
 /* Paper form */
 .pr-paper { position: relative; width: 100%; max-width: 640px; aspect-ratio: 8.5 / 6; container-type: inline-size; background: #FBFAF6; color: #2B2B2B; box-shadow: 0 1px 2px rgb(0 0 0 / 10%), 0 12px 32px rgb(0 0 0 / 10%); transform: rotate(-0.6deg); overflow: hidden; }
 .pr-paper > div { position: absolute; inset: 0; padding: 5cqw; font-family: var(--font-sans); font-size: 2.1cqw; }
@@ -744,45 +703,7 @@ CSS = r"""
 .pr-paper th, .pr-paper td { color: #2B2B2B; }
 .pr-paper .crit { color: #C62828; font-weight: 700; }
 .pr-paper td { position: relative; }
-.pr-pin { position: absolute; z-index: 1; transform: translate(-50%, -50%); padding: 0; border: 0; cursor: pointer; display: grid; place-items: center; width: 5cqw; height: 5cqw; border-radius: 50%; background: var(--color-bg-inverse); color: var(--color-text-inverse); font: var(--weight-medium) 2.6cqw / 1 var(--font-sans); box-shadow: 0 0 0 0.6cqw #FBFAF6; }
-/* Tablet */
-.pr-tab { container-type: inline-size; width: 100%; max-width: 720px; padding: 2.2%; border-radius: 4.5% / 6.4%; background: #1B2026; box-shadow: 0 2px 4px rgb(0 0 0 / 14%), 0 18px 40px rgb(0 0 0 / 16%); }
-.pr-scr { aspect-ratio: 4 / 3; overflow: hidden; border-radius: 2.4% / 3.2%; background: #F6F7F9; color: #1B2026; font-family: var(--font-sans); font-size: 1.9cqw; line-height: 1.35; display: flex; flex-direction: column; }
-.pr-bar { display: flex; align-items: center; gap: 1.6cqw; padding: 1.6cqw 2.6cqw; background: #1B2026; color: #FFFFFF; }
-.pr-bar span { opacity: .7; } .pr-bar i { margin-left: auto; font-style: normal; opacity: .7; }
-.pr-steps { list-style: none; margin: 0; padding: 1.8cqw 2.6cqw; display: flex; gap: 2.6cqw; background: #FFFFFF; border-bottom: 1px solid #E3E6EB; color: #6B7280; }
-.pr-steps li { display: flex; align-items: center; gap: 1cqw; }
-.pr-steps span { display: grid; place-items: center; width: 3cqw; height: 3cqw; border-radius: 50%; border: 1px solid #C9CED6; font-size: 1.6cqw; }
-.pr-steps .is-on { color: #1B2026; font-weight: 600; } .pr-steps .is-on span { background: #2483FF; border-color: #2483FF; color: #FFFFFF; }
-.pr-steps .is-done span { background: #2483FF; border-color: #2483FF; color: #FFFFFF; }
-.pr-steps span .pm-icon { width: 2cqw; height: 2cqw; }
-.pr-body { flex: 1; padding: 2.4cqw 2.6cqw; display: flex; flex-direction: column; gap: 1.8cqw; min-height: 0; }
-.pr-h { margin: 0; font-size: 2.6cqw; font-weight: 600; }
-.pr-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.6cqw 2cqw; }
-.pr-f { display: grid; gap: .6cqw; } .pr-f--wide { grid-column: 1 / -1; }
-.pr-f__l { color: #4B5563; font-size: 1.7cqw; }
-.pr-f__v { display: flex; align-items: center; gap: 1cqw; padding: 1.3cqw 1.4cqw; border: 1px solid #D6DAE1; border-radius: .8cqw; background: #FFFFFF; }
-.pr-f__v svg, .pr-sign svg { width: 2.2cqw; height: 2.2cqw; fill: none; stroke: #2483FF; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex: none; }
-.pr-f__v em { margin-left: auto; font-style: normal; font-size: 1.5cqw; padding: .2cqw .9cqw; border-radius: .6cqw; background: #E6F0FF; color: #1559C9; }
-.pr-foot { margin-top: auto; display: flex; align-items: center; justify-content: flex-end; gap: 1.4cqw; }
-.pr-btn { padding: 1.2cqw 3cqw; border-radius: .8cqw; background: #2483FF; color: #FFFFFF; font-weight: 600; }
-.pr-btn--2 { background: #FFFFFF; color: #1B2026; box-shadow: inset 0 0 0 1px #C9CED6; }
-.pr-two { display: grid; grid-template-columns: 1.15fr 1fr; gap: 2cqw; }
-.pr-sop { padding: 2cqw; border-radius: 1cqw; background: #E6F0FF; border-left: .6cqw solid #2483FF; }
-.pr-sop__n { margin: 0 0 1.2cqw; font-weight: 600; color: #1559C9; }
-.pr-sop ol { margin: 0; padding-left: 2.6cqw; display: grid; gap: 1cqw; }
-.pr-sop b { color: #1B2026; }
-.pr-ing { padding: 2cqw; border-radius: 1cqw; background: #EEF0F3; display: grid; gap: 1.1cqw; align-content: start; }
-.pr-ing__h { margin: 0; font-weight: 600; }
-.pr-ing__r, .pr-qc__r { display: grid; grid-template-columns: 1.6fr 1fr 1fr auto; gap: 1.2cqw; align-items: center; }
-.pr-in { padding: .8cqw 1cqw; border: 1px solid #D6DAE1; border-radius: .6cqw; background: #FFFFFF; min-height: 2.4cqw; }
-.pr-ok { display: grid; place-items: center; color: #1E8E5A; width: 2.4cqw; } .pr-ok .pm-icon { width: 2.4cqw; height: 2.4cqw; }
-.pr-qc { display: grid; gap: 1.2cqw; padding: 2cqw; border-radius: 1cqw; background: #FFFFFF; border: 1px solid #E3E6EB; }
-.pr-qc__r { grid-template-columns: 1.6fr 1.2fr 1fr 6cqw; }
-.pr-qc__hd { color: #6B7280; font-size: 1.6cqw; }
-.pr-pf { text-align: center; padding: .4cqw 0; border-radius: .6cqw; font-size: 1.5cqw; font-weight: 600; }
-.pr-pf--pass { background: #E3F4EA; color: #1E7A4C; } .pr-pf--fail { background: #FDE7E7; color: #B42318; }
-.pr-sign { margin-right: auto; display: flex; align-items: center; gap: 1cqw; color: #4B5563; }
+.pr-pin { position: absolute; z-index: 1; transform: translate(-50%, -50%); padding: 0; border: 0; cursor: pointer; display: grid; place-items: center; width: 5cqw; height: 5cqw; border-radius: 50%; background: var(--color-annotation); color: var(--color-text-on-annotation); font: var(--weight-medium) 2.6cqw / 1 var(--font-sans); box-shadow: 0 0 0 0.6cqw #FBFAF6; }
 """
 
 PT_CSS = """
