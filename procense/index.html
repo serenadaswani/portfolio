@@ -1534,7 +1534,7 @@ body { margin: 0; font-family: var(--font-sans); background: var(--color-bg-canv
 /* Web vs tablet slider sits on the figure stage */
 .pr-stage .cs-ba__side p { max-width: 30ch; }
 
-/* ===== Procense hero (procense_hero.py): paper elements -> shipped screen elements ===== */
+/* ===== Procense hero (procense_hero.py): paper elements land exactly on the shipped screen's elements ===== */
 .ph { --u: 1cqw; container-type: inline-size; background: radial-gradient(120% 90% at 90% 100%, #2483FF 0%, rgb(36 131 255 / 0%) 60%), #1B2026; }
 .ph-stage { position: absolute; left: 50%; top: 50%; width: calc(100 * var(--u)); height: calc(42.857 * var(--u)); transform: translate(-50%, -50%); }
 @container (max-width: 599px) { .ph-stage { --u: 1.25cqw; } }
@@ -1542,74 +1542,73 @@ body { margin: 0; font-family: var(--font-sans); background: var(--color-bg-canv
 .ph-in { position: absolute; left: calc(24 * var(--u)); top: calc(1.65 * var(--u)); width: calc(52 * var(--u)); height: calc(39.55 * var(--u)); }
 .ph-obj { position: absolute; inset: 0; transform-origin: 50% 50%; }
 .ph-bezel { position: absolute; inset: 0; border-radius: calc(2.4 * var(--u)); background: #0D1117; box-shadow: 0 0 0 calc(.12 * var(--u)) rgb(255 255 255 / 9%), 0 calc(2.6 * var(--u)) calc(7 * var(--u)) rgb(0 0 0 / 45%); }
-.ph-screen { position: absolute; inset: calc(1.1 * var(--u)); overflow: hidden; border-radius: calc(1.3 * var(--u)); background: #F3F4F6; font-family: var(--font-sans); color: #1B2026; }
-/* The shipped screen, faded in over the morphed layout at the end */
-.ph-shot { position: absolute; inset: 0; z-index: 2; }
-.ph-shot > img { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
-.ph-view { position: absolute; left: 7.8125%; top: 7.2917%; width: 92.1875%; height: 82.1615%; overflow: hidden; background: #FFFFFF; }
+.ph-screen { position: absolute; inset: calc(1.1 * var(--u)); overflow: hidden; border-radius: calc(1.3 * var(--u)); background: #FFFFFF; font-family: var(--font-sans); }
+.ph-base { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+/* The morph layer and the real slice share the content box exactly */
+.ph-mc, .ph-view { position: absolute; left: 7.8125%; top: 7.2917%; width: 92.1875%; height: 82.1615%; }
+.ph-mc { background: #F5F6F8; clip-path: inset(0); }
+.ph-view { overflow: hidden; background: #FFFFFF; }
 .ph-view img { display: block; width: 100%; height: auto; }
-/* Morphing boxes: placed at their screen rects; the animation brings them in from their paper rects */
+/* Morph boxes: at their shipped rects, in the shipped colours (the animation brings them in from paper) */
 .ph-m { position: absolute; left: var(--sl); top: var(--st); width: var(--sw); height: var(--sh); box-sizing: border-box; }
-.ph-p { opacity: 0; } .ph-s { opacity: 1; }
-.ph-m--title { display: grid; align-items: center; }
-.ph-tp, .ph-ts { grid-area: 1 / 1; white-space: nowrap; }
-.ph-tp { justify-self: center; font-size: calc(1.9 * var(--u)); font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: #2B2B2B; }
-.ph-ts { font-size: calc(1.45 * var(--u)); font-weight: 600; }
-.ph-m--panel { border-radius: calc(.45 * var(--u)); background: #E9EBEF; }
-.ph-m--field { display: flex; align-items: center; padding: 0 calc(.55 * var(--u)); border: calc(.1 * var(--u)) solid #C9CED6; border-radius: calc(.35 * var(--u)); background: #FFFFFF; }
-.ph-m--comments { align-items: flex-start; padding-top: calc(.5 * var(--u)); }
-.ph-lab { position: absolute; left: 0; bottom: 100%; margin-bottom: calc(.45 * var(--u)); white-space: nowrap; }
-.ph-lab.ph-p { font-size: calc(.78 * var(--u)); font-weight: 600; letter-spacing: .04em; text-transform: uppercase; color: #4A473F; }
-.ph-lab.ph-s { font-size: calc(.86 * var(--u)); font-weight: 500; }
-.ph-val { position: absolute; left: calc(.6 * var(--u)); white-space: nowrap; font-size: calc(.82 * var(--u)); }
-.ph-val.ph-s { top: 50%; translate: 0 -50%; } .ph-val--ph { color: #6B7280; }
-.ph-m--comments .ph-val.ph-s { top: calc(.7 * var(--u)); translate: none; }
-.ph-val.ph-hw { bottom: calc(.1 * var(--u)); font-size: calc(2 * var(--u)); }
-.ph-m--table { overflow: hidden; border: calc(.1 * var(--u)) solid #D9DDE3; border-radius: calc(.45 * var(--u)); background: #FFFFFF; }
+.ph-p { opacity: 0; }
+.ph-m--card { background: #FFFFFF; box-shadow: inset 0 0 0 calc(.049 * var(--u)) #E1E4EA; border-radius: calc(.45 * var(--u)); }
+.ph-m--title { display: grid; align-items: center; justify-items: center; overflow: visible; }
+.ph-tp { white-space: nowrap; font-size: calc(1.9 * var(--u)); font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: #2B2B2B; }
+.ph-m--button { border-radius: calc(.26 * var(--u)); background: #4A67E0; }
+.ph-m--panel { border-radius: calc(.45 * var(--u)); background: #F0F2F6; }
+.ph-m--field { border: calc(.049 * var(--u)) solid #848C98; border-radius: calc(.32 * var(--u)); background: #FFFFFF; }
+.ph-lab { position: absolute; left: 0; bottom: 100%; margin-bottom: calc(.45 * var(--u)); white-space: nowrap; font-size: calc(.78 * var(--u)); font-weight: 600; letter-spacing: .04em; text-transform: uppercase; color: #4A473F; }
+.ph-val { position: absolute; left: calc(.6 * var(--u)); bottom: calc(.1 * var(--u)); font-size: calc(2 * var(--u)); }
+.ph-m--table { overflow: hidden; border: calc(.049 * var(--u)) solid #E1E4EA; border-radius: calc(.39 * var(--u)) calc(.39 * var(--u)) 0 0; background: #FFFFFF; }
+.ph-thead { position: absolute; inset: 0 0 auto; height: calc(2.33 * var(--u)); background: #F5F6F8; border-bottom: calc(.049 * var(--u)) solid #EBEDF1; }
 .ph-m--table table { width: 100%; height: 100%; border-collapse: collapse; table-layout: fixed; font-size: calc(.82 * var(--u)); color: #2B2B2B; }
 .ph-m--table th, .ph-m--table td { border: calc(.1 * var(--u)) solid #8E8A7C; padding: calc(.4 * var(--u)) calc(.6 * var(--u)); text-align: left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
 .ph-m--table th { background: #EFEDE4; font-weight: 600; font-size: calc(.75 * var(--u)); }
-.ph-th { position: absolute; inset: 0 0 auto; display: grid; grid-template-columns: 11% 18% 39% 32%; align-items: center; height: calc(2.4 * var(--u)); padding: 0 calc(.7 * var(--u)); background: #F6F7F9; border-bottom: calc(.1 * var(--u)) solid #E5E7EB; font-size: calc(.72 * var(--u)); color: #4B5563; }
-/* Paper-only parts (header line, footer) */
+/* Paper-only parts (header line, footer), in content-box coordinates */
 .ph-po { position: absolute; margin: 0; font-size: calc(.9 * var(--u)); color: #4A473F; opacity: 0; }
-.ph-meta { left: 5%; right: 5%; top: 11%; display: flex; justify-content: space-between; align-items: baseline; }
+.ph-meta { left: -3%; right: -3%; top: 4.5%; display: flex; justify-content: space-between; align-items: baseline; }
 .ph-meta .ph-hw { font-size: calc(1.9 * var(--u)); margin-left: calc(.4 * var(--u)); }
-.ph-foot { left: 5%; top: 95%; }
+.ph-foot { left: -3%; top: 107%; }
 .ph-hw { display: inline-block; font-family: Caveat, "Bradley Hand", cursive; font-weight: 600; line-height: 1; color: #22356F; white-space: nowrap; }
 
-/* ---- The timeline: write (0.7-2.0s), settle (1.9-3.1s), morph (2.7-4.3s), bezel (3.3s), real screen (4.1-4.8s) ---- */
+/* ---- Timeline: write (0.6-1.8s), settle (1.8-3.0s), morph (2.7-4.1s) with the chrome in (3.0-3.9s),
+        button (3.6-4.1s), bezel (3.2-4.2s), real text (3.95-4.5s, as the boxes settle) ---- */
 .ph--anim .ph-in { animation: ph-in .7s cubic-bezier(.2,0,0,1) .1s both; }
-.ph--anim .ph-obj { animation: ph-settle 1.2s cubic-bezier(.65,0,.35,1) 1.9s both; }
-.ph--anim .ph-screen { animation: ph-sheet 1.2s cubic-bezier(.65,0,.35,1) 2.5s both; }
-.ph--anim .ph-po { animation: ph-out .5s ease-in 2.6s both; }
-.ph--anim .ph-po .ph-hw, .ph--anim .ph-p.ph-hw { animation: ph-write .5s cubic-bezier(.4,0,.2,1) both; animation-delay: calc(1.05s + var(--i, 0) * 220ms); }
-.ph--anim .ph-m { animation: ph-geo 1.3s cubic-bezier(.65,0,.35,1) both; animation-delay: calc(2.7s + var(--d) * 45ms); }
-.ph--anim .ph-m--field { animation-name: ph-geo, ph-field; }
+.ph--anim .ph-obj { animation: ph-settle 1.2s cubic-bezier(.65,0,.35,1) 1.8s both; }
+.ph--anim .ph-hw { animation: ph-write .5s cubic-bezier(.4,0,.2,1) both; animation-delay: calc(1.0s + var(--i, 0) * 220ms); }
+.ph--anim .ph-po { animation: ph-out .5s ease-in 2.5s both; }
+.ph--anim .ph-base { animation: ph-fade-in .9s ease-in-out 3.0s both; }
+.ph--anim .ph-mc { animation: ph-mc 1.4s cubic-bezier(.65,0,.35,1) 2.7s both; }
+.ph--anim .ph-m { animation: ph-geo 1.4s cubic-bezier(.65,0,.35,1) both; animation-delay: calc(2.7s + var(--d, 0) * 25ms); }
+.ph--anim .ph-m--card { animation-name: ph-geo, ph-card; }
 .ph--anim .ph-m--panel { animation-name: ph-geo, ph-panel; }
+.ph--anim .ph-m--field { animation-name: ph-geo, ph-field; }
 .ph--anim .ph-m--table { animation-name: ph-geo, ph-table; }
-.ph--anim .ph-m .ph-p:not(.ph-hw) { animation: ph-out-p 1.3s linear both; animation-delay: calc(2.7s + var(--d) * 45ms); }
-.ph--anim .ph-m .ph-p.ph-hw { animation: ph-write .5s cubic-bezier(.4,0,.2,1) both, ph-out-p 1.3s linear both;
-  animation-delay: calc(1.05s + var(--i, 0) * 220ms), calc(2.7s + var(--d) * 45ms); }
-.ph--anim .ph-m .ph-s { animation: ph-in-s 1.3s linear both; animation-delay: calc(2.7s + var(--d) * 45ms); }
-.ph--anim .ph-bezel { animation: ph-bezel 1s cubic-bezier(.2,0,0,1) 3.3s both; }
-.ph--anim .ph-shot { animation: ph-shot .7s ease-in-out 4.1s both; }
+.ph--anim .ph-m--button { animation: ph-grow .5s cubic-bezier(.2,0,0,1) 3.6s both; }
+.ph--anim .ph-thead { animation: ph-fade-in .6s ease-in-out 3.4s both; }
+.ph--anim .ph-m .ph-p { animation: ph-out .55s ease-in both; animation-delay: calc(2.75s + var(--d, 0) * 25ms); }
+.ph--anim .ph-m .ph-p.ph-hw { animation: ph-write .5s cubic-bezier(.4,0,.2,1) both, ph-out .55s ease-in both;
+  animation-delay: calc(1.0s + var(--i, 0) * 220ms), calc(3.55s + var(--d, 0) * 25ms); }  /* handwriting rides along until just before landing */
+.ph--anim .ph-bezel { animation: ph-bezel 1s cubic-bezier(.2,0,0,1) 3.2s both; }
+.ph--anim .ph-view { animation: ph-fade-in .55s ease-in-out 3.95s both; }
 /* Held at the start frame until the script says go */
-.ph--anim:not(.is-play) *, .ph--anim:not(.is-play) { animation-play-state: paused !important; }
+.ph--anim:not(.is-play), .ph--anim:not(.is-play) * { animation-play-state: paused !important; }
 
 @keyframes ph-in { from { opacity: 0; translate: 0 calc(1.5 * var(--u)); } to { opacity: 1; translate: 0 0; } }
 @keyframes ph-settle { from { transform: translate(calc(-15 * var(--u)), calc(1 * var(--u))) rotate(-5deg) scale(.8); } to { transform: none; } }
-@keyframes ph-sheet { from { background: #FBFAF6; border-radius: calc(.4 * var(--u)); } to { background: #F3F4F6; border-radius: calc(1.3 * var(--u)); } }
 @keyframes ph-write { from { clip-path: inset(-25% 100% -25% 0); } to { clip-path: inset(-25% -5% -25% 0); } }
 @keyframes ph-out { from { opacity: 1; } to { opacity: 0; } }
+@keyframes ph-fade-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes ph-grow { from { opacity: 0; transform: scale(.85); } to { opacity: 1; transform: none; } }
+/* The paper sheet is the morph layer's card: no clip and no page colour until the boxes land */
+@keyframes ph-mc { from { background-color: rgb(245 246 248 / 0%); clip-path: inset(-40% -40% -40% -40%); } to { background-color: #F5F6F8; clip-path: inset(0); } }
 @keyframes ph-geo { from { left: var(--pl); top: var(--pt); width: var(--pw); height: var(--ph); } to { left: var(--sl); top: var(--st); width: var(--sw); height: var(--sh); } }
-@keyframes ph-field { from { border-color: transparent transparent #8E8A7C; border-radius: 0; background: rgb(255 255 255 / 0%); } to { border-color: #C9CED6; border-radius: calc(.35 * var(--u)); background: #FFFFFF; } }
-@keyframes ph-panel { from { background: rgb(233 235 239 / 0%); box-shadow: inset 0 0 0 calc(.1 * var(--u)) #8E8A7C; border-radius: 0; } to { background: #E9EBEF; box-shadow: inset 0 0 0 0 rgb(142 138 124 / 0%); border-radius: calc(.45 * var(--u)); } }
-@keyframes ph-table { from { border-color: transparent; background: rgb(255 255 255 / 0%); border-radius: 0; } to { border-color: #D9DDE3; background: #FFFFFF; border-radius: calc(.45 * var(--u)); } }
-/* Overlapping cross-fade, so the elements never go pale mid-morph */
-@keyframes ph-out-p { 0%, 25% { opacity: 1; } 62% { opacity: 0; } 100% { opacity: 0; } }
-@keyframes ph-in-s { 0%, 30% { opacity: 0; } 62% { opacity: 1; } 100% { opacity: 1; } }
+@keyframes ph-card { from { background: #FBFAF6; box-shadow: inset 0 0 0 calc(.049 * var(--u)) rgb(225 228 234 / 0%); border-radius: calc(.4 * var(--u)); } to { background: #FFFFFF; box-shadow: inset 0 0 0 calc(.049 * var(--u)) #E1E4EA; border-radius: calc(.45 * var(--u)); } }
+@keyframes ph-panel { from { background: rgb(240 242 246 / 0%); box-shadow: inset 0 0 0 calc(.1 * var(--u)) #8E8A7C; border-radius: 0; } to { background: #F0F2F6; box-shadow: inset 0 0 0 calc(.1 * var(--u)) rgb(142 138 124 / 0%); border-radius: calc(.45 * var(--u)); } }
+@keyframes ph-field { from { border-width: 0 0 calc(.1 * var(--u)); border-color: #8E8A7C; border-radius: 0; background: rgb(255 255 255 / 0%); } to { border-width: calc(.049 * var(--u)); border-color: #848C98; border-radius: calc(.32 * var(--u)); background: #FFFFFF; } }
+@keyframes ph-table { from { border-color: rgb(225 228 234 / 0%); background: rgb(255 255 255 / 0%); border-radius: 0; } to { border-color: #E1E4EA; background: #FFFFFF; border-radius: calc(.39 * var(--u)) calc(.39 * var(--u)) 0 0; } }
 @keyframes ph-bezel { from { opacity: 0; transform: scale(.97); } to { opacity: 1; transform: scale(1); } }
-@keyframes ph-shot { from { opacity: 0; } to { opacity: 1; } }
 
 </style>
 
@@ -1623,7 +1622,7 @@ body { margin: 0; font-family: var(--font-sans); background: var(--color-bg-canv
     </span>
   </div>
 
-  <div class="pm-media pm-media--21x9 cs-hero-well ph" data-ph role="img" aria-label="A paper quality form for a Dark Chocolate batch, filled in by hand, settles into a tablet; its title, fields and test table glide into the shipped Digital Forms screen for the same form, where the date and time are filled in automatically."><div class="ph-stage" aria-hidden="true"><div class="ph-in"><div class="ph-obj"><div class="ph-bezel"></div><div class="ph-screen"><p class="ph-po ph-meta">Batch No. <span class="ph-hw" style="--i:-2">32000102</span><span>Product <span class="ph-hw" style="--i:-1">Dark Chocolate</span></span></p><p class="ph-po ph-foot">Reviewed by ____________ &nbsp; Date __/__/__ &nbsp; Signature ____________</p><div class="ph-m ph-m--title ph-m--title" style="--pl:30%;--pt:4.5%;--pw:40%;--ph:6%;--sl:12.63%;--st:7.64%;--sw:10.42%;--sh:3.56%;--d:0"><span class="ph-p ph-tp">QC Tests</span><span class="ph-s ph-ts">QC tests</span></div><div class="ph-m ph-m--panel ph-m--panel" style="--pl:5%;--pt:16.5%;--pw:90%;--ph:46%;--sl:12.63%;--st:18.75%;--sw:82.68%;--sh:57.03%;--d:1"></div><div class="ph-m ph-m--field ph-m--yield" style="--pl:9%;--pt:24%;--pw:25%;--ph:5.5%;--sl:14.97%;--st:26.04%;--sw:24.67%;--sh:6.16%;--d:2"><span class="ph-lab ph-p">Actual yield</span><span class="ph-lab ph-s">Actual yield</span><span class="ph-s ph-val ph-val--ph">Add number…</span></div><div class="ph-m ph-m--field ph-m--date" style="--pl:38%;--pt:24%;--pw:25%;--ph:5.5%;--sl:41.6%;--st:26.04%;--sw:24.74%;--sh:6.16%;--d:3"><span class="ph-lab ph-p">Date finished</span><span class="ph-lab ph-s">Date finished</span><span class="ph-p ph-hw ph-val" style="--i:3">4/2/24</span><span class="ph-s ph-val">04/02/2024</span></div><div class="ph-m ph-m--field ph-m--time" style="--pl:67%;--pt:24%;--pw:24%;--ph:5.5%;--sl:68.29%;--st:26.04%;--sw:24.67%;--sh:6.16%;--d:4"><span class="ph-lab ph-p">Time finished</span><span class="ph-lab ph-s">Time finished</span><span class="ph-p ph-hw ph-val" style="--i:4">2:36 pm</span><span class="ph-s ph-val">14:36</span></div><div class="ph-m ph-m--field ph-m--made" style="--pl:9%;--pt:36%;--pw:40%;--ph:5.5%;--sl:14.97%;--st:42.97%;--sw:38.02%;--sh:6.25%;--d:5"><span class="ph-lab ph-p">Made by</span><span class="ph-lab ph-s">Made by</span><span class="ph-s ph-val ph-val--ph">Select operator</span></div><div class="ph-m ph-m--field ph-m--pack" style="--pl:51%;--pt:36%;--pw:40%;--ph:5.5%;--sl:54.95%;--st:42.97%;--sw:38.02%;--sh:6.25%;--d:6"><span class="ph-lab ph-p">Packaged by</span><span class="ph-lab ph-s">Packaged by</span><span class="ph-s ph-val ph-val--ph">Select operator</span></div><div class="ph-m ph-m--field ph-m--comments" style="--pl:9%;--pt:48%;--pw:82%;--ph:10%;--sl:14.97%;--st:55.99%;--sw:77.99%;--sh:16.67%;--d:7"><span class="ph-lab ph-p">Misc. comments</span><span class="ph-lab ph-s">Misc. comments</span><span class="ph-s ph-val ph-val--ph">Add comments here…</span></div><div class="ph-m ph-m--table ph-m--table" style="--pl:5%;--pt:66%;--pw:90%;--ph:27%;--sl:12.63%;--st:78.91%;--sw:82.68%;--sh:29.08%;--d:8"><table class="ph-p"><colgroup><col style="width:11%"><col style="width:22%"><col style="width:41%"><col style="width:13%"><col style="width:13%"></colgroup><thead><tr><th>Test ID</th><th>Test name</th><th>Standard</th><th>Result</th><th>Initials</th></tr></thead><tbody><tr><td>QA-10</td><td>Visual inspection</td><td>Smooth surface, no bloom or air bubbles</td><td></td><td></td></tr><tr><td>QA-11</td><td>Snap test</td><td>Clean, crisp break when snapped</td><td></td><td></td></tr><tr><td>QA-12</td><td>Taste test</td><td>Balanced flavor, not overly bitter</td><td></td><td></td></tr></tbody></table><div class="ph-s ph-th"><span>Test ID</span><span>Test name</span><span>Standard</span><span>Result</span></div></div><div class="ph-shot"><img src="assets/screens/landscape-qc-tests.webp" width="1536" height="1152" alt="" decoding="async"><div class="ph-view"><img src="assets/screens/landscape-qc-tests-scroll.webp" width="1416" height="2337" alt="" decoding="async" style="transform:translateY(-23.1065%)"></div></div></div></div></div></div></div>
+  <div class="pm-media pm-media--21x9 cs-hero-well ph" data-ph role="img" aria-label="A paper quality form for a Dark Chocolate batch, filled in by hand, settles into a tablet; its sheet, sections, fields and test table glide into the shipped Digital Forms screen for the same form, where the date and time are filled in automatically."><div class="ph-stage" aria-hidden="true"><div class="ph-in"><div class="ph-obj"><div class="ph-bezel"></div><div class="ph-screen"><img class="ph-base" src="assets/screens/landscape-qc-tests.webp" width="1536" height="1152" alt="" decoding="async"><div class="ph-mc"><div class="ph-m ph-m--card" style="--pl:-8.475%;--pt:-8.875%;--pw:108.475%;--ph:121.712%;--sl:2.542%;--st:-3.803%;--sw:94.915%;--sh:103.856%"></div><div class="ph-m ph-m--title" style="--pl:24.068%;--pt:-3.398%;--pw:43.390%;--ph:7.303%;--sl:5.367%;--st:1.268%;--sw:11.088%;--sh:3.275%"><span class="ph-p ph-tp">QC Tests</span></div><div class="ph-m ph-m--button" style="--pl:77.966%;--pt:1.268%;--pw:16.808%;--ph:7.607%;--sl:77.966%;--st:1.268%;--sw:16.808%;--sh:7.607%"></div><div class="ph-m ph-m--panel" style="--pl:-3.051%;--pt:11.208%;--pw:97.627%;--ph:55.987%;--sl:5.155%;--st:13.735%;--sw:89.689%;--sh:69.519%;--d:1"></div><div class="ph-m ph-m--field" style="--pl:1.288%;--pt:20.336%;--pw:27.119%;--ph:6.694%;--sl:7.698%;--st:22.610%;--sw:26.836%;--sh:7.818%;--d:2"><span class="ph-p ph-lab">Actual yield</span></div><div class="ph-m ph-m--field" style="--pl:32.746%;--pt:20.336%;--pw:27.119%;--ph:6.694%;--sl:36.582%;--st:22.610%;--sw:26.836%;--sh:7.924%;--d:3"><span class="ph-p ph-lab">Date finished</span><span class="ph-p ph-hw ph-val" style="--i:1">4/2/24</span></div><div class="ph-m ph-m--field" style="--pl:64.203%;--pt:20.336%;--pw:26.034%;--ph:6.694%;--sl:65.466%;--st:22.610%;--sw:26.836%;--sh:7.924%;--d:4"><span class="ph-p ph-lab">Time finished</span><span class="ph-p ph-hw ph-val" style="--i:2">2:36 pm</span></div><div class="ph-m ph-m--field" style="--pl:1.288%;--pt:34.941%;--pw:43.390%;--ph:6.694%;--sl:7.698%;--st:43.212%;--sw:41.314%;--sh:7.924%;--d:5"><span class="ph-p ph-lab">Made by</span></div><div class="ph-m ph-m--field" style="--pl:46.847%;--pt:34.941%;--pw:43.390%;--ph:6.694%;--sl:50.989%;--st:43.212%;--sw:41.314%;--sh:7.924%;--d:6"><span class="ph-p ph-lab">Packaged by</span></div><div class="ph-m ph-m--field" style="--pl:1.288%;--pt:49.547%;--pw:88.949%;--ph:12.171%;--sl:7.698%;--st:59.060%;--sw:84.605%;--sh:20.602%;--d:7"><span class="ph-p ph-lab">Misc. comments</span></div><div class="ph-m ph-m--table" style="--pl:-3.051%;--pt:71.455%;--pw:97.627%;--ph:32.862%;--sl:5.226%;--st:87.058%;--sw:89.548%;--sh:12.995%;--d:8"><table class="ph-p"><colgroup><col style="width:11%"><col style="width:22%"><col style="width:41%"><col style="width:13%"><col style="width:13%"></colgroup><thead><tr><th>Test ID</th><th>Test name</th><th>Standard</th><th>Result</th><th>Initials</th></tr></thead><tbody><tr><td>QA-10</td><td>Visual inspection</td><td>Smooth surface, no bloom or air bubbles</td><td></td><td></td></tr><tr><td>QA-11</td><td>Snap test</td><td>Clean, crisp break when snapped</td><td></td><td></td></tr><tr><td>QA-12</td><td>Taste test</td><td>Balanced flavor, not overly bitter</td><td></td><td></td></tr></tbody></table><i class="ph-thead"></i></div><p class="ph-po ph-meta">Batch No. <span class="ph-hw" style="--i:-2">32000102</span><span>Product <span class="ph-hw" style="--i:-1">Dark Chocolate</span></span></p><p class="ph-po ph-foot">Reviewed by ____________ &nbsp; Date __/__/__ &nbsp; Signature ____________</p></div><div class="ph-view"><img src="assets/screens/landscape-qc-tests-scroll.webp" width="1416" height="2337" alt="" decoding="async" style="transform:translateY(-23.1065%)"></div></div></div></div></div></div>
   <script>(function(h){if(h&&!matchMedia("(prefers-reduced-motion: reduce)").matches)h.classList.add("ph--anim")})(document.querySelector("[data-ph]"))</script>
 
 
@@ -1901,9 +1900,7 @@ body { margin: 0; font-family: var(--font-sans); background: var(--color-bg-canv
     var fonts = document.fonts ? document.fonts.ready : Promise.resolve();
     Promise.race([Promise.all(imgs.concat([fonts])), new Promise(function (res) { setTimeout(res, 1500); })]).then(function () { ready = true; go(); });
     // For checking from the console: restart the timeline
-    hero.phReplay = function () {
-      hero.getAnimations({ subtree: true }).forEach(function (a) { a.cancel(); a.play(); });
-    };
+    hero.phReplay = function () { hero.getAnimations({ subtree: true }).forEach(function (a) { a.cancel(); a.play(); }); };
   })();
 
   // Other pages aren't in this prototype yet
