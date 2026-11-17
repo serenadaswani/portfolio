@@ -109,12 +109,12 @@ def items(rows, grid=False):
 # replace with real interview notes before publishing. Each one links to the design goal it shaped.
 # Interview insights (DRAFT, written at Serena's request; replace with real notes) and the goal each one set.
 INSIGHT_GOALS = [  # insight title, insight, goal title, goal
-    ('Forms get filled in mid-task', 'Operators record values while they weigh ingredients, mix and take samples, often wearing gloves.',
+    ('Forms get filled in mid-task', 'Operators record values while weighing, mixing and sampling, often in gloves.',
      'Fewer taps', 'Every tap removed is one less chance to make a mistake.'),
-    ('The same values are written again and again', 'Date, time and initials go on every row. Most errors were copying slips that only surfaced in review.',
+    ('Values get written again and again', 'Date, time and initials on every row; most errors were copying slips.',
      'Built-in guardrails', 'Fields fill themselves in where they can, and the same parts autopopulate across forms.'),
-    ('The platform already knows the batch', 'Batch numbers, products and operators already live in Procense, yet operators copied them onto paper by hand.',
-     'Leverage existing integrations', 'The forms pull batch numbers, products and operators straight from the Procense platform, so nothing is copied by hand.'),
+    ('The platform already knows the batch', 'Batch numbers, products and operators live in Procense, yet were copied by hand.',
+     'Leverage existing integrations', 'Forms pull batch numbers, products and operators straight from Procense.'),
     ('Every record has to survive an audit', 'Auditors check critical limits and sign-offs first. Every value needs a who and a when.',
      'Speed without skipping checks', 'The forms make each batch faster while keeping every check auditors rely on.'),
 ]
@@ -185,9 +185,9 @@ BODY = ''.join([
           '<p class="pr-ns__text">Streamline batch manufacturing by digitizing its forms, while keeping them intuitive for operators used to filling them in by hand.</p></section>'
         + '<h3 class="cs-h3">The solution, in short</h3>'
         + lede('A guided tablet flow, built into the Procense platform. It gives operators a faster, more reliable way to record each batch, and still feels as familiar as paper.')
-        + feature_cards([('flow', 'Two forms, one flow', 'Batch details, the SOP and QA checks in three steps, in the order operators work.'),
-                         ('auto', 'Fields that fill themselves', 'Dates, times and signatures fill in automatically, so there’s less to write and less to get wrong.'),
-                         ('sop', 'Instructions in the form', 'Each step’s instructions and critical limits sit right where the data is entered.')])),
+        + feature_cards([('flow', 'Two forms, one flow', 'Batch details, SOP and QA checks, in order.'),
+                         ('auto', 'Fields that fill themselves', 'Dates, times and signatures fill in, so there’s less to get wrong.'),
+                         ('sop', 'Instructions in the form', 'Instructions and limits sit right where data is entered.')])),
 
     section('discovery', 'Approach', 'I started by taking the paper forms apart.',
         lede('The forms captured a great deal of data, but made it hard to spot what mattered and slow to fill in.')
@@ -216,7 +216,7 @@ BODY = ''.join([
         + shot(screen2(), 'Manufacturing steps and ingredients. Instructions in blue, ingredients in grey, critical conditions in bold.', 5)
         + shot(screen3(), 'Quality tests, the last step. Each result is checked against its target range as it’s entered.', 6)
         + feature_cards([('', 'Fields that fill themselves', 'Date and time fill in automatically, and signatures come from the operator’s login.'),
-                         ('', 'The same patterns everywhere', 'Buttons and layouts behave the same at every step.'),
+                         ('', 'The same patterns everywhere', 'Buttons, fields and layouts behave the same at every step of the flow.'),
                          ('', 'Clear sections', 'Colour sets them apart: blue for instructions, grey for ingredients.'),
                          ('', 'Familiar icons', 'Icons like date and time mark the inputs that are required.'),
                          ('', 'Built for dense data', 'One left-aligned column that’s easy to read and move through.'),
@@ -338,7 +338,8 @@ CSS = r"""
 .pr-flow__n { --ring: var(--color-bg-surface); }
 /* Feature cards: Card --outlined, lifted (shadow-sm) so they stand out; static, so no hover change */
 .pr-cards { container-type: inline-size; list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-4); grid-template-columns: minmax(0, 1fr); }
-@container (min-width: 600px) { .pr-cards--3 { grid-template-columns: repeat(3, minmax(0, 1fr)); } .pr-cards--2 { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@container pr-cards (min-width: 700px) { .pr-cards--3 { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+@container pr-cards (min-width: 700px) { .pr-cards--2 { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 .pr-cards > li { display: flex; }
 .pr-card.pm-card--outlined, .pr-card.pm-card--outlined:hover { flex: 1; padding: var(--space-5); gap: var(--space-2); box-shadow: inset 0 0 0 1px var(--color-border-subtle), var(--shadow-sm); }
 .pr-card .pm-card__title { font-size: var(--type-body-md); line-height: var(--line-body-md); letter-spacing: 0; }
@@ -410,7 +411,7 @@ CSS = r"""
 @keyframes pr-m1 { 0%, 14% { opacity: 0; } 18%, 90% { opacity: 1; } 95%, 100% { opacity: 0; } }
 @keyframes pr-m2 { 0%, 34% { opacity: 0; } 38%, 90% { opacity: 1; } 95%, 100% { opacity: 0; } }
 @keyframes pr-m3 { 0%, 54% { opacity: 0; } 58%, 90% { opacity: 1; } 95%, 100% { opacity: 0; } }
-.pr-cards-wrap { display: grid; gap: var(--space-3); justify-items: end; }
+.pr-cards-wrap { container: pr-cards / inline-size; display: grid; gap: var(--space-3); justify-items: end; }
 .pr-cards-wrap > .pr-cards { justify-self: stretch; }
 /* North Star: the one accent-tinted surface on the page, so it reads first */
 .pr-ns { display: grid; gap: var(--space-2); padding: var(--space-6); border-radius: var(--radius-md); background: var(--color-action-selected-bg); box-shadow: inset 0 0 0 1px var(--color-border-subtle), var(--shadow-sm); }
@@ -492,7 +493,7 @@ CSS = r"""
 .pr-ig__k { margin: 0 0 var(--space-1); font-family: var(--font-meta); font-size: var(--type-label); line-height: var(--line-label); color: var(--color-text-tertiary); }
 .pr-ig__arrow { color: var(--color-text-tertiary); transform: rotate(90deg); }
 .pr-ig__arrow .pm-icon { width: 20px; height: 20px; }
-@container pr-ig (min-width: 600px) {
+@container pr-ig (min-width: 700px) {
   .pr-ig__head { display: grid; grid-template-columns: minmax(0, 1fr) 40px minmax(0, 1fr); font-family: var(--font-meta); font-size: var(--type-label); line-height: var(--line-label); color: var(--color-text-tertiary); }
   .pr-ig__row { grid-template-columns: minmax(0, 1fr) 40px minmax(0, 1fr); align-items: stretch; gap: 0; }
   .pr-ig__arrow { align-self: center; transform: none; }
