@@ -349,9 +349,12 @@ def _two(t):
 
 def tldr_story():
     risk = lambda i: 'Delay risk' if i == len(FLOW) - 1 else 'Error risk'
-    flow_c = ('<ol class="pr-tlf" aria-label="The paper process, step by step">' + ''.join(
-        f'<li><span class="pr-tlf__n" aria-hidden="true">{i + 1}</span><p class="pr-tlf__who">{"Operator" if who.startswith("Operator") else who}</p><p class="pr-tlf__t">{_two(t)}</p>'
-        f'<p class="pr-tlf__r">{S["warning"]}{risk(i)}</p></li>' for i, (t, who, d, r) in enumerate(FLOW)) + '</ol>')
+    flow_c = ('<div class="pr-tlfw" data-tlf><span class="pr-tlf__track" aria-hidden="true" hidden><i class="pr-tlf__fill"></i></span>'
+              '<ol class="pr-tlf" aria-label="The paper process, step by step">' + ''.join(
+        f'<li><span class="pr-tlf__n" aria-hidden="true"><em>{i + 1}</em><strong>{_l("check")}</strong></span><p class="pr-tlf__who">{"Operator" if who.startswith("Operator") else who}</p><p class="pr-tlf__t">{_two(t)}</p>'
+        f'<p class="pr-tlf__r">{S["warning"]}{risk(i)}</p></li>' for i, (t, who, d, r) in enumerate(FLOW)) + '</ol>'
+              '<div class="pr-tlf__bar"><button type="button" class="pm-btn pm-btn--ghost pm-btn--xs" aria-pressed="false" data-tlf-toggle hidden>'
+              f'<span class="pr-tlf__bp">{I["pause"]}<span>Pause</span></span><span class="pr-tlf__bp" hidden>{I["play"]}<span>Play</span></span></button></div></div>')
     goals = ('<ul class="pr-tlg">' + ''.join(
         f'<li class="pm-card pm-card--outlined pr-card"><h4 class="pm-card__title">{g}</h4><p class="pm-card__summary">{it}</p></li>'
         for it, i_text, g, g_text in INSIGHT_GOALS) + '</ul>')
@@ -498,6 +501,46 @@ JS = r"""
     window.addEventListener('resize', tick);
     if (reduce) tog.hidden = true;
     syncBtn(); tick();
+  });
+
+  // TL;DR stepper: the same motion as Fig. 1. Plays through the six steps every 3.5s, the line creeping toward the next
+  // step while each is shown; loops after the last. Pause/Play (WCAG 2.2.2); rests while off screen or in the hidden view.
+  // Reduced motion: no tour, no button.
+  document.querySelectorAll('[data-tlf]').forEach(function (w) {
+    var items = [].slice.call(w.querySelectorAll('.pr-tlf li')), ns = items.map(function (li) { return li.querySelector('.pr-tlf__n'); });
+    var track = w.querySelector('.pr-tlf__track'), fill = w.querySelector('.pr-tlf__fill'), tog = w.querySelector('[data-tlf-toggle]');
+    var N = items.length, cur = 0, stopped = false, offscreen = true, timer = null, creep = null, STEP = 3500, xs = null;
+    var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduce) return;
+    tog.hidden = false;
+    function layout() {
+      var rs = ns.map(function (n) { return n.getBoundingClientRect(); });
+      if (!rs[0].width || rs.some(function (r) { return Math.abs(r.top - rs[0].top) > 2; })) { track.hidden = true; xs = null; return; }
+      var wr = w.getBoundingClientRect(), x0 = rs[0].left + rs[0].width / 2;
+      track.hidden = false;
+      track.style.left = (x0 - wr.left) + 'px'; track.style.top = (rs[0].top + rs[0].height / 2 - wr.top - 1) + 'px';
+      track.style.width = (rs[N - 1].left + rs[N - 1].width / 2 - x0) + 'px';
+      xs = rs.map(function (r) { return r.left + r.width / 2 - x0; });
+    }
+    function line(i, ms, ease) { if (!xs) return; fill.style.transition = ms ? 'width ' + ms + 'ms ' + ease : 'none'; fill.style.width = xs[i] + 'px'; }
+    function show(i, ms) {
+      cur = i;
+      items.forEach(function (li, j) { li.classList.toggle('is-on', j === i); li.classList.toggle('is-done', j < i); });
+      line(i, ms, 'cubic-bezier(.22,1,.36,1)');
+    }
+    function canRun() { return !stopped && !offscreen && w.offsetParent !== null; }
+    function tick() {
+      clearTimeout(timer); clearTimeout(creep);
+      if (!canRun()) { line(cur, 300, 'ease-out'); return; }
+      if (cur < N - 1) creep = setTimeout(function () { if (canRun()) line(cur + 1, STEP - 500, 'linear'); }, 460);
+      timer = setTimeout(function () { show(cur < N - 1 ? cur + 1 : 0, cur < N - 1 ? 450 : 600); tick(); }, STEP);
+    }
+    function syncBtn() { var p = tog.querySelectorAll('.pr-tlf__bp'); p[0].hidden = stopped; p[1].hidden = !stopped; tog.setAttribute('aria-pressed', String(stopped)); }
+    tog.addEventListener('click', function () { stopped = !stopped; syncBtn(); tick(); });
+    if ('IntersectionObserver' in window) new IntersectionObserver(function (es) { offscreen = !es[0].isIntersecting; if (!offscreen) { layout(); line(cur, 0); } tick(); }).observe(w);
+    else offscreen = false;
+    window.addEventListener('resize', function () { layout(); line(cur, 0); tick(); });
+    layout(); show(0, 0); syncBtn(); tick();
   });
 
   // Fig. 1 pain points: hover, focus or tap a number to show its note under the form and highlight that part of the form
@@ -803,12 +846,26 @@ PT_CSS = """
 @container pr-tlv (min-width: 420px) { .pr-tlf { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
 @container pr-tlv (min-width: 640px) { .pr-tlf { grid-template-columns: repeat(6, minmax(0, 1fr)); } }
 .pr-tlf li { display: grid; grid-template-rows: auto auto auto 1fr; gap: var(--space-1); align-content: start; }
-.pr-tlf__n { display: grid; place-items: center; width: 28px; height: 28px; margin-bottom: var(--space-2); border-radius: 50%; background: var(--color-bg-elevated); box-shadow: inset 0 0 0 1px var(--color-border-default); font-family: var(--font-meta); font-size: var(--type-label); font-variant-numeric: tabular-nums; color: var(--color-text-primary); }
+.pr-tlf__n { position: relative; display: grid; place-items: center; width: 28px; height: 28px; margin-bottom: var(--space-2); border-radius: 50%; background: var(--color-bg-elevated); box-shadow: inset 0 0 0 1px var(--color-border-default), 0 0 0 4px var(--color-bg-surface); font-family: var(--font-meta); font-size: var(--type-label); font-variant-numeric: tabular-nums; color: var(--color-text-primary); }
 .pr-tlf__t > span { display: block; white-space: nowrap; }
 .pr-tlf__t { margin: 0; min-height: calc(2 * var(--line-body-sm) * var(--type-body-sm)); font-size: var(--type-body-sm); line-height: var(--line-body-sm); font-weight: var(--weight-medium); color: var(--color-text-primary); }  /* two lines for every title, so the risk badges line up */
 .pr-tlf__who { margin: 0; white-space: nowrap; font-family: var(--font-meta); font-size: var(--type-label); line-height: var(--line-label); color: var(--color-text-tertiary); }
 .pr-tlf__r { display: inline-flex; align-items: center; gap: var(--space-1); justify-self: start; align-self: start; margin: var(--space-2) 0 0; padding: 2px var(--space-2); border-radius: var(--radius-sm); background: var(--color-state-warning-bg); box-shadow: inset 0 0 0 1px var(--color-state-warning); font-size: var(--type-label); line-height: var(--line-label); color: var(--color-state-warning); white-space: nowrap; }
 .pr-tlf__r svg { flex: none; width: 12px; height: 12px; margin: 0; }  /* drop the status icon's text-line offset so it centres in the badge */
+/* The stepper's motion, as in Fig. 1: the line fills toward the next step, finished steps turn solid cobalt with a check,
+   the current step is solid cobalt. The line only shows when all six steps share a row. */
+.pr-tlfw { position: relative; }
+.pr-tlf { position: relative; z-index: 1; }
+.pr-tlf__track { position: absolute; z-index: 0; height: 2px; border-radius: 1px; background: var(--color-border-default); pointer-events: none; }
+.pr-tlf__fill { display: block; width: 0; height: 100%; border-radius: 1px; background: var(--color-action-primary); }
+.pr-tlf__n em, .pr-tlf__n strong { grid-area: 1 / 1; font-style: normal; }
+.pr-tlf__n strong { display: grid; place-items: center; opacity: 0; } .pr-tlf__n strong .pm-icon { width: 14px; height: 14px; }
+.pr-tlf li.is-on .pr-tlf__n, .pr-tlf li.is-done .pr-tlf__n { background: var(--color-action-primary); color: var(--color-text-on-accent); box-shadow: 0 0 0 4px var(--color-bg-surface); }
+.pr-tlf li.is-done .pr-tlf__n em { opacity: 0; } .pr-tlf li.is-done .pr-tlf__n strong { opacity: 1; }
+@media (prefers-reduced-motion: no-preference) { .pr-tlf__n, .pr-tlf__n em, .pr-tlf__n strong { transition: background-color .35s ease, color .35s ease, box-shadow .35s ease, opacity .25s ease; } }
+.pr-tlf__bar { display: flex; justify-content: flex-end; margin-top: var(--space-4); }
+.pr-tlf__bar .pm-btn[hidden] { display: none; }
+.pr-tlf__bp { display: contents; } .pr-tlf__bp[hidden] { display: none; }
 /* Four goals: two by two from a 480px stage */
 .pr-tlg { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-3); grid-template-columns: minmax(0, 1fr); }
 @container pr-tlv (min-width: 480px) { .pr-tlg { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
