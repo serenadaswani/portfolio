@@ -123,8 +123,10 @@ CSS = """
 .ts__screen { position: relative; overflow: hidden; }
 .ts--framed .ts__screen { border-radius: var(--radius-sm); }
 .ts__base { display: block; width: 100%; height: auto; }
-.ts__scroll { position: absolute; overflow-x: hidden; overflow-y: auto; overscroll-behavior: contain; touch-action: pan-y;
-  -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+/* overscroll-behavior: none = no rubber-band bounce at the top or bottom (which would show the base image through the gap)
+   and no scroll chaining to the page. The white fill is the mockups' own background, a backstop so nothing shows through. */
+.ts__scroll { position: absolute; overflow-x: hidden; overflow-y: auto; overscroll-behavior: none; touch-action: pan-y;
+  scrollbar-width: none; background: #FFFFFF; }
 .ts__scroll::-webkit-scrollbar { display: none; }  /* hidden so it never takes width from the content (which would misalign it); the fade is the cue */
 .ts__scroll:focus-visible { outline: var(--focus-ring-width) solid var(--color-focus-ring); outline-offset: calc(-1 * var(--focus-ring-width)); }
 .ts__content { position: relative; }
