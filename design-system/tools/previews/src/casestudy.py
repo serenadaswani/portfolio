@@ -317,7 +317,8 @@ body { margin: 0; font-family: var(--font-sans); background: var(--color-bg-canv
 
 def render(p):
     """Write one case study. p: page_title, header (badges, title, facts), tldr (rows + stats), sections [(id, label)], body, out."""
-    toc = ''.join(f'<li><a class="pm-toc__item" href="#{sid}"{" aria-current=\"location\"" if i == 0 else ""} data-spy>{label}</a></li>' for i, (sid, label) in enumerate(p['sections']))
+    cur = ' aria-current="location"'
+    toc = ''.join(f'<li><a class="pm-toc__item" href="#{sid}"{cur if i == 0 else ""} data-spy>{label}</a></li>' for i, (sid, label) in enumerate(p['sections']))
     page = f'''<title>{p["page_title"]}</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">

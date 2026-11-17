@@ -247,10 +247,11 @@ def screen_rows(start):
     out = ''
     for k, (label, f, w, h, alt, cap, notes) in enumerate(SCREENS):
         n = start + k
+        slug = label.lower().replace(' ', '-')
         pins = ''.join(f'<button type="button" class="pr-mk pr-mk--btn" style="left:{x}%;top:{y}%" data-ann="{i}" '
-                       f'aria-label="Annotation {i + 1}: {t}" aria-describedby="{label.lower().replace(' ', '-')}-ann-{i}">{i + 1}</button>' for i, (x, y, t, d) in enumerate(notes))
+                       f'aria-label="Annotation {i + 1}: {t}" aria-describedby="{slug}-ann-{i}">{i + 1}</button>' for i, (x, y, t, d) in enumerate(notes))
         cards = ''.join(f'<li class="pm-card pm-card--outlined pr-card pr-note-card" data-ann-card="{i}"><span class="pr-mk pr-mk--key" aria-hidden="true">{i + 1}</span>'
-                        f'<div><h4 class="pm-card__title">{t}</h4><p class="pm-card__summary" id="{label.lower().replace(' ', '-')}-ann-{i}">{d}</p></div></li>' for i, (x, y, t, d) in enumerate(notes))
+                        f'<div><h4 class="pm-card__title">{t}</h4><p class="pm-card__summary" id="{slug}-ann-{i}">{d}</p></div></li>' for i, (x, y, t, d) in enumerate(notes))
         out += (f'<figure class="pm-frame pr-sfig" data-ann-fig><div class="pm-frame__stage pr-zoom" data-lb-item data-lb-caption="Fig. {n:02d}. {cap}">'
                 f'<p class="pr-slabel">{label}</p>'
                 f'<div class="pr-device"><div class="pr-device__screen"><img src="assets/{f}" width="{w}" height="{h}" loading="lazy" alt="{alt}">'
@@ -261,7 +262,8 @@ def screen_rows(start):
     return out
 
 def shot(art, cap, n, zoom=False):
-    return (f'<figure class="pm-frame"><div class="pm-frame__stage pr-stage{" pr-zoom" if zoom else ""}"{f' data-lb-item data-lb-caption="Fig. {n:02d}. {cap}"' if zoom else ""}>{art}'
+    lb = f' data-lb-item data-lb-caption="Fig. {n:02d}. {cap}"' if zoom else ''
+    return (f'<figure class="pm-frame"><div class="pm-frame__stage pr-stage{" pr-zoom" if zoom else ""}"{lb}>{art}'
             + (expand(f'Fig. {n:02d}') if zoom else '') + '</div>'
 
             + f'<figcaption class="pm-frame__caption"><span class="pm-frame__index">Fig. {n:02d}</span><span>{cap}</span></figcaption></figure>')
@@ -479,14 +481,13 @@ CSS = r"""
 .pr-device { padding: 1.6%; border-radius: var(--radius-lg); background: #1B2026; box-shadow: 0 2px 4px rgb(0 0 0 / 12%), 0 14px 32px rgb(0 0 0 / 14%); }
 .pr-device__screen { position: relative; overflow: hidden; border-radius: var(--radius-sm); }
 .pr-device__screen img { display: block; width: 100%; height: auto; }
-/* Annotation markers. Key badge (in the cards) and buttons (on the screen) share the look:
-   default white with a cobalt number and ring · hover pale cobalt · selected solid cobalt with a white number */
-/* Annotation badges: ink with a paper number. On the screens they stay ink in both themes (the mockups are always light);
-   in the cards they use the inverse pair so they show on dark cards too. Hover/focus: a little larger with a paper ring. */
+/* Annotation badges: solid cobalt with an on-accent number, the same as Fig. 1's step numbers, so they stand out on the screens.
+   On the screens they're pinned to the light-theme pair (the mockups are always light); in the cards they follow the theme.
+   Hover/focus: a little larger with a paper ring. */
 .pr-mk { display: grid; place-items: center; width: 24px; height: 24px; padding: 0; border: 0; border-radius: 50%;
-  background: var(--color-bg-inverse); color: var(--color-text-inverse);
+  background: var(--color-action-primary); color: var(--color-text-on-accent);
   font: var(--weight-medium) 12px / 1 var(--font-sans); font-variant-numeric: tabular-nums; }
-.pr-mk--btn { position: absolute; transform: translate(-50%, -50%); cursor: default; background: var(--ink); color: var(--paper); }
+.pr-mk--btn { position: absolute; transform: translate(-50%, -50%); cursor: default; background: var(--cobalt-500); color: var(--white); }
 @media (pointer: coarse) { .pr-mk--btn::after { content: ""; position: absolute; inset: -10px; border-radius: 50%; } }
 .pr-mk--btn:focus-visible, .pr-mk--btn.is-hover { transform: translate(-50%, -50%) scale(1.17); box-shadow: 0 0 0 2px var(--paper), 0 2px 6px rgb(11 18 32 / 30%); }
 @media (hover: hover) { .pr-mk--btn:hover { transform: translate(-50%, -50%) scale(1.17); box-shadow: 0 0 0 2px var(--paper), 0 2px 6px rgb(11 18 32 / 30%); } }

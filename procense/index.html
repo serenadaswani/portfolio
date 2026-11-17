@@ -1227,14 +1227,13 @@ body { margin: 0; font-family: var(--font-sans); background: var(--color-bg-canv
 .pr-device { padding: 1.6%; border-radius: var(--radius-lg); background: #1B2026; box-shadow: 0 2px 4px rgb(0 0 0 / 12%), 0 14px 32px rgb(0 0 0 / 14%); }
 .pr-device__screen { position: relative; overflow: hidden; border-radius: var(--radius-sm); }
 .pr-device__screen img { display: block; width: 100%; height: auto; }
-/* Annotation markers. Key badge (in the cards) and buttons (on the screen) share the look:
-   default white with a cobalt number and ring · hover pale cobalt · selected solid cobalt with a white number */
-/* Annotation badges: ink with a paper number. On the screens they stay ink in both themes (the mockups are always light);
-   in the cards they use the inverse pair so they show on dark cards too. Hover/focus: a little larger with a paper ring. */
+/* Annotation badges: solid cobalt with an on-accent number, the same as Fig. 1's step numbers, so they stand out on the screens.
+   On the screens they're pinned to the light-theme pair (the mockups are always light); in the cards they follow the theme.
+   Hover/focus: a little larger with a paper ring. */
 .pr-mk { display: grid; place-items: center; width: 24px; height: 24px; padding: 0; border: 0; border-radius: 50%;
-  background: var(--color-bg-inverse); color: var(--color-text-inverse);
+  background: var(--color-action-primary); color: var(--color-text-on-accent);
   font: var(--weight-medium) 12px / 1 var(--font-sans); font-variant-numeric: tabular-nums; }
-.pr-mk--btn { position: absolute; transform: translate(-50%, -50%); cursor: default; background: var(--ink); color: var(--paper); }
+.pr-mk--btn { position: absolute; transform: translate(-50%, -50%); cursor: default; background: var(--cobalt-500); color: var(--white); }
 @media (pointer: coarse) { .pr-mk--btn::after { content: ""; position: absolute; inset: -10px; border-radius: 50%; } }
 .pr-mk--btn:focus-visible, .pr-mk--btn.is-hover { transform: translate(-50%, -50%) scale(1.17); box-shadow: 0 0 0 2px var(--paper), 0 2px 6px rgb(11 18 32 / 30%); }
 @media (hover: hover) { .pr-mk--btn:hover { transform: translate(-50%, -50%) scale(1.17); box-shadow: 0 0 0 2px var(--paper), 0 2px 6px rgb(11 18 32 / 30%); } }
