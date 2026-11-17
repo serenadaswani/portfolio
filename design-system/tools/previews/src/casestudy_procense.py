@@ -186,7 +186,8 @@ def lightbox():
 
 # The final screens: Serena's revised tablet designs from Figma (landscape, 1024x768 at 1.5x), in a tablet frame.
 # Numbered badges point at the design patterns described in the cards under each screen.
-SCREENS = [  # screen id in procense/screens.json, caption, [(x%, y% of the base image, pattern, description)]
+SCREENS = [  # screen id in procense/screens.json, caption, [(x%, y% of the base image, pattern, description[, 'content'])]
+# Add 'content' as a 5th item to give x, y as % of the scroll-content image instead (for things below the first view).
     ('landscape-forms-dashboard',
      'The forms dashboard, where every batch starts.',
      [(30.8, 26.7, 'Status at a glance', 'Counts show what’s ready, running and done.'),
@@ -200,7 +201,7 @@ SCREENS = [  # screen id in procense/screens.json, caption, [(x%, y% of the base
     ('landscape-special-precautions',
      'Special precautions, reviewed before any step starts.',
      [(40.2, 70.0, 'Grouped by risk', 'Safety, special and critical items each get a section.'),
-      (69.6, 60.9, 'Read before you start', 'Every item is reviewed before the SOP steps.'),
+      (61.4, 92.9, 'One check for all', 'Replaces an initial for every safety measure.', 'content'),
       (73.2, 94.8, 'Save at any point', 'Operators can go back or save a draft any time.')]),
     ('landscape-sop-step',
      'A manufacturing step, one instruction at a time.',
@@ -253,12 +254,12 @@ def screen_rows(start):
         n = start + k
         label = TS.screen(sid)['label']
         slug = sid
-        pins = [dict(x=x, y=y, html=f'<button type="button" class="pr-mk pr-mk--btn" data-ann="{i}" '
+        pins = [dict(x=n[0], y=n[1], content=len(n) > 4, html=f'<button type="button" class="pr-mk pr-mk--btn" data-ann="{i}" '
                                   f'aria-label="Annotation {i + 1}: {t}" aria-describedby="{slug}-ann-{i}">{i + 1}</button>')
-                for i, (x, y, t, d) in enumerate(notes)]
+                for i, n in enumerate(notes) for t in [n[2]]]
         cards = ''.join(f'<li class="pm-card pm-card--outlined pr-card pr-note-card" data-ann-card="{i}"><span class="pr-mk pr-mk--key" aria-hidden="true">{i + 1}</span>'
                         f'<div><h4 class="pm-card__title"><button type="button" class="pr-note-card__btn" data-ann-jump="{i}" aria-describedby="{slug}-ann-{i}">{t}</button></h4>'
-                        f'<p class="pm-card__summary" id="{slug}-ann-{i}">{d}</p></div></li>' for i, (x, y, t, d) in enumerate(notes))
+                        f'<p class="pm-card__summary" id="{slug}-ann-{i}">{d}</p></div></li>' for i, (x, y, t, d) in ((i, n[:4]) for i, n in enumerate(notes)))
         out += (f'<figure class="pm-frame pr-sfig" data-ann-fig><div class="pm-frame__stage pr-zoom" data-lb-item data-lb-caption="Fig. {n:02d}. {cap}">'
                 f'<p class="pr-slabel">{label}</p>'
                 f'<ol class="pr-notes" aria-label="Design patterns in the {label} screen. Select one to show it on the screen.">{cards}</ol>'
