@@ -199,15 +199,15 @@ SCREENS = [  # label, file, w, h, alt, caption, [(x%, y%, pattern, description)]
 ]
 def screen_rows(start):
     """Each final screen full width in its figure stage: label, tablet frame with numbered annotation buttons, then the
-    three pattern cards inside the same stage (across on wide screens, stacked on narrow ones). Picking an annotation,
-    or its card, selects that pair: the button turns solid and the card lifts."""
+    three pattern cards inside the same stage (across on wide screens, stacked on narrow ones). Hovering or focusing a
+    badge lifts its card; hovering a card shows its badge's hover state. No selected state."""
     out = ''
     for k, (label, f, w, h, alt, cap, notes) in enumerate(SCREENS):
         n = start + k
-        pins = ''.join(f'<button type="button" class="pr-mk pr-mk--btn" style="left:{x}%;top:{y}%" data-ann="{i}" aria-pressed="false" '
-                       f'aria-label="Annotation {i + 1}: {t}">{i + 1}</button>' for i, (x, y, t, d) in enumerate(notes))
+        pins = ''.join(f'<button type="button" class="pr-mk pr-mk--btn" style="left:{x}%;top:{y}%" data-ann="{i}" '
+                       f'aria-label="Annotation {i + 1}: {t}" aria-describedby="{label.lower().replace(' ', '-')}-ann-{i}">{i + 1}</button>' for i, (x, y, t, d) in enumerate(notes))
         cards = ''.join(f'<li class="pm-card pm-card--outlined pr-card pr-note-card" data-ann-card="{i}"><span class="pr-mk pr-mk--key" aria-hidden="true">{i + 1}</span>'
-                        f'<div><h4 class="pm-card__title">{t}</h4><p class="pm-card__summary">{d}</p></div></li>' for i, (x, y, t, d) in enumerate(notes))
+                        f'<div><h4 class="pm-card__title">{t}</h4><p class="pm-card__summary" id="{label.lower().replace(' ', '-')}-ann-{i}">{d}</p></div></li>' for i, (x, y, t, d) in enumerate(notes))
         out += (f'<figure class="pm-frame pr-sfig" data-ann-fig><div class="pm-frame__stage pr-zoom" data-lb-item data-lb-caption="Fig. {n:02d}. {cap}">'
                 f'<p class="pr-slabel">{label}</p>'
                 f'<div class="pr-device"><div class="pr-device__screen"><img src="../assets/procense/{f}" width="{w}" height="{h}" loading="lazy" alt="{alt}">'
@@ -315,15 +315,15 @@ TLDR = f'''      <dl class="cs-tldr__rows">
       {stats([('10%', 'Faster batch execution'), ('100%', 'Automated traceability'), ('100%', 'Data accuracy')], ' pm-stats--sm cs-tldr__stats')}'''
 
 JS = r"""
-  // Final-screen annotations: a marker (or its card) selects the pair; the same one again clears it
+  // Final-screen annotations: hovering or focusing a badge lifts its card; hovering a card shows its badge's hover state
   document.querySelectorAll('[data-ann-fig]').forEach(function (fig) {
-    var btns = [].slice.call(fig.querySelectorAll('[data-ann]')), cards = [].slice.call(fig.querySelectorAll('[data-ann-card]')), on = -1;
-    function pick(i) { on = on === i ? -1 : i;
-      btns.forEach(function (b, j) { b.setAttribute('aria-pressed', String(j === on)); });
-      cards.forEach(function (c, j) { c.classList.toggle('is-on', j === on); }); }
-    btns.forEach(function (b, i) { b.addEventListener('click', function () { pick(i); }); });
+    var btns = [].slice.call(fig.querySelectorAll('[data-ann]')), cards = [].slice.call(fig.querySelectorAll('[data-ann-card]'));
+    btns.forEach(function (b, i) {
+      function on() { cards[i].classList.add('is-on'); } function off() { cards[i].classList.remove('is-on'); }
+      b.addEventListener('mouseenter', on); b.addEventListener('mouseleave', off);
+      b.addEventListener('focus', on); b.addEventListener('blur', off);
+    });
     cards.forEach(function (c, i) {
-      c.addEventListener('click', function () { pick(i); });
       c.addEventListener('mouseenter', function () { btns[i].classList.add('is-hover'); });
       c.addEventListener('mouseleave', function () { btns[i].classList.remove('is-hover'); });
     });
@@ -433,27 +433,27 @@ CSS = r"""
 .pr-device__screen img { display: block; width: 100%; height: auto; }
 /* Annotation markers. Key badge (in the cards) and buttons (on the screen) share the look:
    default white with a cobalt number and ring · hover pale cobalt · selected solid cobalt with a white number */
+/* Annotation badges: ink with a paper number. On the screens they stay ink in both themes (the mockups are always light);
+   in the cards they use the inverse pair so they show on dark cards too. Hover/focus: a little larger with a paper ring. */
 .pr-mk { display: grid; place-items: center; width: 24px; height: 24px; padding: 0; border: 0; border-radius: 50%;
-  background: var(--color-bg-elevated); color: var(--color-action-primary); box-shadow: inset 0 0 0 1.5px var(--color-action-primary);
+  background: var(--color-bg-inverse); color: var(--color-text-inverse);
   font: var(--weight-medium) 12px / 1 var(--font-sans); font-variant-numeric: tabular-nums; }
-.pr-mk--btn { position: absolute; transform: translate(-50%, -50%); cursor: pointer; }
+.pr-mk--btn { position: absolute; transform: translate(-50%, -50%); cursor: default; background: var(--ink); color: var(--paper); }
 @media (pointer: coarse) { .pr-mk--btn::after { content: ""; position: absolute; inset: -10px; border-radius: 50%; } }
-@media (hover: hover) { .pr-mk--btn:hover, .pr-mk--btn.is-hover, .pr-note-card:hover .pr-mk--key { background: var(--color-action-selected-bg); } }
-.pr-mk[aria-pressed="true"]:hover, .pr-mk[aria-pressed="true"].is-hover, .pr-note-card.is-on:hover .pr-mk--key { background: var(--color-action-primary); }
-.pr-mk--btn:focus-visible { outline: var(--focus-ring-width) solid var(--color-focus-ring); outline-offset: var(--focus-ring-offset); }
-.pr-mk[aria-pressed="true"], .pr-note-card.is-on .pr-mk--key { background: var(--color-action-primary); color: var(--color-text-on-accent); box-shadow: 0 0 0 2px var(--color-bg-elevated), 0 1px 3px rgb(0 0 0 / 25%); }
-/* Cards inside the stage: three across from 640px, stacked below; the selected one lifts and gains a cobalt ring */
+.pr-mk--btn:focus-visible, .pr-mk--btn.is-hover { transform: translate(-50%, -50%) scale(1.17); box-shadow: 0 0 0 2px var(--paper), 0 2px 6px rgb(11 18 32 / 30%); }
+@media (hover: hover) { .pr-mk--btn:hover { transform: translate(-50%, -50%) scale(1.17); box-shadow: 0 0 0 2px var(--paper), 0 2px 6px rgb(11 18 32 / 30%); } }
+.pr-mk--btn:focus-visible { outline: var(--focus-ring-width) solid var(--color-focus-ring); outline-offset: 3px; }
 .pr-notes { list-style: none; margin: var(--space-5) 0 0; padding: 0; display: grid; gap: var(--space-3); grid-template-columns: minmax(0, 1fr); }
 @container pr-sfig (min-width: 720px) { .pr-notes { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
-.pr-note-card.pm-card--outlined, .pr-note-card.pm-card--outlined:hover { flex-direction: row; align-items: flex-start; gap: var(--space-3); padding: var(--space-4); cursor: pointer;
+.pr-note-card.pm-card--outlined, .pr-note-card.pm-card--outlined:hover { flex-direction: row; align-items: flex-start; gap: var(--space-3); padding: var(--space-4); cursor: default;
   box-shadow: inset 0 0 0 1px var(--color-border-subtle), var(--shadow-xs); }
 @media (hover: hover) { .pr-note-card.pm-card--outlined:hover { box-shadow: inset 0 0 0 1px var(--color-border-default), var(--shadow-sm); } }
-.pr-note-card.pm-card--outlined.is-on, .pr-note-card.pm-card--outlined.is-on:hover { box-shadow: inset 0 0 0 1.5px var(--color-action-primary), var(--shadow-md); }
+.pr-note-card.pm-card--outlined.is-on, .pr-note-card.pm-card--outlined.is-on:hover { box-shadow: inset 0 0 0 1px var(--color-border-default), var(--shadow-md); }
 .pr-note-card .pr-mk--key { flex: none; margin-top: 0; }
 .pr-note-card .pm-card__title, .pr-note-card .pm-card__summary { padding-inline: 0; }
 .pr-note-card .pm-card__title { font-size: var(--type-body-sm); line-height: var(--line-body-sm); }
 @media (prefers-reduced-motion: no-preference) {
-  .pr-mk { transition: background-color .2s ease, color .2s ease, box-shadow .2s ease; }
+  .pr-mk { transition: transform .2s cubic-bezier(.22,1,.36,1), box-shadow .2s ease; }
   .pr-note-card { transition: transform .25s cubic-bezier(.22,1,.36,1), box-shadow .25s ease; }
   .pr-note-card.is-on { transform: translateY(-8px) scale(1.03); }
 }
