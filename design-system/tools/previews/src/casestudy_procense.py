@@ -181,7 +181,7 @@ SCREENS = [  # label, file, w, h, alt, caption, [(x%, y%, pattern, description)]
     ('Batch information', 'screen-batch-info.webp', 1440, 1211,
      'Batch information screen: product name, description, number, formula code and version already filled in; inputs for lot number, batch number, due date with a calendar, work center, yields and remarks; a Next button.',
      'Batch information, the first step. Product details arrive from the platform.',
-     [(53.5, 20.8, 'Fields that fill themselves', 'Product details arrive from the platform, ready to check.'),
+     [(53.5, 20.8, 'Auto-filled fields', 'Product details come straight from the platform.'),
       (87.0, 30.4, 'Familiar icons', 'A calendar marks the date field at a glance.'),
       (84.6, 77.9, 'Consistent controls', 'Next sits in the same spot on every step.')]),
     ('SOP step', 'screen-sop-step.webp', 1440, 1193,
@@ -194,24 +194,27 @@ SCREENS = [  # label, file, w, h, alt, caption, [(x%, y%, pattern, description)]
      'Quality tests screen: yield, finish date and time, made by and packaged by fields, comments, a table of five tests with their standard and a result field each, and sign-off with Add Signature and Add Initial buttons.',
      'Quality tests, the last step. Every test, its standard and its result sit in one table.',
      [(73.5, 50.0, 'Built for dense data', 'Test, standard and result line up in one table.'),
-      (40.0, 85.4, 'Fields that fill themselves', 'Sign-off adds the operator’s signature in a tap.'),
+      (40.0, 85.4, 'Auto-filled fields', 'Sign-off adds the operator’s signature in a tap.'),
       (71.4, 95.0, 'Consistent controls', 'Back, Save Draft and Next match every step.')]),
 ]
 def screen_rows(start):
-    """Each final screen on the left (labelled, in a tablet frame, numbered markers), its design patterns on the right."""
+    """Each final screen full width in its figure stage: label, tablet frame with numbered annotation buttons, then the
+    three pattern cards inside the same stage (across on wide screens, stacked on narrow ones). Picking an annotation,
+    or its card, selects that pair: the button turns solid and the card lifts."""
     out = ''
     for k, (label, f, w, h, alt, cap, notes) in enumerate(SCREENS):
         n = start + k
-        pins = ''.join(f'<span class="pr-mk" style="left:{x}%;top:{y}%">{i + 1}</span>' for i, (x, y, t, d) in enumerate(notes))
-        cards = ''.join(f'<li class="pm-card pm-card--outlined pr-card pr-note-card"><span class="pr-mk pr-mk--key" aria-hidden="true">{i + 1}</span>'
+        pins = ''.join(f'<button type="button" class="pr-mk pr-mk--btn" style="left:{x}%;top:{y}%" data-ann="{i}" aria-pressed="false" '
+                       f'aria-label="Annotation {i + 1}: {t}">{i + 1}</button>' for i, (x, y, t, d) in enumerate(notes))
+        cards = ''.join(f'<li class="pm-card pm-card--outlined pr-card pr-note-card" data-ann-card="{i}"><span class="pr-mk pr-mk--key" aria-hidden="true">{i + 1}</span>'
                         f'<div><h4 class="pm-card__title">{t}</h4><p class="pm-card__summary">{d}</p></div></li>' for i, (x, y, t, d) in enumerate(notes))
-        out += (f'<div class="pr-srow-c"><div class="pr-srow"><figure class="pm-frame pr-sfig"><div class="pm-frame__stage pr-zoom" data-lb-item data-lb-caption="Fig. {n:02d}. {cap}">'
+        out += (f'<figure class="pm-frame pr-sfig" data-ann-fig><div class="pm-frame__stage pr-zoom" data-lb-item data-lb-caption="Fig. {n:02d}. {cap}">'
                 f'<p class="pr-slabel">{label}</p>'
                 f'<div class="pr-device"><div class="pr-device__screen"><img src="../assets/procense/{f}" width="{w}" height="{h}" loading="lazy" alt="{alt}">'
-                f'<div class="pr-mks" aria-hidden="true">{pins}</div></div></div>'
+                f'<div class="pr-mks">{pins}</div></div></div>'
+                f'<ol class="pr-notes" aria-label="Design patterns in the {label} screen">{cards}</ol>'
                 + expand(f'Fig. {n:02d}, {label}') + '</div>'
-                f'<figcaption class="pm-frame__caption"><span class="pm-frame__index">Fig. {n:02d}</span><span>{cap}</span></figcaption></figure>'
-                f'<ol class="pr-notes" aria-label="Design patterns in the {label} screen">{cards}</ol></div></div>')
+                f'<figcaption class="pm-frame__caption"><span class="pm-frame__index">Fig. {n:02d}</span><span>{cap}</span></figcaption></figure>')
     return out
 
 def shot(art, cap, n, zoom=False):
@@ -312,6 +315,20 @@ TLDR = f'''      <dl class="cs-tldr__rows">
       {stats([('10%', 'Faster batch execution'), ('100%', 'Automated traceability'), ('100%', 'Data accuracy')], ' pm-stats--sm cs-tldr__stats')}'''
 
 JS = r"""
+  // Final-screen annotations: a marker (or its card) selects the pair; the same one again clears it
+  document.querySelectorAll('[data-ann-fig]').forEach(function (fig) {
+    var btns = [].slice.call(fig.querySelectorAll('[data-ann]')), cards = [].slice.call(fig.querySelectorAll('[data-ann-card]')), on = -1;
+    function pick(i) { on = on === i ? -1 : i;
+      btns.forEach(function (b, j) { b.setAttribute('aria-pressed', String(j === on)); });
+      cards.forEach(function (c, j) { c.classList.toggle('is-on', j === on); }); }
+    btns.forEach(function (b, i) { b.addEventListener('click', function () { pick(i); }); });
+    cards.forEach(function (c, i) {
+      c.addEventListener('click', function () { pick(i); });
+      c.addEventListener('mouseenter', function () { btns[i].classList.add('is-hover'); });
+      c.addEventListener('mouseleave', function () { btns[i].classList.remove('is-hover'); });
+    });
+  });
+
   // Lightbox: every expand button opens the shared viewer at its own item; arrows, Previous/Next and the counter page
   // through all of them. Native <dialog> traps focus and closes on Esc; focus returns to the button that opened it.
   (function () {
@@ -406,23 +423,40 @@ JS = r"""
 
 CSS = r"""
 /* Final screens: screen left, its patterns right (side by side from a 700px column); label inside the stage above the image */
-.pr-srows { display: grid; gap: var(--space-12); }
-.pr-srow-c { container: pr-srow / inline-size; }
-.pr-srow { display: grid; gap: var(--space-5); }
-@container pr-srow (min-width: 700px) { .pr-srow { grid-template-columns: minmax(0, 3fr) minmax(0, 2fr); gap: var(--space-6); align-items: start; } }
-.pr-srow > * { min-width: 0; }
+/* Final screens: full width in the stage; pattern cards inside the stage under the screen */
+.cs-main { max-width: none; }  /* this page: let figures use the whole content column (prose keeps its reading width) */
+.pr-sfig + .pr-sfig { margin-top: var(--space-6); }
+.pr-sfig .pm-frame__stage { container: pr-sfig / inline-size; }
 .pr-slabel { margin: 0 0 var(--space-4); font-size: var(--type-body-sm); line-height: var(--line-body-sm); font-weight: var(--weight-medium); color: var(--color-text-primary); }
-.pr-device { padding: 2.2%; border-radius: var(--radius-lg); background: #1B2026; box-shadow: 0 2px 4px rgb(0 0 0 / 12%), 0 14px 32px rgb(0 0 0 / 14%); }
+.pr-device { padding: 1.6%; border-radius: var(--radius-lg); background: #1B2026; box-shadow: 0 2px 4px rgb(0 0 0 / 12%), 0 14px 32px rgb(0 0 0 / 14%); }
 .pr-device__screen { position: relative; overflow: hidden; border-radius: var(--radius-sm); }
 .pr-device__screen img { display: block; width: 100%; height: auto; }
-/* Markers: small cobalt numbers with a white ring, visible without covering the design */
-.pr-mk { display: grid; place-items: center; width: 20px; height: 20px; border-radius: 50%; background: var(--color-action-primary); color: var(--color-text-on-accent); font: var(--weight-medium) 11px / 1 var(--font-sans); font-variant-numeric: tabular-nums; box-shadow: 0 0 0 2px var(--color-bg-elevated), 0 1px 3px rgb(0 0 0 / 25%); }
-.pr-mks .pr-mk { position: absolute; transform: translate(-50%, -50%); }
-.pr-notes { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-3); align-content: start; }
-.pr-note-card.pm-card--outlined, .pr-note-card.pm-card--outlined:hover { flex-direction: row; align-items: flex-start; gap: var(--space-3); padding: var(--space-4); }
-.pr-note-card .pr-mk--key { flex: none; margin-top: 2px; }
+/* Annotation markers. Key badge (in the cards) and buttons (on the screen) share the look:
+   default white with a cobalt number and ring · hover pale cobalt · selected solid cobalt with a white number */
+.pr-mk { display: grid; place-items: center; width: 24px; height: 24px; padding: 0; border: 0; border-radius: 50%;
+  background: var(--color-bg-elevated); color: var(--color-action-primary); box-shadow: inset 0 0 0 1.5px var(--color-action-primary), 0 1px 3px rgb(0 0 0 / 18%);
+  font: var(--weight-medium) 12px / 1 var(--font-sans); font-variant-numeric: tabular-nums; }
+.pr-mk--btn { position: absolute; transform: translate(-50%, -50%); cursor: pointer; }
+@media (pointer: coarse) { .pr-mk--btn::after { content: ""; position: absolute; inset: -10px; border-radius: 50%; } }
+@media (hover: hover) { .pr-mk--btn:hover, .pr-mk--btn.is-hover, .pr-note-card:hover .pr-mk--key { background: var(--color-action-selected-bg); } }
+.pr-mk[aria-pressed="true"]:hover, .pr-mk[aria-pressed="true"].is-hover, .pr-note-card.is-on:hover .pr-mk--key { background: var(--color-action-primary); }
+.pr-mk--btn:focus-visible { outline: var(--focus-ring-width) solid var(--color-focus-ring); outline-offset: var(--focus-ring-offset); }
+.pr-mk[aria-pressed="true"], .pr-note-card.is-on .pr-mk--key { background: var(--color-action-primary); color: var(--color-text-on-accent); box-shadow: 0 0 0 2px var(--color-bg-elevated), 0 1px 3px rgb(0 0 0 / 25%); }
+/* Cards inside the stage: three across from 640px, stacked below; the selected one lifts and gains a cobalt ring */
+.pr-notes { list-style: none; margin: var(--space-5) 0 0; padding: 0; display: grid; gap: var(--space-3); grid-template-columns: minmax(0, 1fr); }
+@container pr-sfig (min-width: 720px) { .pr-notes { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+.pr-note-card.pm-card--outlined, .pr-note-card.pm-card--outlined:hover { flex-direction: row; align-items: flex-start; gap: var(--space-3); padding: var(--space-4); cursor: pointer;
+  box-shadow: inset 0 0 0 1px var(--color-border-subtle), var(--shadow-xs); }
+@media (hover: hover) { .pr-note-card.pm-card--outlined:hover { box-shadow: inset 0 0 0 1px var(--color-border-default), var(--shadow-sm); } }
+.pr-note-card.pm-card--outlined.is-on { box-shadow: inset 0 0 0 1.5px var(--color-action-primary), var(--shadow-md); }
+.pr-note-card .pr-mk--key { flex: none; margin-top: 0; }
 .pr-note-card .pm-card__title, .pr-note-card .pm-card__summary { padding-inline: 0; }
-.cs-section .pr-srow + .pr-srow { margin-top: var(--space-6); }
+.pr-note-card .pm-card__title { font-size: var(--type-body-sm); line-height: var(--line-body-sm); }
+@media (prefers-reduced-motion: no-preference) {
+  .pr-mk { transition: background-color .2s ease, color .2s ease, box-shadow .2s ease; }
+  .pr-note-card { transition: transform .25s cubic-bezier(.22,1,.36,1), box-shadow .25s ease; }
+  .pr-note-card.is-on { transform: translateY(-4px) scale(1.02); }
+}
 
 /* Expand control (ImageFrame) in each well's top-right corner; the shared Lightbox shows images and mockups contained */
 .pr-zoom, .pr-sk { position: relative; }
