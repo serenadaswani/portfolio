@@ -216,7 +216,7 @@ SCREENS = [  # screen id in procense/screens.json, caption, [(x%, y% of the base
     ('landscape-qc-tests',
      'Quality tests, the last step before review.',
      [(78.3, 58.3, 'Samples as needed', 'Extra samples are one tap away.'),
-      (81.2, 70.2, 'Real date and time', 'Pickers for dates and times avoid typos.'),
+      (81.2, 70.2, 'Date and time, filled in', 'Set by integrations and live time tracking.'),
       (98.4, 91.2, 'Straight to review', 'The last step sends the batch for review.')]),
 ]
 PORTRAIT = ['portrait-batch-information', 'portrait-sop-step', 'portrait-all-steps-drawer', 'portrait-qc-tests']  # ids in procense/screens.json
