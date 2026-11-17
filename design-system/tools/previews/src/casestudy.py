@@ -315,8 +315,13 @@ body { margin: 0; font-family: var(--font-sans); background: var(--color-bg-canv
 .cs-views .cs-body { margin-top: 0; }
 """
 
+HERO_WELL = f'''  <div class="pm-media pm-media--21x9 cs-hero-well" role="img" aria-label="Hero image to come">
+    <div class="pm-media__fallback">{I["image"]}<span>Hero image to come</span></div>
+  </div>'''
+
 def render(p):
-    """Write one case study. p: page_title, header (badges, title, facts), tldr (rows + stats), sections [(id, label)], body, out."""
+    """Write one case study. p: page_title, header (badges, title, facts), tldr (rows + stats), sections [(id, label)], body, out;
+    optional hero (markup replacing the empty hero well) and head_extra (extra <head> tags, e.g. a font)."""
     cur = ' aria-current="location"'
     toc = ''.join(f'<li><a class="pm-toc__item" href="#{sid}"{cur if i == 0 else ""} data-spy>{label}</a></li>' for i, (sid, label) in enumerate(p['sections']))
     page = f'''<title>{p["page_title"]}</title>
@@ -324,7 +329,7 @@ def render(p):
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wdth,wght@0,75..100,400..700;1,75..100,400..700&display=swap">
-<style>
+{p.get("head_extra", "")}<style>
 /* ===== Paper × Midnight {VER} · tokens.css (verbatim) ===== */
 {tokens}
 /* ===== Paper × Midnight {VER} · components.css (verbatim) ===== */
@@ -342,9 +347,7 @@ def render(p):
     </span>
   </div>
 
-  <div class="pm-media pm-media--21x9 cs-hero-well" role="img" aria-label="Hero image to come">
-    <div class="pm-media__fallback">{I["image"]}<span>Hero image to come</span></div>
-  </div>
+{p.get("hero") or HERO_WELL}
 
 {p["header"]}
 

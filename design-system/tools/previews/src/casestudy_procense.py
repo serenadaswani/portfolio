@@ -11,6 +11,7 @@ from lib import _l
 import cs_parts
 from cs_parts import before_after
 import tablet_screen as TS
+import procense_hero as PH
 
 def _between(text, start, end):
     a = text.index(start); return text[a:text.index(end, a + len(start))]
@@ -734,7 +735,8 @@ PT_CSS = """
 """
 
 PROCENSE = dict(page_title='Procense Case Study', out='procense/index.html', sections=SECTIONS, body=BODY, header=HEADER, tldr=TLDR,
-                css=TS.CSS + CSS + BA_CSS + PT_CSS, js=TS.JS + JS + BA_JS)
+                css=TS.CSS + CSS + BA_CSS + PT_CSS + PH.CSS, js=TS.JS + JS + BA_JS + PH.JS,
+                hero=PH.html(), head_extra=PH.HEAD)
 
 if __name__ == '__main__':
     print(len(C.render(PROCENSE)))

@@ -3,6 +3,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wdth,wght@0,75..100,400..700;1,75..100,400..700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600&display=swap"><!-- Caveat: handwriting in the hero art only -->
 <style>
 /* ===== Paper × Midnight v1.9 · tokens.css (verbatim) ===== */
 /* Paper × Midnight — semantic CSS tokens v1.6 (generated from design-tokens.json) */
@@ -1533,6 +1534,51 @@ body { margin: 0; font-family: var(--font-sans); background: var(--color-bg-canv
 /* Web vs tablet slider sits on the figure stage */
 .pr-stage .cs-ba__side p { max-width: 30ch; }
 
+/* ===== Procense hero (procense_hero.py): handwriting becomes data ===== */
+.ph { --u: 1cqw; container-type: inline-size; background: radial-gradient(120% 90% at 90% 100%, #2483FF 0%, rgb(36 131 255 / 0%) 60%), #1B2026; }
+@container (max-width: 599px) { .ph-stage { --u: 1.3cqw; } }
+.ph-stage { position: absolute; left: 50%; top: 50%; width: calc(100 * var(--u)); height: calc(42.857 * var(--u)); transform: translate(-50%, -50%); font-family: var(--font-sans); }
+/* Paper */
+.ph-paper { position: absolute; left: calc(7 * var(--u)); top: calc(8 * var(--u)); width: calc(38 * var(--u)); padding: calc(2.6 * var(--u)) calc(3 * var(--u)); background: #FBFAF6; color: #2B2B2B; border-radius: calc(.3 * var(--u));
+  box-shadow: 0 calc(.3 * var(--u)) calc(.8 * var(--u)) rgb(0 0 0 / 25%), 0 calc(2 * var(--u)) calc(5 * var(--u)) rgb(0 0 0 / 30%); transform: rotate(-4deg); transform-origin: 50% 50%; }
+.ph-pt { margin: 0 0 calc(1.6 * var(--u)); font-size: calc(1.15 * var(--u)); font-weight: 600; letter-spacing: .08em; text-transform: uppercase; }
+.ph-lines { display: grid; gap: calc(2.1 * var(--u)); } .ph-lines i { display: block; height: calc(.1 * var(--u)); background: #CFCAB8; }
+.ph-lines i:nth-child(2) { width: 70%; } .ph-lines i:nth-child(3) { width: 85%; }
+.ph-prow { display: grid; grid-template-columns: 1.1fr 1.1fr .8fr; gap: calc(2 * var(--u)); margin: calc(2.4 * var(--u)) 0; }
+.ph-pf { display: grid; gap: calc(.5 * var(--u)); border-bottom: calc(.1 * var(--u)) solid #8E8A7C; padding-bottom: calc(.4 * var(--u)); }
+.ph-pl { font-size: calc(1 * var(--u)); color: #6B675C; }
+.ph-hw { justify-self: start; font-family: Caveat, "Bradley Hand", cursive; font-weight: 600; font-size: calc(3.1 * var(--u)); line-height: 1; color: #22356F; white-space: nowrap; }
+/* Tablet */
+.ph-tab { position: absolute; left: calc(52 * var(--u)); top: calc(7 * var(--u)); width: calc(56 * var(--u)); height: calc(42 * var(--u)); padding: calc(1.3 * var(--u)); border-radius: calc(2.2 * var(--u)); background: #0D1117;
+  box-shadow: 0 0 0 calc(.15 * var(--u)) rgb(255 255 255 / 8%), 0 calc(3 * var(--u)) calc(8 * var(--u)) rgb(0 0 0 / 45%); transform: rotate(-2deg); transform-origin: 0 0; }
+.ph-scr { height: 100%; border-radius: calc(1 * var(--u)); background: #FFFFFF; color: #1B2026; overflow: hidden; padding: calc(2 * var(--u)) calc(2.6 * var(--u)); }
+.ph-crumb { margin: 0 0 calc(2 * var(--u)); padding-bottom: calc(1.4 * var(--u)); border-bottom: calc(.1 * var(--u)) solid #E5E7EB; font-size: calc(1.05 * var(--u)); color: #4B5563; }
+.ph-crumb b { font-weight: 400; margin: 0 calc(.4 * var(--u)); } .ph-crumb span { color: #3E5BD9; }
+.ph-h { display: flex; align-items: center; gap: calc(1 * var(--u)); margin: 0 0 calc(1.6 * var(--u)); font-size: calc(2.2 * var(--u)); font-weight: 600; }
+.ph-ok { display: grid; place-items: center; width: calc(2.2 * var(--u)); height: calc(2.2 * var(--u)); border-radius: 50%; background: #3E5BD9; color: #FFFFFF; }
+.ph-ok svg { width: calc(1.3 * var(--u)); height: calc(1.3 * var(--u)); }
+.ph-panel { padding: calc(2 * var(--u)); border-radius: calc(.8 * var(--u)); background: #F3F4F6; }
+.ph-trow { display: grid; grid-template-columns: repeat(3, 1fr); gap: calc(1.6 * var(--u)); }
+.ph-tf { display: grid; gap: calc(.7 * var(--u)); align-content: start; }
+.ph-tl { font-size: calc(1.15 * var(--u)); font-weight: 500; }
+.ph-in { display: flex; align-items: center; height: calc(3.6 * var(--u)); padding: 0 calc(1.1 * var(--u)); border: calc(.1 * var(--u)) solid #C9CED6; border-radius: calc(.5 * var(--u)); background: #FFFFFF; }
+.ph-tv { font-size: calc(1.35 * var(--u)); white-space: nowrap; }
+.ph-help { font-size: calc(.95 * var(--u)); color: #6B7280; }
+.ph-ghost { display: grid; gap: calc(1.2 * var(--u)); margin-top: calc(2.4 * var(--u)); } .ph-ghost i { display: block; height: calc(3.6 * var(--u)); border-radius: calc(.5 * var(--u)); background: #FFFFFF; box-shadow: inset 0 0 0 calc(.1 * var(--u)) #D9DDE3; }
+.ph-ghost i:first-child { width: 62%; }
+/* Flyers: a handwritten value in flight, cross-fading to its typed form (created by the script) */
+.ph-fly { position: absolute; left: 0; top: 0; pointer-events: none; transform-origin: 0 0; white-space: nowrap; }
+.ph-fly > span { position: absolute; left: 0; top: 0; }
+.ph-fly .ph-hw { color: #22356F; }
+.ph-fly .ph-tv { color: #1B2026; }
+/* Armed (before playing): only the paper shows, its entries unwritten */
+.ph.is-armed .ph-hw { clip-path: inset(0 100% 0 0); }
+.ph.is-armed .ph-tab { opacity: 0; translate: calc(6 * var(--u)) 0; }
+.ph.is-armed .ph-tv, .ph.is-armed .ph-help, .ph.is-armed .ph-ok { opacity: 0; }
+/* Final frame (also the static state): the paper steps back, the tablet holds */
+.ph:not(.is-armed) .ph-paper { opacity: .6; translate: calc(-2 * var(--u)) calc(.6 * var(--u)); scale: .96; }
+.ph:not(.is-armed) .ph-paper .ph-hw { opacity: .45; }
+
 </style>
 
 <div class="cs" id="top">
@@ -1545,9 +1591,8 @@ body { margin: 0; font-family: var(--font-sans); background: var(--color-bg-canv
     </span>
   </div>
 
-  <div class="pm-media pm-media--21x9 cs-hero-well" role="img" aria-label="Hero image to come">
-    <div class="pm-media__fallback"><svg class="pm-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg><span>Hero image to come</span></div>
-  </div>
+  <div class="pm-media pm-media--21x9 cs-hero-well ph" data-ph role="img" aria-label="Handwritten date, time and initials on a paper batch record lift off the page and land as auto-filled fields on a tablet."><div class="ph-stage" aria-hidden="true"><div class="ph-paper"><p class="ph-pt">QC Batch Performance</p><div class="ph-lines"><i></i><i></i></div><div class="ph-prow"><div class="ph-pf"><span class="ph-pl">Date</span><span class="ph-hw" data-k="0">4/2/24</span></div><div class="ph-pf"><span class="ph-pl">Time</span><span class="ph-hw" data-k="1">2:36 pm</span></div><div class="ph-pf"><span class="ph-pl">Initials</span><span class="ph-hw" data-k="2">JF</span></div></div><div class="ph-lines"><i></i><i></i><i></i></div></div><div class="ph-tab"><div class="ph-scr"><p class="ph-crumb">Forms <b>›</b> <span>Dark Chocolate – Batch QC Form</span></p><p class="ph-h">QC tests <span class="ph-ok"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg></span></p><div class="ph-panel"><div class="ph-trow"><div class="ph-tf"><span class="ph-tl">Date finished</span><span class="ph-in"><span class="ph-tv" data-k="0">04/02/2024</span></span><span class="ph-help">Auto-filled from line tracking</span></div><div class="ph-tf"><span class="ph-tl">Time finished</span><span class="ph-in"><span class="ph-tv" data-k="1">14:36</span></span><span class="ph-help">Auto-filled from line tracking</span></div><div class="ph-tf"><span class="ph-tl">Made by</span><span class="ph-in"><span class="ph-tv" data-k="2">J. Fischer</span></span></div></div><div class="ph-ghost"><i></i><i></i></div></div></div></div></div></div>
+
 
   <header class="cs-head">
     <ul class="cs-badges" aria-label="Status and disciplines"><li class="pm-badge pm-badge--success"><svg class="pm-status__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>Shipped</li><li class="pm-badge">Product design</li><li class="pm-badge">End-to-end</li><li class="pm-badge">Tablet</li></ul>
@@ -1804,6 +1849,77 @@ body { margin: 0; font-family: var(--font-sans); background: var(--color-bg-canv
     }
   });
 
+
+  // Procense hero: plays once when it comes into view; reduced motion or no IntersectionObserver keeps the final frame
+  (function () {
+    var hero = document.querySelector('[data-ph]');
+    if (!hero || window.matchMedia('(prefers-reduced-motion: reduce)').matches || !hero.animate) return;
+    var stage = hero.querySelector('.ph-stage'), paper = hero.querySelector('.ph-paper'), tab = hero.querySelector('.ph-tab');
+    var hws = [].slice.call(hero.querySelectorAll('.ph-hw')), tvs = [].slice.call(hero.querySelectorAll('.ph-tv'));
+    var helps = [].slice.call(hero.querySelectorAll('.ph-help')), ok = hero.querySelector('.ph-ok');
+    var ease = 'cubic-bezier(.22,1,.36,1)';
+    function rel(el) { var r = el.getBoundingClientRect(), s = stage.getBoundingClientRect(); return { x: r.left - s.left, y: r.top - s.top, w: r.width, h: r.height }; }
+    function done() { hero.classList.remove('is-armed'); hero.querySelectorAll('.ph-fly').forEach(function (f) { f.remove(); }); }
+    var started = false;
+    function start() {
+      if (started) return; started = true;
+      hero.classList.add('is-armed');
+      var fonts = document.fonts ? Promise.race([document.fonts.ready, new Promise(function (r) { setTimeout(r, 800); })]) : Promise.resolve();
+      fonts.then(function () { requestAnimationFrame(play); });
+    }
+    function play() {
+      // Runs on the first frame the page is actually shown (rAF waits while the tab is hidden).
+      // Never strand the hero half-built: if anything stalls, show the final frame.
+      setTimeout(function () { if (hero.classList.contains('is-armed')) { hero.getAnimations({ subtree: true }).forEach(function (an) { an.cancel(); }); tvs.forEach(function (tv) { tv.style.opacity = ''; }); done(); } }, 7000);
+      // 1. Write: each entry is revealed left to right, as if by pen
+      hws.forEach(function (hw, k) {
+        hw.animate([{ clipPath: 'inset(0 100% 0 0)' }, { clipPath: 'inset(0 0% 0 0)' }], { duration: 520, delay: 250 + k * 260, easing: 'ease-in-out', fill: 'forwards' });
+      });
+      // 2. The tablet slides in as the paper steps back
+      tab.animate([{ opacity: 0, translate: 'calc(6 * var(--u)) 0' }, { opacity: 1, translate: '0 0' }], { duration: 900, delay: 1500, easing: ease, fill: 'forwards' });
+      paper.animate([{ opacity: 1, translate: '0 0', scale: 1 }, { opacity: .6, translate: 'calc(-2 * var(--u)) calc(.6 * var(--u))', scale: .96 }], { duration: 1000, delay: 2300, easing: ease, fill: 'forwards' });
+      // 3. Lift: each entry flies to its field, turning from handwriting into typed text
+      setTimeout(function () {
+        hws.forEach(function (hw, k) {
+          var a = rel(hw), tv = tvs[k];
+          tv.style.opacity = '0';
+          var fly = document.createElement('div'); fly.className = 'ph-fly';
+          var h = hw.cloneNode(true), t = tv.cloneNode(true); h.style.clipPath = 'none'; t.style.opacity = '0';
+          fly.appendChild(h); fly.appendChild(t); stage.appendChild(fly);
+          var b = rel(tv);
+          var hwFont = parseFloat(getComputedStyle(hw).fontSize), tvFont = parseFloat(getComputedStyle(tv).fontSize);
+          fly.style.translate = a.x + 'px ' + a.y + 'px';
+          t.style.fontSize = tvFont + 'px'; h.style.fontSize = hwFont + 'px';
+          hw.animate([{ opacity: 1 }, { opacity: .45 }], { duration: 400, delay: k * 140, fill: 'forwards' });
+          var d = 950, dl = k * 140;
+          fly.animate([{ translate: a.x + 'px ' + a.y + 'px', rotate: '-4deg' },
+                       { translate: ((a.x + b.x) / 2) + 'px ' + (Math.min(a.y, b.y) - 0.06 * stage.offsetWidth) + 'px', rotate: '-3deg', offset: .5 },
+                       { translate: b.x + 'px ' + b.y + 'px', rotate: '-2deg' }], { duration: d, delay: dl, easing: ease, fill: 'forwards' });
+          h.animate([{ opacity: 1 }, { opacity: 0 }], { duration: d * .5, delay: dl + d * .3, fill: 'forwards' });
+          t.animate([{ opacity: 0 }, { opacity: 1 }], { duration: d * .5, delay: dl + d * .35, fill: 'forwards' });
+          setTimeout(function () { tv.style.opacity = '1'; fly.remove(); }, dl + d + 30);
+        });
+      }, 2200);
+      // 4. Settle: helpers fade in, then the check
+      setTimeout(function () { helps.forEach(function (e) { e.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 500, fill: 'forwards' }); }); }, 3450);
+      setTimeout(function () { ok.animate([{ opacity: 0, scale: .4 }, { opacity: 1, scale: 1.15, offset: .7 }, { opacity: 1, scale: 1 }], { duration: 450, easing: 'ease-out', fill: 'forwards' }); }, 3800);
+      setTimeout(function () {
+        // Hand the final frame back to CSS and drop the animation fills
+        hero.getAnimations({ subtree: true }).forEach(function (an) { an.cancel(); });
+        tvs.forEach(function (tv) { tv.style.opacity = ''; });
+        done();
+      }, 4500);
+    }
+    hero.phReplay = function () { started = false; start(); };  // for checking the animation from the console
+    // In view on load (the usual case: it's the top of the page)? Play now. Otherwise play when it scrolls into view.
+    var r = hero.getBoundingClientRect();
+    if (r.top < window.innerHeight * .75 && r.bottom > 0) { start(); return; }
+    if (!('IntersectionObserver' in window)) return;
+    var io = new IntersectionObserver(function (es) {
+      if (es.some(function (e) { return e.isIntersecting; })) { io.disconnect(); start(); }
+    }, { threshold: .5 });
+    io.observe(hero);
+  })();
 
   // Other pages aren't in this prototype yet
   document.querySelectorAll(".cs-more .pm-card__title a").forEach(function (a) { a.addEventListener('click', function (e) { e.preventDefault(); }); });
