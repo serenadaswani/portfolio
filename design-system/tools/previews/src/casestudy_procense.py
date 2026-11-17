@@ -258,8 +258,6 @@ BODY = ''.join([
     section('problem', 'The problem', 'Every batch was recorded by hand, then checked on paper.',
         lede('In many process plants, each batch is recorded on two paper forms: one for the manufacturing steps and one for the quality checks. Once complete, the forms go to reviewers in quality and engineering, who decide whether the batch meets the standard. The process is slow, invites human error and holds up decisions on the floor.')
         + shot(flow(), 'A paper batch, step by step. Five of the six steps are written by hand, and each is a chance for error.', 1)
-        + stats([('~150', 'Handwritten entries in one batch record'), ('1–4%', 'Chance any handwritten entry is inaccurate'), ('1–3 days', 'From the end of a batch to its approval')], ' pm-stats--sm cs-stats')
-        + '<p class="pm-meta-text pr-draft">Estimates for a typical paper batch record, for illustration.</p>'
         + lede('One North Star kept product, design and business aligned.')
         + f'<section class="pr-ns" aria-labelledby="p-ns"><p class="pr-ns__label" id="p-ns">{_l("compass")}Our North Star</p>'
           '<p class="pr-ns__text">Streamline batch manufacturing by digitizing its forms, while keeping them intuitive for operators used to filling them in by hand.</p></section>'
@@ -306,16 +304,18 @@ BODY = ''.join([
         lede('We reviewed the first design of the quality test form with a quality manager, section by section, and their feedback led to two changes.')
         + '<div class="cs-pair">'
         + panel('What we heard', '<p>Operators still typed too much, and choosing batch and order numbers from a list added unnecessary steps.</p>', ' pm-panel--tonal', 'p-heard')
-        + panel('What we changed', '<p>More fields now fill in automatically from the sample type, and batch and order numbers are typed in directly.</p>', '', 'p-changed')
+        + panel('What we changed', '<p>More fields now fill in automatically from the sample type, and batch and order numbers come straight from Procense instead of a list.</p>', '', 'p-changed')
         + '</div>'),
 
     section('reflection', 'Impact &amp; reflection', 'Operators now record each batch as they work.',
         lede('Moving from paper to the Digital Forms application streamlined the whole batch process. Operators record data as they go instead of copying it later, reviewers see it as soon as it’s entered, and every value carries who entered it and when. With the paperwork out of the way, teams can focus on running safe, consistent batches.')
-        + stats(STATS_FULL, ' pm-stats--sm cs-stats') + source()
+        + '<figure class="cs-quote pr-quote"><blockquote><p>“We’re saving time and gaining confidence.”</p></blockquote>'
+          f'<figcaption>Leticia Rodriguez, Lead Operator at Dr. Squatch, in <a class="pm-link" href="{SOURCE_URL}" target="_blank" rel="noopener" aria-label="Procense’s Dr. Squatch case study (opens in a new tab)">Procense’s case study{I["ext"]}</a></figcaption></figure>'
         + '<h3 class="cs-h3">What I learned</h3>'
-        + '<div class="cs-pair">'
+        + '<div class="cs-pair pr-trio">'
         + panel('Design for the device in their hands', '<p>Learning that operators carry tablets changed every layout decision, and made the forms easier to use, not harder.</p>', ' pm-panel--tonal', 'p-l1')
         + panel('Modernize what people already know', '<p>Keeping the forms familiar, rather than reinventing them, let the plants move faster without losing the checks that keep every batch safe.</p>', ' pm-panel--tonal', 'p-l2')
+        + panel('Trade a tap for clarity', '<p>Breaking long forms into steps added a tap or two, but each screen became simple enough to fill in mid-task. It’s a trade I’d make again.</p>', ' pm-panel--tonal', 'p-l3')
         + '</div>' + lightbox()),
 ])
 
@@ -529,6 +529,9 @@ CSS = r"""
 .pr-sketches img { display: block; width: 100%; height: auto; border-radius: var(--radius-sm); }
 /* Body numbers share a top line even when a label wraps (as in the TL;DR) */
 .cs-stats .pm-stats__item { justify-content: flex-end; }
+/* What I learned: three lessons across from a 768px column */
+@container (min-width: 768px) { .cs-pair.pr-trio { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+.pr-quote figcaption .pm-icon { display: inline-block; width: 12px; height: 12px; margin-left: 2px; vertical-align: -1px; }
 /* Source line under the result stats (Procense's Dr. Squatch case study) */
 .pr-source { margin: var(--space-3) 0 0; max-width: 60ch; }
 .pr-source .pm-link { font-weight: var(--weight-regular, 400); text-decoration-line: underline; white-space: nowrap; }
