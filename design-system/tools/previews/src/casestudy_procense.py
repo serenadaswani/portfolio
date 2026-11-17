@@ -175,6 +175,45 @@ def lightbox():
             f'<div class="pm-lightbox__mobile-nav"><button type="button" class="pm-btn pm-btn--on-image pm-btn--sm" data-lb-prev>{I["prev"]}Previous</button>'
             f'<button type="button" class="pm-btn pm-btn--on-image pm-btn--sm" data-lb-next>Next{I["next"]}</button></div></div></dialog>')
 
+# The final screens: Serena's real designs from her Framer case study (branded Empiric, Procense's former name),
+# shown in a tablet frame. Small numbered markers point at the design patterns described in the cards beside them.
+SCREENS = [  # label, file, w, h, alt, caption, [(x%, y%, pattern, description)]
+    ('Batch information', 'screen-batch-info.webp', 1440, 1211,
+     'Batch information screen: product name, description, number, formula code and version already filled in; inputs for lot number, batch number, due date with a calendar, work center, yields and remarks; a Next button.',
+     'Batch information, the first step. Product details arrive from the platform.',
+     [(53.5, 20.8, 'Fields that fill themselves', 'Product details arrive from the platform, ready to check.'),
+      (87.0, 30.4, 'Familiar icons', 'A calendar marks the date field at a glance.'),
+      (84.6, 77.9, 'Consistent controls', 'Next sits in the same spot on every step.')]),
+    ('SOP step', 'screen-sop-step.webp', 1440, 1193,
+     'Manufacturing step screen: Step 1 with a View BOM button, a Start Batch button, the instruction "Melt cocoa mass and cocoa butter together using a double boiler", the ingredient "50.5% coco mass", inputs for amount added, start and stop time, operator initials and lot number; Back, Save Draft and Next.',
+     'A manufacturing step. The instruction, ingredient and inputs share one screen.',
+     [(39.0, 16.2, 'Clear sections', 'Each step has its own header and a materials list.'),
+      (87.5, 38.0, 'Instructions in the form', 'The instruction sits right above its inputs.'),
+      (53.5, 45.4, 'Critical steps stand out', 'The amount to add is large and bold.')]),
+    ('QC tests', 'screen-qc-tests.webp', 1440, 1546,
+     'Quality tests screen: yield, finish date and time, made by and packaged by fields, comments, a table of five tests with their standard and a result field each, and sign-off with Add Signature and Add Initial buttons.',
+     'Quality tests, the last step. Every test, its standard and its result sit in one table.',
+     [(73.5, 50.0, 'Built for dense data', 'Test, standard and result line up in one table.'),
+      (40.0, 85.4, 'Fields that fill themselves', 'Sign-off adds the operator’s signature in a tap.'),
+      (71.4, 95.0, 'Consistent controls', 'Back, Save Draft and Next match every step.')]),
+]
+def screen_rows(start):
+    """Each final screen on the left (labelled, in a tablet frame, numbered markers), its design patterns on the right."""
+    out = ''
+    for k, (label, f, w, h, alt, cap, notes) in enumerate(SCREENS):
+        n = start + k
+        pins = ''.join(f'<span class="pr-mk" style="left:{x}%;top:{y}%">{i + 1}</span>' for i, (x, y, t, d) in enumerate(notes))
+        cards = ''.join(f'<li class="pm-card pm-card--outlined pr-card pr-note-card"><span class="pr-mk pr-mk--key" aria-hidden="true">{i + 1}</span>'
+                        f'<div><h4 class="pm-card__title">{t}</h4><p class="pm-card__summary">{d}</p></div></li>' for i, (x, y, t, d) in enumerate(notes))
+        out += (f'<div class="pr-srow-c"><div class="pr-srow"><figure class="pm-frame pr-sfig"><div class="pm-frame__stage pr-zoom" data-lb-item data-lb-caption="Fig. {n:02d}. {cap}">'
+                f'<p class="pr-slabel">{label}</p>'
+                f'<div class="pr-device"><div class="pr-device__screen"><img src="../assets/procense/{f}" width="{w}" height="{h}" loading="lazy" alt="{alt}">'
+                f'<div class="pr-mks" aria-hidden="true">{pins}</div></div></div>'
+                + expand(f'Fig. {n:02d}, {label}') + '</div>'
+                f'<figcaption class="pm-frame__caption"><span class="pm-frame__index">Fig. {n:02d}</span><span>{cap}</span></figcaption></figure>'
+                f'<ol class="pr-notes" aria-label="Design patterns in the {label} screen">{cards}</ol></div></div>')
+    return out
+
 def shot(art, cap, n, zoom=False):
     return (f'<figure class="pm-frame"><div class="pm-frame__stage pr-stage{" pr-zoom" if zoom else ""}"{f' data-lb-item data-lb-caption="Fig. {n:02d}. {cap}"' if zoom else ""}>{art}'
             + (expand(f'Fig. {n:02d}') if zoom else '') + '</div>'
@@ -233,16 +272,7 @@ BODY = ''.join([
 
     section('solution', 'The solution', 'Two paper forms became one guided flow.',
         lede('The final design merges both forms into three steps: batch details, then the manufacturing steps and ingredients, then the quality tests. Each screen shows only what that step needs, so operators can keep their attention on the batch.')
-        + shot(screen1(), 'Batch information, the first step. Date, time and signature fill in on their own.', 4, zoom=True)
-        + shot(screen2(), 'Manufacturing steps and ingredients. Instructions in blue, ingredients in grey, critical conditions in bold.', 5, zoom=True)
-        + shot(screen3(), 'Quality tests, the last step. Each result is checked against its target range as it’s entered.', 6, zoom=True)
-        + feature_cards([('', 'Fields that fill themselves', 'Date and time fill in automatically, and signatures come from the operator’s login.'),
-                         ('', 'The same patterns everywhere', 'Buttons, fields and layouts behave the same at every step of the flow.'),
-                         ('', 'Clear sections', 'Colour sets them apart: blue for instructions, grey for ingredients.'),
-                         ('', 'Familiar icons', 'Icons like date and time mark the inputs that are required.'),
-                         ('', 'Built for dense data', 'One left-aligned column that’s easy to read and move through.'),
-                         ('', 'Instructions in the form', 'The steps for each stage sit right inside the form, so there’s no binder to check.'),
-                         ('', 'Critical steps stand out', 'Conditions that can ruin a batch are bold and hard to miss.')], cols=2)),
+        + screen_rows(4)),
 
     section('feedback', 'User feedback', 'A QA manager’s review cut even more typing.',
         lede('We reviewed the first design of the quality test form with a QA manager, section by section, and their feedback led to two changes.')
@@ -375,10 +405,30 @@ JS = r"""
 """
 
 CSS = r"""
+/* Final screens: screen left, its patterns right (side by side from a 700px column); label inside the stage above the image */
+.pr-srows { display: grid; gap: var(--space-12); }
+.pr-srow-c { container: pr-srow / inline-size; }
+.pr-srow { display: grid; gap: var(--space-5); }
+@container pr-srow (min-width: 700px) { .pr-srow { grid-template-columns: minmax(0, 3fr) minmax(0, 2fr); gap: var(--space-6); align-items: start; } }
+.pr-srow > * { min-width: 0; }
+.pr-slabel { margin: 0 0 var(--space-4); font-size: var(--type-body-sm); line-height: var(--line-body-sm); font-weight: var(--weight-medium); color: var(--color-text-primary); }
+.pr-device { padding: 2.2%; border-radius: var(--radius-lg); background: #1B2026; box-shadow: 0 2px 4px rgb(0 0 0 / 12%), 0 14px 32px rgb(0 0 0 / 14%); }
+.pr-device__screen { position: relative; overflow: hidden; border-radius: var(--radius-sm); }
+.pr-device__screen img { display: block; width: 100%; height: auto; }
+/* Markers: small cobalt numbers with a white ring, visible without covering the design */
+.pr-mk { display: grid; place-items: center; width: 20px; height: 20px; border-radius: 50%; background: var(--color-action-primary); color: var(--color-text-on-accent); font: var(--weight-medium) 11px / 1 var(--font-sans); font-variant-numeric: tabular-nums; box-shadow: 0 0 0 2px var(--color-bg-elevated), 0 1px 3px rgb(0 0 0 / 25%); }
+.pr-mks .pr-mk { position: absolute; transform: translate(-50%, -50%); }
+.pr-notes { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-3); align-content: start; }
+.pr-note-card.pm-card--outlined, .pr-note-card.pm-card--outlined:hover { flex-direction: row; align-items: flex-start; gap: var(--space-3); padding: var(--space-4); }
+.pr-note-card .pr-mk--key { flex: none; margin-top: 2px; }
+.pr-note-card .pm-card__title, .pr-note-card .pm-card__summary { padding-inline: 0; }
+.cs-section .pr-srow + .pr-srow { margin-top: var(--space-6); }
+
 /* Expand control (ImageFrame) in each well's top-right corner; the shared Lightbox shows images and mockups contained */
 .pr-zoom, .pr-sk { position: relative; }
 .pr-expand { position: absolute; z-index: 2; top: var(--space-3); right: var(--space-3); bottom: auto; }
 .pr-zoom > .pr-expand { top: calc(var(--frame-p) + var(--space-2)); right: calc(var(--frame-p) + var(--space-2)); }
+.pr-sfig .pr-zoom > .pr-expand { top: calc(var(--frame-p) - var(--space-1)); right: var(--frame-p); }
 .pr-sk .pr-expand { top: var(--space-2); right: var(--space-2); }
 .pr-lb__figure { display: grid; place-items: center; min-height: 0; overflow: hidden; }
 .pr-lb__slot { display: grid; place-items: center; width: 100%; height: min(calc(100svh - 190px), 1100px); }
