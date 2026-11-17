@@ -1,0 +1,86 @@
+{
+  "_help": [
+    "Tablet screens for the Procense case study, rendered by design-system/tools/previews/src/tablet_screen.py.",
+    "To add a screen: export the base frame (and, if it scrolls, the full-length middle section) from Figma at 1.5x,",
+    "save them as WebP in procense/assets/screens/ named <orientation>-<slug>.webp and <orientation>-<slug>-scroll.webp,",
+    "then add an entry under 'screens' keyed '<orientation>-<slug>'. Leave out 'scroll' for a static screen.",
+    "'box' is the scroll area in 1x Figma pixels, [left, top, width, height]: a name from 'boxes' or an explicit list.",
+    "Image sizes are read from the files at build time, so there is nothing else to fill in."
+  ],
+  "dir": "assets/screens",
+  "native": { "landscape": [1024, 768], "portrait": [768, 1024] },
+  "boxes": {
+    "landscape": { "default": [80, 56, 944, 631], "dashboard": [80, 64, 944, 704] },
+    "portrait": { "default": [0, 56, 768, 887], "dashboard": [0, 64, 768, 960], "batch-information": [0, 56, 768, 835] }
+  },
+  "screens": {
+    "landscape-forms-dashboard": {
+      "label": "Forms dashboard",
+      "scroll": true, "box": "dashboard",
+      "alt": "Forms dashboard on a landscape tablet: totals for ready to start, in progress, approved and completed forms, search with filter, sort and group by, then batch tickets grouped by stage in collapsible tables with dates, lot numbers, status and an active toggle."
+    },
+    "landscape-batch-information": {
+      "label": "Batch information",
+      "scroll": true, "box": "default",
+      "alt": "Batch information screen on a landscape tablet: the Dark Chocolate batch QC form with Start, Log downtime and Downtime timer buttons, a four-step stepper on Batch information, and fields for lot number, batch number, work center, due date and yields; Save draft and Next at the bottom."
+    },
+    "landscape-special-precautions": {
+      "label": "Special precautions",
+      "scroll": true, "box": "default",
+      "alt": "Special precautions screen on a landscape tablet: the stepper on step 2, then safety precautions, special precautions and critical operating parameters in their own cards, and a checkbox confirming the operator has read them; Back, Save draft and Next at the bottom."
+    },
+    "landscape-sop-step": {
+      "label": "SOP step",
+      "scroll": true, "box": "default",
+      "alt": "SOP step screen on a landscape tablet: Step 1 of 4 marked In progress with a View all steps link, the instruction \"Melt cocoa mass and cocoa butter together using a double boiler\" in bold, and the cocoa mass measurement with amount, start and stop time, lot number and signature fields below."
+    },
+    "landscape-sop-step-details": {
+      "label": "SOP step, details shown",
+      "scroll": true, "box": "default",
+      "alt": "SOP step screen on a landscape tablet with batch details expanded: asset, product number, start time, batch lot, batch size and formula code above the stepper, then the step's instruction and measurement fields."
+    },
+    "landscape-qc-tests": {
+      "label": "QC tests",
+      "scroll": true, "box": "default",
+      "alt": "QC tests screen on a landscape tablet: an Add sample button, fields for actual yield, date and time finished with calendar and clock pickers, made by and packaged by, comments, a table of quality tests with a result field for each, and approve, reject and review sign-offs; Submit for review at the bottom."
+    },
+    "landscape-all-steps-drawer": {
+      "label": "All steps",
+      "alt": "All steps drawer on a landscape tablet, open over the SOP step: 4 of 14 steps complete with a 29% progress bar, a Search steps field, the Preparation steps checked off with who signed each and when, step 5 under Processing highlighted as In progress, and Close and Go to current step buttons at the bottom."
+    },
+    "portrait-forms-dashboard": {
+      "label": "Forms dashboard",
+      "scroll": true, "box": "dashboard",
+      "alt": "Forms dashboard on a portrait tablet: form totals by stage, search, filter and sort, and batch tickets grouped by stage, with navigation behind a menu button."
+    },
+    "portrait-batch-information": {
+      "label": "Batch information",
+      "scroll": true, "box": "batch-information",
+      "alt": "Batch information screen on a portrait tablet: the same form with its fields stacked into fewer columns and the side navigation behind a menu button."
+    },
+    "portrait-special-precautions": {
+      "label": "Special precautions",
+      "scroll": true, "box": "default",
+      "alt": "Special precautions screen on a portrait tablet: the three precaution groups stacked full width, with the confirmation checkbox at the end."
+    },
+    "portrait-sop-step": {
+      "label": "SOP step",
+      "scroll": true, "box": "default",
+      "alt": "SOP step screen on a portrait tablet: the stepper collapses to numbered circles with only the current step named, and the amount, start time and stop time fields wrap into two columns."
+    },
+    "portrait-sop-step-details": {
+      "label": "SOP step, details shown",
+      "scroll": true, "box": "default",
+      "alt": "SOP step screen on a portrait tablet with batch details expanded above the stepper, then the step's instruction and measurement fields."
+    },
+    "portrait-qc-tests": {
+      "label": "QC tests",
+      "scroll": true, "box": "default",
+      "alt": "QC tests screen on a portrait tablet: yield, date and time fields reflow to fit the narrower screen, followed by the test table and sign-offs, with Submit for review at the bottom."
+    },
+    "portrait-all-steps-drawer": {
+      "label": "All steps",
+      "alt": "All steps drawer on a portrait tablet: it covers most of the screen, with progress, search, the Preparation steps checked off, step 5 In progress and the next steps listed with time estimates."
+    }
+  }
+}

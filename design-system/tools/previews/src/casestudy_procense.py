@@ -9,6 +9,7 @@ from casestudy import I, S, section, lede, panel, points, stats
 from lib import _l
 import cs_parts
 from cs_parts import before_after
+import tablet_screen as TS
 
 def _between(text, start, end):
     a = text.index(start); return text[a:text.index(end, a + len(start))]
@@ -185,51 +186,40 @@ def lightbox():
 
 # The final screens: Serena's revised tablet designs from Figma (landscape, 1024x768 at 1.5x), in a tablet frame.
 # Numbered badges point at the design patterns described in the cards under each screen.
-SCREENS = [  # label, file, w, h, alt, caption, [(x%, y%, pattern, description)]
-    ('Batch information', 'tl-batch-info.webp', 1536, 1152,
-     'Batch information screen on a landscape tablet: the Dark Chocolate batch QC form with Start, Log downtime and Downtime timer buttons, a four-step stepper on Batch information, and fields for lot number, batch number, work center, due date and yields; Save draft and Next at the bottom.',
+SCREENS = [  # screen id in procense/screens.json, caption, [(x%, y% of the base image, pattern, description)]
+    ('landscape-batch-information',
      'Batch information, the first of four steps.',
      [(83.0, 46.3, 'Four clear steps', 'The stepper shows where the batch is at a glance.'),
       (76.4, 14.0, 'Start to unlock', 'Fields open once the batch timer is running.'),
       (81.6, 70.2, 'Required, marked', 'An asterisk flags what’s needed before Next.')]),
-    ('Special precautions', 'tl-precautions.webp', 1536, 1152,
-     'Special precautions screen on a landscape tablet: the stepper with Batch information checked, then safety precautions grouped in their own card, with Back, Save draft and Next at the bottom.',
+    ('landscape-special-precautions',
      'Special precautions, reviewed before any step starts.',
      [(40.2, 70.0, 'Grouped by risk', 'Safety, special and critical items each get a section.'),
       (69.6, 60.9, 'Read before you start', 'Every item is reviewed before the SOP steps.'),
       (73.2, 94.8, 'Save at any point', 'Operators can go back or save a draft any time.')]),
-    ('SOP step', 'tl-sop-step.webp', 1536, 1152,
-     'SOP step screen on a landscape tablet: Step 1 of 4 marked In progress with a View all steps link, the instruction "Melt cocoa mass and cocoa butter together using a double boiler" in bold, and the coco mass measurement below.',
+    ('landscape-sop-step',
      'A manufacturing step, one instruction at a time.',
      [(37.4, 56.4, 'One step at a time', 'Each step shows its status; the full list is a tap away.'),
       (73.2, 73.1, 'Instruction first', 'The instruction sits in bold above its inputs.'),
       (82.6, 23.7, 'Details on demand', 'Show details opens batch info only when needed.')]),
-    ('All steps', 'tl-steps-drawer.webp', 1536, 1152,
-     'All steps drawer on a landscape tablet, open over the SOP step: 4 of 14 steps complete with a 29% progress bar, a Search steps field, the Preparation steps checked off with who signed each and when, step 5 under Processing highlighted as In progress, and Close and Go to current step buttons at the bottom.',
+    ('landscape-all-steps-drawer',
      'All steps, the full SOP in a drawer over the current step.',
      [(75.6, 14.9, 'Progress at a glance', 'Steps done and the percent complete sit up top.'),
       (69.0, 31.1, 'The whole SOP', 'Steps grouped by phase, with who signed each one.'),
       (80.1, 91.7, 'Jump to any step', 'Open any step, or return to the current one.')]),
-    ('QC tests', 'tl-qc-tests.webp', 1536, 1152,
-     'QC tests screen on a landscape tablet: an Add sample button, fields for actual yield, date and time finished with calendar and clock pickers, made by and packaged by, and Submit for review at the bottom.',
+    ('landscape-qc-tests',
      'Quality tests, the last step before review.',
      [(78.3, 58.3, 'Samples as needed', 'Extra samples are one tap away.'),
       (81.2, 70.2, 'Real date and time', 'Pickers for dates and times avoid typos.'),
       (98.4, 91.2, 'Straight to review', 'The last step sends the batch for review.')]),
 ]
-PORTRAIT = [  # label, file, alt
-    ('Batch information', 'tp-batch-info.webp', 'Batch information screen on a portrait tablet: the same form with its fields stacked into fewer columns and the side navigation behind a menu button.'),
-    ('SOP step', 'tp-sop-step.webp', 'SOP step screen on a portrait tablet: the stepper collapses to numbered circles with only the current step named, and the amount, start time and stop time fields wrap into two columns.'),
-    ('All steps', 'tp-steps-drawer.webp', 'All steps drawer on a portrait tablet: it covers most of the screen, with progress, search, the Preparation steps checked off, step 5 In progress and the next steps listed with time estimates.'),
-    ('QC tests', 'tp-qc-tests.webp', 'QC tests screen on a portrait tablet: yield, date and time fields reflow to fit the narrower screen, with Submit for review at the bottom.'),
-]
+PORTRAIT = ['portrait-batch-information', 'portrait-sop-step', 'portrait-all-steps-drawer', 'portrait-qc-tests']  # ids in procense/screens.json
 
 def portrait(n):
     """The four key screens on a portrait tablet, two by two (stacked on phones). Each opens in the lightbox."""
-    cells = ''.join(f'<div class="pr-pt" data-lb-item data-lb-caption="Fig. {n:02d}. {label} on a portrait tablet.">'
-                    f'<p class="pr-slabel">{label}</p><div class="pr-device pr-device--pt"><div class="pr-device__screen">'
-                    f'<img src="assets/{f}" width="1152" height="1536" loading="lazy" alt="{alt}"></div></div>'
-                    + expand(f'{label}, portrait') + '</div>' for label, f, alt in PORTRAIT)
+    cells = ''.join(f'<div class="pr-pt" data-lb-item data-lb-caption="Fig. {n:02d}. {TS.screen(sid)["label"]} on a portrait tablet.">'
+                    f'<p class="pr-slabel">{TS.screen(sid)["label"]}</p>' + TS.render(sid, frame=True)
+                    + expand(f'{TS.screen(sid)["label"]}, portrait') + '</div>' for sid in PORTRAIT)
     return (f'<figure class="pm-frame"><div class="pm-frame__stage pr-stage pr-pts">{cells}</div>'
             f'<figcaption class="pm-frame__caption"><span class="pm-frame__index">Fig. {n:02d}</span>'
             '<span>The same flow on a portrait tablet. Navigation moves behind a menu, the stepper names only the current step, the All steps drawer widens to fill the screen, and fields reflow into fewer columns.</span></figcaption></figure>')
@@ -238,7 +228,7 @@ def web_vs_tablet(n):
     """Before/after slider from the design-system parts (cs_parts.before_after): the web form vs the tablet form."""
     ba = before_after('assets/web-batch-info.webp',
                       'Batch information on the web: a wide layout with a full sidebar, six batch details in a row and small controls.',
-                      'assets/tl-batch-info.webp',
+                      'assets/screens/landscape-batch-information.webp',
                       'Batch information on a tablet: a slim navigation rail, larger type and touch-sized buttons, with batch details behind Show details.',
                       'Web: dense rows, a full sidebar and small controls.',
                       'Tablet: a slim rail, larger type and touch-sized controls.',
@@ -249,21 +239,25 @@ def web_vs_tablet(n):
 
 def screen_rows(start):
     """Each final screen full width in its figure stage: label, tablet frame with numbered annotation buttons, then the
-    three pattern cards inside the same stage (across on wide screens, stacked on narrow ones). Hovering or focusing a
-    badge lifts its card; hovering a card shows its badge's hover state. No selected state."""
+    three pattern cards inside the same stage (across on wide screens, stacked on narrow ones). The screen is a
+    TabletScreen (tablet_screen.py): its middle scrolls, and badges inside the scroll area move with the content.
+    Hovering or focusing a badge lifts its card; hovering or focusing a card shows its badge's hover state; clicking a
+    card's title scrolls its badge into view and flashes it. No selected state."""
     out = ''
-    for k, (label, f, w, h, alt, cap, notes) in enumerate(SCREENS):
+    for k, (sid, cap, notes) in enumerate(SCREENS):
         n = start + k
-        slug = label.lower().replace(' ', '-')
-        pins = ''.join(f'<button type="button" class="pr-mk pr-mk--btn" style="left:{x}%;top:{y}%" data-ann="{i}" '
-                       f'aria-label="Annotation {i + 1}: {t}" aria-describedby="{slug}-ann-{i}">{i + 1}</button>' for i, (x, y, t, d) in enumerate(notes))
+        label = TS.screen(sid)['label']
+        slug = sid
+        pins = [dict(x=x, y=y, html=f'<button type="button" class="pr-mk pr-mk--btn" data-ann="{i}" '
+                                  f'aria-label="Annotation {i + 1}: {t}" aria-describedby="{slug}-ann-{i}">{i + 1}</button>')
+                for i, (x, y, t, d) in enumerate(notes)]
         cards = ''.join(f'<li class="pm-card pm-card--outlined pr-card pr-note-card" data-ann-card="{i}"><span class="pr-mk pr-mk--key" aria-hidden="true">{i + 1}</span>'
-                        f'<div><h4 class="pm-card__title">{t}</h4><p class="pm-card__summary" id="{slug}-ann-{i}">{d}</p></div></li>' for i, (x, y, t, d) in enumerate(notes))
+                        f'<div><h4 class="pm-card__title"><button type="button" class="pr-note-card__btn" data-ann-jump="{i}" aria-describedby="{slug}-ann-{i}">{t}</button></h4>'
+                        f'<p class="pm-card__summary" id="{slug}-ann-{i}">{d}</p></div></li>' for i, (x, y, t, d) in enumerate(notes))
         out += (f'<figure class="pm-frame pr-sfig" data-ann-fig><div class="pm-frame__stage pr-zoom" data-lb-item data-lb-caption="Fig. {n:02d}. {cap}">'
                 f'<p class="pr-slabel">{label}</p>'
-                f'<ol class="pr-notes" aria-label="Design patterns in the {label} screen">{cards}</ol>'
-                f'<div class="pr-device"><div class="pr-device__screen"><img src="assets/{f}" width="{w}" height="{h}" loading="lazy" alt="{alt}">'
-                f'<div class="pr-mks">{pins}</div></div></div>'
+                f'<ol class="pr-notes" aria-label="Design patterns in the {label} screen. Select one to show it on the screen.">{cards}</ol>'
+                + TS.render(sid, frame=True, pins=pins)
                 + expand(f'Fig. {n:02d}, {label}') + '</div>'
                 f'<figcaption class="pm-frame__caption"><span class="pm-frame__index">Fig. {n:02d}</span><span>{cap}</span></figcaption></figure>')
     return out
@@ -383,6 +377,15 @@ JS = r"""
     cards.forEach(function (c, i) {
       c.addEventListener('mouseenter', function () { c.classList.add('is-hover'); btns[i].classList.add('is-hover'); });
       c.addEventListener('mouseleave', function () { c.classList.remove('is-hover'); btns[i].classList.remove('is-hover'); });
+      var jb = c.querySelector('[data-ann-jump]'), t;
+      jb.addEventListener('focus', function () { btns[i].classList.add('is-hover'); });
+      jb.addEventListener('blur', function () { btns[i].classList.remove('is-hover'); });
+      // Click: bring the badge into view in its screen (it may be scrolled away), then flash it
+      jb.addEventListener('click', function () {
+        window.TabletScreen.reveal(btns[i]);
+        btns[i].classList.remove('is-flash'); void btns[i].offsetWidth; btns[i].classList.add('is-flash');
+        clearTimeout(t); t = setTimeout(function () { btns[i].classList.remove('is-flash'); }, 1600);
+      });
     });
   });
 
@@ -394,10 +397,15 @@ JS = r"""
     var slot = dlg.querySelector('[data-lb-slot]'), cap = dlg.querySelector('[data-lb-cap]'), n = dlg.querySelector('[data-lb-n]');
     dlg.querySelector('[data-lb-total]').textContent = items.length;
     function show(i) {
-      at = (i + items.length) % items.length; var it = items[at], img = it.querySelector('img'), node;
-      if (img) { node = new Image(); node.src = img.currentSrc || img.src; node.alt = img.alt; }
+      at = (i + items.length) % items.length; var it = items[at], ts = it.querySelector('.ts'), img = it.querySelector('img'), node;
+      if (ts) {
+        node = ts.cloneNode(true); node.classList.add('ts--lb');
+        [].forEach.call(node.querySelectorAll('.ts__pin'), function (e) { e.remove(); });
+        [].forEach.call(node.querySelectorAll('img'), function (e) { e.loading = 'eager'; });
+        [].forEach.call(node.querySelectorAll('.ts__scroll'), function (e) { e._ts = 0; e.scrollTop = 0; });
+      } else if (img) { node = new Image(); node.src = img.currentSrc || img.src; node.alt = img.alt; }
       else { node = it.querySelector('.pr-tab').cloneNode(true); }
-      slot.replaceChildren(node); cap.textContent = it.getAttribute('data-lb-caption'); n.textContent = at + 1;
+      slot.replaceChildren(node); if (ts) window.TabletScreen.init(node); cap.textContent = it.getAttribute('data-lb-caption'); n.textContent = at + 1;
       if (!reduce && node.animate) node.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 200, easing: 'ease-out' });
     }
     items.forEach(function (it, i) { var b = it.querySelector('[data-lb-open]'); if (b) b.addEventListener('click', function () { opener = b; show(i); dlg.showModal(); dlg.querySelector('[data-lb-close]').focus(); }); });
@@ -485,9 +493,6 @@ CSS = r"""
 .pr-sfig + .pr-sfig { margin-top: var(--space-6); }
 .pr-sfig .pm-frame__stage { container: pr-sfig / inline-size; }
 .pr-slabel { margin: 0 0 var(--space-4); font-size: var(--type-body-sm); line-height: var(--line-body-sm); font-weight: var(--weight-medium); color: var(--color-text-primary); }
-.pr-device { padding: 1.6%; border-radius: var(--radius-lg); background: #1B2026; box-shadow: 0 2px 4px rgb(0 0 0 / 12%), 0 14px 32px rgb(0 0 0 / 14%); }
-.pr-device__screen { position: relative; overflow: hidden; border-radius: var(--radius-sm); }
-.pr-device__screen img { display: block; width: 100%; height: auto; }
 /* Annotation badges: the system's annotation coral with a white number, so they stand apart from the screens' blue and black
    without reading as an error. Same in both themes. On the screens a soft shadow lifts them off the UI.
    Hover/focus: larger, with a paper ring, and its card gets a coral stroke and lifts. Hovering a card strokes it and gives its badge the same hover state. */
@@ -496,7 +501,7 @@ CSS = r"""
   font: var(--weight-medium) 12px / 1 var(--font-sans); font-variant-numeric: tabular-nums; }
 .pr-mk--btn { position: absolute; transform: translate(-50%, -50%); cursor: default; box-shadow: 0 1px 3px rgb(11 18 32 / 28%); }
 @media (pointer: coarse) { .pr-mk--btn::after { content: ""; position: absolute; inset: -10px; border-radius: 50%; } }
-.pr-mk--btn:focus-visible, .pr-mk--btn.is-hover { transform: translate(-50%, -50%) scale(1.25); box-shadow: 0 0 0 2px var(--paper), 0 2px 6px rgb(11 18 32 / 30%); }
+.pr-mk--btn:focus-visible, .pr-mk--btn.is-hover, .pr-mk--btn.is-flash { transform: translate(-50%, -50%) scale(1.25); box-shadow: 0 0 0 2px var(--paper), 0 2px 6px rgb(11 18 32 / 30%); }
 @media (hover: hover) { .pr-mk--btn:hover { transform: translate(-50%, -50%) scale(1.25); box-shadow: 0 0 0 2px var(--paper), 0 2px 6px rgb(11 18 32 / 30%); } }
 .pr-mk--btn:focus-visible { outline: var(--focus-ring-width) solid var(--color-focus-ring); outline-offset: 3px; }
 .pr-notes { list-style: none; margin: 0 0 var(--space-5); padding: 0; display: grid; gap: var(--space-3); grid-template-columns: minmax(0, 1fr); }
@@ -508,6 +513,17 @@ CSS = r"""
 @media (hover: hover) { .pr-sfig .pr-note-card.pm-card--outlined:hover { box-shadow: inset 0 0 0 2px var(--color-annotation), var(--shadow-sm); } }
 .pr-sfig .pr-note-card.pm-card--outlined.is-on, .pr-sfig .pr-note-card.pm-card--outlined.is-on:hover, .pr-sfig .pr-note-card.pm-card--outlined.is-on.is-hover { box-shadow: inset 0 0 0 2px var(--color-annotation), var(--shadow-md); }
 .pr-note-card .pr-mk--key { flex: none; margin-top: 0; }
+/* The card's title is a button that shows its badge on the screen; its hit area covers the whole card */
+.pr-sfig .pr-note-card.pm-card--outlined { position: relative; cursor: pointer; }
+.pr-note-card__btn { all: unset; cursor: pointer; }
+.pr-note-card__btn::after { content: ""; position: absolute; inset: 0; border-radius: inherit; }
+.pr-note-card__btn:focus-visible { outline: var(--focus-ring-width) solid var(--color-focus-ring); outline-offset: 2px; border-radius: var(--radius-sm); }
+@supports selector(:has(*)) {
+  .pr-note-card__btn:focus-visible { outline: none; }
+  .pr-note-card:has(.pr-note-card__btn:focus-visible) { outline: var(--focus-ring-width) solid var(--color-focus-ring); outline-offset: 2px; }
+}
+@media (prefers-reduced-motion: no-preference) { .pr-mk--btn.is-flash { animation: pr-flash .8s ease-out 2; } }
+@keyframes pr-flash { 0% { box-shadow: 0 0 0 2px var(--paper), 0 0 0 2px var(--color-annotation); } 100% { box-shadow: 0 0 0 2px var(--paper), 0 0 0 12px rgb(192 83 58 / 0%); } }
 .pr-note-card .pm-card__title, .pr-note-card .pm-card__summary { padding-inline: 0; }
 .pr-note-card .pm-card__title { font-size: var(--type-body-sm); line-height: var(--line-body-sm); }
 @media (prefers-reduced-motion: no-preference) {
@@ -527,6 +543,11 @@ CSS = r"""
 .pr-lb__slot img { display: block; max-width: 100%; max-height: min(calc(100svh - 190px), 1100px); width: auto; height: auto; object-fit: contain; border-radius: var(--radius-sm); }
 @media (max-width: 767px) { .pr-lb__slot img { max-height: min(calc(100svh - 220px), 900px); } }
 .pr-lb__slot .pr-tab { width: min(100%, calc((100svh - 190px) * 1.28), 1100px); max-width: none; }
+/* Tablet screens in the viewer: as large as fits (framed landscape is 1.319x as wide as tall, framed portrait .762x); still scrollable */
+.pr-lb__slot .ts--landscape { width: min(100%, calc((100svh - 190px) * 1.319)); }
+.pr-lb__slot .ts--portrait { width: min(100%, calc((100svh - 190px) * .762)); }
+@media (max-width: 767px) { .pr-lb__slot .ts--landscape { width: min(100%, calc((100svh - 220px) * 1.319)); } .pr-lb__slot .ts--portrait { width: min(100%, calc((100svh - 220px) * .762)); } }
+.pr-lb__slot .ts img { max-width: none; max-height: none; width: 100%; height: auto; border-radius: 0; }
 @media (max-width: 767px) { .pr-lb__slot { height: min(calc(100svh - 220px), 900px); } }
 
 /* Fig. 3 sketches: Serena's images side by side inside the usual figure stage, rounded (nested radius), no outline; stacked below 480px */
@@ -760,19 +781,18 @@ CSS = r"""
 
 PT_CSS = """
 /* Portrait screens: two by two from a 600px stage, stacked below; each cell opens in the lightbox */
-.pr-pts { container-type: inline-size; display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-6); }
+.pr-pts { container-type: inline-size; width: 100%; display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-6); }
 @container (min-width: 600px) { .pr-pts { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-6) var(--space-5); } }
-.pr-pt { position: relative; min-width: 0; }
+.pr-pt { position: relative; min-width: 0; width: 100%; align-self: start; }
 .pr-pt .pr-slabel { min-height: 32px; display: flex; align-items: center; margin-bottom: var(--space-3); }
 .pr-pt > .pr-expand { top: 0; right: 0; }
-.pr-device--pt { padding: 3.2%; }
-@container (max-width: 599px) { .pr-pt .pr-device { max-width: 420px; margin-inline: auto; } }
+@container (max-width: 599px) { .pr-pt .ts { max-width: 420px; } }
 /* Web vs tablet slider sits on the figure stage */
 .pr-stage .cs-ba__side p { max-width: 30ch; }
 """
 
 PROCENSE = dict(page_title='Procense Case Study', out='procense/index.html', sections=SECTIONS, body=BODY, header=HEADER, tldr=TLDR,
-                css=CSS + BA_CSS + PT_CSS, js=JS + BA_JS)
+                css=TS.CSS + CSS + BA_CSS + PT_CSS, js=TS.JS + JS + BA_JS)
 
 if __name__ == '__main__':
     print(len(C.render(PROCENSE)))
