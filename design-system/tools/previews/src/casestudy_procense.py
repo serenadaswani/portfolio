@@ -201,7 +201,10 @@ BODY = ''.join([
 
     section('ideation', 'Ideation', 'I explored how crowded tables could become simple steps.',
         lede('I studied how other products turn paper forms into software and organise large tables, then sketched layouts and noted what each form needed.')
-        + shot(f'<div class="pm-media pm-media--16x10 pr-well" role="img" aria-label="Image to come: annotated layout sketches"><div class="pm-media__fallback">{I["image"]}<span>Image to come</span><span>Annotated layout sketches</span></div></div>', 'Early sketches of the digital quality and manufacturing forms.', 3)),
+        + '<figure class="pm-frame pr-sketches"><div class="pr-sketches__row">'
+          '<img src="../assets/procense/sketch-qc-report.webp" width="1400" height="1534" loading="lazy" alt="Hand-drawn sketch of the QC batch report’s test section: the table reorganized into colour-coded sections, a pass value entered as a range, and pass checkboxes that could be automated, with notes to use monochrome colours.">'
+          '<img src="../assets/procense/sketch-sop-form.webp" width="1400" height="2250" loading="lazy" alt="Hand-drawn sketch of the manufacturing SOP quality form: a heading with date, batch and order numbers and operators picked from the user database, inspection dates, then a procedure table with in-line SOP numbers, amounts to add and added, and a sub-table.">'
+          '</div><figcaption class="pm-frame__caption"><span class="pm-frame__index">Fig. 03</span><span>Early sketches of the quality report (left) and the manufacturing form (right).</span></figcaption></figure>'),
 
     section('tablet', 'Tablet-first', 'We designed for desktop. The floor ran on tablets.',
         '<div class="cs-pair">'
@@ -331,6 +334,10 @@ JS = r"""
 """
 
 CSS = r"""
+/* Fig. 3 sketches: Serena's images side by side, rounded, with no stage or outline (as on her Framer page); stacked below 480px */
+.pr-sketches__row { container-type: inline-size; display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-4); align-items: start; }
+@container (min-width: 480px) { .pr-sketches__row { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.pr-sketches img { display: block; width: 100%; height: auto; border-radius: var(--radius-md); }
 /* Body numbers share a top line even when a label wraps (as in the TL;DR) */
 .cs-stats .pm-stats__item { justify-content: flex-end; }
 /* Figure stages a step lighter on this page (surface instead of sunken) */
