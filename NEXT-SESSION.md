@@ -11,7 +11,7 @@
 1. **Procense, keep iterating.** Review the new solution screens, annotation copy and badge placement, the slider and the Portrait section. Still to confirm with Serena: the interview insights (written at her request, not from real notes) and the Fig. 1 estimates (labelled "for illustration"). The hero is still an empty well.
 2. **Mensio.** Resume the section-by-section revision when Serena is ready.
 3. **Apple and OmniSynkAI.** Their landing cards don't have case studies yet.
-4. **Ship path.** Decide hosting, then merge the working branch into `main`. Résumé link is still a placeholder.
+4. **Ship path.** Pages now carry doctype, charset, lang and viewport tags (2026-11-17) and the branch is pushed. Still: decide hosting, then merge the working branch into `main`. Résumé link is still a placeholder.
 
 ## Getting Figma screens in
 The Figma MCP is on the Starter plan and runs out of calls quickly. Export frames as PNG (2x) in Figma, then commit them on GitHub (signed in as serenadaswani) into the project's `figma/` folder, and convert to `.webp` in `assets/`.

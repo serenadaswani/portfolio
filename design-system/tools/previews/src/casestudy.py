@@ -325,7 +325,11 @@ def render(p):
     (content after the TL;DR panel, inside the TL;DR view)."""
     cur = ' aria-current="location"'
     toc = ''.join(f'<li><a class="pm-toc__item" href="#{sid}"{cur if i == 0 else ""} data-spy>{label}</a></li>' for i, (sid, label) in enumerate(p['sections']))
-    page = f'''<title>{p["page_title"]}</title>
+    page = f'''<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>{p["page_title"]}</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

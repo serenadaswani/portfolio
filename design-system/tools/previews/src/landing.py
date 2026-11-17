@@ -234,7 +234,8 @@ body { font-family: var(--font-sans); }
 .lp-colophon { margin: var(--space-16) 0 0; padding-top: var(--space-4); border-top: 1px solid var(--color-border-subtle); }
 """
 
-NAV = (''.join(f'<li><a class="pm-sidenav__item" href="#{s.lower()}"{" aria-current=\"location\"" if j == 0 else ""} data-spy>{s}</a></li>' for j, s in enumerate(SECTIONS))
+CUR = ' aria-current="location"'
+NAV = (''.join(f'<li><a class="pm-sidenav__item" href="#{s.lower()}"{CUR if j == 0 else ""} data-spy>{s}</a></li>' for j, s in enumerate(SECTIONS))
        + f'<li><a class="pm-sidenav__item lp-nav-ext" href="#resume" data-soon>Resume{I["ext"]}</a></li>')
 
 page = f'''<title>Serena Daswani Portfolio</title>

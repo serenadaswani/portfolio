@@ -314,7 +314,11 @@ cards = (''.join(card(i, p, clone=True) for i, p in enumerate(PROJECTS)) + ''.jo
 roles = ''.join(L.tl_item(len(L.ROLES) - 1 - j, len(L.ROLES), *r) for j, r in enumerate(L.ROLES))
 socials = ''.join(f'<li><a class="pm-link pm-link--subtle" href="{h}" target="_blank" rel="noopener">{l}<span class="pm-sr"> (opens in a new tab)</span></a></li>' for l, h in L.SOCIAL)
 
-page = f'''<title>Serena Daswani Portfolio</title>
+page = f'''<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Serena Daswani Portfolio</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
