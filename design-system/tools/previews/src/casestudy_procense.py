@@ -112,11 +112,11 @@ INSIGHT_GOALS = [  # insight title, insight, goal title, goal
     ('Forms get filled in mid-task', 'Operators record values while they weigh ingredients, mix and take samples, often wearing gloves.',
      'Fewer taps', 'Every tap removed is one less chance to make a mistake.'),
     ('The same values are written again and again', 'Date, time and initials go on every row. Most errors were copying slips that only surfaced in review.',
-     'Built-in guardrails', 'Fields fill themselves in where they can, and the same parts repeat across forms.'),
+     'Built-in guardrails', 'Fields fill themselves in where they can, and the same parts autopopulate across forms.'),
     ('The platform already knows the batch', 'Batch numbers, products and operators already live in Procense, yet operators copied them onto paper by hand.',
-     'At home in Procense', 'The forms draw on what the platform already knows and work like the rest of it.'),
+     'Leverage existing integrations', 'The forms pull batch numbers, products and operators straight from the Procense platform, so nothing is copied by hand.'),
     ('Every record has to survive an audit', 'Auditors check critical limits and sign-offs first. Every value needs a who and a when.',
-     'Faster, not looser', 'Speed can’t come at the cost of the checks the forms exist for.'),
+     'Speed without skipping checks', 'The forms make each batch faster while keeping every check auditors rely on.'),
 ]
 def insight_goals():
     """One graphic: each interview insight on the left, the design goal it set on the right."""
@@ -127,7 +127,7 @@ def insight_goals():
         for it, idesc, gt, gd in INSIGHT_GOALS)
     return (f'<figure class="pr-ig"><div class="pr-ig__head" aria-hidden="true"><span>What I learned</span><span></span><span>Design goal</span></div>'
             f'<ol class="pr-ig__list">{rows}</ol>'
-            '<figcaption class="pm-meta-text">Draft insights, to replace with interview notes.</figcaption></figure>')
+            '</figure>')
 
 # The paper batch workflow, with the points where errors creep in (Serena, 2026-11-16).
 FLOW = [  # title, who, what happens, error risk
