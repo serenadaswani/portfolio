@@ -4,7 +4,7 @@ sticky InPageNavigation + sections with ImageFrame -> learnings -> more case stu
 Built only from design-system components; page CSS composes them with semantic tokens.
 Copy is ported from projects/mensio.html. Images are still placeholders there, so figures show an
 "Image to come" slot with the planned content as text.
-Run: python3 design-system/tools/previews/src/casestudy.py  ->  prototypes/mensio.html
+Run: python3 design-system/tools/previews/src/casestudy.py  ->  mensio/index.html
 """
 import sys, os
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -16,7 +16,7 @@ VER = 'v1.9'
 NAME = 'Serena Daswani'
 
 import re
-A = '../assets/mensio/'  # project media, relative to prototypes/
+A = 'assets/'  # project media, relative to mensio/index.html
 
 def mensio_logo(h=40):
     """Mensio's wordmark in white (fills forced to currentColor), sized by height."""
@@ -169,7 +169,7 @@ BODY = ''.join([
 
 
 # The landing page the case study links back to (2026-11-16: the carousel is the landing)
-LANDING = 'landing-carousel.html'
+LANDING = '../landing/index.html'
 
 MORE = [('chart', 'Placeholder project', 'Your second strongest project.', ['Product design'], 'Placeholder'),
         ('queue', 'Placeholder project', 'A supporting project.', ['Product design'], 'Placeholder')]
@@ -425,10 +425,10 @@ def render(p):
 }})();
 </script>
 '''
-    open(os.path.join(REPO, 'prototypes', p['out']), 'w').write(page)
+    open(os.path.join(REPO, p['out']), 'w').write(page)
     return page
 
-MENSIO = dict(page_title='Mensio Case Study', out='mensio.html', sections=SECTIONS, body=BODY,
+MENSIO = dict(page_title='Mensio Case Study', out='mensio/index.html', sections=SECTIONS, body=BODY,
     header=f'''  <header class="cs-head">
     <ul class="cs-badges" aria-label="Status and disciplines"><li class="pm-badge pm-badge--success">{S["success"]}Shipped</li><li class="pm-badge">Product design</li><li class="pm-badge">User research</li><li class="pm-badge">Analytics</li></ul>
     <h1 class="cs-title">Redesigning Mensio’s custom chart builder for <span class="cs-nowrap">self-serve</span> data analysis</h1>

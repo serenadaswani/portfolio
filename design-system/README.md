@@ -21,7 +21,8 @@ design-system/
       src/comps/*.py             One module per component: preview markup, contrast pairs, guideline README
       src/build2.py              Builds every component preview + README into published/components/
       build_foundations.py       Builds the Colour/Surfaces and 375 / 768 / 1280 layout cards
-      src/landing.py             Builds prototypes/landing.html from css/
+      src/landing_carousel.py    Builds landing/index.html (content in src/landing.py)
+      src/casestudy*.py          Build mensio/index.html and procense/index.html
       src/review.py, review2.py  Built the v1.6 and v1.8 review pages (records only; don't rebuild)
       src/lib.py, lucide.json    Lucide icons (lucide-static 0.460.0, ISC), placeholder imagery, helpers
       checks/*.js                Playwright checks: contrast + errors (shot3), overlaps, first-line alignment

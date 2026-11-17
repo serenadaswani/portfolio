@@ -2,9 +2,9 @@
 each project's brand colour; the heading sits centred on top, the screenshot floats in the centre underneath, and the
 neighbouring screenshots peek in from the edges. Then About + Experience.
 
-An alternative to prototypes/landing.html, which stays as it is. Shares content, brand art, logos and the timeline
-with landing.py (importing it also rebuilds landing.html, unchanged).
-Run: python3 design-system/tools/previews/src/landing_carousel.py  ->  prototypes/landing-carousel.html
+The landing page (landing/index.html). Takes its content, brand art, logos and the timeline
+with landing.py, which is kept as the content source.
+Run: python3 design-system/tools/previews/src/landing_carousel.py  ->  landing/index.html
 """
 import sys, os
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -374,6 +374,6 @@ page = f'''<title>Serena Daswani Portfolio</title>
 
 <script>{SCRIPT}</script>
 '''
-out = os.path.join(L.REPO, 'prototypes', 'landing-carousel.html')
+out = os.path.join(L.REPO, 'landing', 'index.html')
 open(out, 'w').write(page)
 print(len(page))

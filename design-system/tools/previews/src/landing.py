@@ -8,8 +8,8 @@ NAME = 'Serena Daswani'
 VER = 'v1.9'
 # Real content comes from site.js (see CLAUDE.md). Anything marked Placeholder or TBC is still to replace.
 FEATURED = [  # strongest first: full width. Heading + a one-line summary, written by Serena; details live on the case study.
-    ('mensio', 'Redesigning Mensio’s custom chart builder for self-serve data analysis', 'Empowered customers to explore and visualize data without analyst support.', ['Product design', 'Redesign', 'Web'], '', 'mensio.html'),
-    ('procense', 'Digitizing manufacturing QA forms to increase batch execution speed by 10%', 'Unified batch records and SOPs into a traceable digital workflow.', ['Product design', 'End-to-end', 'Tablet'], '', 'procense.html')]
+    ('mensio', 'Redesigning Mensio’s custom chart builder for self-serve data analysis', 'Empowered customers to explore and visualize data without analyst support.', ['Product design', 'Redesign', 'Web'], '', '../mensio/index.html'),
+    ('procense', 'Digitizing manufacturing QA forms to increase batch execution speed by 10%', 'Unified batch records and SOPs into a traceable digital workflow.', ['Product design', 'End-to-end', 'Tablet'], '', '../procense/index.html')]
 MORE = [  # two-up below
     ('apple', 'Redesigning QA reporting for Apple’s internal teams', 'Simplified report creation, organization, and review across internal QA teams.', ['Product design', 'Redesign', 'Internal'], '', 'https://serenadaswani.framer.website/project-detail-apple-internal-reporting-tool'),
     ('omni', 'Introducing AI autofill to reduce e-commerce listing input by 50%', 'Helped sellers generate, refine, and customize product listings with AI.', ['Product design', 'AI', 'Web'], '', 'https://serenadaswani.framer.website/project-detail-omnisynkai-ai-autofill-feature')]
@@ -33,11 +33,11 @@ BRAND = {
     'apple':    {'bg': 'radial-gradient(110% 80% at 85% 100%, #2C2C2E 0%, #000000 60%), #000000', 'glow': 'rgb(255 255 255 / 14%)'},
     'omni':     {'bg': 'linear-gradient(160deg, #4745B0 0%, #5B43E8 40%, #755CFB 75%, #9B94E0 100%)', 'glow': 'rgb(255 255 255 / 40%)'},
 }
-# White logos for the card (official artwork in assets/logos/, every fill forced to currentColor = white here)
+# White logos for the card (official artwork in landing/logos/, every fill forced to currentColor = white here)
 CARD_LOGO = {'mensio': ('mensio', 22, 'Mensio'), 'procense': ('procense', 15, 'Procense'), 'apple': ('apple', 26, 'Apple'), 'omni': ('omnisynkai', 20, 'OmniSynkAI')}
 def white_logo(k):
     f, hgt, name = CARD_LOGO[k]
-    svg = open(os.path.join(REPO, 'assets', 'logos', f + '.svg')).read().strip()
+    svg = open(os.path.join(REPO, 'landing', 'logos', f + '.svg')).read().strip()
     svg = re.sub(r'<defs>.*?</defs>', '', svg, flags=re.S)
     svg = re.sub(r'fill="(?!none)[^"]*"', 'fill="currentColor"', svg)
     svg = re.sub(r'\s(width|height)="[^"]*"', '', svg, count=2)
@@ -58,11 +58,11 @@ def card(p):
     i = html.index('<div class="pm-card__shot">'); j = html.index('</div></div></article>')
     return html[:i] + '<div class="pm-card__shot"><div class="lp-shot" aria-hidden="true"></div>' + html[j:]
 
-# Company logos (official artwork, saved in assets/logos/). Text parts use currentColor so they flip with the theme;
+# Company logos (official artwork, saved in landing/logos/). Text parts use currentColor so they flip with the theme;
 # brand accents keep their colour. Heights are optically balanced: all-caps and wide wordmarks sit smaller.
 LOGO_H = {'Deploy': 22, 'Apple': 24, 'OmniSynkAI': 17, 'Procense': 13}
 def logo(org):
-    svg = open(os.path.join(REPO, 'assets', 'logos', org.lower() + '.svg')).read().strip()
+    svg = open(os.path.join(REPO, 'landing', 'logos', org.lower() + '.svg')).read().strip()
     return svg.replace('<svg ', f'<svg class="lp-logo" style="height:{LOGO_H[org]}px" aria-hidden="true" focusable="false" ', 1)
 
 def role(m, org, r, yrs, now, scope=''):
@@ -340,5 +340,5 @@ page = f'''<title>Serena Daswani Portfolio</title>
 }})();
 </script>
 '''
-open(os.path.join(REPO, 'prototypes/landing.html'), 'w').write(page)
+# Content source for landing_carousel.py; the split landing page it used to write was retired (2026-11-17)
 print(len(page))

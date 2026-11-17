@@ -7,7 +7,7 @@ Once a part is used on a second case study, promote it to a design-system compon
 """
 from lib import I, _l
 
-A = '../assets/mensio/'  # media, relative to prototypes/
+A = 'assets/'  # Mensio media, relative to mensio/index.html
 
 # ---------- Hero: looping product video on a Mensio-blue stage (project art), with a pause control ----------
 def hero(src, poster, label):

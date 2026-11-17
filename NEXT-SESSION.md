@@ -1,45 +1,17 @@
 # Next session: start here
 
-## Where we left off (Paper × Midnight v1.8)
-- **Design system:** 28 components with live previews and guidelines (light and dark), Instrument Sans only (metadata moved off Geist Mono in v1.8), Lucide icons, an Apple HIG pass, and soft dimensional depth. Browse it: https://claude.ai/artifact/4Xae2JhSbDpb6tUHM1wuGL
-- **Landing prototype v2 (split layout):** sticky left column (intro, Copy email, Résumé, vertical nav with scroll-spy, socials, LA clock) → right column: showcase work (two full width, two side by side) → about → experience → contact. The v1 bento and floating nav are not on this page any more. https://claude.ai/artifact/XM7Noz2dHb3rfzVEtTnGRb (source: `prototypes/landing.html`, built by `design-system/tools/previews/src/landing.py`)
-- **References we agreed on:** Megan Yap and Dakota Sumner (split layout, showcase cards, one-page narrative), itti (minimal tone), Leah Kim (case-study layout). Stripe and Vercel inform depth; Apple HIG informs behaviour.
-- Everything is on branch `paper-midnight-design-system`. The current site files are untouched.
-
-## How to start
-1. Open a Claude Code session on `serenadaswani/portfolio`, on branch `paper-midnight-design-system`. `CLAUDE.md` loads automatically.
-2. Paste something like:
-   > Read NEXT-SESSION.md and CLAUDE.md. Let's work on the agenda, starting with item 1. Show me side-by-side comparisons before changing components.
-3. Attach or commit the material under "Bring with you". Any new reference portfolios are welcome too, with a note on what you like in each.
+## Where we are (2026-11-17)
+- **Repo:** cleaned up to this portfolio version only, one folder per project (`landing/`, `procense/`, `mensio/`, shared `design-system/`). Work happens on branch `claude/intelligent-thompson-ninkq1`; `main` still has the old site and is untouched. See `CLAUDE.md` for the layout and the build commands.
+- **Design system:** Paper × Midnight v1.9.1. Browse it: https://claude.ai/artifact/4Xae2JhSbDpb6tUHM1wuGL
+- **Landing:** the Philz-style project carousel, then About + Experience (`landing/index.html`). Preview: https://claude.ai/artifact/C1XbodJGNzah9CmtwPC57X
+- **Procense case study:** being revised section by section (`procense/index.html`). Latest: Serena's revised Figma screens (landscape tablet) with annotation cards, a web → tablet before/after slider in Tablet-first, and a Portrait section. Preview: https://claude.ai/artifact/2gZUFA1RvTXkHAzd5tXFCj
+- **Mensio case study:** paused (`mensio/index.html`). Preview: https://claude.ai/artifact/4QCoQ9xmyxaqjczJaoChaz
 
 ## Agenda
-1. **Real content and images.** Swap the landing placeholders for real material (see "Bring with you" below). Put images in `assets/` at the repo root (photo, project screenshots at 16:10, about 1600×1000) and reference them from `landing.py`; the prototype currently embeds generated placeholder art.
-2. **Case-study template (Leah Kim structure), starting with Mensio.** *First draft built (`prototypes/mensio.html`, from `design-system/tools/previews/src/casestudy.py`); the landing's Mensio card links to it. Figures are "Image to come" slots; header stats (14 wks, 8 → 5, 6) need sign-off.* Build it from existing components: back link + eyebrow → title + badges → summary panel (Background / Problem / Approach / Outcome) → StatRow → sticky InPageNavigation + sections with ImageFrame → learnings → more case studies (Card `--showcase`). Port the copy from `projects/mensio.html`.
-3. **The rest of the IA.** The current site's nav has Work · Fun · Notes · About. Do Fun and Notes become sections in the right column, separate pages, or go?
-4. **Interactions.** Showcase hover, scroll-spy feel, any page-load moment. Keep the reduced-motion fallbacks.
-5. **Ship path.** Move the prototype to `index.html` once approved, link `design-system/css/` instead of inlining it, port the case studies, then retire `styles.css` and the `landing-a`/`landing-b` experiments.
+1. **Procense, keep iterating.** Review the new solution screens, annotation copy and badge placement, the slider and the Portrait section. Still to confirm with Serena: the interview insights (written at her request, not from real notes) and the Fig. 1 estimates (labelled "for illustration"). The hero is still an empty well.
+2. **Mensio.** Resume the section-by-section revision when Serena is ready.
+3. **Apple and OmniSynkAI.** Their landing cards don't have case studies yet.
+4. **Ship path.** Decide hosting, then merge the working branch into `main`. Résumé link is still a placeholder.
 
-## Bring with you
-- A photo for the intro (square crop, at least 256×256).
-- Your four featured projects in order, strongest first. For each: title, one-line summary, year, client, 1–2 discipline tags, and one 16:10 screenshot.
-- About bio (2–3 short paragraphs), years for each role, the public email for Copy email, and a résumé PDF or a decision to build a résumé page.
-
-## Decided (v1.8)
-- Metadata in Instrument Sans; Geist Mono dropped.
-- Split layout with Card `--showcase`: strongest work full width, two more side by side.
-- Scroll-spy marker in the vertical nav stays.
-- Intro gets a photo. A placeholder (`.pm-intro__photo--empty`) holds the slot until there's a real image: drop an `<img alt="">` inside `.pm-intro__photo`.
-- No Bento section on the home page (the showcase cards already do that job). The component stays in the system.
-
-## Open decisions
-- Project card washes are page-level for now. If they stay, add a `--tinted` showcase variant to the design system (side-by-side first), so the case study's "More case studies" cards can use it too.
-- Featured order is my proposal from the Framer site: Mensio, Procense Digital Forms (full width), then Apple QA tool and OmniSynkAI autofill. The three non-Mensio cards link to the Framer case studies for now.
-- Make the white page background a system change (`--color-bg-canvas` → white) instead of a page override?
-- Which project is the second full-width card, and which two go side by side?
-- Real project imagery: plain screenshots, or device mockups, on the showcase cards?
-- Résumé: PDF link, or a résumé page built from ExperienceList?
-
-## Working agreement
-- Propose component changes as a side-by-side (Current | Proposed) before editing the system; approved changes go into tokens, CSS and guidelines, then the pages.
-- Run the checks in `CLAUDE.md` after every visual change, and fix anything they flag.
-- Republish the Claude design system after component changes, so the browsable reference stays in sync with the repo.
+## Getting Figma screens in
+The Figma MCP is on the Starter plan and runs out of calls quickly. Export frames as PNG (2x) in Figma, then commit them on GitHub (signed in as serenadaswani) into the project's `figma/` folder, and convert to `.webp` in `assets/`.

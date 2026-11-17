@@ -2,7 +2,7 @@
 Content: Serena's Framer case study (project-detail-procense-digital-forms-application, read 2026-11-16), rewritten in
 this site's voice. Media: first-pass mockups drawn in HTML (no Framer images were available): the paper QC form and
 three tablet screens. They are labelled as reconstructed and use Procense's navy and blue only as project art.
-Run: python3 design-system/tools/previews/src/casestudy_procense.py  ->  prototypes/procense.html
+Run: python3 design-system/tools/previews/src/casestudy_procense.py  ->  procense/index.html
 """
 import casestudy as C
 from casestudy import I, S, section, lede, panel, points, stats
@@ -221,7 +221,7 @@ def portrait(n):
     """The three key screens on a portrait tablet, side by side (stacked on phones). Each opens in the lightbox."""
     cells = ''.join(f'<div class="pr-pt" data-lb-item data-lb-caption="Fig. {n:02d}. {label} on a portrait tablet.">'
                     f'<p class="pr-slabel">{label}</p><div class="pr-device pr-device--pt"><div class="pr-device__screen">'
-                    f'<img src="../assets/procense/{f}" width="1152" height="1536" loading="lazy" alt="{alt}"></div></div>'
+                    f'<img src="assets/{f}" width="1152" height="1536" loading="lazy" alt="{alt}"></div></div>'
                     + expand(f'{label}, portrait') + '</div>' for label, f, alt in PORTRAIT)
     return (f'<figure class="pm-frame"><div class="pm-frame__stage pr-stage pr-pts">{cells}</div>'
             f'<figcaption class="pm-frame__caption"><span class="pm-frame__index">Fig. {n:02d}</span>'
@@ -229,9 +229,9 @@ def portrait(n):
 
 def web_vs_tablet(n):
     """Before/after slider from the design-system parts (cs_parts.before_after): the web form vs the tablet form."""
-    ba = before_after('../assets/procense/web-batch-info.webp',
+    ba = before_after('assets/web-batch-info.webp',
                       'Batch information on the web: a wide layout with a full sidebar, six batch details in a row and small controls.',
-                      '../assets/procense/tl-batch-info.webp',
+                      'assets/tl-batch-info.webp',
                       'Batch information on a tablet: a slim navigation rail, larger type and touch-sized buttons, with batch details behind Show details.',
                       'Web: dense rows, a full sidebar and small controls.',
                       'Tablet: a slim rail, larger type and touch-sized controls.',
@@ -253,7 +253,7 @@ def screen_rows(start):
                         f'<div><h4 class="pm-card__title">{t}</h4><p class="pm-card__summary" id="{label.lower().replace(' ', '-')}-ann-{i}">{d}</p></div></li>' for i, (x, y, t, d) in enumerate(notes))
         out += (f'<figure class="pm-frame pr-sfig" data-ann-fig><div class="pm-frame__stage pr-zoom" data-lb-item data-lb-caption="Fig. {n:02d}. {cap}">'
                 f'<p class="pr-slabel">{label}</p>'
-                f'<div class="pr-device"><div class="pr-device__screen"><img src="../assets/procense/{f}" width="{w}" height="{h}" loading="lazy" alt="{alt}">'
+                f'<div class="pr-device"><div class="pr-device__screen"><img src="assets/{f}" width="{w}" height="{h}" loading="lazy" alt="{alt}">'
                 f'<div class="pr-mks">{pins}</div></div></div>'
                 f'<ol class="pr-notes" aria-label="Design patterns in the {label} screen">{cards}</ol>'
                 + expand(f'Fig. {n:02d}, {label}') + '</div>'
@@ -305,8 +305,8 @@ BODY = ''.join([
     section('ideation', 'Ideation', 'I explored how crowded tables could become simple steps.',
         lede('I studied how other products turn paper forms into software and organise large tables, then sketched layouts and noted what each form needed.')
         + '<figure class="pm-frame pr-sketches"><div class="pm-frame__stage"><div class="pr-sketches__row">'
-          '<div class="pr-sk" data-lb-item data-lb-caption="Fig. 03. Early sketch of the quality report’s test section.">' + expand('quality report sketch') + '<img src="../assets/procense/sketch-qc-report.webp" width="1400" height="1535" loading="lazy" alt="Hand-drawn sketch of the QC batch report’s test section: the table reorganized into colour-coded sections, a pass value entered as a range, and pass checkboxes that could be automated, with notes to use monochrome colours."></div>'
-          '<div class="pr-sk" data-lb-item data-lb-caption="Fig. 03. Early sketch of the manufacturing form.">' + expand('manufacturing form sketch') + '<img src="../assets/procense/sketch-sop-form.webp" width="1400" height="2255" loading="lazy" alt="Hand-drawn sketch of the manufacturing SOP quality form: a heading with date, batch and order numbers and operators picked from the user database, inspection dates, then a procedure table with in-line SOP numbers, amounts to add and added, and a sub-table."></div>'
+          '<div class="pr-sk" data-lb-item data-lb-caption="Fig. 03. Early sketch of the quality report’s test section.">' + expand('quality report sketch') + '<img src="assets/sketch-qc-report.webp" width="1400" height="1535" loading="lazy" alt="Hand-drawn sketch of the QC batch report’s test section: the table reorganized into colour-coded sections, a pass value entered as a range, and pass checkboxes that could be automated, with notes to use monochrome colours."></div>'
+          '<div class="pr-sk" data-lb-item data-lb-caption="Fig. 03. Early sketch of the manufacturing form.">' + expand('manufacturing form sketch') + '<img src="assets/sketch-sop-form.webp" width="1400" height="2255" loading="lazy" alt="Hand-drawn sketch of the manufacturing SOP quality form: a heading with date, batch and order numbers and operators picked from the user database, inspection dates, then a procedure table with in-line SOP numbers, amounts to add and added, and a sub-table."></div>'
           '</div></div><figcaption class="pm-frame__caption"><span class="pm-frame__index">Fig. 03</span><span>Early sketches of the quality report (left) and the manufacturing form (right).</span></figcaption></figure>'),
 
     section('tablet', 'Tablet-first', 'We designed for desktop. The floor ran on tablets.',
@@ -761,7 +761,7 @@ PT_CSS = """
 .pr-stage .cs-ba__side p { max-width: 30ch; }
 """
 
-PROCENSE = dict(page_title='Procense Case Study', out='procense.html', sections=SECTIONS, body=BODY, header=HEADER, tldr=TLDR,
+PROCENSE = dict(page_title='Procense Case Study', out='procense/index.html', sections=SECTIONS, body=BODY, header=HEADER, tldr=TLDR,
                 css=CSS + BA_CSS + PT_CSS, js=JS + BA_JS)
 
 if __name__ == '__main__':
