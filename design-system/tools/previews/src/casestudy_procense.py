@@ -365,7 +365,7 @@ TLDR = f'''      <dl class="cs-tldr__rows">
       {stats([('10%', 'Faster batch execution'), ('100%', 'Automated traceability'), ('100%', 'Data accuracy')], ' pm-stats--sm cs-tldr__stats')}'''
 
 JS = r"""
-  // Final-screen annotations: hovering or focusing a badge lifts its card and gives it a coral stroke (hovering a card only strokes that card)
+  // Final-screen annotations: hovering or focusing a badge lifts its card and gives it a coral stroke ; hovering a card strokes it and lifts its badge
   document.querySelectorAll('[data-ann-fig]').forEach(function (fig) {
     var btns = [].slice.call(fig.querySelectorAll('[data-ann]')), cards = [].slice.call(fig.querySelectorAll('[data-ann-card]'));
     btns.forEach(function (b, i) {
@@ -373,9 +373,9 @@ JS = r"""
       b.addEventListener('mouseenter', on); b.addEventListener('mouseleave', off);
       b.addEventListener('focus', on); b.addEventListener('blur', off);
     });
-    cards.forEach(function (c) {
-      c.addEventListener('mouseenter', function () { c.classList.add('is-hover'); });
-      c.addEventListener('mouseleave', function () { c.classList.remove('is-hover'); });
+    cards.forEach(function (c, i) {
+      c.addEventListener('mouseenter', function () { c.classList.add('is-hover'); btns[i].classList.add('is-hover'); });
+      c.addEventListener('mouseleave', function () { c.classList.remove('is-hover'); btns[i].classList.remove('is-hover'); });
     });
   });
 
@@ -483,13 +483,13 @@ CSS = r"""
 .pr-device__screen img { display: block; width: 100%; height: auto; }
 /* Annotation badges: the system's annotation coral with a white number, so they stand apart from the screens' blue and black
    without reading as an error. Same in both themes. On the screens a soft shadow lifts them off the UI.
-   Hover/focus: larger, with a paper ring, and its card gets a coral stroke and lifts. Hovering a card strokes only that card. */
+   Hover/focus: larger, with a paper ring, and its card gets a coral stroke and lifts. Hovering a card strokes it and gives its badge the same hover state. */
 .pr-mk { display: grid; place-items: center; width: 24px; height: 24px; padding: 0; border: 0; border-radius: 50%;
   background: var(--color-annotation); color: var(--color-text-on-annotation);
   font: var(--weight-medium) 12px / 1 var(--font-sans); font-variant-numeric: tabular-nums; }
 .pr-mk--btn { position: absolute; transform: translate(-50%, -50%); cursor: default; box-shadow: 0 1px 3px rgb(11 18 32 / 28%); }
 @media (pointer: coarse) { .pr-mk--btn::after { content: ""; position: absolute; inset: -10px; border-radius: 50%; } }
-.pr-mk--btn:focus-visible { transform: translate(-50%, -50%) scale(1.25); box-shadow: 0 0 0 2px var(--paper), 0 2px 6px rgb(11 18 32 / 30%); }
+.pr-mk--btn:focus-visible, .pr-mk--btn.is-hover { transform: translate(-50%, -50%) scale(1.25); box-shadow: 0 0 0 2px var(--paper), 0 2px 6px rgb(11 18 32 / 30%); }
 @media (hover: hover) { .pr-mk--btn:hover { transform: translate(-50%, -50%) scale(1.25); box-shadow: 0 0 0 2px var(--paper), 0 2px 6px rgb(11 18 32 / 30%); } }
 .pr-mk--btn:focus-visible { outline: var(--focus-ring-width) solid var(--color-focus-ring); outline-offset: 3px; }
 .pr-notes { list-style: none; margin: 0 0 var(--space-5); padding: 0; display: grid; gap: var(--space-3); grid-template-columns: minmax(0, 1fr); }
