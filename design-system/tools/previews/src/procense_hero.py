@@ -1,8 +1,8 @@
 """Procense case-study hero: from a handwritten batch form to the shipped tablet screens.
 
 On Procense's navy (the landing card's art), a paper QC batch form, styled like Fig. 2, fills itself in by hand: the
-same date, time and initials on every row. Then two of Serena's real production screens rise in front of it in tablet
-frames: the portrait SOP step behind, the landscape QC tests screen (date and time auto-filled) in front, both cropped
+same date, time and initials on every row. Then Serena's real production screen rises in front of it in a tablet
+frame: the landscape QC tests screen (date and time auto-filled), cropped
 by the hero's edges so the flow stays for later. The paper steps back, staying fully opaque (a translucent paper read as a grey card).
 
 One CSS timeline, transforms and opacity only, long expo-out easing: about 4.5s, played once when the hero is in view
@@ -41,10 +41,9 @@ def html():
              '<p class="ph-pm ph-pf">Reviewed by ____________ &nbsp; Date __/__/__ &nbsp; Signature ____________</p></div>')
     dev = lambda cls, src, w, h: (f'<div class="ph-dev {cls}"><img src="assets/screens/{src}" width="{w}" height="{h}" alt="" decoding="async"></div>')
     return ('  <div class="pm-media pm-media--21x9 cs-hero-well ph" data-ph role="img" '
-            'aria-label="A paper batch quality form, filled in by hand with the same date, time and initials on every row, steps back as two tablet screens from the shipped Digital Forms application rise in front of it.">'
+            'aria-label="A paper batch quality form, filled in by hand with the same date, time and initials on every row, steps back as a tablet screen from the shipped Digital Forms application rises in front of it.">'
             '<div class="ph-stage" aria-hidden="true">'
             + paper
-            + dev('ph-dev--pt', 'portrait-sop-step.webp', 1152, 1536)
             + dev('ph-dev--ls', 'landscape-qc-tests.webp', 1536, 1152)
             + '</div></div>\n'
             # Set the start frame before first paint, so the final frame never flashes (no JS: the final frame stays)
@@ -72,14 +71,12 @@ _CSS = r"""
 /* Devices: Serena's production screens in tablet frames, cropped by the hero's edges */
 .ph-dev { position: absolute; padding: 1.1u; border-radius: 2.2u; background: #0D1117; box-shadow: 0 0 0 .12u rgb(255 255 255 / 9%), 0 3u 8u rgb(0 0 0 / 45%); }
 .ph-dev img { display: block; width: 100%; height: auto; border-radius: 1.1u; }
-.ph-dev--pt { left: 38u; top: 9.5u; width: 20u; transform: rotate(4deg); }
 .ph-dev--ls { left: 52u; top: 3.5u; width: 56u; transform: rotate(-3deg); }
 
 /* The timeline (start frame set before first paint by the inline script; runs once .is-play is added) */
 .ph--anim .ph-paper { animation: ph-paper 4.6s cubic-bezier(.45,0,.2,1) both paused; }
 .ph--anim .ph-hw { animation: ph-write .5s cubic-bezier(.4,0,.2,1) both paused; animation-delay: calc(.55s + var(--i, 0) * 70ms); }
-.ph--anim .ph-dev--pt { animation: ph-rise-pt 1.6s cubic-bezier(.16,1,.3,1) 2.05s both paused; }
-.ph--anim .ph-dev--ls { animation: ph-rise-ls 1.7s cubic-bezier(.16,1,.3,1) 2.35s both paused; }
+.ph--anim .ph-dev--ls { animation: ph-rise-ls 1.7s cubic-bezier(.16,1,.3,1) 2.05s both paused; }
 .ph--anim.is-play .ph-paper, .ph--anim.is-play .ph-hw, .ph--anim.is-play .ph-dev { animation-play-state: running; }
 @keyframes ph-paper {
   0% { opacity: 0; transform: translate(4u, 2u) rotate(-2deg) scale(1); }
@@ -88,7 +85,6 @@ _CSS = r"""
   100% { opacity: 1; transform: translate(-2u, .8u) rotate(-4deg) scale(.97); }
 }
 @keyframes ph-write { from { clip-path: inset(-20% 100% -20% 0); } to { clip-path: inset(-20% -5% -20% 0); } }
-@keyframes ph-rise-pt { from { opacity: 0; transform: translate(-2u, 24u) rotate(10deg); } to { opacity: 1; transform: rotate(4deg); } }
 @keyframes ph-rise-ls { from { opacity: 0; transform: translate(6u, 26u) rotate(4deg); } to { opacity: 1; transform: rotate(-3deg); } }
 """
 CSS = re.sub(r'(?<![\w.#-])(-?(?:\d+(?:\.\d+)?|\.\d+))u\b', lambda m: f'calc({m.group(1)} * var(--u))', _CSS)
