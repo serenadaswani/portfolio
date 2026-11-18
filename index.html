@@ -1298,17 +1298,14 @@ body { margin: 0; font-family: var(--font-sans); background: var(--color-bg-canv
   .cx-slot, .cx-cta { order: 0; }
   .cx-slot { margin: 0; }
   .cx-copy .cx-cta { margin-top: var(--space-4); padding-left: 0; }
-  .cx-title { font-size: var(--type-h1); line-height: var(--line-h1); letter-spacing: var(--tracking-h1); }  /* two steps up from h3 (Serena, 2026-11-17): the wide card has room */
+  .cx-title { font-size: var(--type-h2); line-height: var(--line-h2); letter-spacing: var(--tracking-h2); }  /* one step up from h3 from 1280px wide (Serena, 2026-11-17) */
   .cx-tags { justify-content: flex-start; }
 }
-/* Smaller laptop windows: one step down (h2) from 1280px, the original h3 below that, so the longest title still fits
-   beside the media and every card keeps the same height */
+/* Narrow laptop windows (1024–1279px): the original h3, so the longest title still fits beside the media and every card keeps the same height */
 @media (min-width: 1024px) and (max-width: 1279px) and (min-aspect-ratio: 13/10) {
   .cx-title { font-size: var(--type-h3); line-height: var(--line-h3); letter-spacing: var(--tracking-h3); }
 }
-@media (min-width: 1280px) and (max-width: 1439px) and (min-aspect-ratio: 13/10) {
-  .cx-title { font-size: var(--type-h2); line-height: var(--line-h2); letter-spacing: var(--tracking-h2); }
-}
+
 
 /* Image layer: above the cards; each screenshot placed by transform from the scroll position. Clicking a side
    screenshot lands on the neighbouring card underneath, which brings it to the centre. */
