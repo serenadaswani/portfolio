@@ -46,10 +46,10 @@ def shot(j):
     Procense holds the case-study hero animation (procense_hero.card): it rests on the final frame (the level tablet
     with the shipped QC tests screen) and plays whenever its card becomes the active one."""
     pid = PROJECTS[j % len(PROJECTS)][0]
-    if pid == 'procense':
-        inner = f'<span class="cx-shot__img cx-shot__img--device">{PH.card("procense/assets/screens")}</span>'
-    else:
-        inner = '<span class="cx-shot__img"></span>'
+    # Every card has the same media: a device-sized item centred in the slot (the tablet for Procense, a white
+    # placeholder of the same size and shape for the others until their art exists)
+    art = PH.card("procense/assets/screens") if pid == 'procense' else '<span class="cx-shot__ph"></span>'
+    inner = f'<span class="cx-shot__img cx-shot__img--device">{art}</span>'
     return f'<div class="cx-img cx-img--{pid}" data-j="{j}"><span class="cx-img__float">{inner}</span></div>'
 
 CSS = r"""
@@ -109,19 +109,16 @@ body { margin: 0; font-family: var(--font-sans); background: var(--color-bg-canv
    rest, sized to nearly the full card height, so a wide-but-short window no longer leaves the card mostly empty.
    Neighbours peek in only slightly from the screen edges so they never cover the copy. */
 @media (min-width: 1024px) and (min-aspect-ratio: 13/10) {
-  .cx { --cx-text: clamp(300px, 24cqw, 400px); --cx-col-gap: var(--space-12);
-    --cx-img: min(calc(var(--cx-w) - 2 * var(--space-12) - var(--cx-text) - var(--cx-col-gap)), calc((100svh - 240px) * 1.6)); }
+  /* Every card: the media (77% of the slot, centred) leaves 11.52% of the slot clear on its right; the same space is
+     added on the left, so the copy sits as far from the card's left edge as the media sits from its right edge. The
+     slot shrinks to pay for it, keeping the row's width. */
+  .cx { --cx-text: clamp(300px, 24cqw, 400px); --cx-col-gap: var(--space-12); --cx-inset: 0.1152;
+    --cx-img: min(calc((var(--cx-w) - 2 * var(--space-12) - var(--cx-text) - var(--cx-col-gap)) / (1 + var(--cx-inset))), calc((100svh - 240px) * 1.6)); }
   .cx-card { grid-template-columns: var(--cx-text) var(--cx-img); justify-content: center; align-items: center; column-gap: var(--cx-col-gap);
-    padding: var(--space-10) var(--space-12); text-align: left; }
+    padding: var(--space-10) var(--space-12) var(--space-10) calc(var(--space-12) + var(--cx-img) * var(--cx-inset)); text-align: left; }
   .cx-copy { display: grid; justify-items: start; align-content: center; gap: var(--space-2); }
   .cx-copy .cx-title, .cx-copy .cx-sub { width: 100%; }
   .cx-slot, .cx-cta { order: 0; }
-  /* Procense: the tablet sits centred in its slot at 70.2% of the slot's width (the hero stage at 1.35cqw), leaving
-     14.9% of the slot clear on its right. The same space is added on the left, so the copy sits as far from the card's
-     left edge as the tablet sits from its right edge; the slot shrinks to pay for it, keeping the row's width. */
-  .cx-card--procense { --cx-inset: 0.149;
-    --cx-img: min(calc((var(--cx-w) - 2 * var(--space-12) - var(--cx-text) - var(--cx-col-gap)) / (1 + var(--cx-inset))), calc((100svh - 240px) * 1.6));
-    padding-left: calc(var(--space-12) + var(--cx-img) * var(--cx-inset)); }
   .cx-slot { margin: 0; }
   .cx-copy .cx-cta { margin-top: var(--space-4); padding-left: 0; }
   .cx-title { font-size: var(--type-h3); line-height: var(--line-h3); letter-spacing: var(--tracking-h3); }
@@ -141,15 +138,17 @@ body { margin: 0; font-family: var(--font-sans); background: var(--color-bg-canv
 .cx-img__float { position: relative; display: block; }
 /* Side screenshots are solid (nothing shows through them, so no card edge or border runs across them) and dimmed with
    a tint of the active card's colour instead of transparency. --dim is set per screenshot by the script. */
-.cx-img__float::after { content: ""; position: absolute; inset: 0; border-radius: var(--radius-md); background: var(--cx-tint); opacity: var(--dim, 0); pointer-events: none; }
+/* (The side-screenshot tint is drawn on the media itself: the tablet or the placeholder, never the whole slot) */
 .cx-shot__img { position: relative; display: block; aspect-ratio: 16 / 10; border-radius: var(--radius-md); background: var(--color-text-on-image);
   box-shadow: 0 1px 2px rgb(0 0 0 / 6%), 0 var(--space-5) var(--space-10) calc(-1 * var(--space-2)) rgb(0 0 0 / 30%); }
-/* A device in the slot (Procense): the slot is only a container: no fill, frame or shadow; the tablet sits centred
-   and carries the side-screenshot tint itself, so no tinted box shows around it */
+/* The slot is only a container on every card: no fill, frame or shadow. The media sits centred and carries the
+   side-screenshot tint itself, so no tinted box shows around it. */
 .cx-shot__img--device { container-type: size; display: grid; place-items: center; background: none; box-shadow: none; }
 .cx-shot__img--device::after { display: none; }
-.cx-img__float:has(.cx-shot__img--device)::after { display: none; }
-.cx-shot__img--device .ph-obj::after { content: ""; position: absolute; inset: 0; border-radius: inherit; background: var(--cx-tint); opacity: var(--dim, 0); pointer-events: none; }
+/* Placeholder media: the tablet's size and shape (52 x 39.55 stage units at 1.48% of the slot per unit) */
+.cx-shot__ph { position: relative; display: block; width: calc(52 * 1.48cqw); aspect-ratio: 52 / 39.55; border-radius: calc(2.4 * 1.48cqw); background: var(--color-text-on-image);
+  box-shadow: 0 1px 2px rgb(0 0 0 / 6%), 0 var(--space-5) var(--space-10) calc(-1 * var(--space-2)) rgb(0 0 0 / 30%), inset 0 0 0 1px rgb(255 255 255 / 12%); }
+.cx-shot__ph::after, .cx-shot__img--device .ph-obj::after { content: ""; position: absolute; inset: 0; border-radius: inherit; background: var(--cx-tint); opacity: var(--dim, 0); pointer-events: none; }
 .cx-shot__img::after { content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; box-shadow: inset 0 0 0 1px rgb(255 255 255 / 12%), inset 0 0 var(--space-6) rgb(0 0 0 / 7%); }
 /* "View case study": a white text link with an arrow on every card (44px target) */
 .cx-cta { display: inline-flex; align-items: center; justify-content: center; gap: var(--space-2); min-height: var(--control-min-target, 44px); padding: 0 var(--space-3); border-radius: var(--radius-sm); color: var(--color-text-on-image); font-weight: var(--weight-medium); text-decoration: none; }

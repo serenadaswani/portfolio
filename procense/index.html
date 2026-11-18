@@ -1663,7 +1663,7 @@ body { margin: 0; font-family: var(--font-sans); background: var(--color-bg-canv
 .ph--anim:not(.is-play), .ph--anim:not(.is-play) * { animation-play-state: paused !important; }
 
 @keyframes ph-in { from { opacity: 0; translate: 0 calc(1.5 * var(--u)); } to { opacity: 1; translate: 0 0; } }
-@keyframes ph-settle { from { transform: translate(calc(-15 * var(--u)), calc(1 * var(--u))) rotate(-5deg) scale(.8); } to { transform: none; } }
+@keyframes ph-settle { from { transform: translate(var(--ph-sx, calc(-15 * var(--u))), calc(1 * var(--u))) rotate(-5deg) scale(.8); } to { transform: none; } }  /* --ph-sx: where the sheet starts (the card starts it nearer) */
 @keyframes ph-write { from { clip-path: inset(-25% 100% -25% 0); } to { clip-path: inset(-25% -5% -25% 0); } }
 @keyframes ph-out { from { opacity: 1; } to { opacity: 0; } }
 @keyframes ph-fade-in { from { opacity: 0; } to { opacity: 1; } }

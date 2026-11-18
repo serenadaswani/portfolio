@@ -164,7 +164,7 @@ _CSS = r"""
 .ph--anim:not(.is-play), .ph--anim:not(.is-play) * { animation-play-state: paused !important; }
 
 @keyframes ph-in { from { opacity: 0; translate: 0 1.5u; } to { opacity: 1; translate: 0 0; } }
-@keyframes ph-settle { from { transform: translate(-15u, 1u) rotate(-5deg) scale(.8); } to { transform: none; } }
+@keyframes ph-settle { from { transform: translate(var(--ph-sx, -15u), 1u) rotate(-5deg) scale(.8); } to { transform: none; } }  /* --ph-sx: where the sheet starts (the card starts it nearer) */
 @keyframes ph-write { from { clip-path: inset(-25% 100% -25% 0); } to { clip-path: inset(-25% -5% -25% 0); } }
 @keyframes ph-out { from { opacity: 1; } to { opacity: 0; } }
 @keyframes ph-fade-in { from { opacity: 0; } to { opacity: 1; } }
@@ -210,11 +210,11 @@ def card(base='procense/assets/screens'):
     the shipped QC tests screen) and plays from the start each time the Procense card becomes the active card."""
     return '<div class="ph ph--card" data-phc aria-hidden="true">' + _stage(base) + '</div>'
 
-# In the slot: no navy fill (the card is already navy); the stage is a little larger than in the hero (1.35% of the
-# slot's width per u), so the tablet fills more of the slot and the starting sheet still fits on the left.
+# In the slot: no navy fill (the card is already navy); the stage is larger than in the hero (1.48% of the slot's width
+# per u, so the tablet is 77% of the slot, about 13% larger than before), and the starting sheet begins 2u nearer the centre so it stays in the slot.
 CARD_CSS = """
 .ph.ph--card { position: absolute; inset: 0; background: none; }
-.ph--card .ph-stage { --u: 1.35cqw; }
+.ph--card .ph-stage { --u: 1.48cqw; --ph-sx: calc(-13 * var(--u)); }  /* tablet = 52u = 77% of the slot's width; the sheet starts 2u nearer so it stays inside the slot */
 """
 
 CARD_JS = r"""
