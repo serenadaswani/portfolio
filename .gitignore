@@ -1,2 +1,3 @@
 design-system/tools/previews/.local/
 __pycache__/
+.DS_Store
