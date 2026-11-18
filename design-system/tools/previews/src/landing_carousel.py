@@ -2,9 +2,9 @@
 each project's brand colour; the heading sits centred on top, the screenshot floats in the centre underneath, and the
 neighbouring screenshots peek in from the edges. Then About + Experience.
 
-The landing page (landing/index.html). Takes its content, brand art, logos and the timeline
+The landing page, written to the site root (index.html; it was landing/index.html until 2026-11-17). Takes its content, brand art, logos and the timeline
 with landing.py, which is kept as the content source.
-Run: python3 design-system/tools/previews/src/landing_carousel.py  ->  landing/index.html
+Run: python3 design-system/tools/previews/src/landing_carousel.py  ->  index.html (site root)
 """
 import sys, os
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -378,6 +378,6 @@ page = f'''<!doctype html>
 
 <script>{SCRIPT}</script>
 '''
-out = os.path.join(L.REPO, 'landing', 'index.html')
+out = os.path.join(L.REPO, 'index.html')  # the landing is the site's root page
 open(out, 'w').write(page)
 print(len(page))

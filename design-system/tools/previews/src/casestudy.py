@@ -169,7 +169,7 @@ BODY = ''.join([
 
 
 # The landing page the case study links back to (2026-11-16: the carousel is the landing)
-LANDING = '../landing/index.html'
+LANDING = '../index.html'  # the landing is the site root
 
 MORE = [('chart', 'Placeholder project', 'Your second strongest project.', ['Product design'], 'Placeholder'),
         ('queue', 'Placeholder project', 'A supporting project.', ['Product design'], 'Placeholder')]
