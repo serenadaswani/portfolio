@@ -11,6 +11,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import io, contextlib
 with contextlib.redirect_stdout(io.StringIO()):
     import landing as L
+import procense_hero as PH
 from lib import I
 
 PROJECTS = L.FEATURED + L.MORE
@@ -41,8 +42,14 @@ def card(i, p, clone=False):
             '<div class="cx-slot"></div></article>')
 
 def shot(j):
-    """A screenshot on the image layer, one per card in the track (j = track position). Placed by the script."""
-    return f'<div class="cx-img" data-j="{j}"><span class="cx-img__float"><span class="cx-shot__img"></span></span></div>'
+    """A screenshot on the image layer, one per card in the track (j = track position). Placed by the script.
+    Procense shows the hero's final frame (the level tablet with the shipped QC tests screen) inside the slot."""
+    pid = PROJECTS[j % len(PROJECTS)][0]
+    if pid == 'procense':
+        inner = f'<span class="cx-shot__img cx-shot__img--device">{PH.still("procense/assets/screens")}</span>'
+    else:
+        inner = '<span class="cx-shot__img"></span>'
+    return f'<div class="cx-img cx-img--{pid}" data-j="{j}"><span class="cx-img__float">{inner}</span></div>'
 
 CSS = r"""
 /* ===== Landing, carousel idea (after the Philz app) ===== */
@@ -130,6 +137,12 @@ body { margin: 0; font-family: var(--font-sans); background: var(--color-bg-canv
 .cx-img__float::after { content: ""; position: absolute; inset: 0; border-radius: var(--radius-md); background: var(--cx-tint); opacity: var(--dim, 0); pointer-events: none; }
 .cx-shot__img { position: relative; display: block; aspect-ratio: 16 / 10; border-radius: var(--radius-md); background: var(--color-text-on-image);
   box-shadow: 0 1px 2px rgb(0 0 0 / 6%), 0 var(--space-5) var(--space-10) calc(-1 * var(--space-2)) rgb(0 0 0 / 30%); }
+/* A device in the slot (Procense): the slot is only a container: no fill, frame or shadow; the tablet sits centred
+   and carries the side-screenshot tint itself, so no tinted box shows around it */
+.cx-shot__img--device { container-type: size; display: grid; place-items: center; background: none; box-shadow: none; }
+.cx-shot__img--device::after { display: none; }
+.cx-img__float:has(.cx-shot__img--device)::after { display: none; }
+.cx-shot__img--device .ph-still::after { content: ""; position: absolute; inset: 0; border-radius: inherit; background: var(--cx-tint); opacity: var(--dim, 0); pointer-events: none; }
 .cx-shot__img::after { content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; box-shadow: inset 0 0 0 1px rgb(255 255 255 / 12%), inset 0 0 var(--space-6) rgb(0 0 0 / 7%); }
 /* "View case study": a white text link with an arrow on every card (44px target) */
 .cx-cta { display: inline-flex; align-items: center; justify-content: center; gap: var(--space-2); min-height: var(--control-min-target, 44px); padding: 0 var(--space-3); border-radius: var(--radius-sm); color: var(--color-text-on-image); font-weight: var(--weight-medium); text-decoration: none; }
@@ -331,6 +344,7 @@ page = f'''<!doctype html>
 /* ===== Shared with landing.html (sections, timeline, card art) ===== */
 {L.PAGE_CSS}
 {CSS}
+{PH.STILL_CSS}
 </style>
 
 <div class="cxp lp">

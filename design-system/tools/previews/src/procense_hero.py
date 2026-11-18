@@ -197,3 +197,25 @@ JS = r"""
     hero.phReplay = function () { hero.getAnimations({ subtree: true }).forEach(function (a) { a.cancel(); a.play(); }); };
   })();
 """
+
+
+# ---------- The hero's final frame as a still (used on the landing's Procense card) ----------
+def still(base='assets/screens'):
+    """The hero's last frame, without motion: the level tablet with the shipped QC tests screen (base image plus the
+    same slice of the scroll export). base is the path to procense/assets/screens from the page using it."""
+    slice_top = -SLICE_Y / EXPORT_H * 100
+    return ('<span class="ph-still" aria-hidden="true"><span class="ph-still__screen">'
+            f'<img src="{base}/landscape-qc-tests.webp" width="1536" height="1152" alt="" decoding="async">'
+            f'<span class="ph-still__view"><img src="{base}/landscape-qc-tests-scroll.webp" width="{EXPORT_W}" height="{EXPORT_H}" alt="" decoding="async" style="transform:translateY({slice_top:.4f}%)"></span>'
+            '</span></span>')
+
+# Sized to its container (container-type: size): as wide as fits 88% of the width and 90% of the height.
+STILL_CSS = r"""
+/* The Procense hero's final frame as a still: a level tablet (bezel #0D1117, project art) with the shipped screen */
+.ph-still { --b: 1.4cqw; position: relative; display: block; box-sizing: border-box; width: min(88cqw, calc((90cqh - 2 * var(--b)) * 4 / 3 + 2 * var(--b)));
+  padding: var(--b); border-radius: calc(var(--b) * 2.2); background: #0D1117; box-shadow: 0 0 0 1px rgb(255 255 255 / 9%), 0 1.6cqw 4.5cqw rgb(0 0 0 / 40%); }
+.ph-still__screen { position: relative; display: block; aspect-ratio: 4 / 3; overflow: hidden; border-radius: calc(var(--b) * 1.2); background: #FFFFFF; }
+.ph-still__screen > img { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.ph-still__view { position: absolute; left: 7.8125%; top: 7.2917%; width: 92.1875%; height: 82.1615%; overflow: hidden; background: #FFFFFF; }
+.ph-still__view img { display: block; width: 100%; height: auto; }
+"""
