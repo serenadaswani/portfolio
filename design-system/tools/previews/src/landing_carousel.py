@@ -43,10 +43,11 @@ def card(i, p, clone=False):
 
 def shot(j):
     """A screenshot on the image layer, one per card in the track (j = track position). Placed by the script.
-    Procense shows the hero's final frame (the level tablet with the shipped QC tests screen) inside the slot."""
+    Procense holds the case-study hero animation (procense_hero.card): it rests on the final frame (the level tablet
+    with the shipped QC tests screen) and plays whenever its card becomes the active one."""
     pid = PROJECTS[j % len(PROJECTS)][0]
     if pid == 'procense':
-        inner = f'<span class="cx-shot__img cx-shot__img--device">{PH.still("procense/assets/screens")}</span>'
+        inner = f'<span class="cx-shot__img cx-shot__img--device">{PH.card("procense/assets/screens")}</span>'
     else:
         inner = '<span class="cx-shot__img"></span>'
     return f'<div class="cx-img cx-img--{pid}" data-j="{j}"><span class="cx-img__float">{inner}</span></div>'
@@ -142,7 +143,7 @@ body { margin: 0; font-family: var(--font-sans); background: var(--color-bg-canv
 .cx-shot__img--device { container-type: size; display: grid; place-items: center; background: none; box-shadow: none; }
 .cx-shot__img--device::after { display: none; }
 .cx-img__float:has(.cx-shot__img--device)::after { display: none; }
-.cx-shot__img--device .ph-still::after { content: ""; position: absolute; inset: 0; border-radius: inherit; background: var(--cx-tint); opacity: var(--dim, 0); pointer-events: none; }
+.cx-shot__img--device .ph-obj::after { content: ""; position: absolute; inset: 0; border-radius: inherit; background: var(--cx-tint); opacity: var(--dim, 0); pointer-events: none; }
 .cx-shot__img::after { content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; box-shadow: inset 0 0 0 1px rgb(255 255 255 / 12%), inset 0 0 var(--space-6) rgb(0 0 0 / 7%); }
 /* "View case study": a white text link with an arrow on every card (44px target) */
 .cx-cta { display: inline-flex; align-items: center; justify-content: center; gap: var(--space-2); min-height: var(--control-min-target, 44px); padding: 0 var(--space-3); border-radius: var(--radius-sm); color: var(--color-text-on-image); font-weight: var(--weight-medium); text-decoration: none; }
@@ -336,7 +337,7 @@ page = f'''<!doctype html>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wdth,wght@0,75..100,400..700;1,75..100,400..700&display=swap">
-<style>
+{PH.HEAD}<style>
 /* ===== Paper × Midnight {L.VER} · tokens.css (verbatim) ===== */
 {L.tokens}
 /* ===== Paper × Midnight {L.VER} · components.css (verbatim) ===== */
@@ -344,7 +345,8 @@ page = f'''<!doctype html>
 /* ===== Shared with landing.html (sections, timeline, card art) ===== */
 {L.PAGE_CSS}
 {CSS}
-{PH.STILL_CSS}
+{PH.CSS}
+{PH.CARD_CSS}
 </style>
 
 <div class="cxp lp">
@@ -390,7 +392,7 @@ page = f'''<!doctype html>
 </main>
 </div>
 
-<script>{SCRIPT}</script>
+<script>{SCRIPT}{PH.CARD_JS}</script>
 '''
 out = os.path.join(L.REPO, 'index.html')  # the landing is the site's root page
 open(out, 'w').write(page)

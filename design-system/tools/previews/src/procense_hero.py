@@ -66,7 +66,8 @@ def _vars(name):
     return ';'.join(f'--{a}:{v:.3f}%' for a, v in zip(('pl', 'pt', 'pw', 'ph', 'sl', 'st', 'sw', 'sh'), p + s))
 
 
-def html():
+def _stage(base='assets/screens'):
+    """The animated stage (paper -> tablet), shared by the case-study hero and the landing's Procense card."""
     els = [f'<div class="ph-m ph-m--card" style="{_vars("card")}"></div>',
            f'<div class="ph-m ph-m--title" style="{_vars("title")}"><span class="ph-p ph-tp">QC Tests</span></div>',
            f'<div class="ph-m ph-m--button" style="{_vars("button")}"></div>',
@@ -83,14 +84,18 @@ def html():
                   '<span>Product <span class="ph-hw" style="--i:-1">Dark Chocolate</span></span></p>'
                   '<p class="ph-po ph-foot">Reviewed by ____________ &nbsp; Date __/__/__ &nbsp; Signature ____________</p>')
     slice_top = -SLICE_Y / EXPORT_H * 100
+    return ('<div class="ph-stage" aria-hidden="true"><div class="ph-in"><div class="ph-obj">'
+            '<div class="ph-bezel"></div><div class="ph-screen">'
+            f'<img class="ph-base" src="{base}/landscape-qc-tests.webp" width="1536" height="1152" alt="" decoding="async">'
+            '<div class="ph-mc">' + ''.join(els) + paper_only + '</div>'
+            f'<div class="ph-view"><img src="{base}/landscape-qc-tests-scroll.webp" width="{EXPORT_W}" height="{EXPORT_H}" alt="" decoding="async" style="transform:translateY({slice_top:.4f}%)"></div>'
+            '</div></div></div></div>')
+
+
+def html():
     return ('  <div class="pm-media pm-media--21x9 cs-hero-well ph" data-ph role="img" '
             'aria-label="A paper quality form for a Dark Chocolate batch, filled in by hand, settles into a tablet; its sheet, sections, fields and test table glide into the shipped Digital Forms screen for the same form, where the date and time are filled in automatically.">'
-            '<div class="ph-stage" aria-hidden="true"><div class="ph-in"><div class="ph-obj">'
-            '<div class="ph-bezel"></div><div class="ph-screen">'
-            '<img class="ph-base" src="assets/screens/landscape-qc-tests.webp" width="1536" height="1152" alt="" decoding="async">'
-            '<div class="ph-mc">' + ''.join(els) + paper_only + '</div>'
-            f'<div class="ph-view"><img src="assets/screens/landscape-qc-tests-scroll.webp" width="{EXPORT_W}" height="{EXPORT_H}" alt="" decoding="async" style="transform:translateY({slice_top:.4f}%)"></div>'
-            '</div></div></div></div></div>\n'
+            + _stage() + '</div>\n'
             # Set the start frame before first paint, so the final frame never flashes (no JS: the final frame stays)
             '  <script>(function(h){if(h&&!matchMedia("(prefers-reduced-motion: reduce)").matches)h.classList.add("ph--anim")})(document.querySelector("[data-ph]"))</script>\n')
 
@@ -199,23 +204,36 @@ JS = r"""
 """
 
 
-# ---------- The hero's final frame as a still (used on the landing's Procense card) ----------
-def still(base='assets/screens'):
-    """The hero's last frame, without motion: the level tablet with the shipped QC tests screen (base image plus the
-    same slice of the scroll export). base is the path to procense/assets/screens from the page using it."""
-    slice_top = -SLICE_Y / EXPORT_H * 100
-    return ('<span class="ph-still" aria-hidden="true"><span class="ph-still__screen">'
-            f'<img src="{base}/landscape-qc-tests.webp" width="1536" height="1152" alt="" decoding="async">'
-            f'<span class="ph-still__view"><img src="{base}/landscape-qc-tests-scroll.webp" width="{EXPORT_W}" height="{EXPORT_H}" alt="" decoding="async" style="transform:translateY({slice_top:.4f}%)"></span>'
-            '</span></span>')
+# ---------- The same animation on the landing's Procense card ----------
+def card(base='procense/assets/screens'):
+    """The hero animation inside the landing card's screenshot slot. It rests on the final frame (the level tablet with
+    the shipped QC tests screen) and plays from the start each time the Procense card becomes the active card."""
+    return '<div class="ph ph--card" data-phc aria-hidden="true">' + _stage(base) + '</div>'
 
-# Sized to its container (container-type: size): as wide as fits 88% of the width and 90% of the height.
-STILL_CSS = r"""
-/* The Procense hero's final frame as a still: a level tablet (bezel #0D1117, project art) with the shipped screen */
-.ph-still { --b: 1.4cqw; position: relative; display: block; box-sizing: border-box; width: min(88cqw, calc((90cqh - 2 * var(--b)) * 4 / 3 + 2 * var(--b)));
-  padding: var(--b); border-radius: calc(var(--b) * 2.2); background: #0D1117; box-shadow: 0 0 0 1px rgb(255 255 255 / 9%), 0 1.6cqw 4.5cqw rgb(0 0 0 / 40%); }
-.ph-still__screen { position: relative; display: block; aspect-ratio: 4 / 3; overflow: hidden; border-radius: calc(var(--b) * 1.2); background: #FFFFFF; }
-.ph-still__screen > img { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
-.ph-still__view { position: absolute; left: 7.8125%; top: 7.2917%; width: 92.1875%; height: 82.1615%; overflow: hidden; background: #FFFFFF; }
-.ph-still__view img { display: block; width: 100%; height: auto; }
+# In the slot: no navy fill (the card is already navy); the stage is a little larger than in the hero (1.35% of the
+# slot's width per u), so the tablet fills more of the slot and the starting sheet still fits on the left.
+CARD_CSS = """
+.ph.ph--card { position: absolute; inset: 0; background: none; }
+.ph--card .ph-stage { --u: 1.35cqw; }
+"""
+
+CARD_JS = r"""
+  // Procense card: rest on the final frame; replay the hero animation whenever the card becomes the active card
+  (function () {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    document.querySelectorAll('[data-phc]').forEach(function (ph) {
+      var shot = ph.closest('[data-active], .cx-img'); if (!shot) return;
+      var imgs = [].slice.call(ph.querySelectorAll('img')).map(function (i) { return i.decode ? i.decode().catch(function () {}) : 0; });
+      var ready = Promise.race([Promise.all(imgs.concat([document.fonts ? document.fonts.ready : 0])), new Promise(function (r) { setTimeout(r, 1500); })]);
+      function active() { return shot.getAttribute('data-active') === 'true'; }
+      function play() {
+        ph.classList.remove('ph--anim', 'is-play'); void ph.offsetWidth; ph.classList.add('ph--anim');
+        ready.then(function () { requestAnimationFrame(function () { if (active()) ph.classList.add('is-play'); }); });
+      }
+      function rest() { ph.classList.remove('ph--anim', 'is-play'); }
+      new MutationObserver(function () { if (active()) { if (!ph.classList.contains('ph--anim')) play(); } else rest(); })
+        .observe(shot, { attributes: true, attributeFilter: ['data-active'] });
+      if (active()) play();
+    });
+  })();
 """
