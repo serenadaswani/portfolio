@@ -29,7 +29,9 @@ Pages are generated: edit the builders, not the HTML. Every generated page start
 
 Start every session by reading `NEXT-SESSION.md` for the current agenda.
 
-**Working preference (Serena, 2026-11-17):** make changes in the local files only. Don't publish or update Claude artifacts, and don't push to GitHub until Serena says she's ready (commit locally as you go).
+**Working preference (Serena, 2026-11-17):** make changes in the local files only and commit locally as you go. Don't publish or update Claude artifacts unless asked. The site is live: GitHub Pages serves `main` at https://serenadaswani.github.io/portfolio/ (the working branch `claude/intelligent-thompson-ninkq1` was fast-forwarded into `main` on 2026-11-17; the old site is commit 4e527bd in history). Push when Serena asks.
+
+**Pushing from here (2026-11-17):** git signs in through the official GitHub CLI, installed at `~/.local/gh-cli/gh_2.104.0_macOS_arm64/bin/gh` (not on PATH), logged in as serenadaswani via browser device code, and wired into git with `gh auth setup-git` (global credential helper for github.com). `git push` works from the shell with no prompt; no GitHub Desktop needed.
 
 ## Source of truth: never edit generated files by hand
 - **Tokens:** edit `design-system/tokens/design-tokens.json`, then run `python3 design-system/tools/build_tokens.py`. That regenerates `design-system/css/tokens.css` and `design-system/published/tokens.json`. Never hand-edit those two files.
