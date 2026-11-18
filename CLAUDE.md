@@ -37,7 +37,7 @@ Start every session by reading `NEXT-SESSION.md` for the current agenda.
 - **Tokens:** edit `design-system/tokens/design-tokens.json`, then run `python3 design-system/tools/build_tokens.py`. That regenerates `design-system/css/tokens.css` and `design-system/published/tokens.json`. Never hand-edit those two files.
 - **Component CSS:** `design-system/published/components/bundle.css` is the authored source (it adds a responsive re-point block and specimen scaffolding). `design-system/css/components.css` is the portable copy for sites: bundle.css minus section 0, the HIG preference block and section 22. When you change bundle.css, run `python3 design-system/tools/build_components_css.py` to regenerate components.css.
 - **Component previews and guidelines:** each component is one Python module in `design-system/tools/previews/src/comps/` (markup, contrast pairs, README). Run `python3 design-system/tools/previews/src/build2.py` to write `published/components/<Name>/{preview.html,README.md}`. Foundation cards: `python3 design-system/tools/previews/build_foundations.py`.
-- **Pages:** `python3 design-system/tools/previews/src/landing_carousel.py` → `landing/index.html` (content in `landing.py`); `casestudy.py` → `mensio/index.html`; `casestudy_procense.py` → `procense/index.html`.
+- **Pages:** `python3 design-system/tools/previews/src/landing_carousel.py` → `index.html` at the site root (content in `landing.py`); `casestudy.py` → `mensio/index.html`; `casestudy_procense.py` → `procense/index.html`.
 
 ## Design rules (keep the system cohesive)
 - Use **semantic tokens only** (`--color-*`, `--space-*`, `--radius-*`, `--type-*`, `--shadow-*`). No literal colours, no new accent hues. Cobalt is for the primary action, focus and one precise selection cue only.
@@ -65,7 +65,7 @@ Pass component names (the folder names in `published/components/`). Append `:375
 ## Publishing the Claude design system
 The browsable system is a Claude Design System artifact: https://claude.ai/artifact/4Xae2JhSbDpb6tUHM1wuGL (private to Serena). `design-system/published/` mirrors its `project/` folder exactly. To publish, use the Artifact tool with that `url`, `root` = a folder holding `project/…` (copy `published/` to `<tmp>/project/`), `file_path` = `project/design-system.json`, and `files` = every other changed `project/...` path. Read `project/design-system.json` from the artifact right before publishing and update only its `lastChange`.
 
-Preview artifacts: landing (carousel) https://claude.ai/artifact/C1XbodJGNzah9CmtwPC57X (publish `landing/index.html` with `procense.html` = a copy of `procense/index.html` whose `../landing/index.html` links are rewritten, plus `assets/…` from `procense/assets/`); Procense https://claude.ai/artifact/2gZUFA1RvTXkHAzd5tXFCj (publish `procense/index.html`, which now carries its own doctype and head tags, with `assets/…` files). The old split-landing artifact XM7Noz2dHb3rfzVEtTnGRb is retired.
+Preview artifacts: landing (carousel) https://claude.ai/artifact/C1XbodJGNzah9CmtwPC57X (publish the root `index.html` with `procense.html` = a copy of `procense/index.html` whose `../index.html` links are rewritten, plus `assets/…` from `procense/assets/`); Procense https://claude.ai/artifact/2gZUFA1RvTXkHAzd5tXFCj (publish `procense/index.html`, which now carries its own doctype and head tags, with `assets/…` files). The old split-landing artifact XM7Noz2dHb3rfzVEtTnGRb is retired.
 
 ## Real content. Use this, not sample copy
 - Name: Serena Daswani. Time zone: America/Los_Angeles.
