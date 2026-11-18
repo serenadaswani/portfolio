@@ -35,7 +35,7 @@ def card(i, p, clone=False):
     tags = ''.join(f'<li class="pm-badge">{b}</li>' for b in badges)
     subp = f'<p class="cx-sub">{sub}</p>' if L.SHOW_SUMMARY else ''
     a11y = ' aria-hidden="true" inert' if clone else f' role="group" aria-roledescription="slide" aria-label="{i + 1} of {len(PROJECTS)}: {title}"'
-    return (f'<article class="cx-card" data-i="{i}"{a11y} style="--card:{c["card"]};--glow:{c["glow"]}">'
+    return (f'<article class="cx-card cx-card--{k}" data-i="{i}"{a11y} style="--card:{c["card"]};--glow:{c["glow"]}">'
             f'<div class="cx-copy">{L.white_logo(k)}<h3 class="cx-title">{title}</h3>{subp}'
             f'<ul class="cx-tags" aria-label="Disciplines">{tags}</ul>'
             f'<a class="cx-cta" href="{href}">View case study{I["arrow"]}</a></div>'
@@ -116,6 +116,12 @@ body { margin: 0; font-family: var(--font-sans); background: var(--color-bg-canv
   .cx-copy { display: grid; justify-items: start; align-content: center; gap: var(--space-2); }
   .cx-copy .cx-title, .cx-copy .cx-sub { width: 100%; }
   .cx-slot, .cx-cta { order: 0; }
+  /* Procense: the tablet sits centred in its slot at 70.2% of the slot's width (the hero stage at 1.35cqw), leaving
+     14.9% of the slot clear on its right. The same space is added on the left, so the copy sits as far from the card's
+     left edge as the tablet sits from its right edge; the slot shrinks to pay for it, keeping the row's width. */
+  .cx-card--procense { --cx-inset: 0.149;
+    --cx-img: min(calc((var(--cx-w) - 2 * var(--space-12) - var(--cx-text) - var(--cx-col-gap)) / (1 + var(--cx-inset))), calc((100svh - 240px) * 1.6));
+    padding-left: calc(var(--space-12) + var(--cx-img) * var(--cx-inset)); }
   .cx-slot { margin: 0; }
   .cx-copy .cx-cta { margin-top: var(--space-4); padding-left: 0; }
   .cx-title { font-size: var(--type-h3); line-height: var(--line-h3); letter-spacing: var(--tracking-h3); }
@@ -216,11 +222,15 @@ SCRIPT = r"""
   }
   function layout() {
     var p = progress(), hr = hero.getBoundingClientRect(), slot = cards[Math.max(0, Math.min(cards.length - 1, Math.round(p)))].querySelector('.cx-slot').getBoundingClientRect();
-    var w = slot.width, h = slot.height, cy = slot.top - hr.top + h / 2, sw = w * SIDE, sh = h * SIDE;
+    // Each card's own slot (Procense's is narrower and sits further right): blend the two nearest cards' slot centre and
+    // size by the scroll position, so the screenshot always lands in its own card's slot with no jump mid-swipe.
+    function geo(k) { var sl = cards[Math.max(0, Math.min(cards.length - 1, k))].querySelector('.cx-slot'); return { x: sl.offsetLeft + sl.offsetWidth / 2, w: sl.offsetWidth, h: sl.offsetHeight }; }
+    var k0 = Math.floor(p), f = p - k0, g0 = geo(k0), g1 = geo(k0 + 1);
+    var w = g0.w + (g1.w - g0.w) * f, h = g0.h + (g1.h - g0.h) * f, cy = slot.top - hr.top + slot.height / 2, sw = w * SIDE, sh = h * SIDE;
     // Resting geometry: where the active screenshot sits (centre of its slot with the card at rest) and where each
     // neighbour rests. Stacked: flush with the screen edges. Wide: peeking in from the edges (24px into the card's margin).
-    var cardW = cards[0].offsetWidth, margin = (hr.width - cardW) / 2, cslot = cards[0].querySelector('.cx-slot');
-    var cx = margin + cslot.offsetLeft + w / 2, wide = matchMedia('(min-width: 1024px) and (min-aspect-ratio: 13/10)').matches;
+    var cardW = cards[0].offsetWidth, margin = (hr.width - cardW) / 2;
+    var cx = margin + g0.x + (g1.x - g0.x) * f, wide = matchMedia('(min-width: 1024px) and (min-aspect-ratio: 13/10)').matches;
     var leftC = wide ? margin + 24 - sw / 2 : sw / 2, rightC = wide ? hr.width - margin - 24 + sw / 2 : hr.width - sw / 2;
     imgs.forEach(function (m, j) {
       var d = j - p, ad = Math.abs(d);
@@ -232,6 +242,7 @@ SCRIPT = r"""
       m.style.setProperty('--dim', dim.toFixed(3));
       m.style.visibility = op > 0 ? 'visible' : 'hidden';
       m.style.opacity = op; m.style.zIndex = String(100 - Math.round(ad * 10));
+      m.style.width = w + 'px';  // the blended slot width (cards' slots can differ: Procense's is narrower)
       m.style.transform = 'translate(' + (x - w / 2) + 'px,' + (cy - h / 2) + 'px) scale(' + sc + ')';
     });
     // Card text trails the card a little while it moves (parallax), and is still at rest
