@@ -10,8 +10,9 @@
 ## Agenda
 1. **Procense, keep iterating.** Review the new solution screens, annotation copy and badge placement, the slider and the Portrait section. Still to confirm with Serena: the interview insights (written at her request, not from real notes) and the Fig. 1 estimates (labelled "for illustration"). The hero is still an empty well.
 2. **Mensio.** Resume the section-by-section revision when Serena is ready.
-3. **Apple and OmniSynkAI.** Their landing cards don't have case studies yet.
-4. **Ship path.** Live on GitHub Pages from `main` (https://serenadaswani.github.io/portfolio/) since 2026-11-17; Claude can push from the shell (see CLAUDE.md). Still: the Résumé link is a placeholder, and the paused Mensio draft is public.
+3. **OmniSynkAI (started 2026-11-19).** First pass at `omnisynkai/index.html`, built by `casestudy_omnisynkai.py` from the Framer copy; screens are stills from the approved prototype video (PM's permission, team credited), in `omnisynkai/figma/` (PNG) and `assets/screens/` (JPEG; no WebP encoder here). Landing card links to it. Next: revise section by section with Serena; confirm the 50% figure's source, whether it shipped, and the team size. Serena is rebuilding the screens in Figma with Claude in Chrome (`omnisynkai/figma-rebuild-prompt.md`).
+4. **Apple.** Landing card doesn't have a case study yet.
+5. **Ship path.** Live on GitHub Pages from `main` (https://serenadaswani.github.io/portfolio/) since 2026-11-17; Claude can push from the shell (see CLAUDE.md). Still: the Résumé link is a placeholder, and the paused Mensio draft is public.
 
 ## Getting Figma screens in
 The Figma MCP is on the Starter plan and runs out of calls quickly. Export frames as PNG (2x) in Figma, then commit them on GitHub (signed in as serenadaswani) into the project's `figma/` folder, and convert to `.webp` in `assets/`.
