@@ -57,7 +57,7 @@ def framed(art, cap):
 
 def team_source():
     return ('<p class="pm-meta-text om-source">Team results for the whole listing flow: listing time and accuracy from testing after the September 2024 soft launch; '
-            'autofill satisfaction and discoverability from pre-launch usability testing.</p>')
+            'autofill satisfaction from pre-launch usability testing.</p>')
 
 # How the listing flow evolved before and while I joined (the lead designer's case study), with what each version taught the team
 VERSIONS = [
@@ -127,7 +127,7 @@ def flow():
         for i, (t, d) in enumerate(FLOW)) + '</ol>')
 
 STATS_TEAM = [('60%', 'Less time to create a listing, on average'), ('20%', 'More accurate listings'),
-              ('78%', 'Of testers satisfied with autofill'), ('4.2 / 5', 'For finding autofill’s advanced features')]
+              ('78%', 'Of testers satisfied with autofill')]
 
 # ---------- content ----------
 SECTIONS = [('overview', 'Overview'), ('problem', 'The problem'), ('role', 'My role'), ('discover', 'Research'),
@@ -198,7 +198,7 @@ BODY = ''.join([
                shot('confirm', 'A last check, with a preview, before posting.'))),
 
     section('impact', 'Impact &amp; reflection', 'Sellers found autofill, and liked using it.',
-        lede('The team tested the flow with sellers in Maze before launch, and again after the September 2024 soft launch. The two numbers closest to my work stood out: 78% of testers were satisfied with autofill, and they rated the discoverability of its advanced features 4.2 out of 5. Across the whole listing flow, average listing time fell by 60%.')
+        lede('The team tested the flow with sellers in Maze before launch, and again after the September 2024 soft launch. 78% of testers were satisfied with autofill. Across the whole listing flow, average listing time fell by 60%.')
         + stats(STATS_TEAM, ' pm-stats--sm cs-stats') + team_source()
         + lede('OmniSynkAI has since wound down, but the work showed how AI can take on the tedious parts of selling while sellers keep ownership of their listings.')
         + '<h3 class="cs-h3">What I learned</h3>'
