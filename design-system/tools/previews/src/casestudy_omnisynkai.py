@@ -75,12 +75,12 @@ VERSIONS = [
     ('v4', 'Autofill for launch', 'Autofill became a core launch feature, with a clear place on the page, cues for AI content and simple controls.', 'Make it findable, clearly marked and easy to steer.', True),
 ]
 def versions():
-    """A horizontal timeline of the listing workstream (vertical on narrow stages); v4 is where I joined."""
-    return ('<ol class="om-tl" aria-label="Listing flow versions">' + ''.join(
-        f'<li class="om-tl__v{" is-mine" if mine else ""}"><span class="om-tl__dot" aria-hidden="true"></span>'
-        f'<div class="om-tl__body"><p class="om-tl__k"><span class="pm-meta-text">{v}</span>{name}</p>'
-        + ('<span class="pm-badge om-tl__me">Where I joined</span>' if mine else '')
-        + f'<p class="om-tl__d">{d}</p><p class="om-tl__l"><span>{"Goal" if mine else "Feedback"}</span>{l}</p></div></li>'
+    """An open vertical timeline (after the landing's Experience timeline): version and name, the rail, then what it was and its feedback."""
+    return ('<ol class="om-tl" aria-label="How the listing flow evolved">' + ''.join(
+        f'<li class="om-tl__v{" is-mine" if mine else ""}"><div class="om-tl__k"><p><span class="pm-meta-text">{v}</span><span class="om-tl__n">{name}</span></p>'
+        + ('<span class="pm-badge om-tl__me">Where I joined</span>' if mine else '') + '</div>'
+        f'<span class="om-tl__dot" aria-hidden="true"></span><div class="om-tl__body">'
+        f'<p class="om-tl__d">{d}</p><p class="om-tl__l"><span>{"Goal" if mine else "Feedback"}</span>{l}</p></div></li>'
         for v, name, d, l, mine in VERSIONS) + '</ol>')
 
 # The three gaps, marked on the v3 page: label, question, what went wrong, badge position (% of the image)
@@ -116,7 +116,7 @@ def findings():
     arrow = f'<span class="om-fp__arrow" aria-hidden="true">{_l("arrow-right")}</span>'
     rows = ''.join(
         f'<li class="om-fp__row"><div class="om-fp__c"><p class="om-fp__k">Finding</p><div class="om-fd__h"><h4>{ft}</h4><span class="pm-badge">{src}</span></div><p>{fd}</p></div>{arrow}'
-        f'<div class="om-fp__c"><p class="om-fp__k">Design priority</p><h4>{gt}</h4><p>{gd}</p></div></li>'
+        f'<div class="om-fp__c om-fp__goal"><p class="om-fp__k">Design priority</p><h4>{gt}</h4><p>{gd}</p></div></li>'
         for ft, src, fd, gt, gd in FINDINGS)
     return (f'<div class="om-fp"><div class="om-fp__head" aria-hidden="true"><span>Finding</span><span></span><span>Design priority</span></div>'
             f'<ol class="om-fp__list">{rows}</ol></div>')
@@ -210,7 +210,7 @@ BODY = ''.join([
 
     section('role', 'My role', 'I made autofill findable, clear and easy to steer.',
         lede('The team had already explored three versions of the listing flow. The same three gaps came up in all of them, and closing them became my focus.')
-        + framed(versions(), 'How the listing flow evolved, and where I joined.')
+        + versions()
         + callout('Three gaps', 'Sellers missed autofill, couldn’t tell what it wrote, and wanted more say in the result.')
         + focus()
         + lede('I tackled them in three phases, the sections that follow: discover where AI could help, conceptualize what it should do, then design how it fits the page.')),
@@ -390,27 +390,29 @@ CSS = r"""
 .om-gap__notes h4 { margin: 0; font-size: var(--type-body-md); line-height: var(--line-body-md); font-weight: var(--weight-medium); letter-spacing: 0; color: var(--color-text-primary); }
 .om-gap__notes p { margin: 0; font-size: var(--type-body-sm); line-height: var(--line-body-sm); color: var(--color-text-secondary); }
 .om-gap__notes .om-gap__k { font-family: var(--font-meta); font-size: var(--type-label); line-height: var(--line-label); color: var(--color-text-tertiary); margin-bottom: 2px; }
-/* Versions: a horizontal timeline from a 640px stage (a vertical one below); finished versions grey, v4 cobalt */
-.om-stage:has(.om-tl) { container-type: inline-size; padding: var(--space-6) var(--space-5) var(--space-5); }
-.om-tl { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: minmax(0, 1fr); }
-.om-tl__v { position: relative; display: grid; grid-template-columns: 14px minmax(0, 1fr); gap: var(--space-4); padding-bottom: var(--space-5); align-content: start; }
+/* Versions: an open vertical timeline, after the landing's Experience timeline: label (right-aligned) · rail and dot · body */
+.om-tl { container-type: inline-size; list-style: none; margin: var(--space-4) 0; padding: 0; }
+.om-tl__v { position: relative; display: grid; grid-template-columns: 11rem 12px minmax(0, 1fr); column-gap: var(--space-5); padding-bottom: var(--space-6); }
 .om-tl__v:last-child { padding-bottom: 0; }
-.om-tl__v::before { content: ""; position: absolute; left: 6.5px; top: 14px; bottom: -2px; width: 1px; background: var(--color-border-default); }
+.om-tl__v::before { content: ""; position: absolute; left: calc(11rem + var(--space-5) + 5px); top: 18px; bottom: -4px; width: 2px; border-radius: 1px; background: var(--color-border-subtle); }
 .om-tl__v:last-child::before { display: none; }
-.om-tl__dot { width: 14px; height: 14px; margin-top: 3px; border-radius: 50%; background: var(--color-bg-elevated); box-shadow: inset 0 0 0 2px var(--color-border-strong); position: relative; z-index: 1; }
-.om-tl__v.is-mine .om-tl__dot { background: var(--color-action-primary); box-shadow: 0 0 0 4px var(--color-action-selected-bg); }
-.om-tl__body { display: grid; gap: var(--space-2); align-content: start; min-width: 0; }
-.om-tl__k { margin: 0; display: flex; align-items: baseline; gap: var(--space-2); font-size: var(--type-body-sm); line-height: var(--line-body-sm); font-weight: var(--weight-medium); color: var(--color-text-primary); }
-.om-tl__me { justify-self: start; }
-.om-tl__d { margin: 0; font-size: var(--type-body-sm); line-height: var(--line-body-sm); color: var(--color-text-secondary); }
-.om-tl__l { margin: 0; display: grid; gap: 2px; font-size: var(--type-body-sm); line-height: var(--line-body-sm); color: var(--color-text-primary); }
-.om-tl__l span { font-family: var(--font-meta); font-size: var(--type-label); line-height: var(--line-label); color: var(--color-text-tertiary); }
-@container (min-width: 640px) {
-  .om-tl { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--space-5); }
-  .om-tl__v { grid-template-columns: minmax(0, 1fr); gap: var(--space-4); padding-bottom: 0; }
-  .om-tl__v::before { left: 14px; right: calc(-1 * var(--space-5)); top: 9.5px; bottom: auto; width: auto; height: 1px; }
-  .om-tl__dot { margin-top: 3px; }
-  .om-tl__v.is-mine .om-tl__body { padding: var(--space-3); margin: calc(-1 * var(--space-3)); border-radius: var(--radius-md); background: var(--color-action-selected-bg); }
+.om-tl__k { display: grid; justify-items: end; text-align: right; gap: var(--space-2); }
+.om-tl__k p { margin: 0; display: flex; align-items: baseline; justify-content: flex-end; gap: var(--space-2); }
+.om-tl__n { font-size: var(--type-body-md); line-height: var(--line-body-md); font-weight: var(--weight-medium); color: var(--color-text-primary); text-wrap: balance; }
+.om-tl__dot { position: relative; z-index: 1; width: 12px; height: 12px; margin-top: 6px; border-radius: 50%; background: var(--color-bg-canvas); box-shadow: inset 0 0 0 2px var(--color-border-default); }
+.om-tl__v.is-mine .om-tl__dot { background: var(--color-selected-indicator); box-shadow: 0 0 0 3px var(--color-action-selected-bg); }
+.om-tl__body { display: grid; gap: var(--space-2); justify-items: start; min-width: 0; }
+.om-tl__d { margin: 0; font-size: var(--type-body-md); line-height: var(--line-body-md); color: var(--color-text-primary); }
+.om-tl__l { margin: 0; font-size: var(--type-body-sm); line-height: var(--line-body-sm); color: var(--color-text-secondary); }
+.om-tl__l span { font-weight: var(--weight-medium); color: var(--color-text-primary); }
+.om-tl__l span::after { content: ": "; }
+@container (max-width: 479px) {
+  .om-tl__v { grid-template-columns: 12px minmax(0, 1fr); column-gap: var(--space-4); }
+  .om-tl__v::before { left: 5px; }
+  .om-tl__k { grid-column: 2; justify-items: start; text-align: left; }
+  .om-tl__k p { justify-content: flex-start; }
+  .om-tl__dot { grid-column: 1; grid-row: 1; }
+  .om-tl__body { grid-column: 2; margin-top: var(--space-2); }
 }
 /* Findings -> priorities: two columns split by an arrow column, rows divided by hairlines, no boxes */
 .om-fp { container-type: inline-size; margin: var(--space-2) 0; }
@@ -422,11 +424,12 @@ CSS = r"""
 .om-fp__c h4 { margin: 0; font-size: var(--type-body-md); line-height: var(--line-body-md); font-weight: var(--weight-medium); letter-spacing: 0; color: var(--color-text-primary); }
 .om-fp__c p:not(.om-fp__k) { margin: 0; font-size: var(--type-body-sm); line-height: var(--line-body-sm); color: var(--color-text-secondary); }
 .om-fp__k { margin: 0; font-family: var(--font-meta); font-size: var(--type-label); line-height: var(--line-label); color: var(--color-text-tertiary); }
+.om-fp__goal { padding: var(--space-4) var(--space-5); border-radius: var(--radius-md); background: var(--color-bg-elevated); box-shadow: inset 0 0 0 1px var(--color-border-default), var(--shadow-sm); }
 .om-fp__arrow { color: var(--color-text-tertiary); transform: rotate(90deg); justify-self: start; }
 .om-fp__arrow .pm-icon { width: 20px; height: 20px; }
 @container (min-width: 640px) {
   .om-fp__head { display: grid; grid-template-columns: minmax(0, 1fr) 48px minmax(0, 1fr); padding-bottom: var(--space-2); font-family: var(--font-meta); font-size: var(--type-label); line-height: var(--line-label); color: var(--color-text-tertiary); }
-  .om-fp__row { grid-template-columns: minmax(0, 1fr) 48px minmax(0, 1fr); gap: 0; }
+  .om-fp__row { grid-template-columns: minmax(0, 1fr) 48px minmax(0, 1fr); gap: 0; align-items: center; }
   .om-fp__k { display: none; }
   .om-fp__arrow { transform: none; justify-self: center; align-self: center; }
 }
