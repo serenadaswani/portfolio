@@ -10,6 +10,7 @@ import casestudy as C
 from casestudy import I, S, section, lede, panel, stats
 from lib import _l
 import casestudy_procense as CP
+import omnisynkai_hero as OH
 from cs_parts import before_after
 
 FLOW_CSS = CP._between(CP.CSS, '/* Batch workflow (Fig. 1)', '/* Lists without numbers')  # Procense Fig. 1 stepper
@@ -560,7 +561,8 @@ CSS = r"""
 """
 
 OMNI = dict(page_title='OmniSynkAI Case Study', out='omnisynkai/index.html', sections=SECTIONS, body=BODY, header=HEADER, tldr=TLDR,
-            css=FLOW_CSS + MK_CSS + LB_CSS + BA_CSS + CSS, js=FLOW_JS + ANN_JS + LB_JS + BA_JS + VIDEO_JS + TL_JS)
+            css=FLOW_CSS + MK_CSS + LB_CSS + BA_CSS + CSS + OH.CSS, js=FLOW_JS + ANN_JS + LB_JS + BA_JS + VIDEO_JS + TL_JS + OH.JS,
+            hero=OH.html(I=I))
 
 if __name__ == '__main__':
     print(len(C.render(OMNI)))
