@@ -180,12 +180,12 @@ CSS = r"""
 
 /* Camera (scale, then the shift that centres a point of the screen): the whole page -> Title and Product category
    (507, 200) x1.9 -> AI icon (790, 165) x2.4 -> out for loading -> Description (360, 404) x1.8 -> down to Media
-   (418, 453) x1.45 -> down to Brand and Tags (418, 488.5) x1.47 -> up to the Listing Autofilled bar (395, 218) x1.7 ->
-   the whole page. Media and Brand/Tags views show their sections' full width (no left or right edge cut off); the
+   (418, 453) x1.45 -> down to Brand and Tags (418, 488.5) x1.47 -> up to the Listing Autofilled bar (372, 218) x1.7 ->
+   the whole page. Media, Brand/Tags and the bar views keep the same left edge (x 73-80, just left of the sections at 89), so no section's left side is cut off; the
    Description and Media views start just below the title bar (y 198), so the bar first appears once it has changed. */
 @keyframes oh-cam { 0%, 4% { transform: scale(1) translate(0, 0); } 9.5%, 21% { transform: scale(1.9) translate(-.7%, 22.98%); } 26.5%, 30.5% { transform: scale(2.4) translate(-29%, 27.71%); }
   36%, 49% { transform: scale(1) translate(0, 0); } 54%, 61.5% { transform: scale(1.8) translate(14%, -4.57%); } 65.5%, 69% { transform: scale(1.45) translate(8.2%, -11.19%); }
-  72.5%, 75.5% { transform: scale(1.47) translate(8.2%, -15.99%); } 80%, 84% { transform: scale(1.7) translate(10.5%, 20.55%); } 89.5%, 100% { transform: scale(1) translate(0, 0); } }
+  72.5%, 75.5% { transform: scale(1.47) translate(8.2%, -15.99%); } 80%, 84% { transform: scale(1.7) translate(12.79%, 20.55%); } 89.5%, 100% { transform: scale(1) translate(0, 0); } }
 /* 1. Title, then Product category, type in (one character at a time, the same way) while zoomed in; the cursor glides to the AI autofill icon and clicks it */
 @keyframes oh-type { 0%, 9.5% { clip-path: inset(0 100% 0 0); animation-timing-function: steps(15, end); } 15%, 100% { clip-path: inset(0 0 0 0); } }
 @keyframes oh-cat { 0%, 15.5% { clip-path: inset(0 100% 0 0); animation-timing-function: steps(8, end); } 18.5%, 100% { clip-path: inset(0 0 0 0); } }
