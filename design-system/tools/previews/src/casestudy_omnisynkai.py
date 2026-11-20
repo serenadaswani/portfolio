@@ -160,9 +160,14 @@ def callout(label, text):
     """A key insight, set large on a surface panel (the opportunity keeps the accent tint)."""
     return f'<div class="om-callout"><p class="om-callout__k">{label}</p><p class="om-callout__t">{text}</p></div>'
 
+def sub(sid, label, title, copy, screens):
+    """A solution subsection: screens on the left, copy on the right (stacked on narrow columns)."""
+    return (f'<section class="om-sub" id="{sid}" aria-labelledby="h-{sid}"><div class="om-sub__grid"><div class="om-sub__media">{screens}</div>'
+            f'<div class="om-sub__copy"><p class="cs-eyebrow">{label}</p><h3 class="cs-h3" id="h-{sid}">{title}</h3>{copy}</div></div></section>')
+
 # ---------- content ----------
 SECTIONS = [('overview', 'Overview'), ('problem', 'The problem'), ('role', 'My role'), ('discover', 'Research'), ('concept', 'Concept'),
-            ('placement', 'Placement'), ('clarity', 'Clarity'), ('control', 'Control'), ('publish', 'Publishing'), ('impact', 'Impact &amp; reflection')]
+            ('solution', 'The solution'), ('impact', 'Impact &amp; reflection')]
 
 BODY = ''.join([
     section('overview', 'Overview', 'I designed how AI fits into the moment sellers create a listing.',
@@ -214,36 +219,37 @@ BODY = ''.join([
         + lede('Reviewing it against my priorities, the AI’s limits and the team’s plans, I took three lessons into the final design, one for each gap. Here’s how the launch version compares with v3.')
         + compare()),
 
-    section('placement', 'Placement', 'I moved autofill to where every listing starts.',
-        lede('In v3, autofill was a small link above the title, with more AI buttons elsewhere on the page; in my first concept, it sat in a sidebar card. Either way, it was apart from the fields it needed. Mapping it against the flow showed why sellers missed it: they start a listing at the top, with a title and a category, which is exactly what autofill needs.',
-             'So I moved autofill into a title bar, right beside those two fields. This became the entry point in the final design.')
-        + items([('Unlocks when ready', 'The sparkle button lights up once the title and category are filled in.'),
-                 ('Explains itself', 'One line tells sellers what autofill does for them.'),
-                 ('Always in reach', 'The bar stays fixed as sellers scroll, keeping the AI controls close.')], grid=True)
-        + pair(shot('empty', 'Autofill sits beside the two fields it needs, and unlocks once both are filled in.'),
-               shot('filling', 'A short dialog shows the AI at work, and lets sellers cancel.'))),
-
-    section('clarity', 'Clarity', 'I created a visual language for AI content.',
-        lede('Earlier versions didn’t separate AI content from manual input, so sellers couldn’t tell what to double-check, or which fields they still had to fill in. I designed three cues that carried into the final design:')
-        + items([('Purple highlights', 'Everything AI writes, like the brand and tags, is highlighted, so sellers know exactly what to review.'),
-                 ('A clear status', 'After autofill, the title bar reads “Listing Autofilled, feel free to edit details,” inviting edits instead of blind trust.'),
-                 ('Only what’s new', 'When AI rewrites part of a listing, only the new content is highlighted; what sellers already reviewed goes back to plain text.')])
-        + pair(shot('filled', 'After autofill: AI content highlighted, and a status that invites edits.'),
-               shot('retoned', 'After a change, only the new tags are highlighted.'))),
-
-    section('control', 'Control', 'I fit the feedback loop to what the AI could do.',
-        lede('My first concept put feedback on every field: browse versions, thumbs up or down, regenerate. It was more than our AI model could reliably support, and more than sellers needed on every field. I simplified it to the three actions sellers actually reach for, and gathered them under one More options menu in the title bar, where they’re always in reach. We refined the options together as a team, and this became how sellers steer AI in the final design.')
-        + items([('Regenerate', 'Not quite right? Ask the AI for a new draft.'),
-                 ('Change tone', 'Pick from seven tones, from formal to playful, to match the seller’s brand voice.'),
-                 ('Clear fields', 'Start over by hand, with a confirmation first, since it can’t be undone.')], grid=True)
-        + pair(shot('menu', 'More options: regenerate, change tone or clear fields.'),
-               shot('tone', 'Seven tones, from formal to playful.'))
-        + shot('clear', 'Clearing autofilled content asks for confirmation first.')),
-
-    section('publish', 'Publishing', 'One listing, published everywhere.',
-        lede('Autofill hands off to our publishing flow. Instead of the per-platform toggles in my first concept, sellers choose their marketplaces when they publish, which leaves room for more platforms, then preview the listing on each and post to all of them at once.')
-        + pair(shot('platforms', 'Choose the marketplaces to list on.'),
-               shot('confirm', 'A last check, with a preview, before posting.'))),
+    section('solution', 'The solution', 'Autofill that’s easy to find, clear to read and simple to steer.',
+        lede('The launch version answers each of the three gaps, then hands off to our publishing flow.')
+        + sub('placement', 'Placement', 'I moved autofill to where every listing starts.',
+              lede('In v3, autofill was a small link above the title, with more AI buttons elsewhere on the page. In my first concept, it sat in a sidebar card. Either way, it was apart from the fields it needed.',
+                   'Sellers start a listing with a title and a category, which is exactly what autofill needs. So I moved autofill into a title bar, right beside those two fields.')
+              + items([('Unlocks when ready', 'The sparkle button lights up once the title and category are filled in.'),
+                       ('Explains itself', 'One line tells sellers what autofill does for them.'),
+                       ('Always in reach', 'The bar stays fixed as sellers scroll, keeping the AI controls close.')]),
+              shot('empty', 'Autofill sits beside the two fields it needs, and unlocks once both are filled in.')
+              + shot('filling', 'A short dialog shows the AI at work, and lets sellers cancel.'))
+        + sub('clarity', 'Clarity', 'I created a visual language for AI content.',
+              lede('Earlier versions didn’t separate AI content from manual input, so sellers couldn’t tell what to double-check. I designed three cues that carried into the final design.')
+              + items([('Purple highlights', 'Everything AI writes, like the brand and tags, is highlighted for review.'),
+                       ('A clear status', 'The title bar reads “Listing Autofilled, feel free to edit details,” inviting edits instead of blind trust.'),
+                       ('Only what’s new', 'When AI rewrites part of a listing, only the new content is highlighted.')]),
+              shot('filled', 'After autofill: AI content highlighted, and a status that invites edits.')
+              + shot('retoned', 'After a change, only the new tags are highlighted.'))
+        + sub('control', 'Control', 'I fit the feedback loop to what the AI could do.',
+              lede('My first concept put feedback on every field: browse versions, rate them, regenerate. It was more than our AI model could reliably support, and more than sellers needed.',
+                   'I simplified it to the three actions sellers actually reach for, under one More options menu in the title bar. We refined the options together as a team.')
+              + items([('Regenerate', 'Not quite right? Ask the AI for a new draft.'),
+                       ('Change tone', 'Seven tones, from formal to playful, to match the seller’s brand voice.'),
+                       ('Clear fields', 'Start over by hand, with a confirmation first, since it can’t be undone.')]),
+              shot('menu', 'More options: regenerate, change tone or clear fields.')
+              + shot('tone', 'Seven tones, from formal to playful.')
+              + shot('clear', 'Clearing autofilled content asks for confirmation first.'))
+        + sub('publish', 'Publishing', 'One listing, published everywhere.',
+              lede('Autofill hands off to our publishing flow. Instead of the per-platform toggles in my first concept, sellers choose their marketplaces when they publish, which leaves room for more platforms.',
+                   'They preview the listing on each platform, then post to all of them at once.'),
+              shot('platforms', 'Choose the marketplaces to list on.')
+              + shot('confirm', 'A last check, with a preview, before posting.'))),
 
     section('impact', 'Impact &amp; reflection', 'Sellers found autofill, and liked using it.',
         lede('Autofill shipped in the September 2024 soft launch with the title bar entry point, purple AI cues and the More options menu in place. In pre-launch testing, 78% of testers were satisfied with autofill, and after launch, average listing time fell by 60% across the listing flow.')
@@ -378,6 +384,19 @@ CSS = r"""
 .om-fd__h .pm-badge { flex: none; margin-top: 1px; }
 /* Three-item lists go three across, so none is left on its own row */
 @container (min-width: 768px) { .cs-points--grid.om-g3 { grid-template-columns: repeat(3, minmax(0, 1fr)); column-gap: var(--space-6); } }
+/* Solution subsections: screens left, copy right from a 720px column; the copy stays in view beside tall screens */
+.om-sub { container-type: inline-size; margin-top: var(--space-8); }
+.om-sub__grid { display: grid; gap: var(--space-6); grid-template-columns: minmax(0, 1fr); align-items: start; }
+.om-sub + .om-sub { padding-top: var(--space-8); border-top: 1px solid var(--color-border-subtle); }
+.om-sub__media { display: grid; gap: var(--space-5); min-width: 0; }
+.om-sub__media .pm-frame { margin: 0; }
+.om-sub__copy { display: grid; gap: var(--space-4); align-content: start; min-width: 0; }
+.om-sub__copy .cs-eyebrow, .om-sub__copy .cs-h3 { margin: 0; }
+.om-sub__copy .cs-points { margin: 0; }
+@container (min-width: 720px) {
+  .om-sub__grid { grid-template-columns: minmax(0, 3fr) minmax(0, 2fr); gap: var(--space-8); }
+  .om-sub__copy { position: sticky; top: var(--space-6); }
+}
 """
 
 OMNI = dict(page_title='OmniSynkAI Case Study', out='omnisynkai/index.html', sections=SECTIONS, body=BODY, header=HEADER, tldr=TLDR, css=IG_CSS + CSS)
