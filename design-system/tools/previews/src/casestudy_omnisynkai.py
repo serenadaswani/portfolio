@@ -7,11 +7,14 @@ for team context and results, cited as team results by role only, no names or li
 Run: python3 design-system/tools/previews/src/casestudy_omnisynkai.py  ->  omnisynkai/index.html
 """
 import casestudy as C
-from casestudy import I, section, lede, panel, stats
+from casestudy import I, S, section, lede, panel, stats
 from lib import _l
 import casestudy_procense as CP
 
 IG_CSS = CP._between(CP.CSS, '/* Insights -> goals', '/* ===== Procense media')  # same findings -> goals graphic as Procense
+FLOW_CSS = CP._between(CP.CSS, '/* Batch workflow (Fig. 1)', '/* Lists without numbers')  # Procense Fig. 1 stepper
+FLOW_JS = CP._between(CP.JS, '  // Fig. 1 batch workflow', '  // TL;DR stepper')
+MK_CSS = CP._between(CP.CSS, '/* Annotation badges', '.pr-notes {')  # annotation coral badges
 
 def items(rows, grid=False):
     """Title + description list, no numbering (same as Procense)."""
@@ -73,16 +76,20 @@ def versions():
         + f'<p class="om-ver__d">{d}</p><p class="om-ver__l"><span>{"Goal" if mine else "Feedback"}</span>{l}</p></li>'
         for v, name, d, l, mine in VERSIONS) + '</ol>')
 
-# My three areas: the open problem, the evidence behind it, what I designed
+# The three gaps, marked on the v3 page: label, question, what went wrong, badge position (% of the image)
 FOCUS = [
-    ('Placement', 'Where does autofill live?', 'Sellers couldn’t find the autofill button, and many didn’t know the feature existed.'),
-    ('Clarity', 'What did AI write, and what did I?', 'Autofilled text looked like manual text, and sellers weren’t sure which fields they had to fill in.'),
-    ('Control', 'How do sellers steer the result?', 'AI helped, but sellers wanted more say in what it generated.'),
+    ('Placement', 'Where does autofill live?', 'A small Autofill link sat above the title, and many sellers never noticed it.', 59.0, 32.7),
+    ('Clarity', 'What did AI write, and what did I?', 'AI text looked like manual text, so sellers couldn’t tell what to check.', 40.0, 76.0),
+    ('Control', 'How do sellers steer the result?', 'AI actions were scattered across the page, from the toolbar to the image panel.', 66.5, 81.2),
 ]
 def focus():
-    return ('<ul class="om-focus">' + ''.join(
-        f'<li class="pm-card pm-card--outlined om-focus__c"><p class="om-focus__k">{k}</p><h4 class="pm-card__title">{q}</h4><p class="pm-card__summary">{d}</p></li>'
-        for k, q, d in FOCUS) + '</ul>')
+    pins = ''.join(f'<span class="pr-mk om-pin" style="left:{x}%;top:{y}%" aria-hidden="true">{i + 1}</span>' for i, (k, q, d, x, y) in enumerate(FOCUS))
+    notes = ''.join(f'<li><span class="pr-mk" aria-hidden="true">{i + 1}</span><div><p class="om-gap__k">{k}</p><h4>{q}</h4><p>{d}</p></div></li>' for i, (k, q, d, x, y) in enumerate(FOCUS))
+    img = ('<div class="om-gap__img"><img class="om-shot" src="assets/screens/00-v3-listing-page.jpg" width="1600" height="1139" loading="lazy" '
+           'alt="The v3 listing page, marked in three places: the small Autofill link above the title, the AI-written description that looks like typed text, and the AI Generator button under the images.">'
+           + pins + '</div>')
+    return (f'<figure class="pm-frame"><div class="pm-frame__stage om-stage om-gap"><div class="om-gap__grid">{img}<ol class="om-gap__notes">{notes}</ol></div></div>'
+            + _cap(_num(), 'The three gaps, marked on the v3 listing page.') + '</figure>')
 
 # My research (slides 6–9) and the design priority each finding set
 FINDINGS = [
@@ -106,25 +113,33 @@ def findings():
     return (f'<figure class="pr-ig"><div class="pr-ig__head" aria-hidden="true"><span>Finding</span><span></span><span>Design priority</span></div>'
             f'<ol class="pr-ig__list">{rows}</ol></figure>')
 
-# Discover -> Conceptualize -> Design, for my part
-PHASES = [
-    ('Discover', 'Where can AI help?', 'I pulled past research, mapped the AI’s limits with engineering, and studied how Shopify and Trustana use AI.'),
-    ('Conceptualize', 'What should it do?', 'I mapped the flow for new and returning sellers, starting from the two fields AI needs, with feedback built in.'),
-    ('Design', 'How does it fit?', 'I designed where autofill lives, how AI content is marked, and how sellers steer it.'),
+# The final autofill flow, as Procense's Fig. 1 stepper: title, who, what happens, the design decision at that step
+FLOW = [
+    ('Add a title and category', 'Seller', 'Sellers enter the two pieces of information AI needs to draft a listing.', 'Autofill sits in the title bar, right beside these two fields.'),
+    ('Autofill', 'Seller and AI', 'A single click on the AI autofill icon drafts the description, media, brand and tags.', 'A short progress dialog shows AI at work, with a way to cancel.'),
+    ('Review', 'Seller', 'Sellers check what AI wrote before anything goes live.', 'Purple highlights mark every field AI wrote.'),
+    ('Adjust', 'Seller', 'Sellers regenerate the draft, change its tone, or clear it and start over.', 'All three actions live under one More options menu.'),
+    ('Choose where to list', 'Seller', 'Sellers pick the marketplaces for this listing.', 'Choosing platforms at publish time leaves room for more marketplaces.'),
+    ('Confirm listing details', 'Seller', 'A final review with a preview on each platform, then one click to post.', 'Sellers see exactly what will go live before it does.'),
 ]
-def process():
-    arrow = f'<span class="om-proc__arrow" aria-hidden="true">{_l("arrow-right")}</span>'
-    return ('<ol class="om-proc">' + arrow.join(
-        f'<li class="om-proc__step"><p class="om-proc__k">{name}</p><h4>{q}</h4><p class="om-proc__d">{d}</p></li>'
-        for name, q, d in PHASES) + '</ol>')
-
-# The final autofill flow, from the prototype
-FLOW = [('Add a title and category', 'Enter the required information'), ('Autofill', 'A single click to use AI autofill'), ('Review', 'AI content is clearly highlighted'),
-        ('Adjust', 'Regenerate, retone or clear'), ('Choose where to list', 'Select the marketplaces'), ('Confirm listing details', 'Preview, then post')]
+DECISION = 'Design decision'
 def flow():
-    return ('<ol class="om-flow">' + ''.join(
-        f'<li><span class="om-flow__n" aria-hidden="true">{i + 1}</span><div><p class="om-flow__t">{t}</p><p class="om-flow__d">{d}</p></div></li>'
-        for i, (t, d) in enumerate(FLOW)) + '</ol>')
+    box = lambda text, attrs='': (f'<div class="pr-flow__risk om-dec"{attrs}><span class="pr-flow__rl">{_l("sparkles")}<span data-fn-rl>{DECISION}</span></span>'
+                                  f'<span class="pr-flow__rt" data-fn-rt>{text}</span></div>')
+    steps = ''.join(
+        f'<li class="pr-flow__s"><button type="button" class="pr-flow__b" data-step="{i}" aria-pressed="{"true" if i == 0 else "false"}">'
+        f'<span class="pr-flow__n" aria-hidden="true"><em>{i + 1}</em><strong>{_l("check")}</strong></span><span class="pr-flow__t">{t}</span></button>'
+        f'<div class="pr-flow__d"><p class="pm-meta-text">{who}</p><p>{d}</p>{box(r)}</div></li>'
+        for i, (t, who, d, r) in enumerate(FLOW))
+    notes = ''.join(f'<template data-step-note="{i}">{t}|{who}|{d}|{r}|{DECISION}</template>' for i, (t, who, d, r) in enumerate(FLOW))
+    t0, who0, d0, r0 = FLOW[0]
+    return ('<div class="pr-flow" data-flow>'
+            f'<ol class="pr-flow__list" aria-label="The autofill flow, step by step"><span class="pr-flow__prog" aria-hidden="true"></span>{steps}</ol>{notes}'
+            '<div class="pr-flow__note" aria-live="off" data-fn-live>'
+            f'<div class="pr-flow__txt"><p class="pm-meta-text" data-fn-w>Step 1 of {len(FLOW)} · {who0}</p><p class="pr-note__t" data-fn-t>{t0}</p><p class="pr-note__d" data-fn-d>{d0}</p></div>'
+            f'{box(r0, " data-fn-r")}</div>'
+            f'<div class="pr-flow__bar"><button type="button" class="pm-btn pm-btn--ghost pm-btn--xs" aria-pressed="false" data-flow-toggle>{I["pause"]}<span>Pause</span></button></div>'
+            '</div>')
 
 
 # v3 (the team's listing page before I joined; image from the lead designer's published case study) against the final design
@@ -190,10 +205,9 @@ BODY = ''.join([
         + framed(versions(), 'How the listing flow evolved, and where I joined.')
         + callout('Three gaps', 'Sellers missed autofill, couldn’t tell what it wrote, and wanted more say in the result.')
         + focus()
-        + '<h3 class="cs-h3">I tackled them in three phases.</h3>'
-        + framed(process(), 'Discover, conceptualize, design.')),
+        + lede('I tackled them in three phases, the sections that follow: discover where AI could help, conceptualize what it should do, then design how it fits the page.')),
 
-    section('discover', 'Research', 'I started by asking where AI could actually help.',
+    section('discover', 'Discover', 'I started by asking where AI could actually help.',
         lede('Before designing anything, I needed to uncover where AI could help sellers most, and how we could guide them to a listing they’re happy with.',
              'I partnered with UX research to pull the survey and interview findings and spot the gaps, and collaborated with engineers and product managers to map the AI’s constraints and feasibility. Knowing its limits early kept the design honest.',
              'To fill the gaps, I ran desk research on how people use AI tools, and mapped a SWOT analysis of two competitors’ AI listing features.')
@@ -204,13 +218,13 @@ BODY = ''.join([
         + lede('I prioritized decisions rooted in our research findings and competitor data.')
         + findings()),
 
-    section('concept', 'Concept', 'I mapped the flow before designing a screen.',
+    section('concept', 'Conceptualize', 'I mapped the flow before designing a screen.',
         lede('With priorities set, I defined how autofill should work: the flows for new and returning sellers, the triggers that start it, and a feedback loop for refining what it writes. Three qualities guided every choice.')
         + items([('Simplicity', 'Sellers understand how to start at a glance.'),
                  ('Flexibility', 'The experience feels effortless, even within the AI’s limits.'),
                  ('Better with feedback', 'Results improve as sellers react to them.')], grid=True)
         + lede('The key trigger came from the data: AI needs only a title and a category to draft a listing. Using this information, I built the flow around those two fields, from the first click to a published listing.')
-        + framed(flow(), 'The flow I designed, from two required fields to a published listing.')
+        + framed(flow(), 'The flow I designed, from two required fields to a published listing. Hover over or select a step to see it.')
         + '<h3 class="cs-h3">My first concept</h3>'
         + lede('I built my first layout within OmniSynkAI’s design system:')
         + items([('A sidebar card', 'Invited sellers to “Try listing with Autofill,” with per-platform publishing toggles below it.'),
@@ -219,7 +233,7 @@ BODY = ''.join([
         + lede('Reviewing it against my priorities, the AI’s limits and the team’s plans, I took three lessons into the final design, one for each gap. The comparison below shows how the launch version changed from v3.')
         + compare()),
 
-    section('solution', 'The solution', 'Autofill that’s easy to find, clear to read and simple to steer.',
+    section('solution', 'Design', 'Autofill that’s easy to find, clear to read and simple to steer.',
         lede('The launch version answers each of the three gaps, then hands off to our publishing flow.')
         + sub('placement', 'Placement', 'I moved autofill to where every listing starts.',
               lede('In v3, autofill was a small link above the title, with more AI buttons elsewhere on the page. In my first concept, it sat in a sidebar card. Either way, it was apart from the fields it needed.',
@@ -291,7 +305,7 @@ CSS = r"""
 .om-shot { display: block; width: 100%; height: auto; border-radius: var(--radius-sm); box-shadow: inset 0 0 0 1px var(--color-border-subtle), var(--shadow-sm); }
 .om-pair { display: grid; gap: var(--space-6); grid-template-columns: minmax(0, 1fr); }
 @container (min-width: 768px) { .om-pair { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-5); } }
-.cs-section > .om-pair, .cs-section > .pr-ig, .cs-section > .om-focus { margin-block: var(--space-2); }
+.cs-section > .om-pair, .cs-section > .pr-ig { margin-block: var(--space-2); }
 .cs-points--plain li { grid-template-columns: minmax(0, 1fr); }
 .cs-stats .pm-stats__item { justify-content: flex-end; }
 .om-source { margin: var(--space-3) 0 0; max-width: 60ch; }
@@ -301,16 +315,8 @@ CSS = r"""
 @container (min-width: 768px) { .om-trio { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
 
 /* Shared inner-card look for the HTML graphics */
-.om-stage:has(.om-proc), .om-stage:has(.om-flow), .om-stage:has(.om-ver) { container-type: inline-size; padding: var(--space-5); }
-.om-proc__step, .om-flow li, .om-ver__v { border-radius: var(--radius-md); background: var(--color-bg-elevated); box-shadow: inset 0 0 0 1px var(--color-border-subtle), var(--shadow-xs); }
-
-/* Process: three phases, side by side from a 640px stage */
-.om-proc { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-3); grid-template-columns: minmax(0, 1fr); }
-@container (min-width: 640px) { .om-proc { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
-.om-proc__step { padding: var(--space-5); display: grid; gap: var(--space-2); align-content: start; }
-.om-proc__k { margin: 0; font-size: var(--type-body-sm); line-height: var(--line-body-sm); font-weight: var(--weight-medium); color: var(--color-text-primary); }
-.om-proc__step h4 { margin: 0; font-size: var(--type-body-md); line-height: var(--line-body-md); font-weight: var(--weight-medium); letter-spacing: 0; color: var(--color-text-primary); }
-.om-proc__step ul { margin: 0; padding-left: 1.1em; display: grid; gap: var(--space-1); font-size: var(--type-body-sm); line-height: var(--line-body-sm); color: var(--color-text-secondary); }
+.om-stage:has(.om-ver) { container-type: inline-size; padding: var(--space-5); }
+.om-ver__v { border-radius: var(--radius-md); background: var(--color-bg-elevated); box-shadow: inset 0 0 0 1px var(--color-border-subtle), var(--shadow-xs); }
 
 /* Versions: four across from a 720px stage, two across from 440px; mine gets the selection ring */
 .om-ver { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-3); grid-template-columns: minmax(0, 1fr); }
@@ -324,28 +330,12 @@ CSS = r"""
 .om-ver__l { margin: 0; padding-top: var(--space-2); border-top: 1px solid var(--color-border-subtle); display: grid; gap: 2px; font-size: var(--type-body-sm); line-height: var(--line-body-sm); color: var(--color-text-primary); }
 .om-ver__l span { font-family: var(--font-meta); font-size: var(--type-label); line-height: var(--line-label); color: var(--color-text-tertiary); }
 
-/* Focus areas: three cards across from a 768px column */
-.om-focus { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-3); grid-template-columns: minmax(0, 1fr); }
-@container (min-width: 768px) { .om-focus { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
-.om-focus__c.pm-card--outlined, .om-focus__c.pm-card--outlined:hover { padding: var(--space-5); gap: var(--space-1); cursor: default; box-shadow: inset 0 0 0 1px var(--color-border-subtle), var(--shadow-sm); }
-.om-focus__c .pm-card__title, .om-focus__c .pm-card__summary { padding-inline: 0; }
-.om-focus__k { margin: 0 0 var(--space-1); font-family: var(--font-meta); font-size: var(--type-label); line-height: var(--line-label); color: var(--color-text-tertiary); }
-
 /* The opportunity: the page's one accent-tinted statement, like Procense's North Star */
 .om-ns { margin: var(--space-2) 0; padding: var(--space-6); border-radius: var(--radius-md); background: var(--color-action-selected-bg); box-shadow: var(--shadow-sm); display: grid; gap: var(--space-3); }
 .om-ns__label { margin: 0; display: flex; align-items: center; gap: var(--space-2); font-size: var(--type-body-sm); line-height: var(--line-body-sm); font-weight: var(--weight-medium); color: var(--color-text-primary); }
 .om-ns__label .pm-icon { width: 16px; height: 16px; }
 .om-ns__text { margin: 0; font-size: var(--type-h3); line-height: var(--line-h3); font-weight: var(--weight-medium); color: var(--color-text-primary); text-wrap: balance; }
 
-/* Autofill flow: six numbered steps, three across from 520px, six across from 900px */
-.om-flow { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-3); grid-template-columns: minmax(0, 1fr); }
-@container (min-width: 520px) { .om-flow { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
-@container (min-width: 900px) { .om-flow { grid-template-columns: repeat(6, minmax(0, 1fr)); } }
-.om-flow li { display: flex; gap: var(--space-3); align-items: flex-start; padding: var(--space-4); }
-@container (min-width: 900px) { .om-flow li { flex-direction: column; } }
-.om-flow__n { flex: none; width: 24px; height: 24px; display: grid; place-items: center; border-radius: 50%; background: var(--color-action-primary); color: var(--color-text-on-accent); font-size: var(--type-label); line-height: 1; font-variant-numeric: tabular-nums; }
-.om-flow__t { margin: 0; font-size: var(--type-body-sm); line-height: var(--line-body-sm); font-weight: var(--weight-medium); color: var(--color-text-primary); }
-.om-flow__d { margin: 0; font-size: var(--type-body-sm); line-height: var(--line-body-sm); color: var(--color-text-secondary); }
 
 /* v3 vs my design: two screens, then one row per area (side by side from 768px) */
 .om-cmp { container-type: inline-size; display: grid; gap: var(--space-5); padding: var(--space-5); }
@@ -374,11 +364,6 @@ CSS = r"""
 .om-ver__v { position: relative; }
 .om-ver__me { position: absolute; top: 0; right: var(--space-3); transform: translateY(-50%); margin: 0; background: var(--color-bg-elevated); box-shadow: inset 0 0 0 1px var(--color-action-primary), var(--shadow-xs); }
 .om-stage:has(.om-ver) { padding-top: var(--space-6); }
-/* Phases: short question and tags, with arrows between from 640px */
-.om-proc__d { margin: 0; font-size: var(--type-body-sm); line-height: var(--line-body-sm); color: var(--color-text-secondary); }
-.om-proc__arrow { display: none; color: var(--color-text-tertiary); align-self: center; justify-self: center; }
-.om-proc__arrow .pm-icon { width: 20px; height: 20px; }
-@container (min-width: 640px) { .om-proc { grid-template-columns: minmax(0, 1fr) 24px minmax(0, 1fr) 24px minmax(0, 1fr); gap: var(--space-2); } .om-proc__arrow { display: block; } }
 /* Findings: the source as a badge, top right of each finding */
 .om-fd__h { display: flex; align-items: flex-start; justify-content: space-between; gap: var(--space-3); }
 .om-fd__h .pm-badge { flex: none; margin-top: 1px; }
@@ -397,9 +382,28 @@ CSS = r"""
   .om-sub__grid { grid-template-columns: minmax(0, 3fr) minmax(0, 2fr); gap: var(--space-8); }
   .om-sub__copy { position: sticky; top: var(--space-6); }
 }
+/* Flow: Procense's stepper on this page's stage; the design decision box is neutral (Procense's risk box is a warning) */
+.om-stage:has(.pr-flow) { container-type: inline-size; padding: var(--space-6) var(--space-5) var(--space-5); }
+.pr-flow__risk.om-dec { background: var(--color-bg-surface); box-shadow: inset 0 0 0 1px var(--color-border-subtle); }
+.om-dec .pr-flow__rl { color: var(--color-text-secondary); }
+.om-dec .pr-flow__rl .pm-icon { width: 16px; height: 16px; flex: none; }
+.pr-note__t { margin: 0; font-size: var(--type-body-md); line-height: var(--line-body-md); font-weight: var(--weight-medium); color: var(--color-text-primary); }
+.pr-note__d { margin: var(--space-1) 0 0; font-size: var(--type-body-sm); line-height: var(--line-body-sm); color: var(--color-text-secondary); }
+/* The three gaps: badges on the v3 screen, plain numbered notes beside it (stacked below a 640px stage) */
+.om-gap { container-type: inline-size; padding: var(--space-5); }
+.om-gap__grid { display: grid; gap: var(--space-5); grid-template-columns: minmax(0, 1fr); align-items: center; }
+@container (min-width: 640px) { .om-gap__grid { grid-template-columns: minmax(0, 3fr) minmax(0, 2fr); gap: var(--space-6); } }
+.om-gap__img { position: relative; }
+.om-pin { position: absolute; transform: translate(-50%, -50%); box-shadow: 0 0 0 2px var(--paper), 0 1px 3px rgb(11 18 32 / 28%); }
+.om-gap__notes { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-5); }
+.om-gap__notes li { display: grid; grid-template-columns: 24px minmax(0, 1fr); gap: var(--space-3); align-items: start; }
+.om-gap__notes h4 { margin: 0; font-size: var(--type-body-md); line-height: var(--line-body-md); font-weight: var(--weight-medium); letter-spacing: 0; color: var(--color-text-primary); }
+.om-gap__notes p { margin: 0; font-size: var(--type-body-sm); line-height: var(--line-body-sm); color: var(--color-text-secondary); }
+.om-gap__notes .om-gap__k { font-family: var(--font-meta); font-size: var(--type-label); line-height: var(--line-label); color: var(--color-text-tertiary); margin-bottom: 2px; }
 """
 
-OMNI = dict(page_title='OmniSynkAI Case Study', out='omnisynkai/index.html', sections=SECTIONS, body=BODY, header=HEADER, tldr=TLDR, css=IG_CSS + CSS)
+OMNI = dict(page_title='OmniSynkAI Case Study', out='omnisynkai/index.html', sections=SECTIONS, body=BODY, header=HEADER, tldr=TLDR,
+            css=IG_CSS + FLOW_CSS + MK_CSS + CSS, js=FLOW_JS)
 
 if __name__ == '__main__':
     print(len(C.render(OMNI)))
