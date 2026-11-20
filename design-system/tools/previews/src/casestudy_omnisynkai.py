@@ -151,7 +151,7 @@ BODY = ''.join([
 
     section('role', 'My role', 'I joined for the version that would launch.',
         lede('By the time I joined, the team had already explored three versions of the listing flow. Each one taught us something, and the last left three problems for the launch version to solve.')
-        + framed(versions(), 'How the listing flow evolved. Earlier versions by the design team; I worked on v4 with the lead designer.')
+        + framed(versions(), 'How the listing flow evolved. Earlier versions by the design team; I joined for v4.')
         + '<h3 class="cs-h3">Three open problems became my focus.</h3>'
         + lede('Usability feedback on the earlier versions pointed to the same three gaps, each a question I set out to answer.')
         + focus()
@@ -183,7 +183,7 @@ BODY = ''.join([
                shot('retoned', 'After a change, only the new tags are highlighted.'))),
 
     section('control', 'Control', 'A feedback loop that fits what the AI can do.',
-        lede('v3 put feedback on every suggestion: browse versions, thumbs up or down, regenerate. It was more than our AI model could reliably support, and more than sellers needed on every field. The lead designer and I reworked feedback around three actions sellers actually want, and I gathered them under one More options menu in the title bar, where they’re always in reach.')
+        lede('v3 put feedback on every suggestion: browse versions, thumbs up or down, regenerate. It was more than our AI model could reliably support, and more than sellers needed on every field. We reworked feedback around three actions sellers actually want, and I gathered them under one More options menu in the title bar, where they’re always in reach.')
         + items([('Regenerate', 'Not quite right? Ask the AI for a new draft.'),
                  ('Change tone', 'Pick from seven tones, from formal to playful, to match the seller’s brand voice.'),
                  ('Clear fields', 'Start over by hand, with a confirmation first, since it can’t be undone.')], grid=True)
@@ -192,7 +192,7 @@ BODY = ''.join([
         + shot('clear', 'Clearing autofilled content asks for confirmation first.')),
 
     section('publish', 'Publishing', 'One listing, published everywhere.',
-        lede('Autofill ends in the team’s publishing flow: sellers pick the marketplaces to list on, preview how the listing will look on each (designed by the lead designer), and post to all of them at once.')
+        lede('Autofill ends in the team’s publishing flow: sellers pick the marketplaces to list on, preview how the listing will look on each, and post to all of them at once.')
         + framed(flow(), 'The full autofill flow, from two required fields to a published listing.')
         + pair(shot('platforms', 'Choose the marketplaces to list on.'),
                shot('confirm', 'A last check, with a preview, before posting.'))),
