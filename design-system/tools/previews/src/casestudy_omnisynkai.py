@@ -108,10 +108,7 @@ BODY = ''.join([
     section('overview', 'Overview', 'AI autofill turned inventory listing from data entry into a quick review.',
         lede('OmniSynkAI is a B2B SaaS platform that helps e-commerce sellers list and manage inventory across marketplaces. Sellers create every listing on its Inventory Listing page, filling in product-specific fields by hand, one product and one platform at a time.',
              'As a product design intern, I designed AI autofill for that page, end to end and ahead of the MVP launch. Sellers now enter a title and a category, and AI drafts the rest: description, media, brand and tags. They review what it wrote, refine it with regenerate, tone and clear controls, then publish to every platform they sell on from one flow.')
-        + shot('filled', 'A listing drafted by AI autofill. Everything AI wrote is highlighted in purple for the seller to review.')
-        + '<h3 class="cs-h3">I worked in three phases.</h3>'
-        + lede('Each phase answered one question, and each answer shaped the next.')
-        + framed(process(), 'Discover, conceptualize, design: the question each phase answered and what came out of it.')),
+        + shot('filled', 'A listing drafted by AI autofill. Everything AI wrote is highlighted in purple for the seller to review.')),
 
     section('problem', 'The problem', 'Listing by hand was slow, error-prone and hard to find in search.',
         lede('Sellers spent too much time entering product-specific fields for every item they listed. The more they listed, the more errors and inconsistencies crept in, and listings written in a hurry rarely did well in search.')
@@ -121,7 +118,10 @@ BODY = ''.join([
         + '<div class="cs-pair">'
         + panel('For sellers', '<p>Listings that are faster to create and easier to find, so they can grow with more confidence.</p>', ' pm-panel--tonal', 'p-sellers')
         + panel('For OmniSynkAI', '<p>A reason for sellers to stay: better retention, less churn and more listings that succeed.</p>', ' pm-panel--tonal', 'p-business')
-        + '</div>'),
+        + '</div>'
+        + '<h3 class="cs-h3">I worked in three phases.</h3>'
+        + lede('Each phase answered one question, and each answer shaped the next.')
+        + framed(process(), 'Discover, conceptualize, design: the question each phase answered and what came out of it.')),
 
     section('discover', '01 · Discover', 'I started with what we already knew, and what AI could really do.',
         lede('Before designing anything, I wanted to know where AI could help sellers most, and where it couldn’t. I partnered with UX research to gather past findings on seller needs and pain points and to spot the gaps, and huddled with engineers and product managers to map the AI’s strengths and its limits.')
