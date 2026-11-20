@@ -191,24 +191,35 @@ BODY = ''.join([
     section('discover', 'Research', 'I started by asking where AI could actually help.',
         lede('Before designing anything, I needed to uncover where AI could help sellers most, and how we could guide them to a listing they’re happy with.',
              'I partnered with UX research to pull the survey and interview findings and spot the gaps, and collaborated with engineers and product managers to map the AI’s constraints and feasibility. Knowing its limits early kept the design honest.',
-             'To fill the gaps, I ran desk research on how people use AI tools, and mapped a SWOT analysis of Shopify’s and Trustana’s AI listing features: Shopify’s interactive feedback loops, and Trustana’s AI enrichment for search and conversion.')
+             'To fill the gaps, I ran desk research on how people use AI tools, and mapped a SWOT analysis of two competitors’ AI listing features.')
+        + items([('Shopify', 'Interactive feedback loops let sellers react to what AI writes and steer the next version.'),
+                 ('Trustana', 'AI enrichment fills out product data to improve search and conversion.')], grid=True)
         + need('SWOT analysis of Shopify’s and Trustana’s AI listing features.', 'Your SWOT diagram for Shopify and Trustana, redrawn', '16x9')
         + '<h3 class="cs-h3">I turned five findings into five design priorities.</h3>'
         + lede('Every priority traces back to a finding, so each decision that followed had a reason behind it.')
         + findings()),
 
     section('concept', 'Concept', 'I mapped the flow before designing a screen.',
-        lede('With priorities set, I defined how autofill should work: the user flows for new and returning sellers, the interactions and triggers that start and update it, and a feedback loop for rating and tweaking what AI suggests. Three qualities guided every choice: simplicity, so sellers understand how to start at a glance; flexibility, so the experience still feels effortless within the AI’s limits; and results that get better as sellers give feedback.',
-             'The key trigger came from the data: AI needs only a title and a category to draft a listing. So I built the flow around those two fields, from the first click to a published listing.')
+        lede('With priorities set, I defined how autofill should work: the flows for new and returning sellers, the triggers that start it, and a feedback loop for refining what it writes. Three qualities guided every choice.')
+        + items([('Simplicity', 'Sellers understand how to start at a glance.'),
+                 ('Flexibility', 'The experience feels effortless, even within the AI’s limits.'),
+                 ('Better with feedback', 'Results improve as sellers react to them.')], grid=True)
+        + lede('The key trigger came from the data: AI needs only a title and a category to draft a listing. So I built the flow around those two fields, from the first click to a published listing.')
         + framed(flow(), 'The flow I designed, from two required fields to a published listing.')
         + '<h3 class="cs-h3">My first concept, and what it taught me.</h3>'
-        + lede('My first layout, built within OmniSynkAI’s design system, invited sellers to “Try listing with Autofill” from a card in the sidebar, with per-platform publishing toggles below it. Every AI-written field had its own controls to browse versions, give a thumbs up or down, and regenerate, and a message after autofill invited sellers to compare versions.')
+        + lede('I built my first layout within OmniSynkAI’s design system:')
+        + items([('A sidebar card', 'Invited sellers to “Try listing with Autofill,” with per-platform publishing toggles below it.'),
+                 ('Feedback on every field', 'Each AI-written field had controls to browse versions, rate them and regenerate.'),
+                 ('A compare message', 'After autofill, a message invited sellers to compare versions.')])
         + lede('Reviewing it against my priorities, the AI’s limits and the team’s plans, I took three lessons into the final design, one for each gap. Here’s how the launch version compares with v3.')
         + compare()),
 
     section('placement', 'Placement', 'I moved autofill to where every listing starts.',
         lede('In v3, autofill was a small link above the title, with more AI buttons elsewhere on the page; in my first concept, it sat in a sidebar card. Either way, it was apart from the fields it needed. Mapping it against the flow showed why sellers missed it: they start a listing at the top, with a title and a category, which is exactly what autofill needs.',
-             'So I moved autofill into a title bar, right beside those two fields. The sparkle button lights up once both are filled in, the bar explains the value in one line, and it stays fixed as sellers scroll, so the AI controls are always in reach. This became the entry point in the final design.')
+             'So I moved autofill into a title bar, right beside those two fields. This became the entry point in the final design.')
+        + items([('Unlocks when ready', 'The sparkle button lights up once the title and category are filled in.'),
+                 ('Explains itself', 'One line tells sellers what autofill does for them.'),
+                 ('Always in reach', 'The bar stays fixed as sellers scroll, keeping the AI controls close.')], grid=True)
         + pair(shot('empty', 'Autofill sits beside the two fields it needs, and unlocks once both are filled in.'),
                shot('filling', 'A short dialog shows the AI at work, and lets sellers cancel.'))),
 
