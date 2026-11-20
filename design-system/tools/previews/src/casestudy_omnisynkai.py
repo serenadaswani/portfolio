@@ -126,6 +126,29 @@ def flow():
         f'<li><span class="om-flow__n" aria-hidden="true">{i + 1}</span><div><p class="om-flow__t">{t}</p><p class="om-flow__d">{d}</p></div></li>'
         for i, (t, d) in enumerate(FLOW)) + '</ol>')
 
+
+# v3 (the team's listing page before I joined; image from the lead designer's published case study) against the final design
+CHANGES = [  # area, v3, my design
+    ('Placement', 'A small Autofill link above the title, a sparkle in the description toolbar and an AI Generator button under the images: AI in three places.',
+     'One entry point in a title bar, beside the two fields autofill needs, fixed as sellers scroll.'),
+    ('Clarity', 'AI-written text looked the same as anything the seller typed.',
+     'Purple highlights on everything AI writes, and a status that invites edits.'),
+    ('Control', 'Feedback on each suggestion, spread across the page.',
+     'Regenerate, change tone and clear fields, together under More options.'),
+]
+def compare():
+    n = _num()
+    imgs = ('<div class="om-cmp__imgs">'
+            '<div><p class="om-cmp__k">Before: v3</p><img class="om-shot" src="assets/screens/00-v3-listing-page.jpg" width="1600" height="1139" loading="lazy" '
+            'alt="The v3 listing page: tabs for general information, product details, pricing, shipping and platform integrations; a small Autofill link above the listing title, a sparkle in the description toolbar, and an AI Generator button under the product photos."></div>'
+            f'<div><p class="om-cmp__k">After: my design</p><img class="om-shot" src="assets/screens/{SHOTS["filled"][0]}" width="1600" height="1183" loading="lazy" alt="{SHOTS["filled"][1]}"></div>'
+            '</div>')
+    rows = ('<dl class="om-cmp__rows">' + ''.join(
+        f'<div class="om-cmp__row"><dt>{a}</dt><dd><span class="om-cmp__tag">v3</span>{b}</dd><dd><span class="om-cmp__tag om-cmp__tag--me">Mine</span>{c}</dd></div>'
+        for a, b, c in CHANGES) + '</dl>')
+    return (f'<figure class="pm-frame"><div class="pm-frame__stage om-stage om-cmp">{imgs}{rows}</div>'
+            + _cap(n, 'The team’s v3 listing page (left) and my design for the launch version (right): what I changed in each of my three areas.') + '</figure>')
+
 STATS_TEAM = [('60%', 'Less time to create a listing, on average'), ('20%', 'More accurate listings'),
               ('78%', 'Of testers satisfied with autofill')]
 
@@ -171,11 +194,11 @@ BODY = ''.join([
         + framed(flow(), 'The flow I designed, from two required fields to a published listing.')
         + '<h3 class="cs-h3">My first concept, and what it taught me.</h3>'
         + lede('My first layout, built within OmniSynkAI’s design system, invited sellers to “Try listing with Autofill” from a card in the sidebar, with per-platform publishing toggles below it. Every AI-written field had its own controls to browse versions, give a thumbs up or down, and regenerate, and a message after autofill invited sellers to compare versions.')
-        + need('My first concept (left) against the final design (right).', 'Your first concept export, shown against the final screen in a before/after slider', '16x10')
-        + lede('Reviewing it against my priorities, the AI’s limits and the team’s plans, I took three lessons into the final design, one for each of my questions.')),
+        + lede('Reviewing it against my priorities, the AI’s limits and the team’s plans, I took three lessons into the final design, one for each of my questions. Here’s how the result compares with the v3 page I started from.')
+        + compare()),
 
     section('placement', 'Placement', 'I moved autofill to where every listing starts.',
-        lede('In my first concept, as in the earlier versions, autofill sat in a sidebar card, apart from the fields it needed. Mapping it against the flow showed why sellers missed it: they start a listing at the top, with a title and a category, which is exactly what autofill needs.',
+        lede('In v3, autofill was a small link above the title, with more AI buttons elsewhere on the page; in my first concept, it sat in a sidebar card. Either way, it was apart from the fields it needed. Mapping it against the flow showed why sellers missed it: they start a listing at the top, with a title and a category, which is exactly what autofill needs.',
              'So I moved autofill into a title bar, right beside those two fields. The sparkle button lights up once both are filled in, the bar explains the value in one line, and it stays fixed as sellers scroll, so the AI controls are always in reach. This became the entry point in the final design.')
         + pair(shot('empty', 'Autofill sits beside the two fields it needs, and unlocks once both are filled in.'),
                shot('filling', 'A short dialog shows the AI at work, and lets sellers cancel.'))),
@@ -297,6 +320,20 @@ CSS = r"""
 .om-flow__n { flex: none; width: 24px; height: 24px; display: grid; place-items: center; border-radius: 50%; background: var(--color-action-primary); color: var(--color-text-on-accent); font-size: var(--type-label); line-height: 1; font-variant-numeric: tabular-nums; }
 .om-flow__t { margin: 0; font-size: var(--type-body-sm); line-height: var(--line-body-sm); font-weight: var(--weight-medium); color: var(--color-text-primary); }
 .om-flow__d { margin: 0; font-size: var(--type-body-sm); line-height: var(--line-body-sm); color: var(--color-text-secondary); }
+
+/* v3 vs my design: two screens, then one row per area (side by side from 768px) */
+.om-cmp { container-type: inline-size; display: grid; gap: var(--space-5); padding: var(--space-5); }
+.om-cmp__imgs { display: grid; gap: var(--space-4); grid-template-columns: minmax(0, 1fr); align-items: start; }
+@container (min-width: 640px) { .om-cmp__imgs { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.om-cmp__k { margin: 0 0 var(--space-2); font-size: var(--type-body-sm); line-height: var(--line-body-sm); font-weight: var(--weight-medium); color: var(--color-text-primary); }
+.om-cmp__rows { margin: 0; display: grid; gap: var(--space-3); }
+.om-cmp__row { padding: var(--space-4); border-radius: var(--radius-md); background: var(--color-bg-elevated); box-shadow: inset 0 0 0 1px var(--color-border-subtle), var(--shadow-xs); display: grid; gap: var(--space-2); }
+@container (min-width: 640px) { .om-cmp__row { grid-template-columns: 7rem minmax(0, 1fr) minmax(0, 1fr); gap: var(--space-4); } }
+.om-cmp__row dt { font-size: var(--type-body-sm); line-height: var(--line-body-sm); font-weight: var(--weight-medium); color: var(--color-text-primary); }
+.om-cmp__row dd { margin: 0; display: grid; gap: var(--space-1); align-content: start; font-size: var(--type-body-sm); line-height: var(--line-body-sm); color: var(--color-text-secondary); }
+.om-cmp__row dd:last-child { color: var(--color-text-primary); }
+.om-cmp__tag { justify-self: start; font-family: var(--font-meta); font-size: var(--type-label); line-height: var(--line-label); color: var(--color-text-tertiary); }
+.om-cmp__tag--me { color: var(--color-text-link); font-weight: var(--weight-medium); }
 """
 
 OMNI = dict(page_title='OmniSynkAI Case Study', out='omnisynkai/index.html', sections=SECTIONS, body=BODY, header=HEADER, tldr=TLDR, css=IG_CSS + CSS)
