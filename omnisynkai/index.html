@@ -1539,125 +1539,69 @@ body { margin: 0; font-family: var(--font-sans); background: var(--color-bg-canv
   animation: om-land calc(var(--motion-duration-base, 200ms) * 4) ease-out calc(var(--i) * var(--seg) + 120ms) 1; }
 @keyframes om-land { 0% { opacity: .9; transform: scale(1); } 100% { opacity: 0; transform: scale(2.2); } }
 
-/* ===== OmniSynkAI hero (omnisynkai_hero.py): one-click AI autofill, close up, looped ===== */
+/* ===== OmniSynkAI hero (omnisynkai_hero.py): one-click AI autofill on the shipped listing page ===== */
 .oh-wrap { position: relative; }
-.oh { --u: 1cqw; container-type: inline-size; background: radial-gradient(90% 120% at 50% 110%, rgb(255 255 255 / 22%) 0%, rgb(255 255 255 / 0%) 60%), linear-gradient(160deg, #4745B0 0%, #5B43E8 40%, #755CFB 75%, #9B94E0 100%); }
-@container (max-width: 599px) { .oh { --u: 1.18cqw; } }
+.oh { container-type: inline-size; background: radial-gradient(90% 120% at 50% 110%, rgb(255 255 255 / 22%) 0%, rgb(255 255 255 / 0%) 60%), linear-gradient(160deg, #4745B0 0%, #5B43E8 40%, #755CFB 75%, #9B94E0 100%); }
 .oh-stage { position: absolute; inset: 0; display: grid; place-items: center; }
-.oh-app { position: relative; width: calc(78 * var(--u)); height: calc(35.5 * var(--u)); border-radius: calc(1.6 * var(--u)); background: #F5F5F7; box-shadow: 0 calc(2 * var(--u)) calc(5 * var(--u)) rgb(20 12 70 / 35%), 0 0 0 1px rgb(255 255 255 / 30%);
-  font-family: var(--font-sans); color: #1F2430; font-size: calc(1.05 * var(--u)); line-height: 1.3; }
-.oh-app * { box-sizing: border-box; }
-
-/* Title bar */
-.oh-bar { position: absolute; left: calc(1.5 * var(--u)); top: calc(1.5 * var(--u)); width: calc(75 * var(--u)); height: calc(7.6 * var(--u)); border-radius: calc(1 * var(--u)); background: #FFFFFF; box-shadow: 0 0 0 1px #E3E6EC; }
-.oh-status { position: absolute; left: calc(1.6 * var(--u)); top: 50%; width: calc(13.4 * var(--u)); transform: translateY(-50%); height: calc(4.4 * var(--u)); }
-.oh-st { position: absolute; inset: 0; margin: 0; display: grid; align-content: center; gap: calc(.3 * var(--u)); }
-.oh-st b { display: flex; align-items: center; gap: calc(.5 * var(--u)); font-weight: 500; font-size: calc(1.15 * var(--u)); }
-.oh-st span { font-size: calc(.85 * var(--u)); color: #6B7280; line-height: 1.25; }
-.oh-st--idle, .oh-st--busy { opacity: 0; }
-.oh-st .oh-spark { width: calc(1.4 * var(--u)); height: calc(1.4 * var(--u)); }
-.oh-div { position: absolute; top: calc(1.5 * var(--u)); bottom: calc(1.5 * var(--u)); width: 1px; background: #E3E6EC; }
-.oh-div--1 { left: calc(15.8 * var(--u)); } .oh-div--2 { left: calc(66.2 * var(--u)); }
-.oh-field { position: absolute; top: calc(1.15 * var(--u)); width: calc(18 * var(--u)); display: grid; gap: calc(.45 * var(--u)); }
-.oh-field--title { left: calc(17.2 * var(--u)); } .oh-field--cat { left: calc(36.6 * var(--u)); }
-.oh-lbl { font-size: calc(.85 * var(--u)); color: #4B5563; }
-.oh-in { position: relative; display: flex; align-items: center; gap: calc(.6 * var(--u)); height: calc(3.5 * var(--u)); padding: 0 calc(1 * var(--u)); border-radius: calc(.6 * var(--u)); background: #FFFFFF; box-shadow: inset 0 0 0 1px #CBD2DC; overflow: hidden; }
-.oh-val { font-size: calc(1.05 * var(--u)); white-space: nowrap; }
-.oh-chev { width: calc(1.3 * var(--u)); height: calc(1.3 * var(--u)); margin-left: auto; color: #4B5563; flex: none; }
-.oh-ai { position: absolute; left: calc(60.2 * var(--u)); top: 50%; width: calc(3.6 * var(--u)); height: calc(3.6 * var(--u)); transform: translateY(-50%); display: grid; place-items: center; opacity: 0; }
-.oh-ai .oh-spark { width: calc(2.6 * var(--u)); height: calc(2.6 * var(--u)); position: relative; z-index: 1; }
-.oh-pulse, .oh-ripple { position: absolute; inset: 0; border-radius: 50%; }
-.oh-pulse { box-shadow: 0 0 0 calc(.3 * var(--u)) rgb(124 92 250 / 45%); opacity: 0; }
-.oh-ripple { background: rgb(124 92 250 / 30%); opacity: 0; }
-.oh-more { position: absolute; left: calc(56.6 * var(--u)); top: 50%; transform: translateY(-50%); display: flex; align-items: center; gap: calc(.4 * var(--u)); font-size: calc(1.05 * var(--u)); white-space: nowrap; }
-.oh-more .oh-chev { margin: 0; }
-.oh-pub { position: absolute; left: calc(67.6 * var(--u)); top: 50%; width: calc(6.4 * var(--u)); height: calc(3.4 * var(--u)); transform: translateY(-50%); display: grid; place-items: center; border-radius: calc(.6 * var(--u)); background: #4461DC; color: #FFFFFF; font-size: calc(.85 * var(--u)); font-weight: 500; white-space: nowrap; }
-
-/* Cards */
-.oh-card { position: absolute; border-radius: calc(1 * var(--u)); background: #FFFFFF; box-shadow: 0 0 0 1px #E3E6EC; overflow: hidden; }
-.oh-h { font-size: calc(.95 * var(--u)); color: #374151; }
-.oh-desc { left: calc(1.5 * var(--u)); top: calc(10.6 * var(--u)); width: calc(45.5 * var(--u)); height: calc(12.6 * var(--u)); padding: calc(1 * var(--u)) calc(1.4 * var(--u)); }
-.oh-tools { display: block; height: calc(.5 * var(--u)); margin: calc(.8 * var(--u)) 0 calc(.9 * var(--u)); border-radius: calc(.25 * var(--u)); background: repeating-linear-gradient(90deg, #D9DDE4 0 calc(1.3 * var(--u)), transparent calc(1.3 * var(--u)) calc(2.4 * var(--u))); width: calc(22 * var(--u)); }
-.oh-lines { display: grid; gap: calc(.35 * var(--u)); }
-.oh-line { display: block; white-space: nowrap; font-size: calc(.98 * var(--u)); color: #1F2430; }
-.oh-media { left: calc(48.6 * var(--u)); top: calc(10.6 * var(--u)); width: calc(27.9 * var(--u)); height: calc(23.4 * var(--u)); padding: calc(1 * var(--u)) calc(1.2 * var(--u)); }
-.oh-grid { position: relative; margin-top: calc(1 * var(--u)); height: calc(17 * var(--u)); }
-.oh-slot, .oh-ph { position: absolute; border-radius: calc(.5 * var(--u)); }
-.oh-slot { border: 1px dashed #B9BFCC; }
-.oh-ph { background-repeat: no-repeat; }
-.oh-slot--1, .oh-ph--1 { left: 0; top: 0; width: calc(12.4 * var(--u)); height: calc(12.4 * var(--u)); }
-.oh-slot--2, .oh-ph--2 { left: calc(13.2 * var(--u)); top: 0; width: calc(6 * var(--u)); height: calc(6 * var(--u)); }
-.oh-slot--3, .oh-ph--3 { left: calc(19.8 * var(--u)); top: 0; width: calc(6 * var(--u)); height: calc(6 * var(--u)); }
-.oh-slot--4, .oh-ph--4 { left: calc(13.2 * var(--u)); top: calc(6.4 * var(--u)); width: calc(6 * var(--u)); height: calc(6 * var(--u)); }
-.oh-slot--5, .oh-ph--5 { left: calc(19.8 * var(--u)); top: calc(6.4 * var(--u)); width: calc(6 * var(--u)); height: calc(6 * var(--u)); }
-.oh-meta { left: calc(1.5 * var(--u)); top: calc(24.6 * var(--u)); width: calc(45.5 * var(--u)); height: calc(9.4 * var(--u)); padding: calc(1 * var(--u)) calc(1.4 * var(--u)); display: grid; grid-template-columns: 1fr 1fr; gap: calc(1.4 * var(--u)); }
-.oh-mf { display: grid; gap: calc(.5 * var(--u)); align-content: start; }
-.oh-chip { display: inline-block; padding: calc(.2 * var(--u)) calc(.5 * var(--u)); border-radius: calc(.4 * var(--u)); background: #EDE7FB; color: #6D3FD0; font-size: calc(.95 * var(--u)); white-space: nowrap; box-shadow: 0 0 0 0 rgb(124 92 250 / 0%); }
-.oh-shimmer { position: absolute; left: calc(1.5 * var(--u)); top: calc(10.6 * var(--u)); width: calc(75 * var(--u)); height: calc(23.4 * var(--u)); border-radius: calc(1 * var(--u)); pointer-events: none; opacity: 0;
-  background: linear-gradient(100deg, rgb(167 139 250 / 0%) 30%, rgb(167 139 250 / 30%) 50%, rgb(167 139 250 / 0%) 70%); background-size: 250% 100%; background-position: 120% 0; }
-.oh-cursor { position: absolute; left: calc(70 * var(--u)); top: calc(30 * var(--u)); width: calc(2.6 * var(--u)); height: calc(2.6 * var(--u)); opacity: 0; filter: drop-shadow(0 calc(.2 * var(--u)) calc(.4 * var(--u)) rgb(0 0 0 / 25%)); transform-origin: 15% 10%; pointer-events: none; }
+.oh-app { position: relative; width: 54cqw; aspect-ratio: 1000 / 740; border-radius: .6cqw; overflow: hidden; background: #F5F5F7; isolation: isolate;
+  box-shadow: 0 2cqw 5cqw rgb(20 12 70 / 35%), 0 0 0 1px rgb(255 255 255 / 30%); }
+@container (max-width: 599px) { .oh-app { width: 70cqw; border-radius: .9cqw; } }
+.oh-scr { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.oh-c { position: absolute; background-repeat: no-repeat; }
+.oh-s2 { opacity: 0; }
+.oh-final { opacity: 1; }
+/* skeletons: neutral grey with a soft sweep */
+.oh-sks { position: absolute; inset: 0; opacity: 0; }
+.oh-sk { position: absolute; border-radius: .25cqw; background: linear-gradient(90deg, #E6E8EC 0%, #F1F2F5 45%, #E6E8EC 90%); background-size: 300% 100%; }
+.oh-sk--m { border-radius: .45cqw; }
+.oh-mbg { position: absolute; background: #FFFFFF; opacity: 0; }
+.oh-cursor { position: absolute; left: 92%; top: 82%; width: 3cqw; height: 3cqw; opacity: 0; filter: drop-shadow(0 .2cqw .4cqw rgb(0 0 0 / 25%)); pointer-events: none; }
 
 /* Pause / Play, outside the image role */
 .oh-toggle { position: absolute; right: var(--space-3); bottom: var(--space-3); z-index: 2; }
 .oh-toggle[hidden], .oh-ic[hidden] { display: none; }
 .oh-ic { display: contents; }
 
-/* ---- The loop (10s). The rules above are the final frame; with motion, every layer runs from its 0% frame,
-   held paused until the hero is ready and in view. ---- */
-.oh--anim * { animation-duration: 10s; animation-iteration-count: infinite; animation-fill-mode: both; animation-timing-function: ease-in-out; animation-play-state: paused; }
-.oh--anim.is-play:not(.is-paused) * { animation-play-state: running; }
-.oh--anim .oh-val--title { animation-name: oh-title; }
-.oh--anim .oh-val--cat { animation-name: oh-cat; }
-.oh--anim .oh-st--idle { animation-name: oh-idle; }
-.oh--anim .oh-st--busy { animation-name: oh-busy; }
-.oh--anim .oh-st--done { animation-name: oh-done; }
-.oh--anim .oh-ai { animation-name: oh-ai; }
-.oh--anim .oh-ai .oh-spark { animation-name: oh-spin; }
-.oh--anim .oh-pulse { animation-name: oh-pulse; }
-.oh--anim .oh-ripple { animation-name: oh-ripple; }
-.oh--anim .oh-more { animation-name: oh-more; }
-.oh--anim .oh-pub { animation-name: oh-pub; }
+/* ---- The loop (10s). The rules above are the final frame (03 on top); with motion, the overlays build it, held
+   paused until the hero is ready and in view. ---- */
+.oh--anim .oh-final { opacity: 0; }
+.oh--anim .oh-app * { animation-duration: 10s; animation-iteration-count: infinite; animation-fill-mode: both; animation-timing-function: ease-in-out; animation-play-state: paused; }
+.oh--anim.is-play:not(.is-paused) .oh-app * { animation-play-state: running; }
+.oh--anim .oh-type { animation-name: oh-type; }
+.oh--anim .oh-cat { animation-name: oh-cat; }
 .oh--anim .oh-cursor { animation-name: oh-cursor; }
-.oh--anim .oh-shimmer { animation-name: oh-shimmer; }
-.oh--anim .oh-line { animation-name: oh-line; }
-.oh--anim .oh-line--2 { animation-name: oh-line2; } .oh--anim .oh-line--3 { animation-name: oh-line3; } .oh--anim .oh-line--4 { animation-name: oh-line4; }
-.oh--anim .oh-ph { animation-name: oh-ph1; }
-.oh--anim .oh-ph--2 { animation-name: oh-ph2; } .oh--anim .oh-ph--3 { animation-name: oh-ph3; } .oh--anim .oh-ph--4 { animation-name: oh-ph4; } .oh--anim .oh-ph--5 { animation-name: oh-ph5; }
-.oh--anim .oh-slot { animation-name: oh-slot; }
-.oh--anim .oh-chip { animation-name: oh-chip1; }
-.oh--anim .oh-chip--2 { animation-name: oh-chip2; } .oh--anim .oh-chip--3 { animation-name: oh-chip3; }
+.oh--anim .oh-s2 { animation-name: oh-s2; }
+.oh--anim .oh-sks { animation-name: oh-sks; }
+.oh--anim .oh-sk { animation: oh-sweep 1.4s linear infinite; }
+.oh--anim .oh-mbg, .oh--anim .oh-slots { animation-name: oh-mbg; }
+.oh--anim .oh-d--1 { animation-name: oh-d1; } .oh--anim .oh-d--2 { animation-name: oh-d2; } .oh--anim .oh-d--3 { animation-name: oh-d3; } .oh--anim .oh-d--4 { animation-name: oh-d4; }
+.oh--anim .oh-p { animation-name: oh-p; }
+.oh--anim .oh-p--2, .oh--anim .oh-p--6 { animation-name: oh-p2; } .oh--anim .oh-p--3, .oh--anim .oh-p--7 { animation-name: oh-p3; }
+.oh--anim .oh-p--4, .oh--anim .oh-p--8 { animation-name: oh-p4; } .oh--anim .oh-p--5, .oh--anim .oh-p--9 { animation-name: oh-p5; }
+.oh--anim .oh-k { animation-name: oh-k; } .oh--anim .oh-k--2 { animation-name: oh-k2; } .oh--anim .oh-k--3 { animation-name: oh-k3; }
+.oh--anim .oh-tb { animation-name: oh-tb; }
 
-/* typing and the empty bar */
-@keyframes oh-title { 0%, 5% { clip-path: inset(-40% 100% -40% 0); animation-timing-function: steps(15, end); } 17%, 94% { clip-path: inset(-40% 0 -40% 0); opacity: 1; } 97%, 100% { clip-path: inset(-40% 0 -40% 0); opacity: 0; } }
-@keyframes oh-cat { 0%, 18% { opacity: 0; } 21%, 94% { opacity: 1; } 97%, 100% { opacity: 0; } }
-@keyframes oh-idle { 0%, 29% { opacity: 1; } 32%, 96% { opacity: 0; } 100% { opacity: 1; } }
-@keyframes oh-busy { 0%, 30% { opacity: 0; } 33%, 46% { opacity: 1; } 49%, 100% { opacity: 0; } }
-@keyframes oh-done { 0%, 47% { opacity: 0; } 50%, 94% { opacity: 1; } 97%, 100% { opacity: 0; } }
-/* the AI autofill icon: appears with the fields filled, pulses, is clicked, spins while it works, then gives way to More options */
-@keyframes oh-ai { 0%, 19% { opacity: .35; } 22% { opacity: 1; } 47% { opacity: 1; } 50%, 96% { opacity: 0; } 100% { opacity: .35; } }
-@keyframes oh-spin { 0%, 31% { transform: rotate(0) scale(1); } 29.5% { transform: scale(1); } 30.5% { transform: scale(.8); } 46% { transform: rotate(540deg) scale(1); } 100% { transform: rotate(540deg) scale(1); } }
-@keyframes oh-pulse { 0%, 22% { opacity: 0; transform: scale(1); } 24% { opacity: 1; transform: scale(1); } 27% { opacity: 0; transform: scale(1.7); } 27.1% { opacity: 1; transform: scale(1); } 30% { opacity: 0; transform: scale(1.7); } 100% { opacity: 0; } }
-@keyframes oh-ripple { 0%, 30.4% { opacity: 0; transform: scale(.4); } 30.6% { opacity: 1; transform: scale(.5); } 36%, 100% { opacity: 0; transform: scale(2.6); } }
-@keyframes oh-cursor { 0%, 21% { opacity: 0; left: calc(70 * var(--u)); top: calc(30 * var(--u)); transform: scale(1); } 23% { opacity: 1; } 29.5% { left: calc(63.1 * var(--u)); top: calc(5 * var(--u)); transform: scale(1); }
-  30.5% { transform: scale(.82); } 31.5% { opacity: 1; transform: scale(1); left: calc(63.1 * var(--u)); top: calc(5 * var(--u)); } 38%, 100% { opacity: 0; left: calc(64 * var(--u)); top: calc(12 * var(--u)); } }
-@keyframes oh-more { 0%, 48% { opacity: 0; transform: translateY(-50%) translateX(calc(1 * var(--u))); } 51%, 94% { opacity: 1; transform: translateY(-50%); } 97%, 100% { opacity: 0; transform: translateY(-50%); } }
-@keyframes oh-pub { 0%, 48% { background: #B5C0EF; } 51%, 94% { background: #4461DC; } 97%, 100% { background: #B5C0EF; } }
-/* loading: a shimmer sweeps across the empty cards */
-@keyframes oh-shimmer { 0%, 32% { opacity: 0; background-position: 120% 0; } 34% { opacity: 1; background-position: 120% 0; } 40% { background-position: -20% 0; } 40.1% { background-position: 120% 0; } 46% { opacity: 1; background-position: -20% 0; } 48%, 100% { opacity: 0; background-position: -20% 0; } }
-/* AI content arrives in a stagger: description lines write in, photos pop, chips land with a glow */
-@keyframes oh-line { 0%, 48% { clip-path: inset(-20% 100% -20% 0); } 54%, 94% { clip-path: inset(-20% 0 -20% 0); opacity: 1; } 97%, 100% { opacity: 0; clip-path: inset(-20% 0 -20% 0); } }
-@keyframes oh-line2 { 0%, 51% { clip-path: inset(-20% 100% -20% 0); } 57%, 94% { clip-path: inset(-20% 0 -20% 0); opacity: 1; } 97%, 100% { opacity: 0; clip-path: inset(-20% 0 -20% 0); } }
-@keyframes oh-line3 { 0%, 54% { clip-path: inset(-20% 100% -20% 0); } 59%, 94% { clip-path: inset(-20% 0 -20% 0); opacity: 1; } 97%, 100% { opacity: 0; clip-path: inset(-20% 0 -20% 0); } }
-@keyframes oh-line4 { 0%, 56% { clip-path: inset(-20% 100% -20% 0); } 61%, 94% { clip-path: inset(-20% 0 -20% 0); opacity: 1; } 97%, 100% { opacity: 0; clip-path: inset(-20% 0 -20% 0); } }
-@keyframes oh-ph1 { 0%, 50% { opacity: 0; transform: scale(.85); } 54%, 94% { opacity: 1; transform: scale(1); } 97%, 100% { opacity: 0; } }
-@keyframes oh-ph2 { 0%, 52% { opacity: 0; transform: scale(.8); } 56%, 94% { opacity: 1; transform: scale(1); } 97%, 100% { opacity: 0; } }
-@keyframes oh-ph3 { 0%, 54% { opacity: 0; transform: scale(.8); } 58%, 94% { opacity: 1; transform: scale(1); } 97%, 100% { opacity: 0; } }
-@keyframes oh-ph4 { 0%, 56% { opacity: 0; transform: scale(.8); } 60%, 94% { opacity: 1; transform: scale(1); } 97%, 100% { opacity: 0; } }
-@keyframes oh-ph5 { 0%, 58% { opacity: 0; transform: scale(.8); } 62%, 94% { opacity: 1; transform: scale(1); } 97%, 100% { opacity: 0; } }
-@keyframes oh-slot { 0%, 52% { opacity: 1; } 60%, 94% { opacity: 0; } 98%, 100% { opacity: 1; } }
-@keyframes oh-chip1 { 0%, 61% { opacity: 0; transform: translateY(calc(.6 * var(--u))) scale(.9); } 64% { opacity: 1; transform: none; box-shadow: 0 0 0 calc(.3 * var(--u)) rgb(124 92 250 / 45%); } 72% { box-shadow: 0 0 0 0 rgb(124 92 250 / 0%); } 94% { opacity: 1; transform: none; } 97%, 100% { opacity: 0; } }
-@keyframes oh-chip2 { 0%, 63% { opacity: 0; transform: translateY(calc(.6 * var(--u))) scale(.9); } 66% { opacity: 1; transform: none; box-shadow: 0 0 0 calc(.3 * var(--u)) rgb(124 92 250 / 45%); } 74% { box-shadow: 0 0 0 0 rgb(124 92 250 / 0%); } 94% { opacity: 1; transform: none; } 97%, 100% { opacity: 0; } }
-@keyframes oh-chip3 { 0%, 65% { opacity: 0; transform: translateY(calc(.6 * var(--u))) scale(.9); } 68% { opacity: 1; transform: none; box-shadow: 0 0 0 calc(.3 * var(--u)) rgb(124 92 250 / 45%); } 76% { box-shadow: 0 0 0 0 rgb(124 92 250 / 0%); } 94% { opacity: 1; transform: none; } 97%, 100% { opacity: 0; } }
+@keyframes oh-type { 0%, 5% { opacity: 1; clip-path: inset(0 100% 0 0); animation-timing-function: steps(15, end); } 16%, 95% { opacity: 1; clip-path: inset(0 0 0 0); } 98%, 100% { opacity: 0; clip-path: inset(0 0 0 0); } }
+@keyframes oh-cat { 0%, 17% { opacity: 0; } 19%, 95% { opacity: 1; } 98%, 100% { opacity: 0; } }
+/* the cursor moves to the AI autofill icon and clicks; the click just opens the loading scrim */
+@keyframes oh-cursor { 0%, 20% { opacity: 0; left: 92%; top: 82%; } 22% { opacity: 1; left: 90%; top: 74%; } 28.5%, 30% { opacity: 1; left: 81.2%; top: 19.6%; } 32%, 100% { opacity: 0; left: 81.2%; top: 19.6%; } }
+@keyframes oh-s2 { 0%, 30% { opacity: 0; } 31%, 43% { opacity: 1; } 45%, 100% { opacity: 0; } }
+@keyframes oh-sks { 0%, 44% { opacity: 0; } 46%, 53% { opacity: 1; } 62%, 100% { opacity: 0; } }
+@keyframes oh-sweep { from { background-position: 100% 0; } to { background-position: -50% 0; } }
+@keyframes oh-mbg { 0%, 44% { opacity: 0; } 46%, 95% { opacity: 1; } 98%, 100% { opacity: 0; } }
+@keyframes oh-d1 { 0%, 53% { clip-path: inset(0 100% 0 0); opacity: 1; } 58%, 95% { clip-path: inset(0 0 0 0); opacity: 1; } 98%, 100% { clip-path: inset(0 0 0 0); opacity: 0; } }
+@keyframes oh-d2 { 0%, 55% { clip-path: inset(0 100% 0 0); opacity: 1; } 59.5%, 95% { clip-path: inset(0 0 0 0); opacity: 1; } 98%, 100% { clip-path: inset(0 0 0 0); opacity: 0; } }
+@keyframes oh-d3 { 0%, 57% { clip-path: inset(0 100% 0 0); opacity: 1; } 61%, 95% { clip-path: inset(0 0 0 0); opacity: 1; } 98%, 100% { clip-path: inset(0 0 0 0); opacity: 0; } }
+@keyframes oh-d4 { 0%, 59% { clip-path: inset(0 100% 0 0); opacity: 1; } 63.5%, 95% { clip-path: inset(0 0 0 0); opacity: 1; } 98%, 100% { clip-path: inset(0 0 0 0); opacity: 0; } }
+@keyframes oh-p { 0%, 54% { opacity: 0; } 57%, 95% { opacity: 1; } 98%, 100% { opacity: 0; } }
+@keyframes oh-p2 { 0%, 56% { opacity: 0; } 59%, 95% { opacity: 1; } 98%, 100% { opacity: 0; } }
+@keyframes oh-p3 { 0%, 58% { opacity: 0; } 61%, 95% { opacity: 1; } 98%, 100% { opacity: 0; } }
+@keyframes oh-p4 { 0%, 60% { opacity: 0; } 63%, 95% { opacity: 1; } 98%, 100% { opacity: 0; } }
+@keyframes oh-p5 { 0%, 62% { opacity: 0; } 65%, 95% { opacity: 1; } 98%, 100% { opacity: 0; } }
+@keyframes oh-k { 0%, 62% { opacity: 0; } 65%, 95% { opacity: 1; } 98%, 100% { opacity: 0; } }
+@keyframes oh-k2 { 0%, 64% { opacity: 0; } 67%, 95% { opacity: 1; } 98%, 100% { opacity: 0; } }
+@keyframes oh-k3 { 0%, 65.5% { opacity: 0; } 68.5%, 95% { opacity: 1; } 98%, 100% { opacity: 0; } }
+@keyframes oh-tb { 0%, 67% { opacity: 0; } 70%, 95% { opacity: 1; } 98%, 100% { opacity: 0; } }
 
 </style>
 
@@ -1671,7 +1615,7 @@ body { margin: 0; font-family: var(--font-sans); background: var(--color-bg-canv
     </span>
   </div>
 
-  <div class="cs-hero-well oh-wrap"><div class="pm-media pm-media--21x9 oh" data-oh role="img" aria-label="OmniSynkAI AI autofill, close up: a seller types a title and a category, clicks the AI autofill icon, and the listing fills in by itself: a description writes in, product photos appear, and the brand and tags arrive highlighted in purple as AI-written. The bar then reads Listing Autofilled and Publish turns on."><div class="oh-stage"><div class="oh-app"><div class="oh-bar"><div class="oh-status"><p class="oh-st oh-st--idle"><b>Save time with Autofill</b><span>Fill out required details and click the stars to begin.</span></p><p class="oh-st oh-st--busy"><b>Filling out your listing</b><span>This takes a few seconds.</span></p><p class="oh-st oh-st--done"><b><svg class="oh-spark" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><defs><linearGradient id="ohg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#A78BFA"/><stop offset="1" stop-color="#6D4AF0"/></linearGradient></defs><path fill="url(#ohg)" d="M10 3 C10.6 7.4 12.6 9.4 17 10 C12.6 10.6 10.6 12.6 10 17 C9.4 12.6 7.4 10.6 3 10 C7.4 9.4 9.4 7.4 10 3 Z"/><path fill="url(#ohg)" d="M18 13 C18.3 15.3 19.2 16.2 21.5 16.5 C19.2 16.8 18.3 17.7 18 20 C17.7 17.7 16.8 16.8 14.5 16.5 C16.8 16.2 17.7 15.3 18 13 Z"/></svg>Listing Autofilled</b><span>Feel free to edit details</span></p></div><span class="oh-div oh-div--1"></span><div class="oh-field oh-field--title"><span class="oh-lbl">Title</span><span class="oh-in"><span class="oh-val oh-val--title">Vitamin C Serum</span></span></div><div class="oh-field oh-field--cat"><span class="oh-lbl">Product category</span><span class="oh-in"><span class="oh-val oh-val--cat">Skincare</span><svg class="oh-chev" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div><span class="oh-ai"><svg class="oh-spark" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><defs><linearGradient id="ohg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#A78BFA"/><stop offset="1" stop-color="#6D4AF0"/></linearGradient></defs><path fill="url(#ohg)" d="M10 3 C10.6 7.4 12.6 9.4 17 10 C12.6 10.6 10.6 12.6 10 17 C9.4 12.6 7.4 10.6 3 10 C7.4 9.4 9.4 7.4 10 3 Z"/><path fill="url(#ohg)" d="M18 13 C18.3 15.3 19.2 16.2 21.5 16.5 C19.2 16.8 18.3 17.7 18 20 C17.7 17.7 16.8 16.8 14.5 16.5 C16.8 16.2 17.7 15.3 18 13 Z"/></svg><span class="oh-pulse"></span><span class="oh-ripple"></span></span><span class="oh-more">More options<svg class="oh-chev" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="oh-div oh-div--2"></span><span class="oh-pub">Publish listing</span></div><div class="oh-card oh-desc"><span class="oh-h">Description</span><span class="oh-tools"></span><div class="oh-lines"><span class="oh-line oh-line--1">Give your skin a radiant boost with our potent Vitamin C Serum!</span><span class="oh-line oh-line--2">Packed with antioxidants, this lightweight formula helps:</span><span class="oh-line oh-line--3">•  Brighten and even skin tone for a luminous complexion.</span><span class="oh-line oh-line--4">•  Reduce the appearance of fine lines and wrinkles.</span></div></div><div class="oh-card oh-media"><span class="oh-h">Media</span><div class="oh-grid"><span class="oh-slot oh-slot--1"></span><span class="oh-slot oh-slot--2"></span><span class="oh-slot oh-slot--3"></span><span class="oh-slot oh-slot--4"></span><span class="oh-slot oh-slot--5"></span><span class="oh-ph oh-ph--1" style="background-image:url(assets/screens/03-listing-autofilled.jpg?v=2);background-size:613.5% auto;background-position:12.43% 79.72%"></span><span class="oh-ph oh-ph--2" style="background-image:url(assets/screens/03-listing-autofilled.jpg?v=2);background-size:1265.8% auto;background-position:29.75% 69.59%"></span><span class="oh-ph oh-ph--3" style="background-image:url(assets/screens/03-listing-autofilled.jpg?v=2);background-size:1265.8% auto;background-position:39.09% 69.59%"></span><span class="oh-ph oh-ph--4" style="background-image:url(assets/screens/03-listing-autofilled.jpg?v=2);background-size:1265.8% auto;background-position:29.75% 82.45%"></span><span class="oh-ph oh-ph--5" style="background-image:url(assets/screens/03-listing-autofilled.jpg?v=2);background-size:1265.8% auto;background-position:39.09% 82.45%"></span></div></div><div class="oh-card oh-meta"><div class="oh-mf"><span class="oh-h">Brand</span><span class="oh-in"><span class="oh-chip oh-chip--1">By Rituals</span></span></div><div class="oh-mf"><span class="oh-h">Tags</span><span class="oh-in"><span class="oh-chip oh-chip--2">#skincare</span><span class="oh-chip oh-chip--3">#vitaminC</span></span></div></div><span class="oh-shimmer" aria-hidden="true"></span><svg class="oh-cursor" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 2.5 L4 19.5 L8.6 15.4 L11.4 21.6 L14.2 20.4 L11.5 14.3 L17.6 14.1 Z" fill="#FFFFFF" stroke="#111827" stroke-width="1.4" stroke-linejoin="round"/></svg></div></div></div><button type="button" class="pm-btn pm-btn--on-image pm-btn--icon pm-btn--sm oh-toggle" aria-pressed="false" aria-label="Pause animation" data-oh-toggle hidden><span class="oh-ic oh-ic--pause"><svg class="pm-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="14" y="4" width="4" height="16" rx="1"/><rect x="6" y="4" width="4" height="16" rx="1"/></svg></span><span class="oh-ic oh-ic--play" hidden><svg class="pm-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><polygon points="6 3 20 12 6 21 6 3"/></svg></span></button></div>
+  <div class="cs-hero-well oh-wrap"><div class="pm-media pm-media--21x9 oh" data-oh role="img" aria-label="OmniSynkAI AI autofill on the listing page: a seller types a title and a category and clicks the AI autofill icon; a loading dialog appears, then skeleton content fills each field and resolves into the AI-written description, product photos, brand and tags, and the bar reads Listing Autofilled."><div class="oh-stage"><div class="oh-app"><img class="oh-scr" src="assets/screens/01-empty-listing.jpg?v=2" width="2000" height="1480" alt="" loading="eager" decoding="async"><span class="oh-c oh-type" style="left:26.600%;top:20.541%;width:15.000%;height:2.703%;background-image:url(assets/screens/03-listing-autofilled.jpg?v=2);background-size:666.667% auto;background-position:28.941% 21.111%"></span><span class="oh-c oh-cat" style="left:48.400%;top:20.541%;width:15.000%;height:2.703%;background-image:url(assets/screens/03-listing-autofilled.jpg?v=2);background-size:666.667% auto;background-position:55.412% 21.111%"></span><span class="oh-mbg" style="left:10.000%;top:61.622%;width:63.600%;height:23.243%"></span><span class="oh-c oh-slots" style="left:61.400%;top:61.622%;width:12.000%;height:23.243%;background-image:url(assets/screens/03-listing-autofilled.jpg?v=2);background-size:833.333% auto;background-position:69.773% 80.282%"></span><span class="oh-sks"><span class="oh-sk oh-sk--d" style="left:9.700%;top:36.216%;width:52.000%;height:1.081%"></span><span class="oh-sk oh-sk--d" style="left:11.000%;top:38.919%;width:47.000%;height:0.946%"></span><span class="oh-sk oh-sk--d" style="left:11.000%;top:40.811%;width:52.000%;height:0.946%"></span><span class="oh-sk oh-sk--d" style="left:11.000%;top:42.703%;width:56.000%;height:0.946%"></span><span class="oh-sk oh-sk--d" style="left:11.000%;top:44.595%;width:26.000%;height:0.946%"></span><span class="oh-sk oh-sk--m" style="left:10.300%;top:62.230%;width:16.400%;height:22.095%"></span><span class="oh-sk oh-sk--m" style="left:27.400%;top:62.230%;width:7.950%;height:10.676%"></span><span class="oh-sk oh-sk--m" style="left:36.000%;top:62.230%;width:7.950%;height:10.676%"></span><span class="oh-sk oh-sk--m" style="left:44.600%;top:62.230%;width:7.950%;height:10.676%"></span><span class="oh-sk oh-sk--m" style="left:53.200%;top:62.230%;width:7.950%;height:10.676%"></span><span class="oh-sk oh-sk--m" style="left:27.400%;top:73.649%;width:7.950%;height:10.676%"></span><span class="oh-sk oh-sk--m" style="left:36.000%;top:73.649%;width:7.950%;height:10.676%"></span><span class="oh-sk oh-sk--m" style="left:44.600%;top:73.649%;width:7.950%;height:10.676%"></span><span class="oh-sk oh-sk--m" style="left:53.200%;top:73.649%;width:7.950%;height:10.676%"></span><span class="oh-sk oh-sk--f" style="left:11.400%;top:93.311%;width:5.250%;height:1.757%"></span><span class="oh-sk oh-sk--f" style="left:43.650%;top:93.311%;width:11.650%;height:1.757%"></span></span><span class="oh-c oh-d oh-d--1" style="left:9.500%;top:35.541%;width:65.000%;height:2.432%;background-image:url(assets/screens/03-listing-autofilled.jpg?v=2);background-size:153.846% auto;background-position:27.143% 36.427%"></span><span class="oh-c oh-d oh-d--2" style="left:9.500%;top:38.243%;width:65.000%;height:2.027%;background-image:url(assets/screens/03-listing-autofilled.jpg?v=2);background-size:153.846% auto;background-position:27.143% 39.034%"></span><span class="oh-c oh-d oh-d--3" style="left:9.500%;top:40.270%;width:65.000%;height:1.892%;background-image:url(assets/screens/03-listing-autofilled.jpg?v=2);background-size:153.846% auto;background-position:27.143% 41.047%"></span><span class="oh-c oh-d oh-d--4" style="left:9.500%;top:42.162%;width:65.000%;height:4.054%;background-image:url(assets/screens/03-listing-autofilled.jpg?v=2);background-size:153.846% auto;background-position:27.143% 43.944%"></span><span class="oh-c oh-p oh-p--1" style="left:10.300%;top:62.230%;width:16.400%;height:22.095%;background-image:url(assets/screens/03-listing-autofilled.jpg?v=2);background-size:609.756% auto;background-position:12.321% 79.879%"></span><span class="oh-c oh-p oh-p--2" style="left:27.400%;top:62.230%;width:7.950%;height:10.676%;background-image:url(assets/screens/03-listing-autofilled.jpg?v=2);background-size:1257.862% auto;background-position:29.766% 69.667%"></span><span class="oh-c oh-p oh-p--3" style="left:36.000%;top:62.230%;width:7.950%;height:10.676%;background-image:url(assets/screens/03-listing-autofilled.jpg?v=2);background-size:1257.862% auto;background-position:39.109% 69.667%"></span><span class="oh-c oh-p oh-p--4" style="left:44.600%;top:62.230%;width:7.950%;height:10.676%;background-image:url(assets/screens/03-listing-autofilled.jpg?v=2);background-size:1257.862% auto;background-position:48.452% 69.667%"></span><span class="oh-c oh-p oh-p--5" style="left:53.200%;top:62.230%;width:7.950%;height:10.676%;background-image:url(assets/screens/03-listing-autofilled.jpg?v=2);background-size:1257.862% auto;background-position:57.795% 69.667%"></span><span class="oh-c oh-p oh-p--6" style="left:27.400%;top:73.649%;width:7.950%;height:10.676%;background-image:url(assets/screens/03-listing-autofilled.jpg?v=2);background-size:1257.862% auto;background-position:29.766% 82.451%"></span><span class="oh-c oh-p oh-p--7" style="left:36.000%;top:73.649%;width:7.950%;height:10.676%;background-image:url(assets/screens/03-listing-autofilled.jpg?v=2);background-size:1257.862% auto;background-position:39.109% 82.451%"></span><span class="oh-c oh-p oh-p--8" style="left:44.600%;top:73.649%;width:7.950%;height:10.676%;background-image:url(assets/screens/03-listing-autofilled.jpg?v=2);background-size:1257.862% auto;background-position:48.452% 82.451%"></span><span class="oh-c oh-p oh-p--9" style="left:53.200%;top:73.649%;width:7.950%;height:10.676%;background-image:url(assets/screens/03-listing-autofilled.jpg?v=2);background-size:1257.862% auto;background-position:57.795% 82.451%"></span><span class="oh-c oh-k oh-k--1" style="left:11.400%;top:93.041%;width:5.250%;height:2.297%;background-image:url(assets/screens/03-listing-autofilled.jpg?v=2);background-size:1904.762% auto;background-position:12.032% 95.228%"></span><span class="oh-c oh-k oh-k--2" style="left:43.650%;top:93.041%;width:5.450%;height:2.297%;background-image:url(assets/screens/03-listing-autofilled.jpg?v=2);background-size:1834.862% auto;background-position:46.166% 95.228%"></span><span class="oh-c oh-k oh-k--3" style="left:49.600%;top:93.041%;width:5.700%;height:2.297%;background-image:url(assets/screens/03-listing-autofilled.jpg?v=2);background-size:1754.386% auto;background-position:52.598% 95.228%"></span><span class="oh-c oh-tb" style="left:8.900%;top:14.595%;width:89.500%;height:11.892%;background-image:url(assets/screens/03-listing-autofilled.jpg?v=2);background-size:111.732% auto;background-position:84.762% 16.564%"></span><img class="oh-scr oh-s2" src="assets/screens/02-autofill-in-progress.jpg?v=2" width="2000" height="1480" alt="" loading="eager" decoding="async"><img class="oh-scr oh-final" src="assets/screens/03-listing-autofilled.jpg?v=2" width="2000" height="1480" alt="" loading="eager" decoding="async"><svg class="oh-cursor" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 2.5 L4 19.5 L8.6 15.4 L11.4 21.6 L14.2 20.4 L11.5 14.3 L17.6 14.1 Z" fill="#FFFFFF" stroke="#111827" stroke-width="1.4" stroke-linejoin="round"/></svg></div></div></div><button type="button" class="pm-btn pm-btn--on-image pm-btn--icon pm-btn--sm oh-toggle" aria-pressed="false" aria-label="Pause animation" data-oh-toggle hidden><span class="oh-ic oh-ic--pause"><svg class="pm-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="14" y="4" width="4" height="16" rx="1"/><rect x="6" y="4" width="4" height="16" rx="1"/></svg></span><span class="oh-ic oh-ic--play" hidden><svg class="pm-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><polygon points="6 3 20 12 6 21 6 3"/></svg></span></button></div>
   <script>(function(h){if(h&&!matchMedia("(prefers-reduced-motion: reduce)").matches)h.classList.add("oh--anim")})(document.querySelector("[data-oh]"))</script>
 
 
@@ -1897,7 +1841,7 @@ body { margin: 0; font-family: var(--font-sans); background: var(--color-bg-canv
     }, { threshold: [0, .35] }).observe(tl);
   })();
 
-  // OmniSynkAI hero: loops while in view and the tab is visible, once the photos have decoded; Pause/Play (WCAG 2.2.2)
+  // OmniSynkAI hero: loops while in view and the tab is visible, once the screens have decoded; Pause/Play (WCAG 2.2.2)
   (function () {
     var hero = document.querySelector('[data-oh].oh--anim'); if (!hero) return;
     var btn = document.querySelector('[data-oh-toggle]'), inView = false, ready = false, user = false;
@@ -1913,8 +1857,8 @@ body { margin: 0; font-family: var(--font-sans); background: var(--color-bg-canv
     if ('IntersectionObserver' in window) new IntersectionObserver(function (es) { inView = es[0].isIntersecting; sync(); }, { threshold: .25 }).observe(hero);
     else inView = true;
     document.addEventListener('visibilitychange', sync);
-    var img = new Image(); img.src = (hero.querySelector('.oh-ph').style.backgroundImage.match(/url\(["']?(.*?)["']?\)/) || [])[1] || '';
-    Promise.race([img.decode ? img.decode().catch(function () {}) : Promise.resolve(), new Promise(function (r) { setTimeout(r, 2000); })]).then(function () { ready = true; sync(); });
+    var imgs = [].map.call(hero.querySelectorAll('img'), function (i) { return i.decode ? i.decode().catch(function () {}) : 0; });
+    Promise.race([Promise.all(imgs), new Promise(function (r) { setTimeout(r, 2500); })]).then(function () { ready = true; sync(); });
   })();
 
   // Other pages aren't in this prototype yet
