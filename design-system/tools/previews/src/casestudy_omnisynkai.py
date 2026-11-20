@@ -65,7 +65,7 @@ PHASES = [
 ]
 def process():
     return ('<ol class="om-proc">' + ''.join(
-        f'<li class="om-proc__step"><p class="om-proc__k"><span class="pm-meta-text">{i + 1:02d}</span>{name}</p><h4>{q}</h4>'
+        f'<li class="om-proc__step"><p class="om-proc__k">{name}</p><h4>{q}</h4>'
         '<ul>' + ''.join(f'<li>{o}</li>' for o in outs) + '</ul></li>'
         for i, (name, q, outs) in enumerate(PHASES)) + '</ol>')
 
@@ -123,7 +123,7 @@ BODY = ''.join([
         + lede('Each phase answered one question, and each answer shaped the next.')
         + framed(process(), 'Discover, conceptualize, design: the question each phase answered and what came out of it.')),
 
-    section('discover', '01 · Discover', 'I started with what we already knew, and what AI could really do.',
+    section('discover', 'Discover', 'I started with what we already knew, and what AI could really do.',
         lede('Before designing anything, I wanted to know where AI could help sellers most, and where it couldn’t. I partnered with UX research to gather past findings on seller needs and pain points and to spot the gaps, and huddled with engineers and product managers to map the AI’s strengths and its limits.')
         + '<h3 class="cs-h3">Desk research showed what sellers expect from AI tools.</h3>'
         + items([('Ease of use', 'AI has to feel intuitive from the first click, or sellers won’t trust it.'),
@@ -142,7 +142,7 @@ BODY = ''.join([
         lede('Every priority traces back to something research showed, so each design decision had a reason behind it.')
         + findings()),
 
-    section('conceptualize', '02 · Conceptualize', 'I defined the flow before designing a single screen.',
+    section('conceptualize', 'Conceptualize', 'I defined the flow before designing a single screen.',
         lede('With priorities set, I mapped how autofill should work: the initial user flows, the interactions and triggers that start and update it, and feedback loops that let sellers rate and tweak what AI suggests.')
         + need('Early user flows for autofill: entry points, triggers and feedback loops.', 'Your initial user flow diagram or wireframes', '16x9')
         + '<h3 class="cs-h3">Three qualities guided every choice.</h3>'
@@ -152,7 +152,7 @@ BODY = ''.join([
         + lede('The result was one flow that starts with two fields and ends with a published listing.')
         + framed(flow(), 'The autofill flow, from two required fields to a published listing.')),
 
-    section('design', '03 · Design', 'With the MVP close, the question was where AI lives on the page.',
+    section('design', 'Design', 'With the MVP close, the question was where AI lives on the page.',
         lede('Launch was coming up fast, so I focused on three questions: how sellers learn to start autofill and keep using it, how the experience differs for new and returning sellers, and where AI controls belong on a page that already held a lot.')
         + '<h3 class="cs-h3">The first concept put AI in a sidebar.</h3>'
         + lede('Working within OmniSynkAI’s design system, I explored layouts for the listing page. The first concept invited sellers to “Try listing with Autofill” from a card in the sidebar, with per-platform publishing toggles below it. Each AI-written field had its own controls to browse versions, give a thumbs up or down, and regenerate, and a message after autofill invited sellers to compare versions.')
