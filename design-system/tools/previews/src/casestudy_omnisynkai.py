@@ -126,7 +126,7 @@ def versions():
         f'<li class="om-tl__v{" is-mine" if mine else ""}" style="--i:{k}"><div class="om-tl__k"><p><span class="pm-meta-text">{v}</span><span class="om-tl__n">{name}</span></p>'
         + ('<span class="pm-badge om-tl__me">Where I joined</span>' if mine else '') + '</div>'
         f'<span class="om-tl__dot" aria-hidden="true"></span><div class="om-tl__body">'
-        f'<p class="om-tl__d">{d}</p><p class="om-tl__l pm-panel {"pm-panel--accent" if mine else "pm-panel--callout"}"><span>{"Goal" if mine else "Feedback"}</span>{l}</p></div></li>'
+        f'<p class="om-tl__d">{d}</p><p class="om-tl__l pm-panel{" pm-panel--accent" if mine else ""}"><span>{"Goal" if mine else "Feedback"}</span>{l}</p></div></li>'
         for k, (v, name, d, l, mine) in enumerate(VERSIONS)) + '</ol>')
 
 # The three gaps, marked on the v3 page: label, question, what went wrong, badge position (% of the image)

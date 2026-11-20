@@ -1,4 +1,5 @@
 from lib import I, IMG, IMG_ALT, h, frames
+CUR_TRUE = ' aria-current="true"'  # outside the f-string: Python 3.9 forbids backslashes in f-string expressions
 NAME = 'Lightbox'; GROUP = 'Media'; HEIGHT = 2300; WIDTH = 1100
 SUB = 'Modal image viewer: always dark-scoped, counter, caption, previous/next, thumbnails; Esc, arrows, focus return.'
 KEYS = ['queue', 'grid', 'form', 'chart', 'mobile']
@@ -6,7 +7,7 @@ CAPS = ['The ranked queue, after triage rules.', 'Token library, dark mode.', 'R
 
 def lb(inline=True, idx=1):
     k = KEYS[idx]
-    thumbs = ''.join(f'<li><button type="button" class="pm-thumb pm-thumb--sm" data-i="{i}"{" aria-current=\"true\"" if i == idx else ""} aria-label="Image {i+1} of 5"><img src="{IMG[kk]}" alt="" width="112" height="112"><span class="pm-thumb__check" aria-hidden="true"></span></button></li>' for i, kk in enumerate(KEYS))
+    thumbs = ''.join(f'<li><button type="button" class="pm-thumb pm-thumb--sm" data-i="{i}"{CUR_TRUE if i == idx else ""} aria-label="Image {i+1} of 5"><img src="{IMG[kk]}" alt="" width="112" height="112"><span class="pm-thumb__check" aria-hidden="true"></span></button></li>' for i, kk in enumerate(KEYS))
     tag = 'div' if inline else 'dialog'
     cls = 'pm-lightbox pm-lightbox--inline' if inline else 'pm-lightbox'
     role = ' role="dialog" aria-modal="false"' if inline else ''

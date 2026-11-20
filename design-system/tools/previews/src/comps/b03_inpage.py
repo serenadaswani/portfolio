@@ -1,10 +1,11 @@
 from lib import cell, h, frames
+CUR_LOC = ' aria-current="location"'  # outside the f-string: Python 3.9 forbids backslashes in f-string expressions
 NAME = 'InPageNavigation'; GROUP = 'Navigation'; HEIGHT = 1300; WIDTH = 1100
 SUB = 'Numbered index on a hairline rail with scroll-spy; horizontal strip below 1024px.'
 
 SECTIONS = ['Overview', 'The problem', 'Research', 'Decisions', 'Outcome', 'Reflection']
 def toc():
-    items = ''.join(f'<li><a class="pm-toc__item" href="#ip-{{T}}{{V}}-{i}"{" aria-current=\"location\"" if i == 1 else ""}><span class="pm-toc__num">0{i+1}</span>{s}</a></li>' for i, s in enumerate(SECTIONS))
+    items = ''.join(f'<li><a class="pm-toc__item" href="#ip-{{T}}{{V}}-{i}"{CUR_LOC if i == 1 else ""}><span class="pm-toc__num">0{i+1}</span>{s}</a></li>' for i, s in enumerate(SECTIONS))
     secs = ''.join(f'<section id="ip-{{T}}{{V}}-{i}" class="ip-sec" aria-labelledby="iph-{{T}}{{V}}-{i}"><h3 id="iph-{{T}}{{V}}-{i}" class="h4" style="margin:0 0 var(--space-2)">{s}</h3><div class="pm-skeleton pm-skeleton--text" style="width:92%"></div><div class="pm-skeleton pm-skeleton--text" style="width:80%"></div><div class="pm-skeleton pm-skeleton--text" style="width:60%"></div></section>' for i, s in enumerate(SECTIONS))
     return ('<div class="ip-layout">'
             f'<nav class="pm-toc" aria-labelledby="toch-{{T}}{{V}}"><p class="pm-toc__heading" id="toch-{{T}}{{V}}">On this page</p><ol class="pm-toc__list">{items}</ol></nav>'

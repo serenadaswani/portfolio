@@ -38,7 +38,7 @@ def paper_form():
             '<table><colgroup><col style="width:15%"><col style="width:11%"><col style="width:23%"><col style="width:23%"><col style="width:14%"><col style="width:14%"></colgroup><thead><tr>' + ''.join(f'<th>{h}</th>' for h in head) + f'</tr></thead><tbody>{tr}</tbody></table>'
             '<p class="pr-paper__m">Reviewed by ____________ &nbsp; Date __/__/__ &nbsp; Signature ____________</p>'
             f'</div>{pins}</div>{notes}'
-            '<div class="pr-note" aria-live="polite"><p class="pr-note__t" data-note-t>Two pain points</p><p class="pr-note__d" data-note-d>Hover over or tap a number on the form to see what slowed operators down.</p></div>'
+            '<div class="pr-note pm-panel" aria-live="polite"><p class="pr-note__t" data-note-t>Two pain points</p><p class="pr-note__d" data-note-d>Hover over or tap a number on the form to see what slowed operators down.</p></div>'
             '</div>')
 
 # Small thumbnails for the solution cards: close-ups of the reconstructed tablet UI (project art)
@@ -93,7 +93,7 @@ def insight_goals():
     """One graphic: each interview insight on the left, the design goal it set on the right."""
     arrow = f'<span class="pr-ig__arrow" aria-hidden="true">{_l("arrow-right")}</span>'
     rows = ''.join(
-        f'<li class="pr-ig__row"><div class="pr-ig__in"><p class="pr-ig__k">What I learned</p><h4>{it}</h4><p>{idesc}</p></div>{arrow}'
+        f'<li class="pr-ig__row"><div class="pr-ig__in pm-panel pm-panel--tonal"><p class="pr-ig__k">What I learned</p><h4>{it}</h4><p>{idesc}</p></div>{arrow}'
         f'<div class="pm-card pm-card--outlined pr-ig__goal"><p class="pr-ig__k">Design goal</p><h4 class="pm-card__title">{gt}</h4><p class="pm-card__summary">{gd}</p></div></li>'
         for it, idesc, gt, gd in INSIGHT_GOALS)
     return (f'<figure class="pr-ig"><div class="pr-ig__head" aria-hidden="true"><span>What I learned</span><span></span><span>Design goal</span></div>'
@@ -260,7 +260,7 @@ BODY = ''.join([
         lede('In many process plants, each batch is recorded on two paper forms: one for the manufacturing steps and one for the quality checks. Once complete, the forms go to reviewers in quality and engineering, who decide whether the batch meets the standard. The process is slow, invites human error and holds up decisions on the floor.')
         + shot(flow(), 'A paper batch, step by step. Five of the six steps are written by hand, and each is a chance for error.', 1)
         + lede('One North Star kept product, design and business aligned.')
-        + f'<section class="pr-ns" aria-labelledby="p-ns"><p class="pr-ns__label" id="p-ns">{_l("compass")}Our North Star</p>'
+        + f'<section class="pr-ns pm-panel pm-panel--accent" aria-labelledby="p-ns"><p class="pr-ns__label" id="p-ns">{_l("compass")}Our North Star</p>'
           '<p class="pr-ns__text">Streamline batch manufacturing by digitizing its forms, while keeping them intuitive for operators used to filling them in by hand.</p></section>'
         + '<h3 class="cs-h3">The solution, in short</h3>'
         + lede('A guided tablet flow, built into the Procense platform. It gives operators a faster, more reliable way to record each batch, and still feels as familiar as paper.')
@@ -642,12 +642,12 @@ CSS = r"""
 /* Figure stages a step lighter on this page (surface instead of sunken) */
 .pm-frame__stage { background: var(--color-bg-surface); }
 .pr-flow__n { --ring: var(--color-bg-surface); }
-/* Feature cards: Card --outlined, lifted (shadow-sm) so they stand out; static, so no hover change */
+/* Feature cards: Card --outlined in the lean set's Default style (subtle ring + shadow-xs, v1.11); static, so no hover change */
 .pr-cards { container-type: inline-size; list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-4); grid-template-columns: minmax(0, 1fr); }
 @container pr-cards (min-width: 700px) { .pr-cards--3 { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
 @container pr-cards (min-width: 700px) { .pr-cards--2 { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 .pr-cards > li { display: flex; }
-.pr-card.pm-card--outlined, .pr-card.pm-card--outlined:hover { flex: 1; padding: var(--space-5); gap: var(--space-2); box-shadow: inset 0 0 0 1px var(--color-border-subtle), var(--shadow-sm); }
+.pr-card.pm-card--outlined, .pr-card.pm-card--outlined:hover { flex: 1; padding: var(--space-5); gap: var(--space-2); box-shadow: inset 0 0 0 1px var(--color-border-subtle), var(--shadow-xs); }
 .pr-card .pm-card__title { font-size: var(--type-body-md); line-height: var(--line-body-md); letter-spacing: 0; }
 .pr-card .pm-card__summary { margin: 0; font-size: var(--type-body-sm); line-height: var(--line-body-sm); color: var(--color-text-secondary); text-wrap: pretty; }
 .pr-card.pm-card--outlined, .pr-card.pm-card--outlined:hover { padding: var(--space-3) var(--space-3) var(--space-5); }
@@ -720,7 +720,7 @@ CSS = r"""
 .pr-cards-wrap { container: pr-cards / inline-size; display: grid; gap: var(--space-3); justify-items: end; }
 .pr-cards-wrap > .pr-cards { justify-self: stretch; }
 /* North Star: the one accent-tinted surface on the page, so it reads first */
-.pr-ns { display: grid; gap: var(--space-2); padding: var(--space-6); border-radius: var(--radius-md); background: var(--color-action-selected-bg); box-shadow: inset 0 0 0 1px var(--color-border-subtle), var(--shadow-sm); }
+.pr-ns { display: grid; gap: var(--space-2); padding: var(--space-6); }
 @container (min-width: 768px) { .pr-ns { padding: var(--space-8); } }
 .pr-ns__label { margin: 0; display: flex; align-items: center; gap: var(--space-2); font-size: var(--type-body-sm); line-height: var(--line-body-sm); font-weight: var(--weight-medium); color: var(--color-action-selected-text); }
 .pr-ns__label .pm-icon { width: 16px; height: 16px; flex: none; }
@@ -776,7 +776,7 @@ CSS = r"""
 /* Fig. 1: pain points with a note under the form */
 .pr-pain { width: 100%; max-width: 640px; display: grid; gap: var(--space-5); justify-items: center; }
 .pr-pain template { display: none; }
-.pr-note { justify-self: stretch; min-height: 5.5rem; padding: var(--space-4) var(--space-5); border-radius: var(--radius-md); background: var(--color-bg-elevated); box-shadow: inset 0 0 0 1px var(--color-border-subtle), var(--shadow-xs); }
+.pr-note { justify-self: stretch; min-height: 5.5rem; padding: var(--space-4) var(--space-5); }
 .pr-note__t { margin: 0; font-size: var(--type-body-md); line-height: var(--line-body-md); font-weight: var(--weight-medium); color: var(--color-text-primary); }
 .pr-note__d { margin: var(--space-1) 0 0; font-size: var(--type-body-sm); line-height: var(--line-body-sm); color: var(--color-text-secondary); text-wrap: pretty; }
 /* The paper is always light, so its annotations use the light-theme values of the same tokens in both themes */
@@ -793,10 +793,10 @@ CSS = r"""
 .pr-ig__list { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-4); }
 .pr-ig__row { display: grid; gap: var(--space-2); justify-items: center; }
 .pr-ig__row > div { justify-self: stretch; }
-.pr-ig__in { padding: var(--space-5); border-radius: var(--radius-md); background: var(--color-bg-surface); display: grid; gap: var(--space-1); align-content: start; }
+.pr-ig__in { padding: var(--space-5); display: grid; gap: var(--space-1); align-content: start; }
 .pr-ig h4 { margin: 0; font-size: var(--type-body-md); line-height: var(--line-body-md); font-weight: var(--weight-medium); letter-spacing: 0; color: var(--color-text-primary); }
 .pr-ig__in p:not(.pr-ig__k), .pr-ig__goal .pm-card__summary { margin: 0; font-size: var(--type-body-sm); line-height: var(--line-body-sm); color: var(--color-text-secondary); text-wrap: pretty; }
-.pr-ig__goal.pm-card--outlined, .pr-ig__goal.pm-card--outlined:hover { padding: var(--space-5); gap: var(--space-1); box-shadow: inset 0 0 0 1px var(--color-border-subtle), var(--shadow-sm); }
+.pr-ig__goal.pm-card--outlined, .pr-ig__goal.pm-card--outlined:hover { padding: var(--space-5); gap: var(--space-1); box-shadow: inset 0 0 0 1px var(--color-border-subtle), var(--shadow-xs); }
 .pr-ig__k { margin: 0 0 var(--space-1); font-family: var(--font-meta); font-size: var(--type-label); line-height: var(--line-label); color: var(--color-text-tertiary); }
 .pr-ig__arrow { color: var(--color-text-tertiary); transform: rotate(90deg); }
 .pr-ig__arrow .pm-icon { width: 20px; height: 20px; }

@@ -1,10 +1,11 @@
 from lib import I, h, frames, showcase
+CUR_LOC = ' aria-current="location"'  # outside the f-string: Python 3.9 forbids backslashes in f-string expressions
 NAME = 'SplitLayout'; GROUP = 'Page sections'; HEIGHT = 2300; WIDTH = 1340
 SUB = 'Sticky left column (intro, status, actions, vertical nav with scroll-spy, socials, clock) beside a scrolling work column. Stacks below 1024px.'
 
 NAV = ['Work', 'About', 'Experience', 'Contact']
 def page(uid):
-    nav = ''.join(f'<li><a class="pm-sidenav__item" href="#{uid}-{s.lower()}"{" aria-current=\"location\"" if j == 0 else ""} data-spy>{s}</a></li>' for j, s in enumerate(NAV))
+    nav = ''.join(f'<li><a class="pm-sidenav__item" href="#{uid}-{s.lower()}"{CUR_LOC if j == 0 else ""} data-spy>{s}</a></li>' for j, s in enumerate(NAV))
     work = ('<ul class="pm-showcase-grid">'
             f'<li class="pm-showcase-grid__wide">{showcase("form", "Redesigning Mensio’s Data Explorer for self-serve analysis", "Shipped 2026.", ["Product design", "Analytics"], "2026 · Mensio", href="#s")}</li>'
             f'<li>{showcase("queue", "Placeholder project", "", ["Product design"], "Placeholder", href="#s")}</li>'
