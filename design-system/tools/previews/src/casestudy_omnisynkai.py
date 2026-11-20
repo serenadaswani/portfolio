@@ -1,10 +1,9 @@
 """OmniSynkAI AI autofill case study, on the same structure as the Procense and Mensio pages (casestudy.render).
-Story (2026-11-19, Serena): she joined for v4 of the listing flow, working with lead designer Ezi Anozie while the listing
+Story (2026-11-19, Serena): she joined for v4 of the listing flow, working with the lead designer while the listing
 page itself was being enhanced in parallel. Her focus: where autofill lives on the page, telling AI from manual content, and
 the feedback loop. The page summarizes the team's research and earlier versions, then shows how her work built on them.
 Sources: Serena's presentation (OSAI_Case Study Presentation.pdf) and Framer case study; teammates' published case studies
-for team context and results, cited as team results (Ezi Anozie: ezinneanozie.com/case-studies/omnisynkai; Juhi:
-juhiux.com/omnisynkai). Media: stills from the approved prototype video (PM's permission, team credited).
+for team context and results, cited as team results by role only, no names or links (Serena, 2026-11-19). Media: stills from the approved prototype video (PM's permission, team credited).
 Run: python3 design-system/tools/previews/src/casestudy_omnisynkai.py  ->  omnisynkai/index.html
 """
 import casestudy as C
@@ -13,11 +12,6 @@ from lib import _l
 import casestudy_procense as CP
 
 IG_CSS = CP._between(CP.CSS, '/* Insights -> goals', '/* ===== Procense media')  # same findings -> goals graphic as Procense
-
-EZI = 'https://www.ezinneanozie.com/case-studies/omnisynkai'
-JUHI = 'https://juhiux.com/omnisynkai'
-def ext(label, href, aria):
-    return f'<a class="pm-link" href="{href}" target="_blank" rel="noopener" aria-label="{aria} (opens in a new tab)">{label}{I["ext"]}</a>'
 
 def items(rows, grid=False):
     """Title + description list, no numbering (same as Procense)."""
@@ -62,11 +56,10 @@ def framed(art, cap):
     return f'<figure class="pm-frame"><div class="pm-frame__stage om-stage">{art}</div>' + _cap(_num(), cap) + '</figure>'
 
 def team_source():
-    return ('<p class="pm-meta-text om-source">Team results for the whole listing flow, as reported by my teammates: listing time and accuracy from testing after the September 2024 soft launch ('
-            + ext('Juhi', JUHI, 'Juhi’s OmniSynkAI case study') + '), autofill satisfaction and discoverability ('
-            + ext('Ezi Anozie', EZI, 'Ezi Anozie’s OmniSynkAI case study') + ').</p>')
+    return ('<p class="pm-meta-text om-source">Team results for the whole listing flow: listing time and accuracy from testing after the September 2024 soft launch; '
+            'autofill satisfaction and discoverability from pre-launch usability testing.</p>')
 
-# How the listing flow evolved before and while I joined (Ezi's case study), with what each version taught the team
+# How the listing flow evolved before and while I joined (the lead designer's case study), with what each version taught the team
 VERSIONS = [
     ('v1', 'Cross-listing', 'Grouped actions in a bento layout, with a separate price optimizer.', 'Cluttered, and couldn’t scale to data-heavy fields.', False),
     ('v2', 'Autosynk', 'Sellers chose AI or manual listing; AI drafted from a few core details.', 'Sellers wanted more control over what AI wrote.', False),
@@ -143,7 +136,7 @@ SECTIONS = [('overview', 'Overview'), ('problem', 'The problem'), ('role', 'My r
 BODY = ''.join([
     section('overview', 'Overview', 'AI autofill turned inventory listing from data entry into a quick review.',
         lede('OmniSynkAI was an AI startup helping small and mid-sized e-commerce sellers list and sync products across marketplaces like Amazon, eBay, Etsy and Shopify. Its core was the listing page, where sellers filled in every product field by hand, for every platform.',
-             'When leadership made AI autofill a core launch feature, I joined lead designer Ezi Anozie on its final version. While the listing page itself was being redesigned in parallel, I owned three parts of autofill: where it lives on the page, how sellers tell AI content from their own, and how they give feedback and steer the result.')
+             'When leadership made AI autofill a core launch feature, I joined the lead designer on its final version. While the listing page itself was being redesigned in parallel, I owned three parts of autofill: where it lives on the page, how sellers tell AI content from their own, and how they give feedback and steer the result.')
         + shot('filled', 'A listing drafted by AI autofill. Everything AI wrote is highlighted in purple for the seller to review.')
         + stats(STATS_TEAM, ' pm-stats--sm cs-stats') + team_source()),
 
@@ -158,7 +151,7 @@ BODY = ''.join([
 
     section('role', 'My role', 'I joined for the version that would launch.',
         lede('By the time I joined, the team had already explored three versions of the listing flow. Each one taught us something, and the last left three problems for the launch version to solve.')
-        + framed(versions(), 'How the listing flow evolved. Earlier versions by Ezi Anozie and the design team; I worked on v4 with Ezi.')
+        + framed(versions(), 'How the listing flow evolved. Earlier versions by the design team; I worked on v4 with the lead designer.')
         + '<h3 class="cs-h3">Three open problems became my focus.</h3>'
         + lede('Usability feedback on the earlier versions pointed to the same three gaps, each a question I set out to answer.')
         + focus()
@@ -190,7 +183,7 @@ BODY = ''.join([
                shot('retoned', 'After a change, only the new tags are highlighted.'))),
 
     section('control', 'Control', 'A feedback loop that fits what the AI can do.',
-        lede('v3 put feedback on every suggestion: browse versions, thumbs up or down, regenerate. It was more than our AI model could reliably support, and more than sellers needed on every field. Ezi and I reworked feedback around three actions sellers actually want, and I gathered them under one More options menu in the title bar, where they’re always in reach.')
+        lede('v3 put feedback on every suggestion: browse versions, thumbs up or down, regenerate. It was more than our AI model could reliably support, and more than sellers needed on every field. The lead designer and I reworked feedback around three actions sellers actually want, and I gathered them under one More options menu in the title bar, where they’re always in reach.')
         + items([('Regenerate', 'Not quite right? Ask the AI for a new draft.'),
                  ('Change tone', 'Pick from seven tones, from formal to playful, to match the seller’s brand voice.'),
                  ('Clear fields', 'Start over by hand, with a confirmation first, since it can’t be undone.')], grid=True)
@@ -199,7 +192,7 @@ BODY = ''.join([
         + shot('clear', 'Clearing autofilled content asks for confirmation first.')),
 
     section('publish', 'Publishing', 'One listing, published everywhere.',
-        lede('Autofill ends in the team’s publishing flow: sellers pick the marketplaces to list on, preview how the listing will look on each (a feature Ezi designed), and post to all of them at once.')
+        lede('Autofill ends in the team’s publishing flow: sellers pick the marketplaces to list on, preview how the listing will look on each (designed by the lead designer), and post to all of them at once.')
         + framed(flow(), 'The full autofill flow, from two required fields to a published listing.')
         + pair(shot('platforms', 'Choose the marketplaces to list on.'),
                shot('confirm', 'A last check, with a preview, before posting.'))),
@@ -214,7 +207,7 @@ BODY = ''.join([
         + panel('Design around the model’s limits', '<p>Knowing what the AI could reliably do shaped a simpler feedback loop than the one we started with.</p>', ' pm-panel--tonal', 'p-l2')
         + panel('Make AI visible, not magic', '<p>Sellers trust AI more when they can see what it wrote and change it easily.</p>', ' pm-panel--tonal', 'p-l3')
         + '</div>'
-        + '<p class="pm-meta-text om-credit">Designed with the OmniSynkAI design team: Ezi Anozie (lead), Juhi and the UX research team. Screens from the approved prototype, shared with permission.</p>'),
+        + '<p class="pm-meta-text om-credit">Designed with the OmniSynkAI team: the lead designer, a fellow product designer, UX research, product and engineering. Screens from the approved prototype, shared with permission.</p>'),
 ])
 
 HEADER = '''  <header class="cs-head">
@@ -232,7 +225,7 @@ HEADER = '''  <header class="cs-head">
 TLDR = f'''      <dl class="cs-tldr__rows">
         <div class="cs-tldr__row"><dt>Background</dt><dd>OmniSynkAI helped sellers list products across marketplaces. Its listing page made them fill in every field by hand.</dd></div>
         <div class="cs-tldr__row"><dt>Problem</dt><dd>In a survey of 456 sellers, a quarter called cross-platform listing a nightmare, and many paid assistants to keep up.</dd></div>
-        <div class="cs-tldr__row"><dt>My role</dt><dd>I joined lead designer Ezi Anozie on the launch version of AI autofill, owning its placement, how AI content is marked, and its feedback loop.</dd></div>
+        <div class="cs-tldr__row"><dt>My role</dt><dd>I joined the lead designer on the launch version of AI autofill, owning its placement, how AI content is marked, and its feedback loop.</dd></div>
         <div class="cs-tldr__row"><dt>Outcome</dt><dd>Autofill moved beside the fields it needs, AI content is highlighted, and sellers steer it with regenerate, tone and clear. Listing time fell 60%.</dd></div>
       </dl>
       {stats(STATS_TEAM, ' pm-stats--sm cs-tldr__stats')}
