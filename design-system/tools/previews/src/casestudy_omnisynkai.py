@@ -28,7 +28,7 @@ def _cap(n, cap):
 
 # Prototype stills: file in assets/screens/, alt text
 SHOTS = {
-    'empty': ('01-empty-listing.jpg', 'Create a new listing page before autofill: a bar at the top reads “Save time with Autofill” beside empty Title and Product category fields and a sparkle button; Publish listing is disabled.'),
+    'empty': ('01-empty-listing.jpg', 'Create a new listing page before autofill: a bar at the top reads “Save time with Autofill” beside empty Title and Product category fields and the AI autofill icon; Publish listing is disabled.'),
     'filling': ('02-autofill-in-progress.jpg', 'A “Filling out your listing” dialog over the page, with a tip about time saved and a Cancel Autofill button.'),
     'filled': ('03-listing-autofilled.jpg', 'The listing after autofill: a Vitamin C Serum description, nine product photos, and the brand and tags highlighted in purple. The top bar reads “Listing Autofilled, feel free to edit details” with More options and Publish listing.'),
     'tone': ('04-change-tone.jpg', 'A Change Tone dialog with tone options: Formal, Persuasive, Humorous, Playful, Informative, Conversational and Informal, and a Confirm button.'),
@@ -70,7 +70,7 @@ def versions():
     return ('<ol class="om-ver">' + ''.join(
         f'<li class="om-ver__v{" is-mine" if mine else ""}"><p class="om-ver__k"><span class="pm-meta-text">{v}</span>{name}'
         + '</p>' + ('<span class="pm-badge om-ver__me">Where I joined</span>' if mine else '')
-        + f'<p class="om-ver__d">{d}</p><p class="om-ver__l"><span>{"Goal" if mine else "Learned"}</span>{l}</p></li>'
+        + f'<p class="om-ver__d">{d}</p><p class="om-ver__l"><span>{"Goal" if mine else "Feedback"}</span>{l}</p></li>'
         for v, name, d, l, mine in VERSIONS) + '</ol>')
 
 # My three areas: the open problem, the evidence behind it, what I designed
@@ -119,8 +119,8 @@ def process():
         for name, q, d in PHASES) + '</ol>')
 
 # The final autofill flow, from the prototype
-FLOW = [('Add a title and category', 'The two required fields'), ('Autofill', 'One click on the sparkle'), ('Review', 'AI content highlighted'),
-        ('Adjust', 'Regenerate, retone or clear'), ('Pick platforms', 'Where to list'), ('Preview and post', 'One last check')]
+FLOW = [('Add a title and category', 'Enter the required information'), ('Autofill', 'A single click to use AI autofill'), ('Review', 'AI content is clearly highlighted'),
+        ('Adjust', 'Regenerate, retone or clear'), ('Choose where to list', 'Select the marketplaces'), ('Confirm listing details', 'Preview, then post')]
 def flow():
     return ('<ol class="om-flow">' + ''.join(
         f'<li><span class="om-flow__n" aria-hidden="true">{i + 1}</span><div><p class="om-flow__t">{t}</p><p class="om-flow__d">{d}</p></div></li>'
@@ -129,7 +129,7 @@ def flow():
 
 # v3 (the team's listing page before I joined; image from the lead designer's published case study) against the final design
 CHANGES = [  # area, v3, my design
-    ('Placement', 'A small Autofill link above the title, a sparkle in the description toolbar and an AI Generator button under the images: AI in three places.',
+    ('Placement', 'A small Autofill link above the title, an AI icon in the description toolbar and an AI Generator button under the images: AI in three places.',
      'One entry point in a title bar, beside the two fields autofill needs, fixed as sellers scroll.'),
     ('Clarity', 'AI-written text looked the same as anything the seller typed.',
      'Purple highlights on everything AI writes, and a status that invites edits.'),
@@ -140,7 +140,7 @@ def compare():
     n = _num()
     imgs = ('<div class="om-cmp__imgs">'
             '<div><p class="om-cmp__k">Before: v3</p><img class="om-shot" src="assets/screens/00-v3-listing-page.jpg" width="1600" height="1139" loading="lazy" '
-            'alt="The v3 listing page: tabs for general information, product details, pricing, shipping and platform integrations; a small Autofill link above the listing title, a sparkle in the description toolbar, and an AI Generator button under the product photos."></div>'
+            'alt="The v3 listing page: tabs for general information, product details, pricing, shipping and platform integrations; a small Autofill link above the listing title, an AI icon in the description toolbar, and an AI Generator button under the product photos."></div>'
             f'<div><p class="om-cmp__k">After: v4</p><img class="om-shot" src="assets/screens/{SHOTS["filled"][0]}" width="1600" height="1183" loading="lazy" alt="{SHOTS["filled"][1]}"></div>'
             '</div>')
     rows = ('<dl class="om-cmp__rows">' + ''.join(
@@ -177,11 +177,11 @@ BODY = ''.join([
         + impact_box()),
 
     section('problem', 'The problem', 'Sellers were spending their time, or their money, just to list products.',
-        lede('Small businesses grow by selling on as many platforms as they can, which means listing the same product again and again, each time with different requirements. Our UX research team’s survey of 456 sellers showed what that costs.')
+        lede('Small businesses grow by selling on as many platforms as possible. That means listing the same product again and again to meet each platform’s requirements. Our UX research team’s survey of 456 sellers showed what that costs.')
         + stats([('25%', 'Called syncing listings across platforms a nightmare'), ('27.9%', 'Of multi-platform sellers hired virtual assistants to keep up'),
                  ('25.2%', 'Outsourced listing management to third parties')], ' pm-stats--sm cs-stats')
         + '<p class="pm-meta-text om-source">From the team’s seller survey (456 responses), led by UX research.</p>'
-        + callout('What the data showed', 'Listing by hand was slow, led to errors and inconsistencies, and left listings hard to find in search.')
+        + callout('What the data showed', 'The manual listing process was slow, error-prone and inconsistent, leaving listings hard to discover.')
         + f'<section class="om-ns" aria-labelledby="om-ns-h"><p class="om-ns__label" id="om-ns-h">{_l("sparkles")}The opportunity</p>'
           '<p class="om-ns__text">Design an autofill feature that brings AI into the listing flow, helping sellers quickly create compelling, search-friendly listings and raising listing quality across the platform.</p></section>'),
 
@@ -201,7 +201,7 @@ BODY = ''.join([
                  ('Trustana', 'AI enrichment fills out product data to improve search and conversion.')], grid=True)
         + need('SWOT analysis of Shopify’s and Trustana’s AI listing features.', 'Your SWOT diagram for Shopify and Trustana, redrawn', '16x9')
         + '<h3 class="cs-h3">I turned five findings into five design priorities.</h3>'
-        + lede('Every priority traces back to a finding, so each decision that followed had a reason behind it.')
+        + lede('I prioritized decisions rooted in our research findings and competitor data.')
         + findings()),
 
     section('concept', 'Concept', 'I mapped the flow before designing a screen.',
@@ -209,14 +209,14 @@ BODY = ''.join([
         + items([('Simplicity', 'Sellers understand how to start at a glance.'),
                  ('Flexibility', 'The experience feels effortless, even within the AI’s limits.'),
                  ('Better with feedback', 'Results improve as sellers react to them.')], grid=True)
-        + lede('The key trigger came from the data: AI needs only a title and a category to draft a listing. So I built the flow around those two fields, from the first click to a published listing.')
+        + lede('The key trigger came from the data: AI needs only a title and a category to draft a listing. Using this information, I built the flow around those two fields, from the first click to a published listing.')
         + framed(flow(), 'The flow I designed, from two required fields to a published listing.')
-        + '<h3 class="cs-h3">My first concept, and what it taught me.</h3>'
+        + '<h3 class="cs-h3">My first concept</h3>'
         + lede('I built my first layout within OmniSynkAI’s design system:')
         + items([('A sidebar card', 'Invited sellers to “Try listing with Autofill,” with per-platform publishing toggles below it.'),
                  ('Feedback on every field', 'Each AI-written field had controls to browse versions, rate them and regenerate.'),
                  ('A compare message', 'After autofill, a message invited sellers to compare versions.')])
-        + lede('Reviewing it against my priorities, the AI’s limits and the team’s plans, I took three lessons into the final design, one for each gap. Here’s how the launch version compares with v3.')
+        + lede('Reviewing it against my priorities, the AI’s limits and the team’s plans, I took three lessons into the final design, one for each gap. The comparison below shows how the launch version changed from v3.')
         + compare()),
 
     section('solution', 'The solution', 'Autofill that’s easy to find, clear to read and simple to steer.',
@@ -224,7 +224,7 @@ BODY = ''.join([
         + sub('placement', 'Placement', 'I moved autofill to where every listing starts.',
               lede('In v3, autofill was a small link above the title, with more AI buttons elsewhere on the page. In my first concept, it sat in a sidebar card. Either way, it was apart from the fields it needed.',
                    'Sellers start a listing with a title and a category, which is exactly what autofill needs. So I moved autofill into a title bar, right beside those two fields.')
-              + items([('Unlocks when ready', 'The sparkle button lights up once the title and category are filled in.'),
+              + items([('Unlocks when ready', 'The AI autofill icon lights up once the title and category are filled in.'),
                        ('Explains itself', 'One line tells sellers what autofill does for them.'),
                        ('Always in reach', 'The bar stays fixed as sellers scroll, keeping the AI controls close.')]),
               shot('empty', 'Autofill sits beside the two fields it needs, and unlocks once both are filled in.')
@@ -239,7 +239,7 @@ BODY = ''.join([
         + sub('control', 'Control', 'I fit the feedback loop to what the AI could do.',
               lede('My first concept put feedback on every field: browse versions, rate them, regenerate. It was more than our AI model could reliably support, and more than sellers needed.',
                    'I simplified it to the three actions sellers actually reach for, under one More options menu in the title bar. We refined the options together as a team.')
-              + items([('Regenerate', 'Not quite right? Ask the AI for a new draft.'),
+              + items([('Regenerate', 'Request a fresh draft when the first one misses the mark.'),
                        ('Change tone', 'Seven tones, from formal to playful, to match the seller’s brand voice.'),
                        ('Clear fields', 'Start over by hand, with a confirmation first, since it can’t be undone.')]),
               shot('menu', 'More options: regenerate, change tone or clear fields.')
@@ -254,10 +254,10 @@ BODY = ''.join([
     section('impact', 'Impact &amp; reflection', 'Sellers found autofill, and liked using it.',
         lede('Autofill shipped in the September 2024 soft launch with the title bar entry point, purple AI cues and the More options menu in place. In pre-launch testing, 78% of testers were satisfied with autofill, and after launch, average listing time fell by 60% across the listing flow.')
         + impact_box()
-        + lede('OmniSynkAI has since wound down, but the work showed me how AI can take on the tedious parts of selling while sellers keep ownership of their listings.')
+        + lede('OmniSynkAI has since sunset, but the project taught me how to design AI that empowers sellers while keeping them in control of their listings.')
         + '<h3 class="cs-h3">What I learned</h3>'
         + '<div class="cs-pair om-trio">'
-        + panel('Start from what’s still open', '<p>Studying three earlier versions first meant I could focus on the problems no one had solved yet.</p>', ' pm-panel--tonal', 'p-l1')
+        + panel('Use earlier iterations as a guide', '<p>Studying three earlier versions first meant I could focus on the problems no one had solved yet.</p>', ' pm-panel--tonal', 'p-l1')
         + panel('Design around the model’s limits', '<p>Knowing what the AI could reliably do turned a busy feedback system into three clear actions.</p>', ' pm-panel--tonal', 'p-l2')
         + panel('Make AI visible, not magic', '<p>Sellers trust AI more when they can see what it wrote and change it easily.</p>', ' pm-panel--tonal', 'p-l3')
         + '</div>'
