@@ -230,7 +230,7 @@ def swot():
     quads = ''.join(
         f'<section class="om-swot__q om-swot__q--{tone}" aria-labelledby="swot-{name.lower()}"><div class="om-swot__head">'
         f'<h4 id="swot-{name.lower()}"><span class="om-swot__sw" aria-hidden="true"></span>{name}</h4><p>{desc}</p></div>'
-        '<ul class="om-swot__notes">' + ''.join(f'<li class="om-swot__note"><span class="om-swot__tag">{tag}</span>{t}</li>' for tag, t in notes) + '</ul></section>'
+        '<ul class="om-swot__notes">' + ''.join(f'<li class="om-swot__note"><span class="om-swot__tag">{tag}</span><span class="om-swot__txt">{t}</span></li>' for tag, t in notes) + '</ul></section>'
         for name, desc, tone, notes in SWOT)
     return (f'<figure class="om-swot"><div class="om-swot__grid">{quads}</div>'
             + _cap(_num(), 'SWOT of Shopify’s and Trustana’s AI listing features, and what it meant for OmniSynkAI.') + '</figure>')
@@ -471,29 +471,38 @@ CSS = r"""
 .om-notes li { display: grid; grid-template-columns: 24px minmax(0, 1fr); gap: var(--space-3); align-items: start; }
 .om-notes h4 { margin: 0; font-size: var(--type-body-md); line-height: var(--line-body-md); font-weight: var(--weight-medium); letter-spacing: 0; color: var(--color-text-primary); }
 .om-notes p { margin: var(--space-1) 0 0; font-size: var(--type-body-sm); line-height: var(--line-body-sm); color: var(--color-text-secondary); }
-/* SWOT: a Miro-style board in the design system. Quadrants on a surface (radius-md), notes as sticky notes in the
-   quadrant's state colour (radius-sm, a hairline in that colour, shadow-xs, a slight tilt). Two by two from 600px. */
+/* SWOT: a Miro-style board. Quadrants are dotted canvases (radius-md, design-system surface and border tokens).
+   The sticky notes are project art, like the Procense paper form: square paper in a pastel of the quadrant's state
+   colour (the bright state primitive mixed with white, so the paper stays light in both themes), a soft lifted shadow, a faint adhesive band,
+   handwritten text (Caveat, as in the Procense hero art) and a hand-placed tilt. Two by two from 600px. */
 .om-swot { container-type: inline-size; margin: var(--space-2) 0; }
 .om-swot__grid { display: grid; gap: var(--space-4); grid-template-columns: minmax(0, 1fr); }
 @container (min-width: 600px) { .om-swot__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-.om-swot__q { --tone: var(--color-state-info); --tone-bg: var(--color-state-info-bg); padding: var(--space-5); border-radius: var(--radius-md); background: var(--color-bg-surface); box-shadow: inset 0 0 0 1px var(--color-border-subtle); display: grid; gap: var(--space-4); align-content: start; }
-.om-swot__q--success { --tone: var(--color-state-success); --tone-bg: var(--color-state-success-bg); }
-.om-swot__q--error { --tone: var(--color-state-error); --tone-bg: var(--color-state-error-bg); }
-.om-swot__q--warning { --tone: var(--color-state-warning); --tone-bg: var(--color-state-warning-bg); }
+.om-swot__q { --tone: var(--color-state-info); --paper-tone: var(--info-dark); padding: var(--space-5) var(--space-5) var(--space-6); border-radius: var(--radius-md);
+  background-color: var(--color-bg-surface); background-image: radial-gradient(var(--color-border-default) 1px, transparent 1.4px); background-size: 16px 16px; background-position: 8px 8px;
+  box-shadow: inset 0 0 0 1px var(--color-border-subtle); display: grid; gap: var(--space-5); align-content: start; }
+.om-swot__q--success { --tone: var(--color-state-success); --paper-tone: var(--success-dark); }
+.om-swot__q--error { --tone: var(--color-state-error); --paper-tone: var(--error-dark); }
+.om-swot__q--warning { --tone: var(--color-state-warning); --paper-tone: var(--warning-dark); }
 .om-swot__head { display: grid; gap: var(--space-1); }
 .om-swot__head h4 { margin: 0; display: flex; align-items: center; gap: var(--space-2); font-size: var(--type-body-md); line-height: var(--line-body-md); font-weight: var(--weight-medium); letter-spacing: 0; color: var(--color-text-primary); }
 .om-swot__sw { width: 12px; height: 12px; border-radius: 3px; background: var(--tone); flex: none; }
 .om-swot__head p { margin: 0; font-size: var(--type-body-sm); line-height: var(--line-body-sm); color: var(--color-text-secondary); }
-.om-swot__notes { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-3); grid-template-columns: repeat(2, minmax(0, 1fr)); }
-.om-swot__note { min-height: 6.5rem; padding: var(--space-3); border-radius: var(--radius-sm); background: var(--tone-bg); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--tone) 30%, transparent), var(--shadow-xs); display: flex; flex-direction: column; gap: var(--space-2); font-size: var(--type-body-sm); line-height: var(--line-body-sm); color: var(--color-text-primary); transform: rotate(-.6deg); }
-.om-swot__note:nth-child(even) { transform: rotate(.5deg); }
-.om-swot__note:nth-child(3n) { transform: rotate(-.2deg); }
-.om-swot__tag { font-family: var(--font-meta); font-size: var(--type-label); line-height: var(--line-label); color: var(--color-text-secondary); }
-@media (prefers-reduced-motion: reduce) { .om-swot__note, .om-swot__note:nth-child(n) { transform: none; } }
+.om-swot__notes { list-style: none; margin: 0; padding: 0 var(--space-1); display: grid; gap: var(--space-5) var(--space-4); grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.om-swot__note { position: relative; aspect-ratio: 1; min-height: 7.5rem; padding: var(--space-4) var(--space-3) var(--space-3); border-radius: 2px;
+  background-color: color-mix(in srgb, var(--paper-tone) 52%, var(--white));
+  background-image: linear-gradient(to bottom, rgb(11 18 32 / 6%), rgb(11 18 32 / 0%) 16%), linear-gradient(to bottom right, rgb(255 255 255 / 0%) 70%, rgb(11 18 32 / 4%));
+  box-shadow: 0 1px 1px rgb(11 18 32 / 8%), 0 12px 14px -10px rgb(11 18 32 / 35%);
+  display: flex; flex-direction: column; gap: var(--space-1); color: var(--ink); transform: rotate(-1.6deg); }
+.om-swot__note:nth-child(2) { transform: rotate(1.4deg) translateY(4px); }
+.om-swot__note:nth-child(3) { transform: rotate(.8deg) translateY(-2px); }
+.om-swot__note:nth-child(4) { transform: rotate(-1deg) translateY(3px); }
+.om-swot__tag { font-family: var(--font-meta); font-size: var(--type-label); line-height: var(--line-label); color: rgb(11 18 32 / 62%); }
+.om-swot__txt { font-family: Caveat, "Bradley Hand", cursive; font-weight: 600; font-size: 1.3rem; line-height: 1.15; text-wrap: pretty; }
 """
 
 OMNI = dict(page_title='OmniSynkAI Case Study', out='omnisynkai/index.html', sections=SECTIONS, body=BODY, header=HEADER, tldr=TLDR,
-            css=FLOW_CSS + MK_CSS + LB_CSS + BA_CSS + CSS, js=FLOW_JS + ANN_JS + LB_JS + BA_JS)
+            css=FLOW_CSS + MK_CSS + LB_CSS + BA_CSS + CSS, js=FLOW_JS + ANN_JS + LB_JS + BA_JS, head_extra=CP.PH.HEAD)
 
 if __name__ == '__main__':
     print(len(C.render(OMNI)))
