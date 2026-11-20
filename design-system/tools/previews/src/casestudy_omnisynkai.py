@@ -207,21 +207,21 @@ def sub(sid, label, title, line, screens):
 # confirm or replace each note. Quadrant, description, state colour, notes [(tag, text)].
 SWOT = [
     ('Strengths', 'What their AI does well', 'success', [
-        ('Shopify', 'Feedback loops let sellers steer each new draft.'),
-        ('Shopify', 'AI sits inside the editor sellers already use.'),
-        ('Trustana', 'Enriches product data at scale for search.')]),
+        ('Shopify', 'Feedback loops steer each draft.'),
+        ('Shopify', 'AI built into the editor.'),
+        ('Trustana', 'Enriches data at scale for search.')]),
     ('Weaknesses', 'Where their AI falls short', 'error', [
-        ('Both', 'AI features live in separate tools, not one flow.'),
-        ('Both', 'Little to tell AI content from seller input.'),
-        ('Shopify', 'Help stops at its own store, not other marketplaces.')]),
+        ('Both', 'AI split across separate tools.'),
+        ('Both', 'AI content looks like seller input.'),
+        ('Shopify', 'Stops at its own store.')]),
     ('Opportunities', 'Openings for OmniSynkAI', 'info', [
-        ('Market', 'One flow from AI draft to multi-platform publish.'),
-        ('Market', 'Clear cues for everything AI writes.'),
-        ('Market', 'Feedback that improves the model over time.')]),
+        ('Market', 'One flow, from draft to publish.'),
+        ('Market', 'Clear cues for AI content.'),
+        ('Market', 'Feedback that improves the model.')]),
     ('Threats', 'Risks to plan around', 'warning', [
-        ('Market', 'Sellers may distrust AI that edits without asking.'),
-        ('Market', 'Output quality is capped by the model.'),
-        ('Market', 'Competitors could add multi-platform publishing.')]),
+        ('Market', 'Sellers may distrust AI edits.'),
+        ('Market', 'Quality capped by the model.'),
+        ('Market', 'Rivals could add multi-platform.')]),
 ]
 def swot():
     """Four quadrants on the page background (no stage), each with sticky notes in its state colour."""
@@ -491,7 +491,7 @@ CSS = r"""
 .om-swot__sw { width: 12px; height: 12px; border-radius: 3px; background: var(--tone); flex: none; }
 .om-swot__head p { margin: 0; font-size: var(--type-body-sm); line-height: var(--line-body-sm); color: var(--color-text-secondary); }
 .om-swot__notes { list-style: none; margin: 0; padding: 0 var(--space-1); display: grid; gap: var(--space-4) var(--space-3); grid-template-columns: repeat(auto-fill, minmax(6.25rem, 1fr)); }
-.om-swot__note { position: relative; min-height: 6.25rem; padding: var(--space-3) var(--space-2) var(--space-3) var(--space-3); border-radius: 2px;
+.om-swot__note { position: relative; aspect-ratio: 1; padding: var(--space-2) var(--space-2) var(--space-2) var(--space-3); border-radius: 2px;
   background-color: color-mix(in srgb, var(--paper-tone) 52%, var(--white));
   background-image: linear-gradient(to bottom, rgb(11 18 32 / 6%), rgb(11 18 32 / 0%) 16%), linear-gradient(to bottom right, rgb(255 255 255 / 0%) 70%, rgb(11 18 32 / 4%));
   box-shadow: 0 1px 1px rgb(11 18 32 / 8%), 0 12px 14px -10px rgb(11 18 32 / 35%);
@@ -500,7 +500,7 @@ CSS = r"""
 .om-swot__note:nth-child(3) { transform: rotate(.8deg) translateY(-2px); }
 .om-swot__note:nth-child(4) { transform: rotate(-1deg) translateY(3px); }
 .om-swot__tag { font-family: var(--font-meta); font-size: var(--type-label); line-height: var(--line-label); color: rgb(11 18 32 / 62%); }
-.om-swot__txt { font-family: Caveat, "Bradley Hand", cursive; font-weight: 600; font-size: 1.125rem; line-height: 1.12; text-wrap: pretty; }
+.om-swot__txt { font-family: Caveat, "Bradley Hand", cursive; font-weight: 600; font-size: 1.0625rem; line-height: 1.1; text-wrap: pretty; }
 """
 
 OMNI = dict(page_title='OmniSynkAI Case Study', out='omnisynkai/index.html', sections=SECTIONS, body=BODY, header=HEADER, tldr=TLDR,
