@@ -86,23 +86,23 @@ def focus():
 
 # My research (slides 6–9) and the design priority each finding set
 FINDINGS = [
-    ('Ease of use comes first', 'Desk research: sellers expect AI tools to feel intuitive from the first click.',
+    ('Ease of use comes first', 'Desk research', 'Sellers expect AI tools to feel intuitive from the first click.',
      'Easy to find', 'Make autofill discoverable and simple to start, for new and returning sellers alike.'),
-    ('Sellers need to see what changed', 'Desk research: visual cues help people tell AI content from their own.',
+    ('Sellers need to see what changed', 'Desk research', 'Visual cues help people tell AI content from their own.',
      'Clearly marked', 'Highlight everything AI wrote, so sellers know what to check.'),
-    ('Time is of the essence', 'Desk research: sellers list in volume, so every extra step costs them.',
+    ('Time is of the essence', 'Desk research', 'Sellers list in volume, so every extra step costs them.',
      'Right place, right time', 'Bring AI into the key moments of the listing flow, without adding friction.'),
-    ('Feedback makes the model better', 'Competitors: feedback loops improve the AI and keep sellers engaged.',
+    ('Feedback makes the model better', 'Competitors', 'Feedback loops improve the AI and keep sellers engaged.',
      'Learns from feedback', 'Let sellers react to what AI writes, and use that to improve it.'),
-    ('Sellers still want control', 'Competitors: even with AI, sellers can always list by hand.',
+    ('Sellers still want control', 'Competitors', 'Even with AI, sellers can always list by hand.',
      'Seller in control', 'Every field stays editable, and sellers can regenerate, clear or retone at any time.'),
 ]
 def findings():
     arrow = f'<span class="pr-ig__arrow" aria-hidden="true">{_l("arrow-right")}</span>'
     rows = ''.join(
-        f'<li class="pr-ig__row"><div class="pr-ig__in"><p class="pr-ig__k">Finding</p><h4>{ft}</h4><p>{fd}</p></div>{arrow}'
+        f'<li class="pr-ig__row"><div class="pr-ig__in"><p class="pr-ig__k">Finding</p><div class="om-fd__h"><h4>{ft}</h4><span class="pm-badge">{src}</span></div><p>{fd}</p></div>{arrow}'
         f'<div class="pm-card pm-card--outlined pr-ig__goal"><p class="pr-ig__k">Design priority</p><h4 class="pm-card__title">{gt}</h4><p class="pm-card__summary">{gd}</p></div></li>'
-        for ft, fd, gt, gd in FINDINGS)
+        for ft, src, fd, gt, gd in FINDINGS)
     return (f'<figure class="pr-ig"><div class="pr-ig__head" aria-hidden="true"><span>Finding</span><span></span><span>Design priority</span></div>'
             f'<ol class="pr-ig__list">{rows}</ol></figure>')
 
@@ -189,7 +189,8 @@ BODY = ''.join([
         + framed(process(), 'Discover, conceptualize, design.')),
 
     section('discover', 'Research', 'I started by asking where AI could actually help.',
-        lede('Before designing anything, I wanted two answers: where AI could help sellers most, and how we could guide them to a listing they’re happy with. I partnered with UX research to pull the survey and interview findings and spot the gaps, and huddled with engineers and product managers to map what the AI could and couldn’t reliably do. Knowing its limits early kept the design honest.',
+        lede('Before designing anything, I needed to uncover where AI could help sellers most, and how we could guide them to a listing they’re happy with.',
+             'I partnered with UX research to pull the survey and interview findings and spot the gaps, and collaborated with engineers and product managers to map the AI’s constraints and feasibility. Knowing its limits early kept the design honest.',
              'To fill the gaps, I ran desk research on how people use AI tools, and mapped a SWOT analysis of Shopify’s and Trustana’s AI listing features: Shopify’s interactive feedback loops, and Trustana’s AI enrichment for search and conversion.')
         + need('SWOT analysis of Shopify’s and Trustana’s AI listing features.', 'Your SWOT diagram for Shopify and Trustana, redrawn', '16x9')
         + '<h3 class="cs-h3">I turned five findings into five design priorities.</h3>'
@@ -361,6 +362,9 @@ CSS = r"""
 .om-proc__arrow { display: none; color: var(--color-text-tertiary); align-self: center; justify-self: center; }
 .om-proc__arrow .pm-icon { width: 20px; height: 20px; }
 @container (min-width: 640px) { .om-proc { grid-template-columns: minmax(0, 1fr) 24px minmax(0, 1fr) 24px minmax(0, 1fr); gap: var(--space-2); } .om-proc__arrow { display: block; } }
+/* Findings: the source as a badge, top right of each finding */
+.om-fd__h { display: flex; align-items: flex-start; justify-content: space-between; gap: var(--space-3); }
+.om-fd__h .pm-badge { flex: none; margin-top: 1px; }
 """
 
 OMNI = dict(page_title='OmniSynkAI Case Study', out='omnisynkai/index.html', sections=SECTIONS, body=BODY, header=HEADER, tldr=TLDR, css=IG_CSS + CSS)
