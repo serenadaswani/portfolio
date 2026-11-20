@@ -64,13 +64,13 @@ VERSIONS = [
     ('v1', 'Cross-listing', 'Grouped actions in a bento layout, with a separate price optimizer.', 'Cluttered, and couldn’t scale to data-heavy fields.', False),
     ('v2', 'Autosynk', 'Sellers chose AI or manual listing; AI drafted from a few core details.', 'Sellers wanted more control over what AI wrote.', False),
     ('v3', 'Autofill tiles', 'Autofill buttons, form steppers and feedback on each suggestion.', 'Many sellers didn’t realize autofill existed.', False),
-    ('v4', 'Autofill for launch', 'I designed where autofill lives, how AI content is marked, and how sellers steer it.', 'Make it findable, clearly marked and easy to steer.', True),
+    ('v4', 'Autofill for launch', 'Autofill became a core launch feature, with a clear place on the page, cues for AI content and simple controls.', 'Make it findable, clearly marked and easy to steer.', True),
 ]
 def versions():
     return ('<ol class="om-ver">' + ''.join(
         f'<li class="om-ver__v{" is-mine" if mine else ""}"><p class="om-ver__k"><span class="pm-meta-text">{v}</span>{name}'
-        + ('<span class="pm-badge om-ver__me">My part</span>' if mine else '') + '</p>'
-        f'<p class="om-ver__d">{d}</p><p class="om-ver__l"><span>{"Goal" if mine else "Learned"}</span>{l}</p></li>'
+        + '</p>' + ('<span class="pm-badge om-ver__me">Where I joined</span>' if mine else '')
+        + f'<p class="om-ver__d">{d}</p><p class="om-ver__l"><span>{"Goal" if mine else "Learned"}</span>{l}</p></li>'
         for v, name, d, l, mine in VERSIONS) + '</ol>')
 
 # My three areas: the open problem, the evidence behind it, what I designed
@@ -108,14 +108,15 @@ def findings():
 
 # Discover -> Conceptualize -> Design, for my part
 PHASES = [
-    ('Discover', 'Where can AI help sellers most?', ['Past research, with UX research', 'AI’s strengths and limits, with engineering and product', 'Desk research', 'SWOT of Shopify and Trustana']),
-    ('Conceptualize', 'What should autofill do, and when?', ['User flows for new and returning sellers', 'Interactions and triggers', 'A feedback loop for AI output']),
-    ('Design', 'How does it fit the listing page?', ['Where autofill lives', 'How AI content is marked', 'How sellers adjust it']),
+    ('Discover', 'Where can AI help?', ['Past research', 'AI limits', 'Competitors']),
+    ('Conceptualize', 'What should it do?', ['User flows', 'Triggers', 'Feedback loop']),
+    ('Design', 'How does it fit?', ['Placement', 'Clarity', 'Control']),
 ]
 def process():
-    return ('<ol class="om-proc">' + ''.join(
+    arrow = f'<span class="om-proc__arrow" aria-hidden="true">{_l("arrow-right")}</span>'
+    return ('<ol class="om-proc">' + arrow.join(
         f'<li class="om-proc__step"><p class="om-proc__k">{name}</p><h4>{q}</h4>'
-        '<ul>' + ''.join(f'<li>{o}</li>' for o in outs) + '</ul></li>'
+        '<ul class="om-proc__tags">' + ''.join(f'<li class="pm-badge">{o}</li>' for o in outs) + '</ul></li>'
         for name, q, outs in PHASES) + '</ol>')
 
 # The final autofill flow, from the prototype
@@ -141,16 +142,24 @@ def compare():
     imgs = ('<div class="om-cmp__imgs">'
             '<div><p class="om-cmp__k">Before: v3</p><img class="om-shot" src="assets/screens/00-v3-listing-page.jpg" width="1600" height="1139" loading="lazy" '
             'alt="The v3 listing page: tabs for general information, product details, pricing, shipping and platform integrations; a small Autofill link above the listing title, a sparkle in the description toolbar, and an AI Generator button under the product photos."></div>'
-            f'<div><p class="om-cmp__k">After: my design</p><img class="om-shot" src="assets/screens/{SHOTS["filled"][0]}" width="1600" height="1183" loading="lazy" alt="{SHOTS["filled"][1]}"></div>'
+            f'<div><p class="om-cmp__k">After: v4</p><img class="om-shot" src="assets/screens/{SHOTS["filled"][0]}" width="1600" height="1183" loading="lazy" alt="{SHOTS["filled"][1]}"></div>'
             '</div>')
     rows = ('<dl class="om-cmp__rows">' + ''.join(
-        f'<div class="om-cmp__row"><dt>{a}</dt><dd><span class="om-cmp__tag">v3</span>{b}</dd><dd><span class="om-cmp__tag om-cmp__tag--me">Mine</span>{c}</dd></div>'
+        f'<div class="om-cmp__row"><dt>{a}</dt><dd><span class="om-cmp__tag">v3</span>{b}</dd><dd><span class="om-cmp__tag om-cmp__tag--me">v4</span>{c}</dd></div>'
         for a, b, c in CHANGES) + '</dl>')
     return (f'<figure class="pm-frame"><div class="pm-frame__stage om-stage om-cmp">{imgs}{rows}</div>'
-            + _cap(n, 'The team’s v3 listing page (left) and my design for the launch version (right): what I changed in each of my three areas.') + '</figure>')
+            + _cap(n, 'The v3 listing page (left) and the launch version (right): what changed in placement, clarity and control.') + '</figure>')
 
 STATS_TEAM = [('60%', 'Less time to create a listing, on average'), ('20%', 'More accurate listings'),
               ('78%', 'Of testers satisfied with autofill')]
+
+def impact_box():
+    """Team results in their own container, so they read first."""
+    return f'<section class="om-impact" aria-label="Results">{stats(STATS_TEAM, " pm-stats--sm cs-stats")}{team_source()}</section>'
+
+def callout(label, text):
+    """A key insight, set large on a surface panel (the opportunity keeps the accent tint)."""
+    return f'<div class="om-callout"><p class="om-callout__k">{label}</p><p class="om-callout__t">{text}</p></div>'
 
 # ---------- content ----------
 SECTIONS = [('overview', 'Overview'), ('problem', 'The problem'), ('role', 'My role'), ('discover', 'Research'), ('concept', 'Concept'),
@@ -158,32 +167,32 @@ SECTIONS = [('overview', 'Overview'), ('problem', 'The problem'), ('role', 'My r
 
 BODY = ''.join([
     section('overview', 'Overview', 'I designed how AI fits into the moment sellers create a listing.',
-        lede('OmniSynkAI was an AI startup helping small and mid-sized sellers list and sync products across marketplaces like Amazon, eBay, Etsy and Shopify. Its listing page asked sellers to fill in every product field by hand, for every platform.',
-             'When AI autofill became a core launch feature, I joined the design team on the version that would ship. I owned three parts of it: where autofill lives on the page, how sellers tell AI content from their own, and how they steer what AI writes. Each of those decisions made it into the final design.')
-        + shot('filled', 'The listing after autofill: my title bar, purple highlights for AI content, and the More options menu for steering it.')
-        + stats(STATS_TEAM, ' pm-stats--sm cs-stats') + team_source()),
+        lede('OmniSynkAI helped small and mid-sized sellers list products across marketplaces like Amazon, eBay and Etsy. Its listing page made them fill in every field by hand.',
+             'I joined the design team as AI autofill became a launch feature, and focused on three things: where autofill lives on the page, how sellers tell AI content from their own, and how they steer what it writes.')
+        + shot('filled', 'The listing after autofill: the title bar, purple highlights for AI content, and More options for steering it.')
+        + impact_box()),
 
     section('problem', 'The problem', 'Sellers were spending their time, or their money, just to list products.',
         lede('Small businesses grow by selling on as many platforms as they can, which means listing the same product again and again, each time with different requirements. Our UX research team’s survey of 456 sellers showed what that costs.')
         + stats([('25%', 'Called syncing listings across platforms a nightmare'), ('27.9%', 'Of multi-platform sellers hired virtual assistants to keep up'),
                  ('25.2%', 'Outsourced listing management to third parties')], ' pm-stats--sm cs-stats')
         + '<p class="pm-meta-text om-source">From the team’s seller survey (456 responses), led by UX research.</p>'
-        + lede('Listing by hand was slow, led to errors and inconsistencies, and left listings hard to find in search.')
+        + callout('What the data showed', 'Listing by hand was slow, led to errors and inconsistencies, and left listings hard to find in search.')
         + f'<section class="om-ns" aria-labelledby="om-ns-h"><p class="om-ns__label" id="om-ns-h">{_l("sparkles")}The opportunity</p>'
           '<p class="om-ns__text">Design an autofill feature that brings AI into the listing flow, helping sellers quickly create compelling, search-friendly listings and raising listing quality across the platform.</p></section>'),
 
-    section('role', 'My role', 'I owned three questions on the version that would launch.',
-        lede('By the time I joined, the team had explored three versions of the listing flow. I studied what each one had taught us, and saw the same gaps come up again and again: sellers missed autofill, couldn’t tell what it wrote, and wanted more say in the result. Those became my three questions.')
-        + framed(versions(), 'What I inherited, and where I came in.')
+    section('role', 'My role', 'I joined for the version that would launch.',
+        lede('The team had already explored three versions of the listing flow. Studying what each one taught us, I saw the same three gaps come up again and again.')
+        + framed(versions(), 'How the listing flow evolved, and where I joined.')
+        + callout('Three gaps', 'Sellers missed autofill, couldn’t tell what it wrote, and wanted more say in the result.')
         + focus()
-        + '<h3 class="cs-h3">I answered them in three phases.</h3>'
-        + lede('Each phase answered one question, and each answer shaped the next.')
-        + framed(process(), 'Discover, conceptualize, design: the question each phase answered and what came out of it.')),
+        + '<h3 class="cs-h3">I tackled them in three phases.</h3>'
+        + framed(process(), 'Discover, conceptualize, design.')),
 
     section('discover', 'Research', 'I started by asking where AI could actually help.',
-        lede('Before designing anything, I wanted two answers: where AI could help sellers most, and how we could guide them to a listing they’re happy with. I partnered with UX research to pull the survey and interview findings and spot the gaps, and huddled with engineers and product managers to map what the AI could and couldn’t reliably do. Knowing its limits early kept my designs honest.',
+        lede('Before designing anything, I wanted two answers: where AI could help sellers most, and how we could guide them to a listing they’re happy with. I partnered with UX research to pull the survey and interview findings and spot the gaps, and huddled with engineers and product managers to map what the AI could and couldn’t reliably do. Knowing its limits early kept the design honest.',
              'To fill the gaps, I ran desk research on how people use AI tools, and mapped a SWOT analysis of Shopify’s and Trustana’s AI listing features: Shopify’s interactive feedback loops, and Trustana’s AI enrichment for search and conversion.')
-        + need('My SWOT analysis of Shopify’s and Trustana’s AI listing features.', 'Your SWOT diagram for Shopify and Trustana, redrawn', '16x9')
+        + need('SWOT analysis of Shopify’s and Trustana’s AI listing features.', 'Your SWOT diagram for Shopify and Trustana, redrawn', '16x9')
         + '<h3 class="cs-h3">I turned five findings into five design priorities.</h3>'
         + lede('Every priority traces back to a finding, so each decision that followed had a reason behind it.')
         + findings()),
@@ -194,7 +203,7 @@ BODY = ''.join([
         + framed(flow(), 'The flow I designed, from two required fields to a published listing.')
         + '<h3 class="cs-h3">My first concept, and what it taught me.</h3>'
         + lede('My first layout, built within OmniSynkAI’s design system, invited sellers to “Try listing with Autofill” from a card in the sidebar, with per-platform publishing toggles below it. Every AI-written field had its own controls to browse versions, give a thumbs up or down, and regenerate, and a message after autofill invited sellers to compare versions.')
-        + lede('Reviewing it against my priorities, the AI’s limits and the team’s plans, I took three lessons into the final design, one for each of my questions. Here’s how the result compares with the v3 page I started from.')
+        + lede('Reviewing it against my priorities, the AI’s limits and the team’s plans, I took three lessons into the final design, one for each gap. Here’s how the launch version compares with v3.')
         + compare()),
 
     section('placement', 'Placement', 'I moved autofill to where every listing starts.',
@@ -226,12 +235,12 @@ BODY = ''.join([
                shot('confirm', 'A last check, with a preview, before posting.'))),
 
     section('impact', 'Impact &amp; reflection', 'Sellers found autofill, and liked using it.',
-        lede('Autofill shipped in the September 2024 soft launch with all three of my pieces in place: the title bar entry point, the purple AI cues and the More options feedback loop. In pre-launch testing, 78% of testers were satisfied with autofill, and after launch, average listing time fell by 60% across the listing flow.')
-        + stats(STATS_TEAM, ' pm-stats--sm cs-stats') + team_source()
+        lede('Autofill shipped in the September 2024 soft launch with the title bar entry point, purple AI cues and the More options menu in place. In pre-launch testing, 78% of testers were satisfied with autofill, and after launch, average listing time fell by 60% across the listing flow.')
+        + impact_box()
         + lede('OmniSynkAI has since wound down, but the work showed me how AI can take on the tedious parts of selling while sellers keep ownership of their listings.')
         + '<h3 class="cs-h3">What I learned</h3>'
         + '<div class="cs-pair om-trio">'
-        + panel('Start from what’s still open', '<p>Studying three earlier versions first meant I spent my time on the problems no one had solved yet.</p>', ' pm-panel--tonal', 'p-l1')
+        + panel('Start from what’s still open', '<p>Studying three earlier versions first meant I could focus on the problems no one had solved yet.</p>', ' pm-panel--tonal', 'p-l1')
         + panel('Design around the model’s limits', '<p>Knowing what the AI could reliably do turned a busy feedback system into three clear actions.</p>', ' pm-panel--tonal', 'p-l2')
         + panel('Make AI visible, not magic', '<p>Sellers trust AI more when they can see what it wrote and change it easily.</p>', ' pm-panel--tonal', 'p-l3')
         + '</div>'
@@ -253,8 +262,8 @@ HEADER = '''  <header class="cs-head">
 TLDR = f'''      <dl class="cs-tldr__rows">
         <div class="cs-tldr__row"><dt>Background</dt><dd>OmniSynkAI helped sellers list products across marketplaces. Its listing page made them fill in every field by hand.</dd></div>
         <div class="cs-tldr__row"><dt>Problem</dt><dd>In a survey of 456 sellers, a quarter called cross-platform listing a nightmare, and many paid assistants to keep up.</dd></div>
-        <div class="cs-tldr__row"><dt>My role</dt><dd>On the launch version of AI autofill, I owned where it lives on the page, how AI content is marked, and how sellers steer it.</dd></div>
-        <div class="cs-tldr__row"><dt>Outcome</dt><dd>All three of my designs shipped: autofill beside the fields it needs, purple cues for AI content, and a More options menu to steer it. Listing time fell 60%.</dd></div>
+        <div class="cs-tldr__row"><dt>My role</dt><dd>I joined the team on the launch version of AI autofill, focusing on where it lives on the page, how AI content is marked, and how sellers steer it.</dd></div>
+        <div class="cs-tldr__row"><dt>Outcome</dt><dd>Autofill shipped beside the fields it needs, with purple cues for AI content and a More options menu to steer it. Listing time fell 60%.</dd></div>
       </dl>
       {stats(STATS_TEAM, ' pm-stats--sm cs-tldr__stats')}
       {team_source()}'''
@@ -334,6 +343,25 @@ CSS = r"""
 .om-cmp__row dd:last-child { color: var(--color-text-primary); }
 .om-cmp__tag { justify-self: start; font-family: var(--font-meta); font-size: var(--type-label); line-height: var(--line-label); color: var(--color-text-tertiary); }
 .om-cmp__tag--me { color: var(--color-text-link); font-weight: var(--weight-medium); }
+
+/* Results: a container so the numbers stand out */
+.om-impact { margin: var(--space-2) 0; padding: var(--space-6); border-radius: var(--radius-md); background: var(--color-bg-surface); box-shadow: inset 0 0 0 1px var(--color-border-subtle), var(--shadow-xs); }
+.om-impact .pm-stats { margin: 0; padding-top: 0; border-top: 0; }
+.om-impact .om-source { margin-top: var(--space-4); }
+/* Key insight: large text on a surface panel with a cobalt rule */
+.om-callout { margin: var(--space-2) 0; padding: var(--space-5) var(--space-6); border-radius: var(--radius-md); background: var(--color-bg-surface); box-shadow: inset 3px 0 0 var(--color-action-primary), inset 0 0 0 1px var(--color-border-subtle); display: grid; gap: var(--space-2); }
+.om-callout__k { margin: 0; display: flex; align-items: center; gap: var(--space-2); font-size: var(--type-body-sm); line-height: var(--line-body-sm); font-weight: var(--weight-medium); color: var(--color-text-secondary); }
+.om-callout__k .pm-icon { width: 16px; height: 16px; }
+.om-callout__t { margin: 0; font-size: var(--type-h4, var(--type-body-lg)); line-height: var(--line-h4, var(--line-body-lg)); font-weight: var(--weight-medium); color: var(--color-text-primary); text-wrap: balance; }
+/* Versions: the badge sits on the card's top-right edge */
+.om-ver__v { position: relative; }
+.om-ver__me { position: absolute; top: 0; right: var(--space-3); transform: translateY(-50%); margin: 0; background: var(--color-bg-elevated); box-shadow: inset 0 0 0 1px var(--color-action-primary), var(--shadow-xs); }
+.om-stage:has(.om-ver) { padding-top: var(--space-6); }
+/* Phases: short question and tags, with arrows between from 640px */
+.om-proc__tags { list-style: none; margin: 0; padding: 0 !important; display: flex !important; flex-wrap: wrap; gap: var(--space-2) !important; }
+.om-proc__arrow { display: none; color: var(--color-text-tertiary); align-self: center; justify-self: center; }
+.om-proc__arrow .pm-icon { width: 20px; height: 20px; }
+@container (min-width: 640px) { .om-proc { grid-template-columns: minmax(0, 1fr) 24px minmax(0, 1fr) 24px minmax(0, 1fr); gap: var(--space-2); } .om-proc__arrow { display: block; } }
 """
 
 OMNI = dict(page_title='OmniSynkAI Case Study', out='omnisynkai/index.html', sections=SECTIONS, body=BODY, header=HEADER, tldr=TLDR, css=IG_CSS + CSS)
