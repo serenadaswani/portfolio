@@ -15,7 +15,7 @@ IG_CSS = CP._between(CP.CSS, '/* Insights -> goals', '/* ===== Procense media') 
 
 def items(rows, grid=False):
     """Title + description list, no numbering (same as Procense)."""
-    return (f'<ul class="cs-points cs-points--plain{" cs-points--grid" if grid else ""}">'
+    return (f'<ul class="cs-points cs-points--plain{" cs-points--grid" if grid else ""}{" om-g3" if grid and len(rows) == 3 else ""}">'
             + ''.join(f'<li><div><h4>{t}</h4><p>{d}</p></div></li>' for t, d in rows) + '</ul>')
 
 # ---------- figures ----------
@@ -376,6 +376,8 @@ CSS = r"""
 /* Findings: the source as a badge, top right of each finding */
 .om-fd__h { display: flex; align-items: flex-start; justify-content: space-between; gap: var(--space-3); }
 .om-fd__h .pm-badge { flex: none; margin-top: 1px; }
+/* Three-item lists go three across, so none is left on its own row */
+@container (min-width: 768px) { .cs-points--grid.om-g3 { grid-template-columns: repeat(3, minmax(0, 1fr)); column-gap: var(--space-6); } }
 """
 
 OMNI = dict(page_title='OmniSynkAI Case Study', out='omnisynkai/index.html', sections=SECTIONS, body=BODY, header=HEADER, tldr=TLDR, css=IG_CSS + CSS)
