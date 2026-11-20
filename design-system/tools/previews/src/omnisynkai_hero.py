@@ -179,11 +179,12 @@ CSS = r"""
 .oh--anim .oh-k--1 { animation-name: oh-k1; } .oh--anim .oh-k--2 { animation-name: oh-k2; } .oh--anim .oh-k--3 { animation-name: oh-k3; }
 
 /* Camera (scale, then the shift that centres a point of the screen): the whole page -> Title and Product category
-   (507, 200) x1.9 -> AI icon (790, 165) x2.4 -> out for loading -> Description (360, 285) x1.8 -> down to Media
-   (418, 430) x1.45 -> down to Brand and Tags (418, 488.5) x1.47 -> up to the Listing Autofilled bar (395, 218) x1.7 ->
-   the whole page. Media and Brand/Tags views show their sections' full width (no left or right edge cut off). */
+   (507, 200) x1.9 -> AI icon (790, 165) x2.4 -> out for loading -> Description (360, 404) x1.8 -> down to Media
+   (418, 453) x1.45 -> down to Brand and Tags (418, 488.5) x1.47 -> up to the Listing Autofilled bar (395, 218) x1.7 ->
+   the whole page. Media and Brand/Tags views show their sections' full width (no left or right edge cut off); the
+   Description and Media views start just below the title bar (y 198), so the bar first appears once it has changed. */
 @keyframes oh-cam { 0%, 4% { transform: scale(1) translate(0, 0); } 9.5%, 21% { transform: scale(1.9) translate(-.7%, 22.98%); } 26.5%, 30.5% { transform: scale(2.4) translate(-29%, 27.71%); }
-  36%, 49% { transform: scale(1) translate(0, 0); } 54%, 61.5% { transform: scale(1.8) translate(14%, 11.5%); } 65.5%, 69% { transform: scale(1.45) translate(8.2%, -8.09%); }
+  36%, 49% { transform: scale(1) translate(0, 0); } 54%, 61.5% { transform: scale(1.8) translate(14%, -4.57%); } 65.5%, 69% { transform: scale(1.45) translate(8.2%, -11.19%); }
   72.5%, 75.5% { transform: scale(1.47) translate(8.2%, -15.99%); } 80%, 84% { transform: scale(1.7) translate(10.5%, 20.55%); } 89.5%, 100% { transform: scale(1) translate(0, 0); } }
 /* 1. Title, then Product category, type in (one character at a time, the same way) while zoomed in; the cursor glides to the AI autofill icon and clicks it */
 @keyframes oh-type { 0%, 9.5% { clip-path: inset(0 100% 0 0); animation-timing-function: steps(15, end); } 15%, 100% { clip-path: inset(0 0 0 0); } }
@@ -194,10 +195,10 @@ CSS = r"""
 @keyframes oh-s2 { 0%, 34.5% { opacity: 0; } 37.5%, 49% { opacity: 1; } 52%, 100% { opacity: 0; } }
 @keyframes oh-stb { 0%, 39.5% { transform: translate(6.9px, 12.2px) scale(5.4, 5.9); } 42% { transform: translate(10px, 10.4px) scale(6.3, 6.7); } 43.5% { transform: translate(10px, 10.4px) scale(6.7, 7.1); } 45% { transform: translate(10px, 10.4px) scale(6.3, 6.7); } 47.5%, 100% { transform: translate(6.9px, 12.2px) scale(5.4, 5.9); } }
 @keyframes oh-sts { 0%, 39.5% { opacity: 1; transform: translate(15.05px, 4.9px) scale(3.1, 3.5); } 41.5% { opacity: .8; } 42%, 45% { opacity: 0; transform: translate(10px, 10.4px) scale(1.2, 1.3); } 45.5% { opacity: .8; } 47.5%, 100% { opacity: 1; transform: translate(15.05px, 4.9px) scale(3.1, 3.5); } }
-/* 3-4. Skeletons in the sections autofill writes to, each giving way to its content as the camera reaches it */
-@keyframes oh-skd { 0%, 34% { opacity: 0; } 36%, 54.5% { opacity: 1; } 57.5%, 100% { opacity: 0; } }
-@keyframes oh-skm { 0%, 34% { opacity: 0; } 36%, 65% { opacity: 1; } 68%, 100% { opacity: 0; } }
-@keyframes oh-skf { 0%, 34% { opacity: 0; } 36%, 71.5% { opacity: 1; } 74%, 100% { opacity: 0; } }
+/* 3-4. Skeletons (switched on only once the loading screen fully covers the page, so they first show as it lifts) in the sections autofill writes to, each giving way to its content as the camera reaches it */
+@keyframes oh-skd { 0%, 37.5% { opacity: 0; } 38%, 54.5% { opacity: 1; } 57.5%, 100% { opacity: 0; } }
+@keyframes oh-skm { 0%, 37.5% { opacity: 0; } 38%, 65% { opacity: 1; } 68%, 100% { opacity: 0; } }
+@keyframes oh-skf { 0%, 37.5% { opacity: 0; } 38%, 71.5% { opacity: 1; } 74%, 100% { opacity: 0; } }
 @keyframes oh-sweep { from { background-position: 100% 0; } to { background-position: -50% 0; } }
 @keyframes oh-d1 { 0%, 54.5% { opacity: 0; transform: translateY(20%); } 57.5%, 100% { opacity: 1; transform: none; } }
 @keyframes oh-d2 { 0%, 55.6% { opacity: 0; transform: translateY(20%); } 58.6%, 100% { opacity: 1; transform: none; } }
