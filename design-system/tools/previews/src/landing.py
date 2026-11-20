@@ -12,7 +12,7 @@ FEATURED = [  # strongest first: full width. Heading + a one-line summary, writt
     ('procense', 'Digitizing manufacturing QA forms to increase batch execution speed by 10%', 'Unified batch records and SOPs into a traceable digital workflow.', ['Product design', 'End-to-end', 'Tablet'], '', 'procense/index.html')]
 MORE = [  # two-up below
     ('apple', 'Redesigning QA reporting for Apple’s internal teams', 'Simplified report creation, organization, and review across internal QA teams.', ['Product design', 'Redesign', 'Internal'], '', 'https://serenadaswani.framer.website/project-detail-apple-internal-reporting-tool'),
-    ('omni', 'Introducing AI autofill to reduce e-commerce listing input by 50%', 'Helped sellers generate, refine, and customize product listings with AI.', ['Product design', 'AI', 'Web'], '', 'omnisynkai/index.html')]
+    ('omni', 'Introducing AI autofill to cut e-commerce listing time by 60%', 'Helped sellers generate, refine, and customize product listings with AI.', ['Product design', 'AI', 'Web'], '', 'omnisynkai/index.html')]
 ROLES = [('D', 'Deploy', 'Product designer', 'Jan 2026 – Present', True, 'Product design for Mensio, and a design system adopted across Deploy’s products.'),
          ('A', 'Apple', 'UI/UX designer, contract', 'Aug 2024 – Dec 2025', False, 'Sole designer on an internal QA reporting tool.'),
          ('O', 'OmniSynkAI', 'Product design intern', 'Jul – Sep 2024', False, 'Designed an AI autofill feature for inventory listings.'),
