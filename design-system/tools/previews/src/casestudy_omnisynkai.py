@@ -10,10 +10,16 @@ import casestudy as C
 from casestudy import I, S, section, lede, panel, stats
 from lib import _l
 import casestudy_procense as CP
+from cs_parts import before_after
 
 FLOW_CSS = CP._between(CP.CSS, '/* Batch workflow (Fig. 1)', '/* Lists without numbers')  # Procense Fig. 1 stepper
 FLOW_JS = CP._between(CP.JS, '  // Fig. 1 batch workflow', '  // TL;DR stepper')
-MK_CSS = CP._between(CP.CSS, '/* Annotation badges', '.pr-notes {')  # annotation coral badges
+MK_CSS = (CP._between(CP.CSS, '/* Annotation badges', '/* Expand control')  # badges + annotation cards, as on Procense's final screens
+          + CP._between(CP.CSS, '/* Feature cards: Card --outlined', '/* Thumbnail:')
+          + '.pr-sfig + .pr-sfig { margin-top: var(--space-6); }\n.pr-sfig .pm-frame__stage { container: pr-sfig / inline-size; }\n')
+ANN_JS = CP._between(CP.JS, '  // Final-screen annotations', '  // Lightbox:').replace(
+    'window.TabletScreen.reveal(btns[i]);', "btns[i].scrollIntoView({ block: 'nearest', behavior: reduce ? 'auto' : 'smooth' });")  # no TabletScreen here
+BA_CSS, BA_JS = CP.BA_CSS, CP.BA_JS  # before/after slider, as in Procense's Tablet-first section
 LB_CSS = CP._between(CP.CSS, '/* Expand control (ImageFrame)', '/* Fig. 3 sketches')  # expand button + shared Lightbox
 LB_JS = CP._between(CP.JS, '  // Lightbox:', '  // Solution card animations')
 
@@ -44,13 +50,25 @@ SHOTS = {
     'done': ('10-listing-complete.jpg', 'A Listing Complete dialog: “Nice work, you just listed your first product with OmniSynkAI,” with Dashboard and List Another buttons.'),
 }
 def shot(key, cap, pins=(), rows=None, size=''):
-    """A prototype still in its figure stage, with an expand button that opens the shared Lightbox (as on Procense).
-    pins: coral badges [(number, x%, y%)]. rows: numbered notes [(title, line)] shown above the screen, three across."""
+    """A prototype still in its figure stage with the Procense expand button (opens the shared Lightbox).
+    With rows (notes) it is a Procense annotation figure: Card --outlined note cards above the screen, coral badge
+    buttons on it; hovering or focusing a badge lifts its card, hovering a card lifts its badge, clicking a card's
+    title flashes its badge. pins: [(x%, y%)] in note order. Without rows, pins are plain badges [(number, x%, y%)]."""
     f, alt = SHOTS[key]
     n = _num()
-    mk = ''.join(f'<span class="pr-mk om-pin" data-n="{k}" style="left:{x}%;top:{y}%" aria-hidden="true">{k}</span>' for k, x, y in pins)
-    top = notes(rows) if rows else ''
-    return (f'<figure class="pm-frame om-fig{size}"><div class="pm-frame__stage om-stage pr-zoom" data-lb-item data-lb-caption="Fig. {n}. {cap}">{top}'
+    slug = f'ann-{key}'
+    if rows:
+        mk = ''.join(f'<button type="button" class="pr-mk pr-mk--btn" data-ann="{i}" style="left:{x}%;top:{y}%" '
+                     f'aria-label="Annotation {i + 1}: {rows[i][0]}" aria-describedby="{slug}-{i}">{i + 1}</button>' for i, (x, y) in enumerate(pins))
+        cards = ''.join(f'<li class="pm-card pm-card--outlined pr-card pr-note-card" data-ann-card="{i}"><span class="pr-mk pr-mk--key" aria-hidden="true">{i + 1}</span>'
+                        f'<div><h4 class="pm-card__title"><button type="button" class="pr-note-card__btn" data-ann-jump="{i}" aria-describedby="{slug}-{i}">{t}</button></h4>'
+                        f'<p class="pm-card__summary" id="{slug}-{i}">{d}</p></div></li>' for i, (t, d) in enumerate(rows))
+        top = f'<ol class="pr-notes" aria-label="Design details in this screen. Select one to show it on the screen.">{cards}</ol>'
+        fig_cls, data = 'pm-frame pr-sfig om-fig', ' data-ann-fig'
+    else:
+        mk = ''.join(f'<span class="pr-mk om-pin" style="left:{x}%;top:{y}%" aria-hidden="true">{k}</span>' for k, x, y in pins)
+        top, fig_cls, data = '', 'pm-frame om-fig', ''
+    return (f'<figure class="{fig_cls}{size}"{data}><div class="pm-frame__stage om-stage pr-zoom" data-lb-item data-lb-caption="Fig. {n}. {cap}">{top}'
             f'<div class="om-pinwrap"><img class="om-shot" src="assets/screens/{f}" width="1600" height="1183" loading="lazy" alt="{alt}">{mk}'
             + CP.expand(f'Fig. {n}') + '</div></div>' + _cap(n, cap) + '</figure>')
 def notes(rows):
@@ -156,27 +174,16 @@ def flow():
             '</div>')
 
 
-# v3 (the team's listing page before I joined; image from the lead designer's published case study) against the final design
-CHANGES = [  # area, v3, my design
-    ('Placement', 'A small Autofill link above the title, an AI icon in the description toolbar and an AI Generator button under the images: AI in three places.',
-     'One entry point in a title bar, beside the two fields autofill needs, fixed as sellers scroll.'),
-    ('Clarity', 'AI-written text looked the same as anything the seller typed.',
-     'Purple highlights on everything AI writes, and a status that invites edits.'),
-    ('Control', 'Feedback on each suggestion, spread across the page.',
-     'Regenerate, change tone and clear fields, together under More options.'),
-]
-def compare():
+def before_v4():
+    """The v3 page against the launch version, in the design-system before/after slider (as in Procense's Tablet-first)."""
     n = _num()
-    imgs = ('<div class="om-cmp__imgs">'
-            '<div><p class="om-cmp__k">Before: v3</p><img class="om-shot" src="assets/screens/00-v3-listing-page.jpg" width="1600" height="1139" loading="lazy" '
-            'alt="The v3 listing page: tabs for general information, product details, pricing, shipping and platform integrations; a small Autofill link above the listing title, an AI icon in the description toolbar, and an AI Generator button under the product photos."></div>'
-            f'<div><p class="om-cmp__k">After: v4</p><img class="om-shot" src="assets/screens/{SHOTS["filled"][0]}" width="1600" height="1183" loading="lazy" alt="{SHOTS["filled"][1]}"></div>'
-            '</div>')
-    rows = ('<dl class="om-cmp__rows">' + ''.join(
-        f'<div class="om-cmp__row"><dt>{a}</dt><dd><span class="om-cmp__tag">v3</span>{b}</dd><dd><span class="om-cmp__tag om-cmp__tag--me">v4</span>{c}</dd></div>'
-        for a, b, c in CHANGES) + '</dl>')
-    return (f'<figure class="pm-frame"><div class="pm-frame__stage om-stage om-cmp">{imgs}{rows}</div>'
-            + _cap(n, 'The v3 listing page (left) and the launch version (right): what changed in placement, clarity and control.') + '</figure>')
+    ba = before_after('assets/screens/00-v3-listing-page-1183.jpg',
+                      'The v3 listing page: a small Autofill link above the title, an AI icon in the description toolbar and an AI Generator button under the images; AI text looks like typed text.',
+                      f'assets/screens/{SHOTS["filled"][0]}', SHOTS['filled'][1],
+                      'v3: AI in three places, and nothing marks what it wrote.',
+                      'Launch: one entry point, marked AI content, one menu to steer it.', w=1600, h=1183)
+    return (f'<figure class="pm-frame"><div class="pm-frame__stage om-stage">{ba}</div>'
+            + _cap(n, 'The v3 listing page and the launch version. Drag the divider, or use Before and After, to compare.') + '</figure>')
 
 STATS_TEAM = [('60%', 'Less time to create a listing, on average'), ('20%', 'More accurate listings'),
               ('78%', 'Of testers satisfied with autofill')]
@@ -245,37 +252,37 @@ BODY = ''.join([
         + items([('A sidebar card', 'Invited sellers to “Try listing with Autofill,” with per-platform publishing toggles below it.'),
                  ('Feedback on every field', 'Each AI-written field had controls to browse versions, rate them and regenerate.'),
                  ('A compare message', 'After autofill, a message invited sellers to compare versions.')])
-        + lede('Reviewing it against my priorities, the AI’s limits and the team’s plans, I took three lessons into the final design, one for each gap. The comparison below shows how the launch version changed from v3.')
-        + compare()),
+        + lede('Reviewing it against my priorities, the AI’s limits and the team’s plans, I took three lessons into the final design, one for each gap.')),
 
     section('solution', 'Design', 'Autofill that’s easy to find, clear to read and simple to steer.',
         lede('The launch version answers each of the three gaps, then hands off to our publishing flow.')
+        + before_v4()
         + sub('placement', 'Placement', 'I moved autofill to where every listing starts.',
               'Sellers start with a title and a category, exactly what autofill needs, so I put autofill right beside them.',
-              shot('empty', 'Autofill sits in the title bar, beside the two fields it needs.', [(1, 79.0, 20.3), (2, 23.6, 17.4), (3, 98.0, 14.6)],
+              shot('empty', 'Autofill sits in the title bar, beside the two fields it needs.', [(79.0, 20.3), (23.6, 17.4), (98.0, 14.6)],
                    [('Unlocks when ready', 'Lights up once both fields are filled in.'),
                     ('Explains itself', 'One line says what autofill does.'),
                     ('Always in reach', 'The bar stays fixed as sellers scroll.')])
               + pair(shot('filling', 'A short dialog shows AI at work, with a way to cancel.', size=' om-fig--sm'), ''))
         + sub('clarity', 'Clarity', 'I created a visual language for AI content.',
               'Sellers need to know what to double-check, so everything AI writes looks different from what they typed.',
-              shot('filled', 'After autofill: AI content highlighted, and a status that invites edits.', [(1, 19.0, 93.5), (2, 23.0, 19.6)],
-                   [('Purple highlights', 'Mark everything AI wrote.'),
+              shot('retoned', 'After a tone change: the new tags are highlighted, and the status invites edits.', [(70.6, 93.5), (23.0, 19.6), (43.6, 93.5)],
+                   [('Purple highlights', 'Mark what AI just wrote.'),
                     ('A clear status', 'Invites edits, not blind trust.'),
-                    ('Only what’s new', 'After a rewrite, only changes are highlighted.')])
-              + pair(shot('retoned', 'After a tone change, only the new tags are highlighted.', [(3, 70.6, 93.5)], size=' om-fig--sm'), ''))
+                    ('Only what’s new', 'Earlier content returns to plain text.')])
+              + pair(shot('filled', 'Right after autofill, everything AI wrote is highlighted.', size=' om-fig--sm'), ''))
         + sub('control', 'Control', 'I fit the feedback loop to what the AI could do.',
               'Feedback on every field was more than the AI could support, so I narrowed it to three actions in one menu.',
-              shot('menu', 'More options in the title bar: regenerate, change tone or clear fields.', [(1, 85.2, 25.7), (2, 85.6, 32.5)],
+              shot('menu', 'More options in the title bar: regenerate, change tone or clear fields.', [(85.2, 25.7), (85.6, 32.5), (72.0, 29.1)],
                    [('Regenerate', 'A fresh draft when the first misses.'),
                     ('Change tone', 'Seven tones to match the brand.'),
                     ('Clear fields', 'Start over, after a confirmation.')])
               + pair(shot('tone', 'Seven tones, from formal to playful.', size=' om-fig--sm'),
-                     shot('clear', 'Clearing asks for confirmation first.', [(3, 65.6, 53.2)], size=' om-fig--sm')))
+                     shot('clear', 'Clearing asks for confirmation first.', size=' om-fig--sm')))
         + sub('publish', 'Publishing', 'One listing, published everywhere.',
               'Sellers choose their marketplaces at publish time, then preview the listing before it goes live.',
-              shot('platforms', 'Choose the marketplaces to list on.')
-              + pair(shot('confirm', 'A last check, with a preview, before posting.', size=' om-fig--sm'), ''))
+              pair(shot('platforms', 'Choose the marketplaces to list on.', size=' om-fig--sm'),
+                   shot('confirm', 'A last check, with a preview, before posting.', size=' om-fig--sm')))
         + CP.lightbox()),
 
     section('impact', 'Impact &amp; reflection', 'Sellers found autofill, and liked using it.',
@@ -336,20 +343,6 @@ CSS = r"""
 .om-ns__text { margin: 0; font-size: var(--type-h3); line-height: var(--line-h3); font-weight: var(--weight-medium); color: var(--color-text-primary); text-wrap: balance; }
 
 
-/* v3 vs my design: two screens, then one row per area (side by side from 768px) */
-.om-cmp { container-type: inline-size; display: grid; gap: var(--space-5); padding: var(--space-5); }
-.om-cmp__imgs { display: grid; gap: var(--space-4); grid-template-columns: minmax(0, 1fr); align-items: start; }
-@container (min-width: 640px) { .om-cmp__imgs { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-.om-cmp__k { margin: 0 0 var(--space-2); font-size: var(--type-body-sm); line-height: var(--line-body-sm); font-weight: var(--weight-medium); color: var(--color-text-primary); }
-.om-cmp__rows { margin: 0; display: grid; gap: var(--space-3); }
-.om-cmp__row { padding: var(--space-4); border-radius: var(--radius-md); background: var(--color-bg-elevated); box-shadow: inset 0 0 0 1px var(--color-border-subtle), var(--shadow-xs); display: grid; gap: var(--space-2); }
-@container (min-width: 640px) { .om-cmp__row { grid-template-columns: 7rem minmax(0, 1fr) minmax(0, 1fr); gap: var(--space-4); } }
-.om-cmp__row dt { font-size: var(--type-body-sm); line-height: var(--line-body-sm); font-weight: var(--weight-medium); color: var(--color-text-primary); }
-.om-cmp__row dd { margin: 0; display: grid; gap: var(--space-1); align-content: start; font-size: var(--type-body-sm); line-height: var(--line-body-sm); color: var(--color-text-secondary); }
-.om-cmp__row dd:last-child { color: var(--color-text-primary); }
-.om-cmp__tag { justify-self: start; font-family: var(--font-meta); font-size: var(--type-label); line-height: var(--line-label); color: var(--color-text-tertiary); }
-.om-cmp__tag--me { color: var(--color-text-link); font-weight: var(--weight-medium); }
-
 /* Results: a container so the numbers stand out */
 .om-impact { margin: var(--space-2) 0; padding: var(--space-6); border-radius: var(--radius-md); background: var(--color-bg-surface); box-shadow: inset 0 0 0 1px var(--color-border-subtle), var(--shadow-xs); }
 .om-impact .pm-stats { margin: 0; padding-top: 0; border-top: 0; }
@@ -373,8 +366,9 @@ CSS = r"""
 .om-sub .pm-frame { margin: 0; }
 .om-sub .om-pair { margin-top: var(--space-3); }
 @container (min-width: 520px) { .om-sub .om-pair { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-4); } }
-.om-stage .om-notes { margin-bottom: var(--space-4); }
-@container (min-width: 640px) { .om-stage .om-notes { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-4); } }
+.om-sub .pr-notes { margin-bottom: var(--space-4); }
+.om-pinwrap .pr-mk--btn { z-index: 1; }
+.om-pinwrap, .cs-ba__frame { isolation: isolate; }
 .om-pinwrap > .pr-expand { top: var(--space-2); right: var(--space-2); }
 /* Flow: Procense's stepper on this page's stage; the design decision box is neutral (Procense's risk box is a warning) */
 .om-stage:has(.pr-flow) { container-type: inline-size; padding: var(--space-6) var(--space-5) var(--space-5); }
@@ -448,19 +442,8 @@ CSS = r"""
 .om-notes p { margin: var(--space-1) 0 0; font-size: var(--type-body-sm); line-height: var(--line-body-sm); color: var(--color-text-secondary); }
 """
 
-NOTES_JS = r"""
-  // Solution notes: hovering a note lifts the matching badge on that subsection's screens
-  document.querySelectorAll('.om-sub').forEach(function (sec) {
-    sec.querySelectorAll('.om-notes li').forEach(function (li) {
-      var pins = sec.querySelectorAll('.om-pin[data-n="' + li.dataset.n + '"]');
-      function on(v) { pins.forEach(function (p) { p.classList.toggle('is-hover', v); }); }
-      li.addEventListener('mouseenter', function () { on(true); }); li.addEventListener('mouseleave', function () { on(false); });
-    });
-  });
-"""
-
 OMNI = dict(page_title='OmniSynkAI Case Study', out='omnisynkai/index.html', sections=SECTIONS, body=BODY, header=HEADER, tldr=TLDR,
-            css=FLOW_CSS + MK_CSS + LB_CSS + CSS, js=FLOW_JS + NOTES_JS + LB_JS)
+            css=FLOW_CSS + MK_CSS + LB_CSS + BA_CSS + CSS, js=FLOW_JS + ANN_JS + LB_JS + BA_JS)
 
 if __name__ == '__main__':
     print(len(C.render(OMNI)))
