@@ -17,6 +17,13 @@ FLOW_JS = CP._between(CP.JS, '  // Fig. 1 batch workflow', '  // TL;DR stepper')
 MK_CSS = (CP._between(CP.CSS, '/* Annotation badges', '/* Expand control')  # badges + annotation cards, as on Procense's final screens
           + CP._between(CP.CSS, '/* Feature cards: Card --outlined', '/* Thumbnail:')
           + '.pr-sfig + .pr-sfig { margin-top: var(--space-6); }\n.pr-sfig .pm-frame__stage { container: pr-sfig / inline-size; }\n')
+VIDEO_JS = r"""
+  // First-concept prototype: plays (muted, looped) only while in view and not with reduced motion; native controls pause it
+  document.querySelectorAll('video[data-autoplay]').forEach(function (v) {
+    if (reduce || !('IntersectionObserver' in window)) return;
+    new IntersectionObserver(function (es) { if (es[0].isIntersecting) { var p = v.play(); if (p && p.catch) p.catch(function () {}); } else v.pause(); }, { threshold: .4 }).observe(v);
+  });
+"""
 ANN_JS = CP._between(CP.JS, '  // Final-screen annotations', '  // Lightbox:').replace(
     'window.TabletScreen.reveal(btns[i]);', "btns[i].scrollIntoView({ block: 'nearest', behavior: reduce ? 'auto' : 'smooth' });")  # no TabletScreen here
 BA_CSS, BA_JS = CP.BA_CSS, CP.BA_JS  # before/after slider, as in Procense's Tablet-first section
@@ -69,7 +76,7 @@ def shot(key, cap, pins=(), rows=None, size=''):
         mk = ''.join(f'<span class="pr-mk om-pin" style="left:{x}%;top:{y}%" aria-hidden="true">{k}</span>' for k, x, y in pins)
         top, fig_cls, data = '', 'pm-frame om-fig', ''
     return (f'<figure class="{fig_cls}{size}"{data}><div class="pm-frame__stage om-stage pr-zoom" data-lb-item data-lb-caption="Fig. {n}. {cap}">{top}'
-            f'<div class="om-pinwrap"><img class="om-shot" src="assets/screens/{f}" width="1600" height="1183" loading="lazy" alt="{alt}">{mk}'
+            f'<div class="om-pinwrap"><img class="om-shot" src="assets/screens/{f}" width="2000" height="1480" loading="lazy" alt="{alt}">{mk}'
             + CP.expand(f'Fig. {n}') + '</div></div>' + _cap(n, cap) + '</figure>')
 def notes(rows):
     """Numbered notes that match the badges on the screens (title, one line)."""
@@ -181,7 +188,7 @@ def before_v4():
                       'The v3 listing page: a small Autofill link above the title, an AI icon in the description toolbar and an AI Generator button under the images; AI text looks like typed text.',
                       f'assets/screens/{SHOTS["filled"][0]}', SHOTS['filled'][1],
                       'v3: AI in three places, and nothing marks what it wrote.',
-                      'Launch: one entry point, marked AI content, one menu to steer it.', w=1600, h=1183)
+                      'Launch: one entry point, marked AI content, one menu to steer it.', w=2000, h=1480)
     return (f'<figure class="pm-frame"><div class="pm-frame__stage om-stage">{ba}</div>'
             + _cap(n, 'The v3 listing page and the launch version. Drag the divider, or use Before and After, to compare.') + '</figure>')
 
@@ -233,6 +240,16 @@ def swot():
     return (f'<figure class="om-swot"><div class="om-swot__grid">{quads}</div>'
             + _cap(_num(), 'SWOT of Shopify’s and Trustana’s AI listing features, and what it meant for OmniSynkAI.') + '</figure>')
 
+def first_concept():
+    """The unfinalized v4 prototype (from Serena's Framer case study): sidebar autofill card, publishing toggles,
+    compare-and-regenerate panel. Plays muted and looped with native controls (pause, WCAG 2.2.2); reduced motion
+    leaves it paused on the poster."""
+    return ('<figure class="pm-frame"><div class="pm-frame__stage om-stage">'
+            '<video class="om-video" src="assets/first-concept-prototype.mp4" poster="assets/first-concept-poster.jpg" width="1080" height="716" '
+            'muted loop playsinline controls preload="metadata" data-autoplay '
+            'aria-label="Prototype of my first concept: a seller types a title, starts autofill from a sidebar card, compares regenerated versions and toggles publishing platforms."></video>'
+            '</div>' + _cap(_num(), 'Prototype of my first concept: autofill in a sidebar card, version compare and per-platform toggles.') + '</figure>')
+
 # ---------- content ----------
 SECTIONS = [('overview', 'Overview'), ('problem', 'The problem'), ('role', 'My role'), ('discover', 'Research'), ('concept', 'Concept'),
             ('solution', 'The solution'), ('impact', 'Impact &amp; reflection')]
@@ -281,6 +298,7 @@ BODY = ''.join([
         + items([('A sidebar card', 'Invited sellers to “Try listing with Autofill,” with per-platform publishing toggles below it.'),
                  ('Feedback on every field', 'Each AI-written field had controls to browse versions, rate them and regenerate.'),
                  ('A compare message', 'After autofill, a message invited sellers to compare versions.')])
+        + first_concept()
         + lede('Reviewing it against my priorities, the AI’s limits and the team’s plans, I took three lessons into the final design, one for each gap.')),
 
     section('solution', 'Design', 'Autofill that’s easy to find, clear to read and simple to steer.',
@@ -288,21 +306,21 @@ BODY = ''.join([
         + before_v4()
         + sub('placement', 'Placement', 'I moved autofill to where every listing starts.',
               'Sellers start with a title and a category, exactly what autofill needs, so I put autofill right beside them.',
-              shot('empty', 'Autofill sits in the title bar, beside the two fields it needs.', [(79.0, 20.3), (23.6, 17.4), (98.0, 14.6)],
+              shot('empty', 'Autofill sits in the title bar, beside the two fields it needs.', [(79.4, 20.5), (23.0, 18.6), (98.2, 14.6)],
                    [('Unlocks when ready', 'Lights up once both fields are filled in.'),
                     ('Explains itself', 'One line says what autofill does.'),
                     ('Always in reach', 'The bar stays fixed as sellers scroll.')])
               + pair(shot('filling', 'A short dialog shows AI at work, with a way to cancel.', size=' om-fig--sm'), ''))
         + sub('clarity', 'Clarity', 'I created a visual language for AI content.',
               'Sellers need to know what to double-check, so everything AI writes looks different from what they typed.',
-              shot('retoned', 'After a tone change: the new tags are highlighted, and the status invites edits.', [(70.6, 93.5), (23.0, 19.6), (43.6, 93.5)],
+              shot('retoned', 'After a tone change: the new tags are highlighted, and the status invites edits.', [(69.6, 94.0), (22.6, 19.6), (43.0, 94.0)],
                    [('Purple highlights', 'Mark what AI just wrote.'),
                     ('A clear status', 'Invites edits, not blind trust.'),
                     ('Only what’s new', 'Earlier content returns to plain text.')])
               + pair(shot('filled', 'Right after autofill, everything AI wrote is highlighted.', size=' om-fig--sm'), ''))
         + sub('control', 'Control', 'I fit the feedback loop to what the AI could do.',
               'Feedback on every field was more than the AI could support, so I narrowed it to three actions in one menu.',
-              shot('menu', 'More options in the title bar: regenerate, change tone or clear fields.', [(85.2, 25.7), (85.6, 32.5), (72.0, 29.1)],
+              shot('menu', 'More options in the title bar: regenerate, change tone or clear fields.', [(85.6, 25.5), (86.0, 32.7), (71.4, 29.1)],
                    [('Regenerate', 'A fresh draft when the first misses.'),
                     ('Change tone', 'Seven tones to match the brand.'),
                     ('Clear fields', 'Start over, after a confirmation.')])
@@ -502,10 +520,12 @@ CSS = r"""
   box-shadow: 0 1px 1px rgb(11 18 32 / 10%), 0 12px 12px -10px rgb(11 18 32 / 32%); color: var(--color-text-primary); }
 .om-swot__tag { font-family: var(--font-meta); font-size: var(--type-label); line-height: var(--line-label); color: var(--color-text-secondary); }
 .om-swot__txt { font-size: var(--type-body-sm); line-height: var(--line-body-sm); font-weight: var(--weight-medium); text-wrap: pretty; }
+/* First-concept prototype video on the figure stage */
+.om-video { display: block; width: 100%; height: auto; border-radius: var(--radius-sm); background: var(--white); }
 """
 
 OMNI = dict(page_title='OmniSynkAI Case Study', out='omnisynkai/index.html', sections=SECTIONS, body=BODY, header=HEADER, tldr=TLDR,
-            css=FLOW_CSS + MK_CSS + LB_CSS + BA_CSS + CSS, js=FLOW_JS + ANN_JS + LB_JS + BA_JS)
+            css=FLOW_CSS + MK_CSS + LB_CSS + BA_CSS + CSS, js=FLOW_JS + ANN_JS + LB_JS + BA_JS + VIDEO_JS)
 
 if __name__ == '__main__':
     print(len(C.render(OMNI)))
