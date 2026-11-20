@@ -406,9 +406,16 @@ CSS = r"""
 
 
 /* Results: a container so the numbers stand out */
-.om-impact { margin: var(--space-2) 0; padding: var(--space-6); border-radius: var(--radius-md); background: var(--color-bg-surface); box-shadow: inset 0 0 0 1px var(--color-border-subtle), var(--shadow-xs); }
-.om-impact .pm-stats { margin: 0; padding-top: 0; border-top: 0; }
-.om-impact .om-source { margin-top: var(--space-4); }
+.om-impact { container-type: inline-size; margin: var(--space-2) 0; }
+.om-impact .pm-stats__item { flex-direction: column-reverse; }  /* value first; flex-end = top in column-reverse */
+/* Each result in its own accent-tinted container (the page's accent surface, as on the opportunity statement), value in the
+   accent text colour, label in secondary text. Three across from 560px, stacked below. */
+.om-impact .pm-stats { margin: 0; padding-top: 0; border-top: 0; display: grid; gap: var(--space-3); grid-template-columns: minmax(0, 1fr); }
+@container (min-width: 560px) { .om-impact .pm-stats { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+.om-impact .pm-stats__item { justify-content: flex-end; gap: var(--space-2); padding: var(--space-5); border-radius: var(--radius-md); background: var(--color-action-selected-bg); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--color-selected-indicator) 22%, transparent); }
+.om-impact .pm-stats__value { color: var(--color-text-link); }
+.om-impact .pm-stats__label { font-family: var(--font-sans); font-size: var(--type-body-sm); line-height: var(--line-body-sm); color: var(--color-text-secondary); }
+.om-impact .om-source { margin-top: var(--space-3); }
 /* Key insight: large text on a surface panel with a cobalt rule */
 .om-callout { margin: var(--space-2) 0; padding: var(--space-5) var(--space-6); border-radius: var(--radius-md); background: var(--color-bg-surface); box-shadow: inset 3px 0 0 var(--color-action-primary), inset 0 0 0 1px var(--color-border-subtle); display: grid; gap: var(--space-2); }
 .om-callout__k { margin: 0; display: flex; align-items: center; gap: var(--space-2); font-size: var(--type-body-sm); line-height: var(--line-body-sm); font-weight: var(--weight-medium); color: var(--color-text-secondary); }
