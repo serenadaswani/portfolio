@@ -64,7 +64,7 @@ VERSIONS = [
     ('v1', 'Cross-listing', 'Grouped actions in a bento layout, with a separate price optimizer.', 'Cluttered, and couldn’t scale to data-heavy fields.', False),
     ('v2', 'Autosynk', 'Sellers chose AI or manual listing; AI drafted from a few core details.', 'Sellers wanted more control over what AI wrote.', False),
     ('v3', 'Autofill tiles', 'Autofill buttons, form steppers and feedback on each suggestion.', 'Many sellers didn’t realize autofill existed.', False),
-    ('v4', 'Autofill for launch', 'Autofill became a core launch feature. This is where I came in.', 'Make it findable, clearly marked and easy to steer.', True),
+    ('v4', 'Autofill for launch', 'I designed where autofill lives, how AI content is marked, and how sellers steer it.', 'Make it findable, clearly marked and easy to steer.', True),
 ]
 def versions():
     return ('<ol class="om-ver">' + ''.join(
@@ -130,18 +130,18 @@ STATS_TEAM = [('60%', 'Less time to create a listing, on average'), ('20%', 'Mor
               ('78%', 'Of testers satisfied with autofill')]
 
 # ---------- content ----------
-SECTIONS = [('overview', 'Overview'), ('problem', 'The problem'), ('role', 'My role'), ('discover', 'Research'),
+SECTIONS = [('overview', 'Overview'), ('problem', 'The problem'), ('role', 'My role'), ('discover', 'Research'), ('concept', 'Concept'),
             ('placement', 'Placement'), ('clarity', 'Clarity'), ('control', 'Control'), ('publish', 'Publishing'), ('impact', 'Impact &amp; reflection')]
 
 BODY = ''.join([
-    section('overview', 'Overview', 'AI autofill turned inventory listing from data entry into a quick review.',
-        lede('OmniSynkAI was an AI startup helping small and mid-sized e-commerce sellers list and sync products across marketplaces like Amazon, eBay, Etsy and Shopify. Its core was the listing page, where sellers filled in every product field by hand, for every platform.',
-             'When leadership made AI autofill a core launch feature, I joined the lead designer on its final version. While the listing page itself was being redesigned in parallel, I owned three parts of autofill: where it lives on the page, how sellers tell AI content from their own, and how they give feedback and steer the result.')
-        + shot('filled', 'A listing drafted by AI autofill. Everything AI wrote is highlighted in purple for the seller to review.')
+    section('overview', 'Overview', 'I designed how AI fits into the moment sellers create a listing.',
+        lede('OmniSynkAI was an AI startup helping small and mid-sized sellers list and sync products across marketplaces like Amazon, eBay, Etsy and Shopify. Its listing page asked sellers to fill in every product field by hand, for every platform.',
+             'When AI autofill became a core launch feature, I joined the design team on the version that would ship. I owned three parts of it: where autofill lives on the page, how sellers tell AI content from their own, and how they steer what AI writes. Each of those decisions made it into the final design.')
+        + shot('filled', 'The listing after autofill: my title bar, purple highlights for AI content, and the More options menu for steering it.')
         + stats(STATS_TEAM, ' pm-stats--sm cs-stats') + team_source()),
 
     section('problem', 'The problem', 'Sellers were spending their time, or their money, just to list products.',
-        lede('Small business owners grow by selling on as many platforms as they can, which means uploading the same product again and again, each with different requirements. Our UX research team surveyed 456 sellers and ran follow-up interviews.')
+        lede('Small businesses grow by selling on as many platforms as they can, which means listing the same product again and again, each time with different requirements. Our UX research team’s survey of 456 sellers showed what that costs.')
         + stats([('25%', 'Called syncing listings across platforms a nightmare'), ('27.9%', 'Of multi-platform sellers hired virtual assistants to keep up'),
                  ('25.2%', 'Outsourced listing management to third parties')], ' pm-stats--sm cs-stats')
         + '<p class="pm-meta-text om-source">From the team’s seller survey (456 responses), led by UX research.</p>'
@@ -149,41 +149,47 @@ BODY = ''.join([
         + f'<section class="om-ns" aria-labelledby="om-ns-h"><p class="om-ns__label" id="om-ns-h">{_l("sparkles")}The opportunity</p>'
           '<p class="om-ns__text">Design an autofill feature that brings AI into the listing flow, helping sellers quickly create compelling, search-friendly listings and raising listing quality across the platform.</p></section>'),
 
-    section('role', 'My role', 'I joined for the version that would launch.',
-        lede('By the time I joined, the team had already explored three versions of the listing flow. Each one taught us something, and the last left three problems for the launch version to solve.')
-        + framed(versions(), 'How the listing flow evolved. Earlier versions by the design team; I joined for v4.')
-        + '<h3 class="cs-h3">Three open problems became my focus.</h3>'
-        + lede('Usability feedback on the earlier versions pointed to the same three gaps, each a question I set out to answer.')
+    section('role', 'My role', 'I owned three questions on the version that would launch.',
+        lede('By the time I joined, the team had explored three versions of the listing flow. I studied what each one had taught us, and saw the same gaps come up again and again: sellers missed autofill, couldn’t tell what it wrote, and wanted more say in the result. Those became my three questions.')
+        + framed(versions(), 'What I inherited, and where I came in.')
         + focus()
-        + '<h3 class="cs-h3">I worked in three phases.</h3>'
+        + '<h3 class="cs-h3">I answered them in three phases.</h3>'
         + lede('Each phase answered one question, and each answer shaped the next.')
         + framed(process(), 'Discover, conceptualize, design: the question each phase answered and what came out of it.')),
 
-    section('discover', 'Research', 'I built on the team’s research, then filled the gaps.',
-        lede('I started with what we already knew. I partnered with UX research to pull the survey and interview findings and spot what was missing, and huddled with engineers and product managers to map what the AI could and couldn’t reliably do. Knowing its limits early kept the design honest.',
+    section('discover', 'Research', 'I started by asking where AI could actually help.',
+        lede('Before designing anything, I wanted two answers: where AI could help sellers most, and how we could guide them to a listing they’re happy with. I partnered with UX research to pull the survey and interview findings and spot the gaps, and huddled with engineers and product managers to map what the AI could and couldn’t reliably do. Knowing its limits early kept my designs honest.',
              'To fill the gaps, I ran desk research on how people use AI tools, and mapped a SWOT analysis of Shopify’s and Trustana’s AI listing features: Shopify’s interactive feedback loops, and Trustana’s AI enrichment for search and conversion.')
-        + need('SWOT analysis of Shopify’s and Trustana’s AI listing features.', 'Your SWOT diagram for Shopify and Trustana, redrawn', '16x9')
-        + '<h3 class="cs-h3">Five findings became five design priorities.</h3>'
+        + need('My SWOT analysis of Shopify’s and Trustana’s AI listing features.', 'Your SWOT diagram for Shopify and Trustana, redrawn', '16x9')
+        + '<h3 class="cs-h3">I turned five findings into five design priorities.</h3>'
         + lede('Every priority traces back to a finding, so each decision that followed had a reason behind it.')
         + findings()),
 
-    section('placement', 'Placement', 'Autofill moved to where every listing starts.',
-        lede('In v3, autofill lived in tiles and a sidebar card, apart from the fields it needed, and many sellers never noticed it. My first concept kept a “Try listing with Autofill” card in the sidebar. Mapping it against the flow showed the problem: sellers start a listing at the top, with a title and a category, and that’s exactly what autofill needs.',
-             'So I moved autofill into a title bar, right beside those two fields. The sparkle button lights up once both are filled in, the bar explains the value in one line, and it stays fixed as sellers scroll, so the AI controls are always in reach.')
-        + need('My first concept (autofill in a sidebar card) against the final title bar.', 'Your sidebar concept, shown against the final screen in a before/after slider', '16x10')
+    section('concept', 'Concept', 'I mapped the flow before designing a screen.',
+        lede('With priorities set, I defined how autofill should work: the user flows for new and returning sellers, the interactions and triggers that start and update it, and a feedback loop for rating and tweaking what AI suggests. Three qualities guided every choice: simplicity, so sellers understand how to start at a glance; flexibility, so the experience still feels effortless within the AI’s limits; and results that get better as sellers give feedback.',
+             'The key trigger came from the data: AI needs only a title and a category to draft a listing. So I built the flow around those two fields, from the first click to a published listing.')
+        + framed(flow(), 'The flow I designed, from two required fields to a published listing.')
+        + '<h3 class="cs-h3">My first concept, and what it taught me.</h3>'
+        + lede('My first layout, built within OmniSynkAI’s design system, invited sellers to “Try listing with Autofill” from a card in the sidebar, with per-platform publishing toggles below it. Every AI-written field had its own controls to browse versions, give a thumbs up or down, and regenerate, and a message after autofill invited sellers to compare versions.')
+        + need('My first concept (left) against the final design (right).', 'Your first concept export, shown against the final screen in a before/after slider', '16x10')
+        + lede('Reviewing it against my priorities, the AI’s limits and the team’s plans, I took three lessons into the final design, one for each of my questions.')),
+
+    section('placement', 'Placement', 'I moved autofill to where every listing starts.',
+        lede('In my first concept, as in the earlier versions, autofill sat in a sidebar card, apart from the fields it needed. Mapping it against the flow showed why sellers missed it: they start a listing at the top, with a title and a category, which is exactly what autofill needs.',
+             'So I moved autofill into a title bar, right beside those two fields. The sparkle button lights up once both are filled in, the bar explains the value in one line, and it stays fixed as sellers scroll, so the AI controls are always in reach. This became the entry point in the final design.')
         + pair(shot('empty', 'Autofill sits beside the two fields it needs, and unlocks once both are filled in.'),
                shot('filling', 'A short dialog shows the AI at work, and lets sellers cancel.'))),
 
-    section('clarity', 'Clarity', 'Sellers can always see what AI wrote.',
-        lede('Earlier versions didn’t separate AI content from manual input, so sellers couldn’t tell what to double-check, or which fields they still had to fill in. I designed a simple visual language for it:')
+    section('clarity', 'Clarity', 'I created a visual language for AI content.',
+        lede('Earlier versions didn’t separate AI content from manual input, so sellers couldn’t tell what to double-check, or which fields they still had to fill in. I designed three cues that carried into the final design:')
         + items([('Purple highlights', 'Everything AI writes, like the brand and tags, is highlighted, so sellers know exactly what to review.'),
                  ('A clear status', 'After autofill, the title bar reads “Listing Autofilled, feel free to edit details,” inviting edits instead of blind trust.'),
                  ('Only what’s new', 'When AI rewrites part of a listing, only the new content is highlighted; what sellers already reviewed goes back to plain text.')])
         + pair(shot('filled', 'After autofill: AI content highlighted, and a status that invites edits.'),
                shot('retoned', 'After a change, only the new tags are highlighted.'))),
 
-    section('control', 'Control', 'A feedback loop that fits what the AI can do.',
-        lede('v3 put feedback on every suggestion: browse versions, thumbs up or down, regenerate. It was more than our AI model could reliably support, and more than sellers needed on every field. We reworked feedback around three actions sellers actually want, and I gathered them under one More options menu in the title bar, where they’re always in reach.')
+    section('control', 'Control', 'I fit the feedback loop to what the AI could do.',
+        lede('My first concept put feedback on every field: browse versions, thumbs up or down, regenerate. It was more than our AI model could reliably support, and more than sellers needed on every field. I simplified it to the three actions sellers actually reach for, and gathered them under one More options menu in the title bar, where they’re always in reach. We refined the options together as a team, and this became how sellers steer AI in the final design.')
         + items([('Regenerate', 'Not quite right? Ask the AI for a new draft.'),
                  ('Change tone', 'Pick from seven tones, from formal to playful, to match the seller’s brand voice.'),
                  ('Clear fields', 'Start over by hand, with a confirmation first, since it can’t be undone.')], grid=True)
@@ -192,19 +198,18 @@ BODY = ''.join([
         + shot('clear', 'Clearing autofilled content asks for confirmation first.')),
 
     section('publish', 'Publishing', 'One listing, published everywhere.',
-        lede('Autofill ends in the team’s publishing flow: sellers pick the marketplaces to list on, preview how the listing will look on each, and post to all of them at once.')
-        + framed(flow(), 'The full autofill flow, from two required fields to a published listing.')
+        lede('Autofill hands off to our publishing flow. Instead of the per-platform toggles in my first concept, sellers choose their marketplaces when they publish, which leaves room for more platforms, then preview the listing on each and post to all of them at once.')
         + pair(shot('platforms', 'Choose the marketplaces to list on.'),
                shot('confirm', 'A last check, with a preview, before posting.'))),
 
     section('impact', 'Impact &amp; reflection', 'Sellers found autofill, and liked using it.',
-        lede('The team tested the flow with sellers in Maze before launch, and again after the September 2024 soft launch. 78% of testers were satisfied with autofill. Across the whole listing flow, average listing time fell by 60%.')
+        lede('Autofill shipped in the September 2024 soft launch with all three of my pieces in place: the title bar entry point, the purple AI cues and the More options feedback loop. In pre-launch testing, 78% of testers were satisfied with autofill, and after launch, average listing time fell by 60% across the listing flow.')
         + stats(STATS_TEAM, ' pm-stats--sm cs-stats') + team_source()
-        + lede('OmniSynkAI has since wound down, but the work showed how AI can take on the tedious parts of selling while sellers keep ownership of their listings.')
+        + lede('OmniSynkAI has since wound down, but the work showed me how AI can take on the tedious parts of selling while sellers keep ownership of their listings.')
         + '<h3 class="cs-h3">What I learned</h3>'
         + '<div class="cs-pair om-trio">'
-        + panel('Build on what the team knows', '<p>Starting from three versions and a 456-seller survey meant I could spend my time on the open problems, not rediscovering old ones.</p>', ' pm-panel--tonal', 'p-l1')
-        + panel('Design around the model’s limits', '<p>Knowing what the AI could reliably do shaped a simpler feedback loop than the one we started with.</p>', ' pm-panel--tonal', 'p-l2')
+        + panel('Start from what’s still open', '<p>Studying three earlier versions first meant I spent my time on the problems no one had solved yet.</p>', ' pm-panel--tonal', 'p-l1')
+        + panel('Design around the model’s limits', '<p>Knowing what the AI could reliably do turned a busy feedback system into three clear actions.</p>', ' pm-panel--tonal', 'p-l2')
         + panel('Make AI visible, not magic', '<p>Sellers trust AI more when they can see what it wrote and change it easily.</p>', ' pm-panel--tonal', 'p-l3')
         + '</div>'
         + '<p class="pm-meta-text om-credit">Designed with the OmniSynkAI team: the lead designer, a fellow product designer, UX research, product and engineering. Screens from the approved prototype, shared with permission.</p>'),
@@ -225,8 +230,8 @@ HEADER = '''  <header class="cs-head">
 TLDR = f'''      <dl class="cs-tldr__rows">
         <div class="cs-tldr__row"><dt>Background</dt><dd>OmniSynkAI helped sellers list products across marketplaces. Its listing page made them fill in every field by hand.</dd></div>
         <div class="cs-tldr__row"><dt>Problem</dt><dd>In a survey of 456 sellers, a quarter called cross-platform listing a nightmare, and many paid assistants to keep up.</dd></div>
-        <div class="cs-tldr__row"><dt>My role</dt><dd>I joined the lead designer on the launch version of AI autofill, owning its placement, how AI content is marked, and its feedback loop.</dd></div>
-        <div class="cs-tldr__row"><dt>Outcome</dt><dd>Autofill moved beside the fields it needs, AI content is highlighted, and sellers steer it with regenerate, tone and clear. Listing time fell 60%.</dd></div>
+        <div class="cs-tldr__row"><dt>My role</dt><dd>On the launch version of AI autofill, I owned where it lives on the page, how AI content is marked, and how sellers steer it.</dd></div>
+        <div class="cs-tldr__row"><dt>Outcome</dt><dd>All three of my designs shipped: autofill beside the fields it needs, purple cues for AI content, and a More options menu to steer it. Listing time fell 60%.</dd></div>
       </dl>
       {stats(STATS_TEAM, ' pm-stats--sm cs-tldr__stats')}
       {team_source()}'''
