@@ -5,6 +5,7 @@ files), so components, buttons and spacing are exactly as designed; frames float
   1. Title bar. The title types in and the category fills while the view zooms into both fields; then the view glides
      to the AI autofill icon and the cursor clicks it.
   2. Loading. The title bar fades out, a soft scrim settles over the gradient and the "Filling out your listing" dialog
+     (its AI icon redrawn in SVG so the two sparkles merge into one star and split back, as in the first-concept video)
      floats in.
   3. Skeletons. Only the sections autofill writes to appear, Description and Brand & Tags, with grey skeleton content
      inside them.
@@ -42,6 +43,7 @@ BAR = (89, 108.3, 895, 86.8)                      # title bar (01 empty, 03 auto
 DESC_CARD = (89, 203.5, 659, 140.3)
 META_CARD = (89, 646.5, 659, 81.3)
 DIALOG = (349, 275, 302.5, 188.5)                 # 02 loading dialog
+SPARK = (361, 292, 20, 20)                        # 02 dialog's AI icon, redrawn so it can animate (as in the first-concept video)
 TYPE_TITLE = (246, 152, 150, 20, 20)              # 03 field text (x, y, w, h), shifted dx onto 01's title input
 TYPE_CAT = (471, 152, 150, 20, 13)
 # description lines in 03: crop bands (non-overlapping) and text boxes (x extents, ascender to descender)
@@ -66,6 +68,20 @@ def _meta(sbox):
     x, y, w, h = sbox
     return (x - META_CARD[0], y - META_CARD[1] + Y_META, w, h)
 
+STAR = 'M0 -.94C.07 -.42 .42 -.07 .94 0C.42 .07 .07 .42 0 .94C-.07 .42 -.42 .07 -.94 0C-.42 -.07 -.07 -.42 0 -.94Z'
+
+def _spark(s2):
+    """The dialog's two-star AI icon as SVG, over a patch of the same export's blank dialog (so the paper matches exactly)."""
+    x, y, w, h = SPARK
+    patch = _place('oh-patch', s2, (612, y, w, h), (x - DIALOG[0], y - DIALOG[1], w, h), DIALOG[2:])
+    pos = (f'left:{(x - DIALOG[0]) / DIALOG[2] * 100:.3f}%;top:{(y - DIALOG[1]) / DIALOG[3] * 100:.3f}%;'
+           f'width:{w / DIALOG[2] * 100:.3f}%;height:{h / DIALOG[3] * 100:.3f}%')
+    star = f'<path d="{STAR}" fill="url(#oh-sg)" stroke="url(#oh-sg)" stroke-width=".16" stroke-linejoin="round"/>'
+    return patch + (f'<span class="oh-spark" style="{pos}"><svg viewBox="0 0 20 20" aria-hidden="true" focusable="false">'
+            '<defs><linearGradient id="oh-sg" x1="0" x2="1" y1="0" y2="0">'
+            '<stop offset="0" stop-color="#5B8CFF"/><stop offset=".48" stop-color="#A566FF"/><stop offset="1" stop-color="#AC6AFF"/>'
+            f'</linearGradient></defs><g class="oh-st oh-st--b">{star}</g><g class="oh-st oh-st--s">{star}</g></svg></span>')
+
 def html(base='assets/screens', I=None):
     s1, s2, s3 = (f'{base}/{f}{V}' for f in ('01-empty-listing.jpg', '02-autofill-in-progress.jpg', '03-listing-autofilled.jpg'))
     fb = BAR[2:]
@@ -79,7 +95,7 @@ def html(base='assets/screens', I=None):
           + CURSOR + '</div></div>')
     # Frame 2: the loading dialog over a soft scrim
     f2 = ('<span class="oh-scrim"></span><div class="oh-f oh-f2">'
-          + _place('oh-dialog', s2, DIALOG, (0, 0) + DIALOG[2:], DIALOG[2:]) + '</div>')
+          + _place('oh-dialog', s2, DIALOG, (0, 0) + DIALOG[2:], DIALOG[2:]) + _spark(s2) + '</div>')
     # Frames 3 and 4: Description and Brand & Tags (skeletons, then content), with the autofilled bar arriving on top
     sk = ('<span class="oh-sks">' + ''.join(_rect('oh-sk', _desc(b), STACK) for b in SK_DESC)
           + ''.join(_rect('oh-sk', _meta(b), STACK) for b in SK_FIELDS) + '</span>')
@@ -122,6 +138,11 @@ CSS = r"""
 .oh-c { background-repeat: no-repeat; }
 .oh-card { border-radius: .8cqw; box-shadow: 0 .6cqw 2.4cqw rgb(20 12 70 / 26%), 0 .1cqw .3cqw rgb(20 12 70 / 12%); }
 .oh-dialog { inset: 0; border-radius: 1cqw; box-shadow: 0 1.4cqw 4cqw rgb(20 12 70 / 40%), 0 0 0 1px rgb(255 255 255 / 40%); }
+.oh-spark { position: absolute; }
+.oh-spark svg { display: block; width: 100%; height: 100%; overflow: visible; }
+.oh-st { transform-box: view-box; transform-origin: 0 0; }
+.oh-st--b { transform: translate(6.9px, 12.2px) scale(5.4, 5.9); }
+.oh-st--s { transform: translate(15.05px, 4.9px) scale(3.1, 3.5); }
 .oh-scrim { position: absolute; inset: 0; background: rgb(20 14 60 / 38%); opacity: 0; }
 .oh-sks { position: absolute; inset: 0; opacity: 0; }
 .oh-sk { border-radius: .3cqw; background: linear-gradient(90deg, #E6E8EC 0%, #F1F2F5 45%, #E6E8EC 90%); background-size: 300% 100%; }
@@ -146,6 +167,8 @@ CSS = r"""
 .oh--anim .oh-cursor { animation-name: oh-cursor; }
 .oh--anim .oh-scrim { animation-name: oh-scrim; }
 .oh--anim .oh-f2 { animation-name: oh-f2; }
+.oh--anim .oh-st--b { animation-name: oh-stb; }
+.oh--anim .oh-st--s { animation-name: oh-sts; }
 .oh--anim .oh-f3 { animation-name: oh-f3; }
 .oh--anim .oh-stack { animation-name: oh-stack; }
 .oh--anim .oh-bar { animation-name: oh-bar; }
@@ -164,6 +187,9 @@ CSS = r"""
 /* 2. Loading: scrim and dialog */
 @keyframes oh-scrim { 0%, 28% { opacity: 0; } 32%, 44% { opacity: 1; } 49%, 100% { opacity: 0; } }
 @keyframes oh-f2 { 0%, 29.5% { opacity: 0; transform: translate(-50%, -44%) scale(.97); } 33.5%, 44% { opacity: 1; transform: translate(-50%, -50%); } 47.5%, 100% { opacity: 0; transform: translate(-50%, -54%) scale(.98); } }
+/* The icon, as in the first-concept video: the small sparkle slides into the large one and they merge into one star, then split back */
+@keyframes oh-stb { 0%, 34.5% { transform: translate(6.9px, 12.2px) scale(5.4, 5.9); } 37% { transform: translate(10px, 10.4px) scale(6.3, 6.7); } 39% { transform: translate(10px, 10.4px) scale(6.7, 7.1); } 41% { transform: translate(10px, 10.4px) scale(6.3, 6.7); } 43.5%, 100% { transform: translate(6.9px, 12.2px) scale(5.4, 5.9); } }
+@keyframes oh-sts { 0%, 34.5% { opacity: 1; transform: translate(15.05px, 4.9px) scale(3.1, 3.5); } 36.5% { opacity: .8; } 37%, 41% { opacity: 0; transform: translate(10px, 10.4px) scale(1.2, 1.3); } 41.5% { opacity: .8; } 43.5%, 100% { opacity: 1; transform: translate(15.05px, 4.9px) scale(3.1, 3.5); } }
 /* 3. Description and Brand & Tags with skeletons (centred), 4. content and the autofilled bar (the stack rises to make room) */
 @keyframes oh-f3 { 0%, 47% { opacity: 0; } 50.5%, 92% { opacity: 1; } 97%, 100% { opacity: 0; } }
 @keyframes oh-stack { 0%, 63% { transform: translateY(calc(-1 * var(--stack-shift))); } 69%, 100% { transform: none; } }
