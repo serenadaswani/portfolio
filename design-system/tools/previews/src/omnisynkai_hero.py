@@ -11,7 +11,8 @@ One CSS timeline (10s, looped):
      and tags fields (neutral grey with a soft sweep).
   4. Each skeleton resolves into the real AI content (crops of 03): description lines write in, photos appear one by
      one, the brand and tags chips land; the title bar becomes "Listing Autofilled" with Publish on. Hold, then reset.
-Final frame (reduced motion, no JS): the autofilled listing (03). Starts when in view, the tab is visible and the
+Only the page's sections are shown (no sidebar or header). The AI-written description gets the same purple highlight as
+the brand and tags chips. Final frame (reduced motion, no JS): the autofilled listing (03) with the highlight. Starts when in view, the tab is visible and the
 screens have decoded; pauses off screen and on Pause (WCAG 2.2.2).
 """
 
@@ -41,6 +42,12 @@ PHOTOS = [(103, 460.5, 164, 163.5)] + [(x, y, 79.5, 79) for y in (460.5, 545) fo
 CHIPS = [(114, 688.5, 52.5, 17), (436.5, 688.5, 54.5, 17), (496, 688.5, 57, 17)]          # 03 brand chip, tag chips
 SK_DESC = [(97, 268, 520, 8), (110, 288, 470, 7), (110, 302, 520, 7), (110, 316, 560, 7), (110, 330, 260, 7)]
 SK_FIELDS = [(114, 690.5, 52.5, 13), (436.5, 690.5, 116.5, 13)]
+# The view: the page's sections only (title bar to the brand & tags card, with the right column), no sidebar or header
+VIEW = (79, 98, 914, 640)
+# AI-written description, highlighted like the brand and tags chips (chip fill #F0E8F7, text #9447E0, from 03):
+# one box per line of text (text extents measured from the export), and the description line it reveals with
+HILITE = [((95, 267.5, 532, 13.5), 1), ((109, 287.5, 439, 12), 2), ((109, 300, 558, 13), 3),
+          ((109, 313.5, 631, 13.5), 4), ((109, 327, 630, 14), 4)]
 # Typed values: 03's field text (unscrimmed), shifted onto 01's fields (01 title input starts at 260, 03's at 240;
 # 01 category at 478, 03's at 465)
 TYPE_TITLE = (246, 152, 150, 20, 20)
@@ -62,15 +69,19 @@ def html(base='assets/screens', I=None):
         _crop('oh-tb', s3, 89, 108, 895, 88),
         f'<img class="oh-scr oh-s2" src="{s2}" width="2000" height="1480" alt="" loading="eager" decoding="async">',
         f'<img class="oh-scr oh-final" src="{s3}" width="2000" height="1480" alt="" loading="eager" decoding="async">',
+        # purple highlight on the AI-written description: 'screen' turns the black text purple, 'multiply' tints the paper
+        ''.join(f'<span class="oh-hl oh-hl--t oh-d--{d}" style="{_box(*b)}"></span><span class="oh-hl oh-hl--f oh-d--{d}" style="{_box(*b)}"></span>' for b, d in HILITE),
         CURSOR,
     ]
+    vx, vy, vw, vh = VIEW
+    page = (f'left:{-vx / vw * 100:.4f}%;top:{-vy / vh * 100:.4f}%;width:{W / vw * 100:.4f}%;height:{H / vh * 100:.4f}%')
     pause = I['pause'] if I else ''
     play = I['play'] if I else ''
     return ('  <div class="cs-hero-well oh-wrap">'
             '<div class="pm-media pm-media--21x9 oh" data-oh role="img" '
             'aria-label="OmniSynkAI AI autofill on the listing page: a seller types a title and a category and clicks the AI autofill icon; a loading dialog appears, '
             'then skeleton content fills each field and resolves into the AI-written description, product photos, brand and tags, and the bar reads Listing Autofilled.">'
-            f'<div class="oh-stage"><div class="oh-app">{"".join(parts)}</div></div></div>'
+            f'<div class="oh-stage"><div class="oh-app"><div class="oh-page" style="{page}">{"".join(parts)}</div></div></div></div>'
             '<button type="button" class="pm-btn pm-btn--on-image pm-btn--icon pm-btn--sm oh-toggle" aria-pressed="false" aria-label="Pause animation" data-oh-toggle hidden>'
             f'<span class="oh-ic oh-ic--pause">{pause}</span><span class="oh-ic oh-ic--play" hidden>{play}</span></button></div>\n'
             '  <script>(function(h){if(h&&!matchMedia("(prefers-reduced-motion: reduce)").matches)h.classList.add("oh--anim")})(document.querySelector("[data-oh]"))</script>\n')
@@ -80,9 +91,10 @@ CSS = r"""
 .oh-wrap { position: relative; }
 .oh { container-type: inline-size; background: radial-gradient(90% 120% at 50% 110%, rgb(255 255 255 / 22%) 0%, rgb(255 255 255 / 0%) 60%), linear-gradient(160deg, #4745B0 0%, #5B43E8 40%, #755CFB 75%, #9B94E0 100%); }
 .oh-stage { position: absolute; inset: 0; display: grid; place-items: center; }
-.oh-app { position: relative; width: 54cqw; aspect-ratio: 1000 / 740; border-radius: .6cqw; overflow: hidden; background: #F5F5F7; isolation: isolate;
+.oh-app { position: relative; width: 57cqw; aspect-ratio: 914 / 640; border-radius: .6cqw; overflow: hidden; background: #F5F5F7; isolation: isolate;
   box-shadow: 0 2cqw 5cqw rgb(20 12 70 / 35%), 0 0 0 1px rgb(255 255 255 / 30%); }
-@container (max-width: 599px) { .oh-app { width: 70cqw; border-radius: .9cqw; } }
+@container (max-width: 599px) { .oh-app { width: 74cqw; border-radius: .9cqw; } }
+.oh-page { position: absolute; }
 .oh-scr { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
 .oh-c { position: absolute; background-repeat: no-repeat; }
 .oh-s2 { opacity: 0; }
@@ -92,6 +104,9 @@ CSS = r"""
 .oh-sk { position: absolute; border-radius: .25cqw; background: linear-gradient(90deg, #E6E8EC 0%, #F1F2F5 45%, #E6E8EC 90%); background-size: 300% 100%; }
 .oh-sk--m { border-radius: .45cqw; }
 .oh-mbg { position: absolute; background: #FFFFFF; opacity: 0; }
+.oh-hl { position: absolute; border-radius: .2cqw; }  /* siblings, so each blends with the screen beneath (a clipped wrapper would isolate them) */
+.oh-hl--t { background: #9447E0; mix-blend-mode: screen; }
+.oh-hl--f { background: #F0E8F7; mix-blend-mode: multiply; }
 .oh-cursor { position: absolute; left: 92%; top: 82%; width: 3cqw; height: 3cqw; opacity: 0; filter: drop-shadow(0 .2cqw .4cqw rgb(0 0 0 / 25%)); pointer-events: none; }
 
 /* Pause / Play, outside the image role */
