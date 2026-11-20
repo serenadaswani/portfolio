@@ -471,16 +471,20 @@ CSS = r"""
 .om-notes li { display: grid; grid-template-columns: 24px minmax(0, 1fr); gap: var(--space-3); align-items: start; }
 .om-notes h4 { margin: 0; font-size: var(--type-body-md); line-height: var(--line-body-md); font-weight: var(--weight-medium); letter-spacing: 0; color: var(--color-text-primary); }
 .om-notes p { margin: var(--space-1) 0 0; font-size: var(--type-body-sm); line-height: var(--line-body-sm); color: var(--color-text-secondary); }
-/* SWOT: a Miro-style board. Quadrants are dotted canvases (radius-md, design-system surface and border tokens).
+/* SWOT: a Miro-style board. One container (radius-md, surface, subtle ring) split into quadrants by hairlines.
    The sticky notes are project art, like the Procense paper form: square paper in a pastel of the quadrant's state
    colour (the bright state primitive mixed with white, so the paper stays light in both themes), a soft lifted shadow, a faint adhesive band,
    handwritten text (Caveat, as in the Procense hero art) and a hand-placed tilt. Two by two from 600px. */
 .om-swot { container-type: inline-size; margin: var(--space-2) 0; }
-.om-swot__grid { display: grid; gap: var(--space-4); grid-template-columns: minmax(0, 1fr); }
-@container (min-width: 600px) { .om-swot__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-.om-swot__q { --tone: var(--color-state-info); --paper-tone: var(--info-dark); padding: var(--space-5) var(--space-5) var(--space-6); border-radius: var(--radius-md);
-  background-color: var(--color-bg-surface); background-image: radial-gradient(var(--color-border-default) 1px, transparent 1.4px); background-size: 16px 16px; background-position: 8px 8px;
-  box-shadow: inset 0 0 0 1px var(--color-border-subtle); display: grid; gap: var(--space-5); align-content: start; }
+.om-swot__grid { display: grid; grid-template-columns: minmax(0, 1fr); border-radius: var(--radius-md); background: var(--color-bg-surface); box-shadow: inset 0 0 0 1px var(--color-border-subtle); overflow: hidden; }
+.om-swot__q + .om-swot__q { border-top: 1px solid var(--color-border-default); }
+@container (min-width: 600px) {
+  .om-swot__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .om-swot__q + .om-swot__q { border-top: 0; }
+  .om-swot__q:nth-child(odd) { border-right: 1px solid var(--color-border-default); }
+  .om-swot__q:nth-child(-n + 2) { border-bottom: 1px solid var(--color-border-default); }
+}
+.om-swot__q { --tone: var(--color-state-info); --paper-tone: var(--info-dark); padding: var(--space-5) var(--space-5) var(--space-6); display: grid; gap: var(--space-5); align-content: start; }
 .om-swot__q--success { --tone: var(--color-state-success); --paper-tone: var(--success-dark); }
 .om-swot__q--error { --tone: var(--color-state-error); --paper-tone: var(--error-dark); }
 .om-swot__q--warning { --tone: var(--color-state-warning); --paper-tone: var(--warning-dark); }
