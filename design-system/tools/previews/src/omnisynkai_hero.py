@@ -49,8 +49,8 @@ CURSOR = ('<svg class="oh-cursor" viewBox="0 0 24 24" aria-hidden="true" focusab
 # ---- regions measured from the exports ----
 BAR = (89, 108.3, 895, 86.8)
 SPARK = (361, 292, 20, 20)                        # 02 dialog's AI icon (redrawn so it can animate)
-TYPE_TITLE = (246, 152, 150, 20, 20)              # 03 field text (x, y, w, h), shifted dx onto 01's title input
-TYPE_CAT = (471, 152, 150, 20, 13)
+TYPE_TITLE = (252, 152, 80, 20, 20)               # 03 field text (x, y, w, h), shifted dx onto 01's title input
+TYPE_CAT = (477, 152, 44, 20, 13)    # crops end at the text, so each typing step is one character
 DESC_BANDS = [(263, 284), (284, 300.5), (300.5, 314.5), (314.5, 328.3), (328.3, 343)]
 HILITE = [(95, 268, 532, 12.3), (109, 287.5, 439.2, 12.3), (109, 301.4, 558.3, 12.3), (109, 315.3, 631, 12.3), (109, 329.2, 144.4, 12.3)]
 CHIPS = [(114, 688.5, 52.5, 17), (436.5, 688.5, 54.5, 17), (496, 688.5, 57, 17)]
@@ -125,11 +125,10 @@ CSS = r"""
 /* ===== OmniSynkAI hero (omnisynkai_hero.py): the full listing screen on a laptop, with a camera inside the screen ===== */
 .oh-wrap { position: relative; }
 .oh { --u: .946cqw; container-type: inline-size; overflow: hidden; background: radial-gradient(90% 120% at 50% 110%, rgb(255 255 255 / 22%) 0%, rgb(255 255 255 / 0%) 60%), linear-gradient(160deg, #4745B0 0%, #5B43E8 40%, #755CFB 75%, #9B94E0 100%); }
-/* Laptop, front view (project art, like Procense's tablet): a 52-unit lid with a thin black bezel and an aluminium
-   edge, the screen at the export's ratio, and a wider aluminium base with the thumb notch. 58 x 40.76 units. */
+/* Laptop, front view (project art, like Procense's tablet): a 52-unit lid with a thin black bezel (no outline ring), the screen at the export's ratio, and a wider aluminium base with the thumb notch. 58 x 40.76 units. */
 .od { position: absolute; left: 50%; top: 50%; width: calc(58 * var(--u)); height: calc(40.76 * var(--u)); transform: translate(-50%, -50%); }
 .od-lid { position: absolute; left: calc(3 * var(--u)); top: 0; width: calc(52 * var(--u)); height: calc(39.56 * var(--u)); border-radius: calc(1.8 * var(--u)) calc(1.8 * var(--u)) calc(.3 * var(--u)) calc(.3 * var(--u)); background: #0B0D12;
-  box-shadow: 0 0 0 calc(.16 * var(--u)) #9EA3AD, 0 calc(2.4 * var(--u)) calc(6 * var(--u)) rgb(0 0 0 / 32%); }
+  box-shadow: 0 calc(2.4 * var(--u)) calc(6 * var(--u)) rgb(0 0 0 / 32%); }
 .od-cam-dot { position: absolute; left: 50%; top: calc(.42 * var(--u)); width: calc(.34 * var(--u)); aspect-ratio: 1; border-radius: 50%; transform: translateX(-50%); background: #23272F; }
 .od-screen { position: absolute; left: calc(.9 * var(--u)); top: calc(1.1 * var(--u)); width: calc(50.2 * var(--u)); aspect-ratio: 1000 / 740.28; overflow: hidden; border-radius: calc(.2 * var(--u)); background: #FFFFFF; }
 .od-base { position: absolute; left: 0; top: calc(39.56 * var(--u)); width: 100%; height: calc(1.2 * var(--u)); border-radius: calc(.15 * var(--u)) calc(.15 * var(--u)) calc(1.6 * var(--u)) calc(1.6 * var(--u)) / calc(.15 * var(--u)) calc(.15 * var(--u)) calc(1 * var(--u)) calc(1 * var(--u));
@@ -180,14 +179,15 @@ CSS = r"""
 .oh--anim .oh-k--1 { animation-name: oh-k1; } .oh--anim .oh-k--2 { animation-name: oh-k2; } .oh--anim .oh-k--3 { animation-name: oh-k3; }
 
 /* Camera (scale, then the shift that centres a point of the screen): the whole page -> Title and Product category
-   (507, 200) x1.9 -> AI icon (790, 165) x2.4 -> out for loading -> Description (360, 285) x1.8 -> Media, Brand and Tags
-   (418, 509) x1.6 -> the Listing Autofilled bar (395, 218) x1.7 -> the whole page */
-@keyframes oh-cam { 0%, 4% { transform: scale(1) translate(0, 0); } 10%, 21% { transform: scale(1.9) translate(-.7%, 22.98%); } 26.5%, 30.5% { transform: scale(2.4) translate(-29%, 27.71%); }
-  36.5%, 49% { transform: scale(1) translate(0, 0); } 55%, 61.5% { transform: scale(1.8) translate(14%, 11.5%); } 67%, 72.5% { transform: scale(1.6) translate(8.2%, -18.76%); }
-  78%, 82% { transform: scale(1.7) translate(10.5%, 20.55%); } 88%, 100% { transform: scale(1) translate(0, 0); } }
-/* 1. The fields fill while zoomed in; the cursor glides to the AI autofill icon and clicks it */
-@keyframes oh-type { 0%, 10% { clip-path: inset(0 100% 0 0); animation-timing-function: steps(15, end); } 16.5%, 100% { clip-path: inset(0 0 0 0); } }
-@keyframes oh-cat { 0%, 17% { opacity: 0; } 19%, 100% { opacity: 1; } }
+   (507, 200) x1.9 -> AI icon (790, 165) x2.4 -> out for loading -> Description (360, 285) x1.8 -> down to Media
+   (418, 430) x1.45 -> down to Brand and Tags (418, 488.5) x1.47 -> up to the Listing Autofilled bar (395, 218) x1.7 ->
+   the whole page. Media and Brand/Tags views show their sections' full width (no left or right edge cut off). */
+@keyframes oh-cam { 0%, 4% { transform: scale(1) translate(0, 0); } 9.5%, 21% { transform: scale(1.9) translate(-.7%, 22.98%); } 26.5%, 30.5% { transform: scale(2.4) translate(-29%, 27.71%); }
+  36%, 49% { transform: scale(1) translate(0, 0); } 54%, 61.5% { transform: scale(1.8) translate(14%, 11.5%); } 65.5%, 69% { transform: scale(1.45) translate(8.2%, -8.09%); }
+  72.5%, 75.5% { transform: scale(1.47) translate(8.2%, -15.99%); } 80%, 84% { transform: scale(1.7) translate(10.5%, 20.55%); } 89.5%, 100% { transform: scale(1) translate(0, 0); } }
+/* 1. Title, then Product category, type in (one character at a time, the same way) while zoomed in; the cursor glides to the AI autofill icon and clicks it */
+@keyframes oh-type { 0%, 9.5% { clip-path: inset(0 100% 0 0); animation-timing-function: steps(15, end); } 15%, 100% { clip-path: inset(0 0 0 0); } }
+@keyframes oh-cat { 0%, 15.5% { clip-path: inset(0 100% 0 0); animation-timing-function: steps(8, end); } 18.5%, 100% { clip-path: inset(0 0 0 0); } }
 @keyframes oh-cursor { 0%, 22% { opacity: 0; left: 72%; top: 84%; transform: none; } 24% { opacity: 1; } 28.5% { opacity: 1; left: 55.97%; top: 45.16%; transform: none; }
   29.2% { transform: scale(.85); } 30% { opacity: 1; transform: none; } 32%, 100% { opacity: 0; left: 55.97%; top: 45.16%; transform: none; } }
 /* 2. The loading screen (scrim + dialog) once the camera is back out; the icon's sparkles merge and split */
@@ -195,20 +195,20 @@ CSS = r"""
 @keyframes oh-stb { 0%, 39.5% { transform: translate(6.9px, 12.2px) scale(5.4, 5.9); } 42% { transform: translate(10px, 10.4px) scale(6.3, 6.7); } 43.5% { transform: translate(10px, 10.4px) scale(6.7, 7.1); } 45% { transform: translate(10px, 10.4px) scale(6.3, 6.7); } 47.5%, 100% { transform: translate(6.9px, 12.2px) scale(5.4, 5.9); } }
 @keyframes oh-sts { 0%, 39.5% { opacity: 1; transform: translate(15.05px, 4.9px) scale(3.1, 3.5); } 41.5% { opacity: .8; } 42%, 45% { opacity: 0; transform: translate(10px, 10.4px) scale(1.2, 1.3); } 45.5% { opacity: .8; } 47.5%, 100% { opacity: 1; transform: translate(15.05px, 4.9px) scale(3.1, 3.5); } }
 /* 3-4. Skeletons in the sections autofill writes to, each giving way to its content as the camera reaches it */
-@keyframes oh-skd { 0%, 34% { opacity: 0; } 36%, 55% { opacity: 1; } 58%, 100% { opacity: 0; } }
-@keyframes oh-skm { 0%, 34% { opacity: 0; } 36%, 66.5% { opacity: 1; } 69.5%, 100% { opacity: 0; } }
-@keyframes oh-skf { 0%, 34% { opacity: 0; } 36%, 68% { opacity: 1; } 70.5%, 100% { opacity: 0; } }
+@keyframes oh-skd { 0%, 34% { opacity: 0; } 36%, 54.5% { opacity: 1; } 57.5%, 100% { opacity: 0; } }
+@keyframes oh-skm { 0%, 34% { opacity: 0; } 36%, 65% { opacity: 1; } 68%, 100% { opacity: 0; } }
+@keyframes oh-skf { 0%, 34% { opacity: 0; } 36%, 71.5% { opacity: 1; } 74%, 100% { opacity: 0; } }
 @keyframes oh-sweep { from { background-position: 100% 0; } to { background-position: -50% 0; } }
-@keyframes oh-d1 { 0%, 55% { opacity: 0; transform: translateY(20%); } 58%, 100% { opacity: 1; transform: none; } }
-@keyframes oh-d2 { 0%, 56.1% { opacity: 0; transform: translateY(20%); } 59.1%, 100% { opacity: 1; transform: none; } }
-@keyframes oh-d3 { 0%, 57.2% { opacity: 0; transform: translateY(20%); } 60.2%, 100% { opacity: 1; transform: none; } }
-@keyframes oh-d4 { 0%, 58.3% { opacity: 0; transform: translateY(20%); } 61.3%, 100% { opacity: 1; transform: none; } }
-@keyframes oh-d5 { 0%, 59.4% { opacity: 0; transform: translateY(20%); } 62.4%, 100% { opacity: 1; transform: none; } }
-@keyframes oh-media { 0%, 66.5% { opacity: 0; } 70%, 100% { opacity: 1; } }
-@keyframes oh-k1 { 0%, 68% { opacity: 0; transform: translateY(20%); } 71%, 100% { opacity: 1; transform: none; } }
-@keyframes oh-k2 { 0%, 69% { opacity: 0; transform: translateY(20%); } 72%, 100% { opacity: 1; transform: none; } }
-@keyframes oh-k3 { 0%, 70% { opacity: 0; transform: translateY(20%); } 73%, 100% { opacity: 1; transform: none; } }
-@keyframes oh-bar { 0%, 77.5% { opacity: 0; } 80.5%, 100% { opacity: 1; } }
+@keyframes oh-d1 { 0%, 54.5% { opacity: 0; transform: translateY(20%); } 57.5%, 100% { opacity: 1; transform: none; } }
+@keyframes oh-d2 { 0%, 55.6% { opacity: 0; transform: translateY(20%); } 58.6%, 100% { opacity: 1; transform: none; } }
+@keyframes oh-d3 { 0%, 56.7% { opacity: 0; transform: translateY(20%); } 59.7%, 100% { opacity: 1; transform: none; } }
+@keyframes oh-d4 { 0%, 57.8% { opacity: 0; transform: translateY(20%); } 60.8%, 100% { opacity: 1; transform: none; } }
+@keyframes oh-d5 { 0%, 58.9% { opacity: 0; transform: translateY(20%); } 61.9%, 100% { opacity: 1; transform: none; } }
+@keyframes oh-media { 0%, 65% { opacity: 0; } 68.5%, 100% { opacity: 1; } }
+@keyframes oh-k1 { 0%, 71.5% { opacity: 0; transform: translateY(20%); } 74.5%, 100% { opacity: 1; transform: none; } }
+@keyframes oh-k2 { 0%, 72.5% { opacity: 0; transform: translateY(20%); } 75.5%, 100% { opacity: 1; transform: none; } }
+@keyframes oh-k3 { 0%, 73.5% { opacity: 0; transform: translateY(20%); } 76.5%, 100% { opacity: 1; transform: none; } }
+@keyframes oh-bar { 0%, 80% { opacity: 0; } 83%, 100% { opacity: 1; } }
 /* Loop reset (hero only): the filled-in parts fade back to the empty listing */
 @keyframes oh-ov { 0%, 95% { opacity: 1; } 99%, 100% { opacity: 0; } }
 """
@@ -241,8 +241,7 @@ JS = r"""
 # slot); plays once and holds the finished listing (no loop reset); side cards tint the laptop itself.
 CARD_CSS = """
 .oh.oh--card { --u: 1.48cqw; position: absolute; inset: 0; background: none; overflow: visible; }
-.oh--card .od-lid::after, .oh--card .od-base::after { content: ""; position: absolute; inset: calc(-.16 * var(--u)); z-index: 1; border-radius: inherit; background: var(--cx-tint, transparent); opacity: var(--dim, 0); pointer-events: none; }
-.oh--card .od-base::after { inset: 0; }
+.oh--card .od-lid::after, .oh--card .od-base::after { content: ""; position: absolute; inset: 0; z-index: 1; border-radius: inherit; background: var(--cx-tint, transparent); opacity: var(--dim, 0); pointer-events: none; }
 .oh--card.oh--anim * { animation-iteration-count: 1; }
 .oh--card.oh--anim .oh-sk { animation-iteration-count: infinite; }
 .oh--card.oh--anim .oh-ov { animation-name: none; }
