@@ -228,7 +228,7 @@ def swot():
     quads = ''.join(
         f'<section class="om-swot__q om-swot__q--{tone}" aria-labelledby="swot-{name.lower()}"><div class="om-swot__head">'
         f'<h4 id="swot-{name.lower()}"><span class="om-swot__sw" aria-hidden="true"></span>{name}</h4><p>{desc}</p></div>'
-        '<ul class="om-swot__notes">' + ''.join(f'<li class="om-swot__note"><span class="om-swot__tag">{tag}</span><span class="om-swot__txt">{t}</span></li>' for tag, t in notes) + '</ul></section>'
+        '<ul class="om-swot__notes">' + ''.join(f'<li class="om-swot__note"><div class="om-swot__paper"><span class="om-swot__tag">{tag}</span><span class="om-swot__txt">{t}</span></div></li>' for tag, t in notes) + '</ul></section>'
         for name, desc, tone, notes in SWOT)
     return (f'<figure class="om-swot"><div class="om-swot__grid">{quads}</div>'
             + _cap(_num(), 'SWOT of Shopify’s and Trustana’s AI listing features, and what it meant for OmniSynkAI.') + '</figure>')
@@ -489,13 +489,17 @@ CSS = r"""
 .om-swot__head h4 { margin: 0; display: flex; align-items: center; gap: var(--space-2); font-size: var(--type-body-md); line-height: var(--line-body-md); font-weight: var(--weight-medium); letter-spacing: 0; color: var(--color-text-primary); }
 .om-swot__sw { width: 12px; height: 12px; border-radius: 3px; background: var(--tone); flex: none; }
 .om-swot__head p { margin: 0; font-size: var(--type-body-sm); line-height: var(--line-body-sm); color: var(--color-text-secondary); }
-.om-swot__notes { list-style: none; margin: 0; padding: 0 var(--space-1); display: grid; gap: var(--space-4) var(--space-3); grid-template-columns: repeat(auto-fill, minmax(6.25rem, 1fr)); }
-.om-swot__note { position: relative; aspect-ratio: 1; padding: var(--space-2) var(--space-2) var(--space-2) var(--space-3); border-radius: 2px;
-  background: var(--tone-bg); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--tone) 22%, transparent), 0 1px 1px rgb(11 18 32 / 6%), 0 10px 12px -9px rgb(11 18 32 / 28%);
-  display: flex; flex-direction: column; gap: var(--space-1); color: var(--color-text-primary); transform: rotate(-1.6deg); }
+.om-swot__notes { list-style: none; margin: 0; padding: 0 var(--space-1) var(--space-2); display: grid; gap: var(--space-4) var(--space-3); grid-template-columns: repeat(auto-fill, minmax(6.25rem, 1fr)); }
+/* Each note: the li carries the tilt; the paper is a flat square of the
+   quadrant's state tint, deepened with a touch of the state colour, with a slightly darker adhesive band at the top and a lifted shadow. */
+.om-swot__note { position: relative; transform: rotate(-1.6deg); }
 .om-swot__note:nth-child(2) { transform: rotate(1.4deg) translateY(3px); }
 .om-swot__note:nth-child(3) { transform: rotate(.8deg) translateY(-2px); }
 .om-swot__note:nth-child(4) { transform: rotate(-1deg) translateY(3px); }
+.om-swot__paper { position: relative; aspect-ratio: 1; padding: var(--space-2) var(--space-2) var(--space-2) var(--space-3); display: flex; flex-direction: column; gap: var(--space-1);
+  background-color: color-mix(in srgb, var(--tone) 16%, var(--tone-bg));
+  background-image: linear-gradient(to bottom, color-mix(in srgb, var(--tone) 6%, transparent) 0, color-mix(in srgb, var(--tone) 6%, transparent) 16%, transparent 16%);
+  box-shadow: 0 1px 1px rgb(11 18 32 / 10%), 0 12px 12px -10px rgb(11 18 32 / 32%); color: var(--color-text-primary); }
 .om-swot__tag { font-family: var(--font-meta); font-size: var(--type-label); line-height: var(--line-label); color: var(--color-text-secondary); }
 .om-swot__txt { font-size: var(--type-body-sm); line-height: var(--line-body-sm); font-weight: var(--weight-medium); text-wrap: pretty; }
 """
