@@ -209,8 +209,7 @@ SWOT = [
     ('Strengths', 'What their AI does well', 'success', [
         ('Shopify', 'Feedback loops let sellers steer each new draft.'),
         ('Shopify', 'AI sits inside the editor sellers already use.'),
-        ('Trustana', 'Enriches product data for search and conversion.'),
-        ('Trustana', 'Fills many product attributes at once.')]),
+        ('Trustana', 'Enriches product data at scale for search.')]),
     ('Weaknesses', 'Where their AI falls short', 'error', [
         ('Both', 'AI features live in separate tools, not one flow.'),
         ('Both', 'Little to tell AI content from seller input.'),
@@ -218,8 +217,7 @@ SWOT = [
     ('Opportunities', 'Openings for OmniSynkAI', 'info', [
         ('Market', 'One flow from AI draft to multi-platform publish.'),
         ('Market', 'Clear cues for everything AI writes.'),
-        ('Market', 'Feedback that improves the model over time.'),
-        ('Market', 'Tone options that match each brand voice.')]),
+        ('Market', 'Feedback that improves the model over time.')]),
     ('Threats', 'Risks to plan around', 'warning', [
         ('Market', 'Sellers may distrust AI that edits without asking.'),
         ('Market', 'Output quality is capped by the model.'),
@@ -484,7 +482,7 @@ CSS = r"""
   .om-swot__q:nth-child(odd) { border-right: 1px solid var(--color-border-default); }
   .om-swot__q:nth-child(-n + 2) { border-bottom: 1px solid var(--color-border-default); }
 }
-.om-swot__q { --tone: var(--color-state-info); --paper-tone: var(--info-dark); padding: var(--space-5) var(--space-5) var(--space-6); display: grid; gap: var(--space-5); align-content: start; }
+.om-swot__q { --tone: var(--color-state-info); --paper-tone: var(--info-dark); padding: var(--space-4) var(--space-4) var(--space-5); display: grid; gap: var(--space-4); align-content: start; }
 .om-swot__q--success { --tone: var(--color-state-success); --paper-tone: var(--success-dark); }
 .om-swot__q--error { --tone: var(--color-state-error); --paper-tone: var(--error-dark); }
 .om-swot__q--warning { --tone: var(--color-state-warning); --paper-tone: var(--warning-dark); }
@@ -492,17 +490,17 @@ CSS = r"""
 .om-swot__head h4 { margin: 0; display: flex; align-items: center; gap: var(--space-2); font-size: var(--type-body-md); line-height: var(--line-body-md); font-weight: var(--weight-medium); letter-spacing: 0; color: var(--color-text-primary); }
 .om-swot__sw { width: 12px; height: 12px; border-radius: 3px; background: var(--tone); flex: none; }
 .om-swot__head p { margin: 0; font-size: var(--type-body-sm); line-height: var(--line-body-sm); color: var(--color-text-secondary); }
-.om-swot__notes { list-style: none; margin: 0; padding: 0 var(--space-1); display: grid; gap: var(--space-5) var(--space-4); grid-template-columns: repeat(2, minmax(0, 1fr)); }
-.om-swot__note { position: relative; aspect-ratio: 1; min-height: 7.5rem; padding: var(--space-4) var(--space-3) var(--space-3); border-radius: 2px;
+.om-swot__notes { list-style: none; margin: 0; padding: 0 var(--space-1); display: grid; gap: var(--space-4) var(--space-3); grid-template-columns: repeat(auto-fill, minmax(6.25rem, 1fr)); }
+.om-swot__note { position: relative; min-height: 6.25rem; padding: var(--space-3) var(--space-2) var(--space-3) var(--space-3); border-radius: 2px;
   background-color: color-mix(in srgb, var(--paper-tone) 52%, var(--white));
   background-image: linear-gradient(to bottom, rgb(11 18 32 / 6%), rgb(11 18 32 / 0%) 16%), linear-gradient(to bottom right, rgb(255 255 255 / 0%) 70%, rgb(11 18 32 / 4%));
   box-shadow: 0 1px 1px rgb(11 18 32 / 8%), 0 12px 14px -10px rgb(11 18 32 / 35%);
   display: flex; flex-direction: column; gap: var(--space-1); color: var(--ink); transform: rotate(-1.6deg); }
-.om-swot__note:nth-child(2) { transform: rotate(1.4deg) translateY(4px); }
+.om-swot__note:nth-child(2) { transform: rotate(1.4deg) translateY(3px); }
 .om-swot__note:nth-child(3) { transform: rotate(.8deg) translateY(-2px); }
 .om-swot__note:nth-child(4) { transform: rotate(-1deg) translateY(3px); }
 .om-swot__tag { font-family: var(--font-meta); font-size: var(--type-label); line-height: var(--line-label); color: rgb(11 18 32 / 62%); }
-.om-swot__txt { font-family: Caveat, "Bradley Hand", cursive; font-weight: 600; font-size: 1.3rem; line-height: 1.15; text-wrap: pretty; }
+.om-swot__txt { font-family: Caveat, "Bradley Hand", cursive; font-weight: 600; font-size: 1.125rem; line-height: 1.12; text-wrap: pretty; }
 """
 
 OMNI = dict(page_title='OmniSynkAI Case Study', out='omnisynkai/index.html', sections=SECTIONS, body=BODY, header=HEADER, tldr=TLDR,
