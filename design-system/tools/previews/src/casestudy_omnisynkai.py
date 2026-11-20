@@ -181,7 +181,7 @@ BODY = ''.join([
         + f'<section class="om-ns" aria-labelledby="om-ns-h"><p class="om-ns__label" id="om-ns-h">{_l("sparkles")}The opportunity</p>'
           '<p class="om-ns__text">Design an autofill feature that brings AI into the listing flow, helping sellers quickly create compelling, search-friendly listings and raising listing quality across the platform.</p></section>'),
 
-    section('role', 'My role', 'I joined for the version that would launch.',
+    section('role', 'My role', 'I owned three questions on the version that would launch.',
         lede('The team had already explored three versions of the listing flow. Studying what each one taught us, I saw the same three gaps come up again and again.')
         + framed(versions(), 'How the listing flow evolved, and where I joined.')
         + callout('Three gaps', 'Sellers missed autofill, couldn’t tell what it wrote, and wanted more say in the result.')
