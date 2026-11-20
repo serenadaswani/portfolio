@@ -17,6 +17,20 @@ FLOW_JS = CP._between(CP.JS, '  // Fig. 1 batch workflow', '  // TL;DR stepper')
 MK_CSS = (CP._between(CP.CSS, '/* Annotation badges', '/* Expand control')  # badges + annotation cards, as on Procense's final screens
           + CP._between(CP.CSS, '/* Feature cards: Card --outlined', '/* Thumbnail:')
           + '.pr-sfig + .pr-sfig { margin-top: var(--space-6); }\n.pr-sfig .pm-frame__stage { container: pr-sfig / inline-size; }\n')
+TL_JS = r"""
+  // Versions timeline, after the landing's Experience timeline: each time it comes into view (it resets once fully off
+  // screen) the line grows from v1 down to v4, each row appears as the line reaches it, and v4 lands with a small pulse.
+  // A timed animation, not tied to scroll. No animation with reduced motion or without JS.
+  (function () {
+    var tl = document.querySelector('.om-tl'); if (!tl || reduce || !('IntersectionObserver' in window)) return;
+    document.documentElement.classList.add('om-anim');
+    new IntersectionObserver(function (es) {
+      var e = es[0];
+      if (e.isIntersecting && e.intersectionRatio >= .35) tl.classList.add('is-in');
+      else if (!e.isIntersecting) tl.classList.remove('is-in');
+    }, { threshold: [0, .35] }).observe(tl);
+  })();
+"""
 VIDEO_JS = r"""
   // First-concept prototype: plays (muted, looped) only while in view and not with reduced motion; native controls pause it
   document.querySelectorAll('video[data-autoplay]').forEach(function (v) {
@@ -36,6 +50,7 @@ def items(rows, grid=False):
             + ''.join(f'<li><div><h4>{t}</h4><p>{d}</p></div></li>' for t, d in rows) + '</ul>')
 
 # ---------- figures ----------
+V = '?v=2'  # bump when screen exports are replaced in place, so browsers fetch the new files
 _n = [0]
 def _num():
     _n[0] += 1
@@ -76,7 +91,7 @@ def shot(key, cap, pins=(), rows=None, size=''):
         mk = ''.join(f'<span class="pr-mk om-pin" style="left:{x}%;top:{y}%" aria-hidden="true">{k}</span>' for k, x, y in pins)
         top, fig_cls, data = '', 'pm-frame om-fig', ''
     return (f'<figure class="{fig_cls}{size}"{data}><div class="pm-frame__stage om-stage pr-zoom" data-lb-item data-lb-caption="Fig. {n}. {cap}">{top}'
-            f'<div class="om-pinwrap"><img class="om-shot" src="assets/screens/{f}" width="2000" height="1480" loading="lazy" alt="{alt}">{mk}'
+            f'<div class="om-pinwrap"><img class="om-shot" src="assets/screens/{f}{V}" width="2000" height="1480" loading="lazy" alt="{alt}">{mk}'
             + CP.expand(f'Fig. {n}') + '</div></div>' + _cap(n, cap) + '</figure>')
 def notes(rows):
     """Numbered notes that match the badges on the screens (title, one line)."""
@@ -108,11 +123,11 @@ VERSIONS = [
 def versions():
     """An open vertical timeline (after the landing's Experience timeline): version and name, the rail, then what it was and its feedback."""
     return ('<ol class="om-tl" aria-label="How the listing flow evolved">' + ''.join(
-        f'<li class="om-tl__v{" is-mine" if mine else ""}"><div class="om-tl__k"><p><span class="pm-meta-text">{v}</span><span class="om-tl__n">{name}</span></p>'
+        f'<li class="om-tl__v{" is-mine" if mine else ""}" style="--i:{k}"><div class="om-tl__k"><p><span class="pm-meta-text">{v}</span><span class="om-tl__n">{name}</span></p>'
         + ('<span class="pm-badge om-tl__me">Where I joined</span>' if mine else '') + '</div>'
         f'<span class="om-tl__dot" aria-hidden="true"></span><div class="om-tl__body">'
         f'<p class="om-tl__d">{d}</p><p class="om-tl__l"><span>{"Goal" if mine else "Feedback"}</span>{l}</p></div></li>'
-        for v, name, d, l, mine in VERSIONS) + '</ol>')
+        for k, (v, name, d, l, mine) in enumerate(VERSIONS)) + '</ol>')
 
 # The three gaps, marked on the v3 page: label, question, what went wrong, badge position (% of the image)
 FOCUS = [
@@ -184,9 +199,9 @@ def flow():
 def before_v4():
     """The v3 page against the launch version, in the design-system before/after slider (as in Procense's Tablet-first)."""
     n = _num()
-    ba = before_after('assets/screens/00-v3-listing-page-1183.jpg',
+    ba = before_after(f'assets/screens/00-v3-listing-page-match.jpg{V}',
                       'The v3 listing page: a small Autofill link above the title, an AI icon in the description toolbar and an AI Generator button under the images; AI text looks like typed text.',
-                      f'assets/screens/{SHOTS["filled"][0]}', SHOTS['filled'][1],
+                      f'assets/screens/{SHOTS["filled"][0]}{V}', SHOTS['filled'][1],
                       'v3: AI in three places, and nothing marks what it wrote.',
                       'Launch: one entry point, marked AI content, one menu to steer it.', w=2000, h=1480)
     return (f'<figure class="pm-frame"><div class="pm-frame__stage om-stage">{ba}</div>'
@@ -522,10 +537,23 @@ CSS = r"""
 .om-swot__txt { font-size: var(--type-body-sm); line-height: var(--line-body-sm); font-weight: var(--weight-medium); text-wrap: pretty; }
 /* First-concept prototype video on the figure stage */
 .om-video { display: block; width: 100%; height: auto; border-radius: var(--radius-sm); background: var(--white); }
+/* Timeline motion (landing Experience timeline, top to bottom): segments grow in order, dots pop and rows fade in as the
+   line reaches them, v4 pulses on arrival. --seg is one segment's duration. */
+.om-tl { --seg: calc(var(--motion-duration-base, 200ms) * 2.4); }
+.om-anim .om-tl__v::before { transform: scaleY(0); transform-origin: top; }
+.om-anim .om-tl__dot { transform: scale(0); }
+.om-anim .om-tl__k, .om-anim .om-tl__body { opacity: 0; transform: translateY(var(--space-1)); }
+.om-anim .om-tl.is-in .om-tl__v::before { transform: none; transition: transform var(--seg) linear calc(var(--i) * var(--seg) + 120ms); }
+.om-anim .om-tl.is-in .om-tl__dot { transform: none; transition: transform var(--motion-duration-base, 200ms) var(--motion-ease, ease) calc(var(--i) * var(--seg)); }
+.om-anim .om-tl.is-in .om-tl__k, .om-anim .om-tl.is-in .om-tl__body { opacity: 1; transform: none;
+  transition: opacity calc(var(--motion-duration-base, 200ms) * 2) var(--motion-ease, ease) calc(var(--i) * var(--seg)), transform calc(var(--motion-duration-base, 200ms) * 2) var(--motion-ease, ease) calc(var(--i) * var(--seg)); }
+.om-anim .om-tl.is-in .is-mine .om-tl__dot::after { content: ""; position: absolute; inset: -3px; border-radius: 50%; box-shadow: 0 0 0 2px var(--color-selected-indicator); opacity: 0;
+  animation: om-land calc(var(--motion-duration-base, 200ms) * 4) ease-out calc(var(--i) * var(--seg) + 120ms) 1; }
+@keyframes om-land { 0% { opacity: .9; transform: scale(1); } 100% { opacity: 0; transform: scale(2.2); } }
 """
 
 OMNI = dict(page_title='OmniSynkAI Case Study', out='omnisynkai/index.html', sections=SECTIONS, body=BODY, header=HEADER, tldr=TLDR,
-            css=FLOW_CSS + MK_CSS + LB_CSS + BA_CSS + CSS, js=FLOW_JS + ANN_JS + LB_JS + BA_JS + VIDEO_JS)
+            css=FLOW_CSS + MK_CSS + LB_CSS + BA_CSS + CSS, js=FLOW_JS + ANN_JS + LB_JS + BA_JS + VIDEO_JS + TL_JS)
 
 if __name__ == '__main__':
     print(len(C.render(OMNI)))
