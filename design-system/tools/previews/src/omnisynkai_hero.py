@@ -16,19 +16,30 @@ Final frame (reduced motion, no JS): frame 4, complete. Starts when in view, the
 decoded; pauses off screen and on Pause (WCAG 2.2.2).
 """
 
-V = '?v=2'
+V = '?v=3'
 W, H = 1000, 740   # grid of the exports at 1000 px wide
 
-def _place(cls, src, sbox, dbox, frame):
-    """Crop sbox (x, y, w, h in the export grid) of src into dbox (in the frame's own grid, uniformly scaled)."""
+# Sharp sources: each piece is its own crop of the 2880px Figma exports (omnisynkai/assets/hero/<name>.jpg), so the page
+# downloads only what it shows. Regions are (x, y, w, h) in the export grid, from the pixel crops (2.88 px per unit).
+SPRITES = {
+    '01-bar': (87.8472, 106.9444, 897.2222, 88.8889), '01-desc': (87.8472, 202.4306, 661.1111, 142.7083),
+    '01-meta': (87.8472, 645.4861, 661.1111, 83.6806), '03-bar': (87.8472, 106.9444, 897.2222, 88.8889),
+    '03-desc': (92.7083, 260.7639, 654.1667, 84.375), '03-chips': (111.8056, 685.7639, 444.0972, 22.2222),
+    '02-dialog': (347.9167, 273.9583, 305.2083, 190.9722),
+}
+
+def _place(cls, sp, sbox, dbox, frame):
+    """Crop sbox (x, y, w, h in the export grid) of sprite sp = (url, region) into dbox (in the frame's own grid)."""
+    url, (rx, ry, rw, rh) = sp
     sx, sy, sw, sh = sbox
+    assert rx - .01 <= sx and sx + sw <= rx + rw + .01 and ry - .01 <= sy and sy + sh <= ry + rh + .01, (cls, sbox, rx, ry, rw, rh)
     dx, dy, dw, dh = dbox
     fw, fh = frame
-    bs = W / sw * 100
-    px = sx / (W - sw) * 100 if sw < W else 0
-    py = sy / (H - sh) * 100 if sh < H else 0
+    bs = rw / sw * 100
+    px = (sx - rx) / (rw - sw) * 100 if rw - sw > .01 else 0
+    py = (sy - ry) / (rh - sh) * 100 if rh - sh > .01 else 0
     return (f'<span class="oh-c {cls}" style="left:{dx / fw * 100:.3f}%;top:{dy / fh * 100:.3f}%;width:{dw / fw * 100:.3f}%;height:{dh / fh * 100:.3f}%;'
-            f'background-image:url({src});background-size:{bs:.3f}% auto;background-position:{px:.3f}% {py:.3f}%"></span>')
+            f'background-image:url({url});background-size:{bs:.3f}% auto;background-position:{px:.3f}% {py:.3f}%"></span>')
 
 def _rect(cls, dbox, frame):
     dx, dy, dw, dh = dbox
@@ -70,56 +81,64 @@ def _meta(sbox):
 
 STAR = 'M0 -.94C.07 -.42 .42 -.07 .94 0C.42 .07 .07 .42 0 .94C-.07 .42 -.42 .07 -.94 0C-.42 -.07 -.07 -.42 0 -.94Z'
 
-def _spark(s2):
+def _spark(s2, uid):
     """The dialog's two-star AI icon as SVG, over a patch of the same export's blank dialog (so the paper matches exactly)."""
     x, y, w, h = SPARK
     patch = _place('oh-patch', s2, (612, y, w, h), (x - DIALOG[0], y - DIALOG[1], w, h), DIALOG[2:])
     pos = (f'left:{(x - DIALOG[0]) / DIALOG[2] * 100:.3f}%;top:{(y - DIALOG[1]) / DIALOG[3] * 100:.3f}%;'
            f'width:{w / DIALOG[2] * 100:.3f}%;height:{h / DIALOG[3] * 100:.3f}%')
-    star = f'<path d="{STAR}" fill="url(#oh-sg)" stroke="url(#oh-sg)" stroke-width=".16" stroke-linejoin="round"/>'
+    star = f'<path d="{STAR}" fill="url(#oh-sg{uid})" stroke="url(#oh-sg{uid})" stroke-width=".16" stroke-linejoin="round"/>'
     return patch + (f'<span class="oh-spark" style="{pos}"><svg viewBox="0 0 20 20" aria-hidden="true" focusable="false">'
-            '<defs><linearGradient id="oh-sg" x1="0" x2="1" y1="0" y2="0">'
+            f'<defs><linearGradient id="oh-sg{uid}" x1="0" x2="1" y1="0" y2="0">'
             '<stop offset="0" stop-color="#5B8CFF"/><stop offset=".48" stop-color="#A566FF"/><stop offset="1" stop-color="#AC6AFF"/>'
             f'</linearGradient></defs><g class="oh-st oh-st--b">{star}</g><g class="oh-st oh-st--s">{star}</g></svg></span>')
 
-def html(base='assets/screens', I=None):
-    s1, s2, s3 = (f'{base}/{f}{V}' for f in ('01-empty-listing.jpg', '02-autofill-in-progress.jpg', '03-listing-autofilled.jpg'))
+def _stage(base, uid):
+    """The three layers (title bar, loading dialog, sections) and the root's custom properties; shared by the
+    case-study hero and the landing's OmniSynkAI card."""
+    sp = {n: (f'{base}/{n}.jpg{V}', r) for n, r in SPRITES.items()}
+    s1b, s1d, s1m, s2, s3b, s3d, s3k = (sp[n] for n in ('01-bar', '01-desc', '01-meta', '02-dialog', '03-bar', '03-desc', '03-chips'))
     fb = BAR[2:]
     # Frame 1: the title bar, with a camera that zooms to the fields, then to the AI autofill icon
     tx, ty, tw, th, tdx = TYPE_TITLE
     cx, cy, cw, ch, cdx = TYPE_CAT
     f1 = ('<div class="oh-f oh-f1"><div class="oh-cam">'
-          + _place('oh-card', s1, BAR, (0, 0) + fb, fb)
-          + _place('oh-type', s3, (tx, ty, tw, th), (tx + tdx - BAR[0], ty - BAR[1], tw, th), fb)
-          + _place('oh-cat', s3, (cx, cy, cw, ch), (cx + cdx - BAR[0], cy - BAR[1], cw, ch), fb)
+          + _place('oh-card', s1b, BAR, (0, 0) + fb, fb)
+          + _place('oh-type', s3b, (tx, ty, tw, th), (tx + tdx - BAR[0], ty - BAR[1], tw, th), fb)
+          + _place('oh-cat', s3b, (cx, cy, cw, ch), (cx + cdx - BAR[0], cy - BAR[1], cw, ch), fb)
           + CURSOR + '</div></div>')
     # Frame 2: the loading dialog over a soft scrim
     f2 = ('<span class="oh-scrim"></span><div class="oh-f oh-f2">'
-          + _place('oh-dialog', s2, DIALOG, (0, 0) + DIALOG[2:], DIALOG[2:]) + _spark(s2) + '</div>')
+          + _place('oh-dialog', s2, DIALOG, (0, 0) + DIALOG[2:], DIALOG[2:]) + _spark(s2, uid) + '</div>')
     # Frames 3 and 4: Description and Brand & Tags (skeletons, then content), with the autofilled bar arriving on top
     sk = ('<span class="oh-sks">' + ''.join(_rect('oh-sk', _desc(b), STACK) for b in SK_DESC)
           + ''.join(_rect('oh-sk', _meta(b), STACK) for b in SK_FIELDS) + '</span>')
-    lines = ''.join(_place(f'oh-d oh-d--{i + 1}', s3, (95, y0, 650, y1 - y0), _desc((95, y0, 650, y1 - y0)), STACK)
+    lines = ''.join(_place(f'oh-d oh-d--{i + 1}', s3d, (95, y0, 650, y1 - y0), _desc((95, y0, 650, y1 - y0)), STACK)
                     for i, (y0, y1) in enumerate(DESC_BANDS))
     # clean highlight: per measured line, 'screen' turns black text purple and 'multiply' tints the paper (siblings, so both blend)
     hl = ''.join(_rect(f'oh-hl oh-hl--t oh-d--{i + 1}', _desc(b), STACK) + _rect(f'oh-hl oh-hl--f oh-d--{i + 1}', _desc(b), STACK)
                  for i, b in enumerate(HILITE))
-    chips = ''.join(_place(f'oh-k oh-k--{i + 1}', s3, b, _meta(b), STACK) for i, b in enumerate(CHIPS))
+    chips = ''.join(_place(f'oh-k oh-k--{i + 1}', s3k, b, _meta(b), STACK) for i, b in enumerate(CHIPS))
     f34 = ('<div class="oh-f oh-f3"><div class="oh-stack">'
-           + _place('oh-card oh-bar', s3, BAR, (0, 0, STACK[0], BAR_H), STACK)
-           + _place('oh-card oh-sec', s1, DESC_CARD, (0, Y_DESC) + DESC_CARD[2:], STACK)
-           + _place('oh-card oh-sec', s1, META_CARD, (0, Y_META) + META_CARD[2:], STACK)
+           + _place('oh-card oh-bar', s3b, BAR, (0, 0, STACK[0], BAR_H), STACK)
+           + _place('oh-card oh-sec', s1d, DESC_CARD, (0, Y_DESC) + DESC_CARD[2:], STACK)
+           + _place('oh-card oh-sec', s1m, META_CARD, (0, Y_META) + META_CARD[2:], STACK)
            + sk + lines + hl + chips + '</div></div>')
-    pause = I['pause'] if I else ''
-    play = I['play'] if I else ''
     style = (f'--f1-ar:{BAR[2]} / {BAR[3]};--f2-ar:{DIALOG[2]} / {DIALOG[3]};--f3-ar:{STACK[0]} / {STACK[1]:.2f};'
              f'--stack-shift:{(BAR_H + GAP) / 2 / STACK[1] * 100:.3f}%')
+    return f1 + f2 + f34, style
+
+
+def html(base='assets/hero', I=None):
+    inner, style = _stage(base, 'h')
+    pause = I['pause'] if I else ''
+    play = I['play'] if I else ''
     return ('  <div class="cs-hero-well oh-wrap">'
             f'<div class="pm-media pm-media--21x9 oh" data-oh role="img" style="{style}" '
             'aria-label="OmniSynkAI AI autofill in four steps: a seller types a title and a category, and the view zooms to the AI autofill icon, which they click; '
             'a loading dialog appears; skeletons fill the description and the brand and tags fields; then the AI-written description, highlighted in purple, '
             'and the brand and tag chips appear, with the title bar reading Listing Autofilled.">'
-            f'{f1}{f2}{f34}</div>'
+            f'{inner}</div>'
             '<button type="button" class="pm-btn pm-btn--on-image pm-btn--icon pm-btn--sm oh-toggle" aria-pressed="false" aria-label="Pause animation" data-oh-toggle hidden>'
             f'<span class="oh-ic oh-ic--pause">{pause}</span><span class="oh-ic oh-ic--play" hidden>{play}</span></button></div>\n'
             '  <script>(function(h){if(h&&!matchMedia("(prefers-reduced-motion: reduce)").matches)h.classList.add("oh--anim")})(document.querySelector("[data-oh]"))</script>\n')
@@ -180,7 +199,7 @@ CSS = r"""
 
 /* 1. Title bar: in, zoom to the fields while they fill, glide to the AI autofill icon, click, out */
 @keyframes oh-f1 { 0% { opacity: 0; transform: translate(-50%, -46%); } 3%, 26% { opacity: 1; transform: translate(-50%, -50%); } 29.5%, 100% { opacity: 0; transform: translate(-50%, -50%); } }
-@keyframes oh-cam { 0%, 4% { transform: none; } 9%, 16% { transform: scale(1.45) translateX(2.5cqw); } 22%, 30% { transform: scale(2.1) translateX(-24.5cqw); } 100% { transform: scale(2.1) translateX(-24.5cqw); } }
+@keyframes oh-cam { 0%, 4% { transform: none; } 9%, 16% { transform: scale(1.45) translateX(3.2%); } 22%, 30% { transform: scale(2.1) translateX(-31.4%); } 100% { transform: scale(2.1) translateX(-31.4%); } }
 @keyframes oh-type { 0%, 7% { clip-path: inset(0 100% 0 0); animation-timing-function: steps(15, end); } 14%, 100% { clip-path: inset(0 0 0 0); } }
 @keyframes oh-cat { 0%, 14% { opacity: 0; } 16.5%, 100% { opacity: 1; } }
 @keyframes oh-cursor { 0%, 20% { opacity: 0; left: 90%; top: 95%; } 22% { opacity: 1; } 25.5%, 27% { opacity: 1; left: 81.2%; top: 47%; } 29%, 100% { opacity: 0; left: 81.2%; top: 47%; } }
@@ -226,5 +245,48 @@ JS = r"""
     var srcs = {}; [].forEach.call(hero.querySelectorAll('.oh-c'), function (e) { var m = e.style.backgroundImage.match(/url\(["']?(.*?)["']?\)/); if (m) srcs[m[1]] = 1; });
     var loads = Object.keys(srcs).map(function (s) { var i = new Image(); i.src = s; return i.decode ? i.decode().catch(function () {}) : 0; });
     Promise.race([Promise.all(loads), new Promise(function (r) { setTimeout(r, 2500); })]).then(function () { ready = true; sync(); });
+  })();
+"""
+
+
+# ---------- The same animation on the landing's OmniSynkAI card ----------
+def card(base='omnisynkai/assets/hero', uid='c'):
+    """The hero animation in the landing card's media spot (the same size and place as Procense's tablet). It rests on
+    the final frame (frame 4, complete) and plays once from the start each time the OmniSynkAI card becomes active."""
+    inner, style = _stage(base, uid)
+    return f'<div class="oh oh--card" data-ohc aria-hidden="true" style="{style}">{inner}</div>'
+
+# The media box matches the Procense tablet / placeholder: 52 x 39.55 units at 1.48% of the slot's width per unit.
+# Frames are sized for its 4:3-ish shape. Plays once (no loop): frame 4 holds at the end instead of fading out.
+CARD_CSS = """
+.oh.oh--card { position: relative; width: calc(52 * 1.48cqw); aspect-ratio: 52 / 39.55; border-radius: calc(1.2 * 1.48cqw);
+  box-shadow: 0 1px 2px rgb(0 0 0 / 6%), 0 var(--space-5) var(--space-10) calc(-1 * var(--space-2)) rgb(0 0 0 / 30%), inset 0 0 0 1px rgb(255 255 255 / 14%); }
+.oh.oh--card .oh-f1 { width: 92cqw; } .oh.oh--card .oh-f2 { width: 64cqw; } .oh.oh--card .oh-f3 { width: 90cqw; }
+.oh.oh--card::after { content: ""; position: absolute; inset: 0; z-index: 2; border-radius: inherit; background: var(--cx-tint); opacity: var(--dim, 0); pointer-events: none; }
+.oh--card.oh--anim * { animation-iteration-count: 1; }
+.oh--card.oh--anim .oh-sk { animation-iteration-count: infinite; }
+.oh--card.oh--anim .oh-f3 { animation-name: oh-f3c; }
+@keyframes oh-f3c { 0%, 47% { opacity: 0; } 50.5%, 100% { opacity: 1; } }
+"""
+
+CARD_JS = r"""
+  // OmniSynkAI card: rest on the final frame; play the hero animation once whenever the card becomes the active card
+  (function () {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    document.querySelectorAll('[data-ohc]').forEach(function (oh) {
+      var shot = oh.closest('.cx-img'); if (!shot) return;
+      var srcs = {}; [].forEach.call(oh.querySelectorAll('.oh-c'), function (e) { var m = e.style.backgroundImage.match(/url\(["']?(.*?)["']?\)/); if (m) srcs[m[1]] = 1; });
+      var ready;
+      function load() { return ready || (ready = Promise.race([Promise.all(Object.keys(srcs).map(function (s) { var i = new Image(); i.src = s; return i.decode ? i.decode().catch(function () {}) : 0; })), new Promise(function (r) { setTimeout(r, 2500); })])); }
+      function active() { return shot.getAttribute('data-active') === 'true'; }
+      function play() {
+        oh.classList.remove('oh--anim', 'is-play'); void oh.offsetWidth; oh.classList.add('oh--anim');
+        load().then(function () { requestAnimationFrame(function () { if (active()) oh.classList.add('is-play'); }); });
+      }
+      function rest() { oh.classList.remove('oh--anim', 'is-play'); }
+      new MutationObserver(function () { if (active()) { if (!oh.classList.contains('oh--anim')) play(); } else rest(); })
+        .observe(shot, { attributes: true, attributeFilter: ['data-active'] });
+      if (active()) play();
+    });
   })();
 """

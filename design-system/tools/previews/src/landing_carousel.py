@@ -12,6 +12,7 @@ import io, contextlib
 with contextlib.redirect_stdout(io.StringIO()):
     import landing as L
 import procense_hero as PH
+import omnisynkai_hero as OH
 from lib import I
 
 PROJECTS = L.FEATURED + L.MORE
@@ -48,7 +49,8 @@ def shot(j):
     pid = PROJECTS[j % len(PROJECTS)][0]
     # Every card has the same media: a device-sized item centred in the slot (the tablet for Procense, a white
     # placeholder of the same size and shape for the others until their art exists)
-    art = PH.card("procense/assets/screens") if pid == 'procense' else '<span class="cx-shot__ph"></span>'
+    art = (PH.card("procense/assets/screens") if pid == 'procense'
+           else OH.card("omnisynkai/assets/hero", uid=str(j)) if pid == 'omni' else '<span class="cx-shot__ph"></span>')
     inner = f'<span class="cx-shot__img cx-shot__img--device">{art}</span>'
     return f'<div class="cx-img cx-img--{pid}" data-j="{j}"><span class="cx-img__float">{inner}</span></div>'
 
@@ -362,6 +364,8 @@ page = f'''<!doctype html>
 {CSS}
 {PH.CSS}
 {PH.CARD_CSS}
+{OH.CSS}
+{OH.CARD_CSS}
 </style>
 
 <div class="cxp lp">
@@ -407,7 +411,7 @@ page = f'''<!doctype html>
 </main>
 </div>
 
-<script>{SCRIPT}{PH.CARD_JS}</script>
+<script>{SCRIPT}{PH.CARD_JS}{OH.CARD_JS}</script>
 '''
 out = os.path.join(L.REPO, 'index.html')  # the landing is the site's root page
 open(out, 'w').write(page)
