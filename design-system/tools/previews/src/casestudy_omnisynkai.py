@@ -202,6 +202,39 @@ def sub(sid, label, title, line, screens):
     return (f'<section class="om-sub" id="{sid}" aria-labelledby="h-{sid}"><p class="cs-eyebrow">{label}</p>'
             f'<h3 class="cs-h3" id="h-{sid}">{title}</h3><p class="om-sub__line">{line}</p>{screens}</section>')
 
+# SWOT of Shopify's and Trustana's AI listing features (one board, both competitors), drawn as a Miro-style board.
+# DRAFT (Serena, 2026-11-20: "draft from my research"): written from her deck and findings, not her original Miro notes;
+# confirm or replace each note. Quadrant, description, state colour, notes [(tag, text)].
+SWOT = [
+    ('Strengths', 'What their AI does well', 'success', [
+        ('Shopify', 'Feedback loops let sellers steer each new draft.'),
+        ('Shopify', 'AI sits inside the editor sellers already use.'),
+        ('Trustana', 'Enriches product data for search and conversion.'),
+        ('Trustana', 'Fills many product attributes at once.')]),
+    ('Weaknesses', 'Where their AI falls short', 'error', [
+        ('Both', 'AI features live in separate tools, not one flow.'),
+        ('Both', 'Little to tell AI content from seller input.'),
+        ('Shopify', 'Help stops at its own store, not other marketplaces.')]),
+    ('Opportunities', 'Openings for OmniSynkAI', 'info', [
+        ('Market', 'One flow from AI draft to multi-platform publish.'),
+        ('Market', 'Clear cues for everything AI writes.'),
+        ('Market', 'Feedback that improves the model over time.'),
+        ('Market', 'Tone options that match each brand voice.')]),
+    ('Threats', 'Risks to plan around', 'warning', [
+        ('Market', 'Sellers may distrust AI that edits without asking.'),
+        ('Market', 'Output quality is capped by the model.'),
+        ('Market', 'Competitors could add multi-platform publishing.')]),
+]
+def swot():
+    """Four quadrants on the page background (no stage), each with sticky notes in its state colour."""
+    quads = ''.join(
+        f'<section class="om-swot__q om-swot__q--{tone}" aria-labelledby="swot-{name.lower()}"><div class="om-swot__head">'
+        f'<h4 id="swot-{name.lower()}"><span class="om-swot__sw" aria-hidden="true"></span>{name}</h4><p>{desc}</p></div>'
+        '<ul class="om-swot__notes">' + ''.join(f'<li class="om-swot__note"><span class="om-swot__tag">{tag}</span>{t}</li>' for tag, t in notes) + '</ul></section>'
+        for name, desc, tone, notes in SWOT)
+    return (f'<figure class="om-swot"><div class="om-swot__grid">{quads}</div>'
+            + _cap(_num(), 'SWOT of Shopify’s and Trustana’s AI listing features, and what it meant for OmniSynkAI.') + '</figure>')
+
 # ---------- content ----------
 SECTIONS = [('overview', 'Overview'), ('problem', 'The problem'), ('role', 'My role'), ('discover', 'Research'), ('concept', 'Concept'),
             ('solution', 'The solution'), ('impact', 'Impact &amp; reflection')]
@@ -232,10 +265,8 @@ BODY = ''.join([
     section('discover', 'Discover', 'I started by asking where AI could actually help.',
         lede('Before designing anything, I needed to uncover where AI could help sellers most, and how we could guide them to a listing they’re happy with.',
              'I partnered with UX research to pull the survey and interview findings and spot the gaps, and collaborated with engineers and product managers to map the AI’s constraints and feasibility. Knowing its limits early kept the design honest.',
-             'To fill the gaps, I ran desk research on how people use AI tools, and mapped a SWOT analysis of two competitors’ AI listing features.')
-        + items([('Shopify', 'Interactive feedback loops let sellers react to what AI writes and steer the next version.'),
-                 ('Trustana', 'AI enrichment fills out product data to improve search and conversion.')], grid=True)
-        + need('SWOT analysis of Shopify’s and Trustana’s AI listing features.', 'Your SWOT diagram for Shopify and Trustana, redrawn', '16x9')
+             'To fill the gaps, I ran desk research on how people use AI tools, and mapped a SWOT analysis of Shopify’s and Trustana’s AI listing features.')
+        + swot()
         + '<h3 class="cs-h3">I turned five findings into five design priorities.</h3>'
         + lede('I prioritized decisions rooted in our research findings and competitor data.')
         + findings()),
@@ -440,6 +471,25 @@ CSS = r"""
 .om-notes li { display: grid; grid-template-columns: 24px minmax(0, 1fr); gap: var(--space-3); align-items: start; }
 .om-notes h4 { margin: 0; font-size: var(--type-body-md); line-height: var(--line-body-md); font-weight: var(--weight-medium); letter-spacing: 0; color: var(--color-text-primary); }
 .om-notes p { margin: var(--space-1) 0 0; font-size: var(--type-body-sm); line-height: var(--line-body-sm); color: var(--color-text-secondary); }
+/* SWOT: a Miro-style board in the design system. Quadrants on a surface (radius-md), notes as sticky notes in the
+   quadrant's state colour (radius-sm, a hairline in that colour, shadow-xs, a slight tilt). Two by two from 600px. */
+.om-swot { container-type: inline-size; margin: var(--space-2) 0; }
+.om-swot__grid { display: grid; gap: var(--space-4); grid-template-columns: minmax(0, 1fr); }
+@container (min-width: 600px) { .om-swot__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.om-swot__q { --tone: var(--color-state-info); --tone-bg: var(--color-state-info-bg); padding: var(--space-5); border-radius: var(--radius-md); background: var(--color-bg-surface); box-shadow: inset 0 0 0 1px var(--color-border-subtle); display: grid; gap: var(--space-4); align-content: start; }
+.om-swot__q--success { --tone: var(--color-state-success); --tone-bg: var(--color-state-success-bg); }
+.om-swot__q--error { --tone: var(--color-state-error); --tone-bg: var(--color-state-error-bg); }
+.om-swot__q--warning { --tone: var(--color-state-warning); --tone-bg: var(--color-state-warning-bg); }
+.om-swot__head { display: grid; gap: var(--space-1); }
+.om-swot__head h4 { margin: 0; display: flex; align-items: center; gap: var(--space-2); font-size: var(--type-body-md); line-height: var(--line-body-md); font-weight: var(--weight-medium); letter-spacing: 0; color: var(--color-text-primary); }
+.om-swot__sw { width: 12px; height: 12px; border-radius: 3px; background: var(--tone); flex: none; }
+.om-swot__head p { margin: 0; font-size: var(--type-body-sm); line-height: var(--line-body-sm); color: var(--color-text-secondary); }
+.om-swot__notes { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-3); grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.om-swot__note { min-height: 6.5rem; padding: var(--space-3); border-radius: var(--radius-sm); background: var(--tone-bg); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--tone) 30%, transparent), var(--shadow-xs); display: flex; flex-direction: column; gap: var(--space-2); font-size: var(--type-body-sm); line-height: var(--line-body-sm); color: var(--color-text-primary); transform: rotate(-.6deg); }
+.om-swot__note:nth-child(even) { transform: rotate(.5deg); }
+.om-swot__note:nth-child(3n) { transform: rotate(-.2deg); }
+.om-swot__tag { font-family: var(--font-meta); font-size: var(--type-label); line-height: var(--line-label); color: var(--color-text-secondary); }
+@media (prefers-reduced-motion: reduce) { .om-swot__note, .om-swot__note:nth-child(n) { transform: none; } }
 """
 
 OMNI = dict(page_title='OmniSynkAI Case Study', out='omnisynkai/index.html', sections=SECTIONS, body=BODY, header=HEADER, tldr=TLDR,
