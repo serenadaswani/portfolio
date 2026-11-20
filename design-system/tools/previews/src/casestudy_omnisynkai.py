@@ -11,7 +11,6 @@ from casestudy import I, S, section, lede, panel, stats
 from lib import _l
 import casestudy_procense as CP
 
-IG_CSS = CP._between(CP.CSS, '/* Insights -> goals', '/* ===== Procense media')  # same findings -> goals graphic as Procense
 FLOW_CSS = CP._between(CP.CSS, '/* Batch workflow (Fig. 1)', '/* Lists without numbers')  # Procense Fig. 1 stepper
 FLOW_JS = CP._between(CP.JS, '  // Fig. 1 batch workflow', '  // TL;DR stepper')
 MK_CSS = CP._between(CP.CSS, '/* Annotation badges', '.pr-notes {')  # annotation coral badges
@@ -42,10 +41,16 @@ SHOTS = {
     'confirm': ('09-confirm-and-publish.jpg', 'A Confirm and publish dialog showing the listing will be posted on eBay and Amazon, with Preview listing and “Looks good, post” buttons.'),
     'done': ('10-listing-complete.jpg', 'A Listing Complete dialog: “Nice work, you just listed your first product with OmniSynkAI,” with Dashboard and List Another buttons.'),
 }
-def shot(key, cap):
+def shot(key, cap, pins=()):
+    """A prototype still; pins are coral badges [(number, x%, y%)] matching the notes in the copy column."""
     f, alt = SHOTS[key]
-    return (f'<figure class="pm-frame"><div class="pm-frame__stage om-stage"><img class="om-shot" src="assets/screens/{f}" width="1600" height="1183" loading="lazy" alt="{alt}"></div>'
+    mk = ''.join(f'<span class="pr-mk om-pin" data-n="{n}" style="left:{x}%;top:{y}%" aria-hidden="true">{n}</span>' for n, x, y in pins)
+    return (f'<figure class="pm-frame"><div class="pm-frame__stage om-stage"><div class="om-pinwrap"><img class="om-shot" src="assets/screens/{f}" width="1600" height="1183" loading="lazy" alt="{alt}">{mk}</div></div>'
             + _cap(_num(), cap) + '</figure>')
+def notes(rows):
+    """Numbered notes that match the badges on the screens (title, one line)."""
+    return ('<ol class="om-notes">' + ''.join(f'<li data-n="{i + 1}"><span class="pr-mk" aria-hidden="true">{i + 1}</span><div><h4>{t}</h4><p>{d}</p></div></li>'
+            for i, (t, d) in enumerate(rows)) + '</ol>')
 def pair(a, b):
     return f'<div class="om-pair">{a}{b}</div>'
 
@@ -70,10 +75,12 @@ VERSIONS = [
     ('v4', 'Autofill for launch', 'Autofill became a core launch feature, with a clear place on the page, cues for AI content and simple controls.', 'Make it findable, clearly marked and easy to steer.', True),
 ]
 def versions():
-    return ('<ol class="om-ver">' + ''.join(
-        f'<li class="om-ver__v{" is-mine" if mine else ""}"><p class="om-ver__k"><span class="pm-meta-text">{v}</span>{name}'
-        + '</p>' + ('<span class="pm-badge om-ver__me">Where I joined</span>' if mine else '')
-        + f'<p class="om-ver__d">{d}</p><p class="om-ver__l"><span>{"Goal" if mine else "Feedback"}</span>{l}</p></li>'
+    """A horizontal timeline of the listing workstream (vertical on narrow stages); v4 is where I joined."""
+    return ('<ol class="om-tl" aria-label="Listing flow versions">' + ''.join(
+        f'<li class="om-tl__v{" is-mine" if mine else ""}"><span class="om-tl__dot" aria-hidden="true"></span>'
+        f'<div class="om-tl__body"><p class="om-tl__k"><span class="pm-meta-text">{v}</span>{name}</p>'
+        + ('<span class="pm-badge om-tl__me">Where I joined</span>' if mine else '')
+        + f'<p class="om-tl__d">{d}</p><p class="om-tl__l"><span>{"Goal" if mine else "Feedback"}</span>{l}</p></div></li>'
         for v, name, d, l, mine in VERSIONS) + '</ol>')
 
 # The three gaps, marked on the v3 page: label, question, what went wrong, badge position (% of the image)
@@ -105,13 +112,14 @@ FINDINGS = [
      'Seller in control', 'Every field stays editable, and sellers can regenerate, clear or retone at any time.'),
 ]
 def findings():
-    arrow = f'<span class="pr-ig__arrow" aria-hidden="true">{_l("arrow-right")}</span>'
+    """Finding | arrow | design priority, one row each, divided by hairlines (no boxes)."""
+    arrow = f'<span class="om-fp__arrow" aria-hidden="true">{_l("arrow-right")}</span>'
     rows = ''.join(
-        f'<li class="pr-ig__row"><div class="pr-ig__in"><p class="pr-ig__k">Finding</p><div class="om-fd__h"><h4>{ft}</h4><span class="pm-badge">{src}</span></div><p>{fd}</p></div>{arrow}'
-        f'<div class="pm-card pm-card--outlined pr-ig__goal"><p class="pr-ig__k">Design priority</p><h4 class="pm-card__title">{gt}</h4><p class="pm-card__summary">{gd}</p></div></li>'
+        f'<li class="om-fp__row"><div class="om-fp__c"><p class="om-fp__k">Finding</p><div class="om-fd__h"><h4>{ft}</h4><span class="pm-badge">{src}</span></div><p>{fd}</p></div>{arrow}'
+        f'<div class="om-fp__c"><p class="om-fp__k">Design priority</p><h4>{gt}</h4><p>{gd}</p></div></li>'
         for ft, src, fd, gt, gd in FINDINGS)
-    return (f'<figure class="pr-ig"><div class="pr-ig__head" aria-hidden="true"><span>Finding</span><span></span><span>Design priority</span></div>'
-            f'<ol class="pr-ig__list">{rows}</ol></figure>')
+    return (f'<div class="om-fp"><div class="om-fp__head" aria-hidden="true"><span>Finding</span><span></span><span>Design priority</span></div>'
+            f'<ol class="om-fp__list">{rows}</ol></div>')
 
 # The final autofill flow, as Procense's Fig. 1 stepper: title, who, what happens, the design decision at that step
 FLOW = [
@@ -238,27 +246,27 @@ BODY = ''.join([
         + sub('placement', 'Placement', 'I moved autofill to where every listing starts.',
               lede('In v3, autofill was a small link above the title, with more AI buttons elsewhere on the page. In my first concept, it sat in a sidebar card. Either way, it was apart from the fields it needed.',
                    'Sellers start a listing with a title and a category, which is exactly what autofill needs. So I moved autofill into a title bar, right beside those two fields.')
-              + items([('Unlocks when ready', 'The AI autofill icon lights up once the title and category are filled in.'),
+              + notes([('Unlocks when ready', 'The AI autofill icon lights up once the title and category are filled in.'),
                        ('Explains itself', 'One line tells sellers what autofill does for them.'),
                        ('Always in reach', 'The bar stays fixed as sellers scroll, keeping the AI controls close.')]),
-              shot('empty', 'Autofill sits beside the two fields it needs, and unlocks once both are filled in.')
+              shot('empty', 'Autofill sits beside the two fields it needs, and unlocks once both are filled in.', [(1, 79.0, 20.3), (2, 23.6, 17.4), (3, 98.0, 14.6)])
               + shot('filling', 'A short dialog shows the AI at work, and lets sellers cancel.'))
         + sub('clarity', 'Clarity', 'I created a visual language for AI content.',
               lede('Earlier versions didn’t separate AI content from manual input, so sellers couldn’t tell what to double-check. I designed three cues that carried into the final design.')
-              + items([('Purple highlights', 'Everything AI writes, like the brand and tags, is highlighted for review.'),
+              + notes([('Purple highlights', 'Everything AI writes, like the brand and tags, is highlighted for review.'),
                        ('A clear status', 'The title bar reads “Listing Autofilled, feel free to edit details,” inviting edits instead of blind trust.'),
                        ('Only what’s new', 'When AI rewrites part of a listing, only the new content is highlighted.')]),
-              shot('filled', 'After autofill: AI content highlighted, and a status that invites edits.')
-              + shot('retoned', 'After a change, only the new tags are highlighted.'))
+              shot('filled', 'After autofill: AI content highlighted, and a status that invites edits.', [(1, 19.0, 93.5), (2, 23.0, 19.6)])
+              + shot('retoned', 'After a change, only the new tags are highlighted.', [(3, 70.6, 93.5)]))
         + sub('control', 'Control', 'I fit the feedback loop to what the AI could do.',
               lede('My first concept put feedback on every field: browse versions, rate them, regenerate. It was more than our AI model could reliably support, and more than sellers needed.',
                    'I simplified it to the three actions sellers actually reach for, under one More options menu in the title bar. We refined the options together as a team.')
-              + items([('Regenerate', 'Request a fresh draft when the first one misses the mark.'),
+              + notes([('Regenerate', 'Request a fresh draft when the first one misses the mark.'),
                        ('Change tone', 'Seven tones, from formal to playful, to match the seller’s brand voice.'),
                        ('Clear fields', 'Start over by hand, with a confirmation first, since it can’t be undone.')]),
-              shot('menu', 'More options: regenerate, change tone or clear fields.')
+              shot('menu', 'More options: regenerate, change tone or clear fields.', [(1, 85.2, 25.7), (2, 85.6, 32.5)])
               + shot('tone', 'Seven tones, from formal to playful.')
-              + shot('clear', 'Clearing autofilled content asks for confirmation first.'))
+              + shot('clear', 'Clearing autofilled content asks for confirmation first.', [(3, 65.6, 53.2)]))
         + sub('publish', 'Publishing', 'One listing, published everywhere.',
               lede('Autofill hands off to our publishing flow. Instead of the per-platform toggles in my first concept, sellers choose their marketplaces when they publish, which leaves room for more platforms.',
                    'They preview the listing on each platform, then post to all of them at once.'),
@@ -305,7 +313,7 @@ CSS = r"""
 .om-shot { display: block; width: 100%; height: auto; border-radius: var(--radius-sm); box-shadow: inset 0 0 0 1px var(--color-border-subtle), var(--shadow-sm); }
 .om-pair { display: grid; gap: var(--space-6); grid-template-columns: minmax(0, 1fr); }
 @container (min-width: 768px) { .om-pair { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-5); } }
-.cs-section > .om-pair, .cs-section > .pr-ig { margin-block: var(--space-2); }
+.cs-section > .om-pair, .cs-section > .om-fp { margin-block: var(--space-2); }
 .cs-points--plain li { grid-template-columns: minmax(0, 1fr); }
 .cs-stats .pm-stats__item { justify-content: flex-end; }
 .om-source { margin: var(--space-3) 0 0; max-width: 60ch; }
@@ -314,21 +322,7 @@ CSS = r"""
 .om-need .pm-media__fallback span:last-child { max-width: 36ch; text-align: center; }
 @container (min-width: 768px) { .om-trio { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
 
-/* Shared inner-card look for the HTML graphics */
-.om-stage:has(.om-ver) { container-type: inline-size; padding: var(--space-5); }
-.om-ver__v { border-radius: var(--radius-md); background: var(--color-bg-elevated); box-shadow: inset 0 0 0 1px var(--color-border-subtle), var(--shadow-xs); }
 
-/* Versions: four across from a 720px stage, two across from 440px; mine gets the selection ring */
-.om-ver { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-3); grid-template-columns: minmax(0, 1fr); }
-@container (min-width: 440px) { .om-ver { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-@container (min-width: 720px) { .om-ver { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
-.om-ver__v { padding: var(--space-4); display: grid; gap: var(--space-2); align-content: start; }
-.om-ver__v.is-mine { background: var(--color-action-selected-bg); box-shadow: inset 0 0 0 2px var(--color-action-primary), var(--shadow-sm); }
-.om-ver__k { margin: 0; display: flex; flex-wrap: wrap; align-items: baseline; gap: var(--space-2); font-size: var(--type-body-sm); line-height: var(--line-body-sm); font-weight: var(--weight-medium); color: var(--color-text-primary); }
-.om-ver__me { margin-left: auto; }
-.om-ver__d { margin: 0; font-size: var(--type-body-sm); line-height: var(--line-body-sm); color: var(--color-text-secondary); }
-.om-ver__l { margin: 0; padding-top: var(--space-2); border-top: 1px solid var(--color-border-subtle); display: grid; gap: 2px; font-size: var(--type-body-sm); line-height: var(--line-body-sm); color: var(--color-text-primary); }
-.om-ver__l span { font-family: var(--font-meta); font-size: var(--type-label); line-height: var(--line-label); color: var(--color-text-tertiary); }
 
 /* The opportunity: the page's one accent-tinted statement, like Procense's North Star */
 .om-ns { margin: var(--space-2) 0; padding: var(--space-6); border-radius: var(--radius-md); background: var(--color-action-selected-bg); box-shadow: var(--shadow-sm); display: grid; gap: var(--space-3); }
@@ -360,10 +354,6 @@ CSS = r"""
 .om-callout__k { margin: 0; display: flex; align-items: center; gap: var(--space-2); font-size: var(--type-body-sm); line-height: var(--line-body-sm); font-weight: var(--weight-medium); color: var(--color-text-secondary); }
 .om-callout__k .pm-icon { width: 16px; height: 16px; }
 .om-callout__t { margin: 0; font-size: var(--type-h4, var(--type-body-lg)); line-height: var(--line-h4, var(--line-body-lg)); font-weight: var(--weight-medium); color: var(--color-text-primary); text-wrap: balance; }
-/* Versions: the badge sits on the card's top-right edge */
-.om-ver__v { position: relative; }
-.om-ver__me { position: absolute; top: 0; right: var(--space-3); transform: translateY(-50%); margin: 0; background: var(--color-bg-elevated); box-shadow: inset 0 0 0 1px var(--color-action-primary), var(--shadow-xs); }
-.om-stage:has(.om-ver) { padding-top: var(--space-6); }
 /* Findings: the source as a badge, top right of each finding */
 .om-fd__h { display: flex; align-items: flex-start; justify-content: space-between; gap: var(--space-3); }
 .om-fd__h .pm-badge { flex: none; margin-top: 1px; }
@@ -400,10 +390,69 @@ CSS = r"""
 .om-gap__notes h4 { margin: 0; font-size: var(--type-body-md); line-height: var(--line-body-md); font-weight: var(--weight-medium); letter-spacing: 0; color: var(--color-text-primary); }
 .om-gap__notes p { margin: 0; font-size: var(--type-body-sm); line-height: var(--line-body-sm); color: var(--color-text-secondary); }
 .om-gap__notes .om-gap__k { font-family: var(--font-meta); font-size: var(--type-label); line-height: var(--line-label); color: var(--color-text-tertiary); margin-bottom: 2px; }
+/* Versions: a horizontal timeline from a 640px stage (a vertical one below); finished versions grey, v4 cobalt */
+.om-stage:has(.om-tl) { container-type: inline-size; padding: var(--space-6) var(--space-5) var(--space-5); }
+.om-tl { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: minmax(0, 1fr); }
+.om-tl__v { position: relative; display: grid; grid-template-columns: 14px minmax(0, 1fr); gap: var(--space-4); padding-bottom: var(--space-5); align-content: start; }
+.om-tl__v:last-child { padding-bottom: 0; }
+.om-tl__v::before { content: ""; position: absolute; left: 6.5px; top: 14px; bottom: -2px; width: 1px; background: var(--color-border-default); }
+.om-tl__v:last-child::before { display: none; }
+.om-tl__dot { width: 14px; height: 14px; margin-top: 3px; border-radius: 50%; background: var(--color-bg-elevated); box-shadow: inset 0 0 0 2px var(--color-border-strong); position: relative; z-index: 1; }
+.om-tl__v.is-mine .om-tl__dot { background: var(--color-action-primary); box-shadow: 0 0 0 4px var(--color-action-selected-bg); }
+.om-tl__body { display: grid; gap: var(--space-2); align-content: start; min-width: 0; }
+.om-tl__k { margin: 0; display: flex; align-items: baseline; gap: var(--space-2); font-size: var(--type-body-sm); line-height: var(--line-body-sm); font-weight: var(--weight-medium); color: var(--color-text-primary); }
+.om-tl__me { justify-self: start; }
+.om-tl__d { margin: 0; font-size: var(--type-body-sm); line-height: var(--line-body-sm); color: var(--color-text-secondary); }
+.om-tl__l { margin: 0; display: grid; gap: 2px; font-size: var(--type-body-sm); line-height: var(--line-body-sm); color: var(--color-text-primary); }
+.om-tl__l span { font-family: var(--font-meta); font-size: var(--type-label); line-height: var(--line-label); color: var(--color-text-tertiary); }
+@container (min-width: 640px) {
+  .om-tl { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--space-5); }
+  .om-tl__v { grid-template-columns: minmax(0, 1fr); gap: var(--space-4); padding-bottom: 0; }
+  .om-tl__v::before { left: 14px; right: calc(-1 * var(--space-5)); top: 9.5px; bottom: auto; width: auto; height: 1px; }
+  .om-tl__dot { margin-top: 3px; }
+  .om-tl__v.is-mine .om-tl__body { padding: var(--space-3); margin: calc(-1 * var(--space-3)); border-radius: var(--radius-md); background: var(--color-action-selected-bg); }
+}
+/* Findings -> priorities: two columns split by an arrow column, rows divided by hairlines, no boxes */
+.om-fp { container-type: inline-size; margin: var(--space-2) 0; }
+.om-fp__head { display: none; }
+.om-fp__list { list-style: none; margin: 0; padding: 0; }
+.om-fp__row { display: grid; gap: var(--space-2); padding: var(--space-4) 0; border-top: 1px solid var(--color-border-subtle); }
+.om-fp__row:last-child { border-bottom: 1px solid var(--color-border-subtle); }
+.om-fp__c { display: grid; gap: var(--space-1); align-content: start; min-width: 0; }
+.om-fp__c h4 { margin: 0; font-size: var(--type-body-md); line-height: var(--line-body-md); font-weight: var(--weight-medium); letter-spacing: 0; color: var(--color-text-primary); }
+.om-fp__c p:not(.om-fp__k) { margin: 0; font-size: var(--type-body-sm); line-height: var(--line-body-sm); color: var(--color-text-secondary); }
+.om-fp__k { margin: 0; font-family: var(--font-meta); font-size: var(--type-label); line-height: var(--line-label); color: var(--color-text-tertiary); }
+.om-fp__arrow { color: var(--color-text-tertiary); transform: rotate(90deg); justify-self: start; }
+.om-fp__arrow .pm-icon { width: 20px; height: 20px; }
+@container (min-width: 640px) {
+  .om-fp__head { display: grid; grid-template-columns: minmax(0, 1fr) 48px minmax(0, 1fr); padding-bottom: var(--space-2); font-family: var(--font-meta); font-size: var(--type-label); line-height: var(--line-label); color: var(--color-text-tertiary); }
+  .om-fp__row { grid-template-columns: minmax(0, 1fr) 48px minmax(0, 1fr); gap: 0; }
+  .om-fp__k { display: none; }
+  .om-fp__arrow { transform: none; justify-self: center; align-self: center; }
+}
+/* Solution callouts: coral badges on the screens, matching numbered notes in the copy column; hovering a note lifts its badge */
+.om-pinwrap { position: relative; }
+.om-pin.is-hover { transform: translate(-50%, -50%) scale(1.25); }
+@media (prefers-reduced-motion: no-preference) { .om-pin { transition: transform .2s cubic-bezier(.22,1,.36,1); } }
+.om-notes { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-4); }
+.om-notes li { display: grid; grid-template-columns: 24px minmax(0, 1fr); gap: var(--space-3); align-items: start; }
+.om-notes h4 { margin: 0; font-size: var(--type-body-md); line-height: var(--line-body-md); font-weight: var(--weight-medium); letter-spacing: 0; color: var(--color-text-primary); }
+.om-notes p { margin: var(--space-1) 0 0; font-size: var(--type-body-sm); line-height: var(--line-body-sm); color: var(--color-text-secondary); }
+"""
+
+NOTES_JS = r"""
+  // Solution notes: hovering a note lifts the matching badge on that subsection's screens
+  document.querySelectorAll('.om-sub').forEach(function (sec) {
+    sec.querySelectorAll('.om-notes li').forEach(function (li) {
+      var pins = sec.querySelectorAll('.om-pin[data-n="' + li.dataset.n + '"]');
+      function on(v) { pins.forEach(function (p) { p.classList.toggle('is-hover', v); }); }
+      li.addEventListener('mouseenter', function () { on(true); }); li.addEventListener('mouseleave', function () { on(false); });
+    });
+  });
 """
 
 OMNI = dict(page_title='OmniSynkAI Case Study', out='omnisynkai/index.html', sections=SECTIONS, body=BODY, header=HEADER, tldr=TLDR,
-            css=IG_CSS + FLOW_CSS + MK_CSS + CSS, js=FLOW_JS)
+            css=FLOW_CSS + MK_CSS + CSS, js=FLOW_JS + NOTES_JS)
 
 if __name__ == '__main__':
     print(len(C.render(OMNI)))
