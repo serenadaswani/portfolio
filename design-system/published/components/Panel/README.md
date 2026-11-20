@@ -13,12 +13,17 @@ A titled region for grouped content: project details, an aside, a form or an err
 | Variant | Class | Use |
 |---|---|---|
 | Default | — | Elevated paper + 1px `color-border-subtle` ring + `shadow-xs`. Forms, contact, details. |
-| Tonal | `pm-panel--tonal` | Mineral fill, no border. Asides beside prose. |
+| Tonal | `pm-panel--tonal` | Mineral fill, no border. Grouped asides beside prose ("What I learned"). |
+| Callout | `pm-panel--callout` | Tonal fill + a 3px `color-selected-indicator` rule on the left. A key insight the reader should not miss. |
+| Accent | `pm-panel--accent` | `color-action-selected-bg` fill + a faint selection ring. Very important content only: results and one key statement per page; values may use `color-text-link`. |
+| Plain | `pm-panel--plain` | No fill, ring or padding. Supporting stats and list items that need the panel's type but no container. |
 | Sunken | `pm-panel--sunken` | Code, raw data, quotes. |
 | Collapsible | `pm-panel--collapsible` | Optional depth (methods, appendices). |
 | Error | `pm-panel--error` | `color-state-error` edge, shape icon, sentence starting "Error:". |
 
 `--elevated`, `--outlined` and `--surface` from v1.2 are kept as aliases (default, default, tonal), so nothing breaks.
+
+**The lean set (v1.11).** Case-study content uses four containers, chosen by importance: Plain (supporting) → Default (important; reads as an outline on the white page and as raised paper on a grey stage, so there is no separate "white on grey" card) → Tonal / Callout (asides / key insights) → Accent (the one highlight). One radius (`radius-md`) and one shadow level (`shadow-xs`, Default only). Don't add page-specific borders or shadows to these; illustrations (sticky notes, mockups) are exempt.
 
 ## Sizes
 `pm-panel--sm` `space-4` · md `space-5` · `pm-panel--lg` `space-8` with an h4 title. All drop to `space-4` below a 768px container.

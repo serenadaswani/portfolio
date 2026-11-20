@@ -1,5 +1,10 @@
 # Changes applied
 
+## v1.11 lean content containers
+- Panel gains three variants so case studies use one lean set of containers, chosen by importance: `pm-panel--plain` (no container: supporting stats, list items), Default (important content; reads as an outline on white and as raised paper on a grey stage), `pm-panel--tonal` (grouped asides) with `pm-panel--callout` (tonal + 3px `color-selected-indicator` rule: key insights), and `pm-panel--accent` (`color-action-selected-bg` + faint selection ring: results and one key statement per page).
+- Rules: one radius (`radius-md`), one shadow level (`shadow-xs`, Default only), no page-specific borders or shadows on these containers. `prefers-contrast: more` adds a `color-border-default` edge to tonal, callout and accent.
+- No token changes. First used on the OmniSynkAI case study.
+
 ## v1.10 annotation coral
 - New role for marking up mockups and screenshots in case studies: `color-annotation` (`--coral`, #C0533A, both themes) with `color-text-on-annotation` (white). A warm terracotta coral, chosen to stand apart from blue-and-black product UI without reading as an error or warning. Only for annotations (numbered badges, the stroke that links a note to its badge); never for UI, actions or status, so cobalt stays the one accent.
 - Contrast: white number on coral 4.6:1; coral as a stroke 4.6:1 on white cards and 3.1:1 on dark cards.

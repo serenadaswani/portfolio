@@ -126,7 +126,7 @@ def versions():
         f'<li class="om-tl__v{" is-mine" if mine else ""}" style="--i:{k}"><div class="om-tl__k"><p><span class="pm-meta-text">{v}</span><span class="om-tl__n">{name}</span></p>'
         + ('<span class="pm-badge om-tl__me">Where I joined</span>' if mine else '') + '</div>'
         f'<span class="om-tl__dot" aria-hidden="true"></span><div class="om-tl__body">'
-        f'<p class="om-tl__d">{d}</p><p class="om-tl__l"><span>{"Goal" if mine else "Feedback"}</span>{l}</p></div></li>'
+        f'<p class="om-tl__d">{d}</p><p class="om-tl__l pm-panel {"pm-panel--accent" if mine else "pm-panel--callout"}"><span>{"Goal" if mine else "Feedback"}</span>{l}</p></div></li>'
         for k, (v, name, d, l, mine) in enumerate(VERSIONS)) + '</ol>')
 
 # The three gaps, marked on the v3 page: label, question, what went wrong, badge position (% of the image)
@@ -162,7 +162,7 @@ def findings():
     arrow = f'<span class="om-fp__arrow" aria-hidden="true">{_l("arrow-right")}</span>'
     rows = ''.join(
         f'<li class="om-fp__row"><div class="om-fp__c"><p class="om-fp__k">Finding</p><div class="om-fd__h"><h4>{ft}</h4><span class="pm-badge">{src}</span></div><p>{fd}</p></div>{arrow}'
-        f'<div class="om-fp__c om-fp__goal"><p class="om-fp__k">Design priority</p><h4>{gt}</h4><p>{gd}</p></div></li>'
+        f'<div class="om-fp__c om-fp__goal pm-panel"><p class="om-fp__k">Design priority</p><h4>{gt}</h4><p>{gd}</p></div></li>'
         for ft, src, fd, gt, gd in FINDINGS)
     return (f'<div class="om-fp"><div class="om-fp__head" aria-hidden="true"><span>Finding</span><span></span><span>Design priority</span></div>'
             f'<ol class="om-fp__list">{rows}</ol></div>')
@@ -178,7 +178,7 @@ FLOW = [
 ]
 DECISION = 'Design decision'
 def flow():
-    box = lambda text, attrs='': (f'<div class="pr-flow__risk om-dec"{attrs}><span class="pr-flow__rl">{_l("sparkles")}<span data-fn-rl>{DECISION}</span></span>'
+    box = lambda text, attrs='': (f'<div class="pr-flow__risk om-dec pm-panel pm-panel--tonal"{attrs}><span class="pr-flow__rl">{_l("sparkles")}<span data-fn-rl>{DECISION}</span></span>'
                                   f'<span class="pr-flow__rt" data-fn-rt>{text}</span></div>')
     steps = ''.join(
         f'<li class="pr-flow__s"><button type="button" class="pr-flow__b" data-step="{i}" aria-pressed="{"true" if i == 0 else "false"}">'
@@ -212,11 +212,12 @@ STATS_TEAM = [('60%', 'Less time to create a listing, on average'), ('20%', 'Mor
 
 def impact_box():
     """Team results in their own container, so they read first."""
-    return f'<section class="om-impact" aria-label="Results">{stats(STATS_TEAM, " pm-stats--sm cs-stats")}{team_source()}</section>'
+    row = stats(STATS_TEAM, " pm-stats--sm cs-stats").replace('class="pm-stats__item"', 'class="pm-stats__item pm-panel pm-panel--accent"')
+    return f'<section class="om-impact" aria-label="Results">{row}{team_source()}</section>'
 
 def callout(label, text):
     """A key insight, set large on a surface panel (the opportunity keeps the accent tint)."""
-    return f'<div class="om-callout"><p class="om-callout__k">{label}</p><p class="om-callout__t">{text}</p></div>'
+    return f'<div class="om-callout pm-panel pm-panel--callout"><p class="om-callout__k">{label}</p><p class="om-callout__t">{text}</p></div>'
 
 def sub(sid, label, title, line, screens):
     """A solution subsection: label, heading and one line, then the main screen full width with its notes, and any
@@ -252,7 +253,7 @@ def swot():
         f'<h4 id="swot-{name.lower()}"><span class="om-swot__sw" aria-hidden="true"></span>{name}</h4><p>{desc}</p></div>'
         '<ul class="om-swot__notes">' + ''.join(f'<li class="om-swot__note"><div class="om-swot__paper"><span class="om-swot__tag">{tag}</span><span class="om-swot__txt">{t}</span></div></li>' for tag, t in notes) + '</ul></section>'
         for name, desc, tone, notes in SWOT)
-    return (f'<figure class="om-swot"><div class="om-swot__grid">{quads}</div>'
+    return (f'<figure class="om-swot"><div class="om-swot__grid pm-panel pm-panel--tonal">{quads}</div>'
             + _cap(_num(), 'SWOT of Shopify’s and Trustana’s AI listing features, and what it meant for OmniSynkAI.') + '</figure>')
 
 def first_concept():
@@ -282,7 +283,7 @@ BODY = ''.join([
                  ('25.2%', 'Outsourced listing management to third parties')], ' pm-stats--sm cs-stats')
         + '<p class="pm-meta-text om-source">From the team’s seller survey (456 responses), led by UX research.</p>'
         + callout('What the data showed', 'The manual listing process was slow, error-prone and inconsistent, leaving listings hard to discover.')
-        + f'<section class="om-ns" aria-labelledby="om-ns-h"><p class="om-ns__label" id="om-ns-h">{_l("sparkles")}The opportunity</p>'
+        + f'<section class="om-ns pm-panel pm-panel--accent" aria-labelledby="om-ns-h"><p class="om-ns__label" id="om-ns-h">{_l("sparkles")}The opportunity</p>'
           '<p class="om-ns__text">Design an autofill feature that brings AI into the listing flow, helping sellers quickly create compelling, search-friendly listings and raising listing quality across the platform.</p></section>'),
 
     section('role', 'My role', 'I made autofill findable, clear and easy to steer.',
@@ -399,7 +400,7 @@ CSS = r"""
 
 
 /* The opportunity: the page's one accent-tinted statement, like Procense's North Star */
-.om-ns { margin: var(--space-2) 0; padding: var(--space-6); border-radius: var(--radius-md); background: var(--color-action-selected-bg); box-shadow: var(--shadow-sm); display: grid; gap: var(--space-3); }
+.om-ns { margin: var(--space-2) 0; padding: var(--space-6); display: grid; gap: var(--space-3); }
 .om-ns__label { margin: 0; display: flex; align-items: center; gap: var(--space-2); font-size: var(--type-body-sm); line-height: var(--line-body-sm); font-weight: var(--weight-medium); color: var(--color-text-primary); }
 .om-ns__label .pm-icon { width: 16px; height: 16px; }
 .om-ns__text { margin: 0; font-size: var(--type-h3); line-height: var(--line-h3); font-weight: var(--weight-medium); color: var(--color-text-primary); text-wrap: balance; }
@@ -412,12 +413,12 @@ CSS = r"""
    accent text colour, label in secondary text. Three across from 560px, stacked below. */
 .om-impact .pm-stats { margin: 0; padding-top: 0; border-top: 0; display: grid; gap: var(--space-3); grid-template-columns: minmax(0, 1fr); }
 @container (min-width: 560px) { .om-impact .pm-stats { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
-.om-impact .pm-stats__item { justify-content: flex-end; gap: var(--space-2); padding: var(--space-5); border-radius: var(--radius-md); background: var(--color-action-selected-bg); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--color-selected-indicator) 22%, transparent); }
+.om-impact .pm-stats__item { justify-content: flex-end; gap: var(--space-2); padding: var(--space-5); }
 .om-impact .pm-stats__value { color: var(--color-text-link); }
 .om-impact .pm-stats__label { font-family: var(--font-sans); font-size: var(--type-body-sm); line-height: var(--line-body-sm); color: var(--color-text-secondary); }
 .om-impact .om-source { margin-top: var(--space-3); }
 /* Key insight: large text on a surface panel with a cobalt rule */
-.om-callout { margin: var(--space-2) 0; padding: var(--space-5) var(--space-6); border-radius: var(--radius-md); background: var(--color-bg-surface); box-shadow: inset 3px 0 0 var(--color-action-primary), inset 0 0 0 1px var(--color-border-subtle); display: grid; gap: var(--space-2); }
+.om-callout { margin: var(--space-2) 0; padding: var(--space-5) var(--space-6); display: grid; gap: var(--space-2); }
 .om-callout__k { margin: 0; display: flex; align-items: center; gap: var(--space-2); font-size: var(--type-body-sm); line-height: var(--line-body-sm); font-weight: var(--weight-medium); color: var(--color-text-secondary); }
 .om-callout__k .pm-icon { width: 16px; height: 16px; }
 .om-callout__t { margin: 0; font-size: var(--type-h4, var(--type-body-lg)); line-height: var(--line-h4, var(--line-body-lg)); font-weight: var(--weight-medium); color: var(--color-text-primary); text-wrap: balance; }
@@ -441,7 +442,7 @@ CSS = r"""
 .om-pinwrap > .pr-expand { top: var(--space-2); right: var(--space-2); }
 /* Flow: Procense's stepper on this page's stage; the design decision box is neutral (Procense's risk box is a warning) */
 .om-stage:has(.pr-flow) { container-type: inline-size; padding: var(--space-6) var(--space-5) var(--space-5); }
-.pr-flow__risk.om-dec { background: var(--color-bg-surface); box-shadow: inset 0 0 0 1px var(--color-border-subtle); }
+.pr-flow__risk.om-dec { background: var(--color-bg-surface); box-shadow: none; border-radius: var(--radius-md); }  /* Panel tonal; outranks Procense's warning box */
 .om-dec .pr-flow__rl { color: var(--color-text-secondary); }
 .om-dec .pr-flow__rl .pm-icon { width: 16px; height: 16px; flex: none; }
 .pr-note__t { margin: 0; font-size: var(--type-body-md); line-height: var(--line-body-md); font-weight: var(--weight-medium); color: var(--color-text-primary); }
@@ -470,8 +471,7 @@ CSS = r"""
 .om-tl__v.is-mine .om-tl__dot { background: var(--color-selected-indicator); box-shadow: 0 0 0 3px var(--color-action-selected-bg); }
 .om-tl__body { display: grid; gap: var(--space-2); justify-items: start; min-width: 0; }
 .om-tl__d { margin: 0; font-size: var(--type-body-md); line-height: var(--line-body-md); color: var(--color-text-primary); }
-.om-tl__l { margin: 0; padding: var(--space-2) var(--space-3); border-radius: var(--radius-sm); background: var(--color-bg-surface); box-shadow: inset 2px 0 0 var(--color-border-strong); font-size: var(--type-body-sm); line-height: var(--line-body-sm); color: var(--color-text-primary); }
-.om-tl__v.is-mine .om-tl__l { background: var(--color-action-selected-bg); box-shadow: inset 2px 0 0 var(--color-selected-indicator); }
+.om-tl__l { margin: 0; padding: var(--space-2) var(--space-3); font-size: var(--type-body-sm); line-height: var(--line-body-sm); color: var(--color-text-primary); }
 .om-tl__l span { font-weight: var(--weight-medium); color: var(--color-text-primary); }
 .om-tl__l span::after { content: ": "; }
 @container (max-width: 479px) {
@@ -492,7 +492,7 @@ CSS = r"""
 .om-fp__c h4 { margin: 0; font-size: var(--type-body-md); line-height: var(--line-body-md); font-weight: var(--weight-medium); letter-spacing: 0; color: var(--color-text-primary); }
 .om-fp__c p:not(.om-fp__k) { margin: 0; font-size: var(--type-body-sm); line-height: var(--line-body-sm); color: var(--color-text-secondary); }
 .om-fp__k { margin: 0; font-family: var(--font-meta); font-size: var(--type-label); line-height: var(--line-label); color: var(--color-text-tertiary); }
-.om-fp__goal { padding: var(--space-4) var(--space-5); border-radius: var(--radius-md); background: var(--color-bg-elevated); box-shadow: inset 0 0 0 1px var(--color-border-default), var(--shadow-sm); }
+.om-fp__goal { padding: var(--space-4) var(--space-5); }
 .om-fp__arrow { color: var(--color-text-tertiary); transform: rotate(90deg); justify-self: start; }
 .om-fp__arrow .pm-icon { width: 20px; height: 20px; }
 @container (min-width: 640px) {
@@ -513,7 +513,7 @@ CSS = r"""
    Sticky notes use the system's state tints (themed), a hairline in the state colour, a lifted shadow and a slight tilt;
    text is Instrument Sans (body-sm, 500) with the tag in the meta style. Two by two from 600px. */
 .om-swot { container-type: inline-size; margin: var(--space-2) 0; }
-.om-swot__grid { display: grid; grid-template-columns: minmax(0, 1fr); border-radius: var(--radius-md); background: var(--color-bg-surface); box-shadow: inset 0 0 0 1px var(--color-border-subtle); overflow: hidden; }
+.om-swot__grid { display: grid; grid-template-columns: minmax(0, 1fr); overflow: hidden; }
 .om-swot__q + .om-swot__q { border-top: 1px solid var(--color-border-default); }
 @container (min-width: 600px) {
   .om-swot__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }

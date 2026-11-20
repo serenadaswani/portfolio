@@ -28,6 +28,9 @@ ERR = ('<section class="pm-panel pm-panel--error" role="alert" aria-labelledby="
 BODY = (h('Variants') + '<div class="pm-spec__grid" style="grid-template-columns:repeat(auto-fill,minmax(300px,1fr))">' +
         cell(panel(), 'default · light ring + shadow-xs') +
         cell(panel(' pm-panel--tonal', action=False), 'tonal · Mineral fill, no border') +
+        cell(panel(' pm-panel--callout', title='What the data showed', action=False, body='<p>The manual listing process was slow, error-prone and inconsistent.</p>'), 'callout · tonal + 3px selection rule') +
+        cell(panel(' pm-panel--accent', title='60%', action=False, body='<p>Less time to create a listing, on average.</p>'), 'accent · selection tint, the one highlight') +
+        cell(panel(' pm-panel--plain', title='Supporting point', action=False, body='<p>No container: list items and supporting stats.</p>'), 'plain · no container') +
         cell(panel(' pm-panel--sunken', title='Raw data', action=False, body='<p class="pm-meta-text" style="margin:0">n = 412 evaluations · p50 18m → 9m</p>'), 'sunken · code and data') +
         cell(panel(title='Contact', desc='I reply within two working days.', body='<p>Messages go straight to my inbox.</p>', action=False, footer=True), 'with description + tonal footer') +
         cell(coll('a'), 'collapsible · expanded') + cell(coll('b', False), 'collapsible · collapsed') +
@@ -42,7 +45,8 @@ BODY = (h('Variants') + '<div class="pm-spec__grid" style="grid-template-columns
               panel(title='Medium · space-5', action=False, body='<p>Default.</p>') +
               panel(' pm-panel--lg', title='Large · space-8', action=False, body='<p>Feature regions; h4 title. Every size drops to space-4 below 768px.</p>') + '</div>', 820, 375))
 STYLE = '.pm-spec__grid .pm-spec__cell{align-items:stretch}'
-PAIRS = [('title', '--color-text-primary', '--color-bg-elevated', 4.5), ('body', '--color-text-secondary', '--color-bg-elevated', 4.5),
+PAIRS = [('accent body', '--color-text-secondary', '--color-action-selected-bg', 4.5), ('accent value', '--color-text-link', '--color-action-selected-bg', 4.5),
+         ('callout rule', '--color-selected-indicator', '--color-bg-surface', 3), ('title', '--color-text-primary', '--color-bg-elevated', 4.5), ('body', '--color-text-secondary', '--color-bg-elevated', 4.5),
          ('body/tonal', '--color-text-secondary', '--color-bg-surface', 4.5), ('key', '--color-text-tertiary', '--color-bg-elevated', 4.5),
          ('meta/sunken', '--color-text-tertiary', '--color-bg-sunken', 4.5), ('error edge', '--color-state-error', '--color-bg-elevated', 3),
          ('edge', '--color-border-default', '--color-bg-canvas', 0)]
@@ -66,12 +70,17 @@ A titled region for grouped content: project details, an aside, a form or an err
 | Variant | Class | Use |
 |---|---|---|
 | Default | — | Elevated paper + 1px `color-border-subtle` ring + `shadow-xs`. Forms, contact, details. |
-| Tonal | `pm-panel--tonal` | Mineral fill, no border. Asides beside prose. |
+| Tonal | `pm-panel--tonal` | Mineral fill, no border. Grouped asides beside prose ("What I learned"). |
+| Callout | `pm-panel--callout` | Tonal fill + a 3px `color-selected-indicator` rule on the left. A key insight the reader should not miss. |
+| Accent | `pm-panel--accent` | `color-action-selected-bg` fill + a faint selection ring. Very important content only: results and one key statement per page; values may use `color-text-link`. |
+| Plain | `pm-panel--plain` | No fill, ring or padding. Supporting stats and list items that need the panel's type but no container. |
 | Sunken | `pm-panel--sunken` | Code, raw data, quotes. |
 | Collapsible | `pm-panel--collapsible` | Optional depth (methods, appendices). |
 | Error | `pm-panel--error` | `color-state-error` edge, shape icon, sentence starting "Error:". |
 
 `--elevated`, `--outlined` and `--surface` from v1.2 are kept as aliases (default, default, tonal), so nothing breaks.
+
+**The lean set (v1.11).** Case-study content uses four containers, chosen by importance: Plain (supporting) → Default (important; reads as an outline on the white page and as raised paper on a grey stage, so there is no separate "white on grey" card) → Tonal / Callout (asides / key insights) → Accent (the one highlight). One radius (`radius-md`) and one shadow level (`shadow-xs`, Default only). Don't add page-specific borders or shadows to these; illustrations (sticky notes, mockups) are exempt.
 
 ## Sizes
 `pm-panel--sm` `space-4` · md `space-5` · `pm-panel--lg` `space-8` with an h4 title. All drop to `space-4` below a 768px container.

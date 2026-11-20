@@ -401,6 +401,11 @@ body { margin: 0; background: var(--color-bg-canvas); color: var(--color-text-pr
 .pm-panel__footer { display: flex; flex-wrap: wrap; gap: var(--space-2); justify-content: flex-end; padding: var(--space-3) var(--panel-p); background: var(--color-bg-surface); border-top: 1px solid var(--color-border-subtle); border-radius: 0 0 var(--radius-md) var(--radius-md); }
 .pm-panel--tonal, .pm-panel--surface { background: var(--color-bg-surface); box-shadow: none; }
 .pm-panel--sunken { background: var(--color-bg-sunken); box-shadow: none; }
+/* v1.11 lean content containers: Plain (no container) · Default · Tonal · Callout (tonal + selection rule) · Accent (selection tint) */
+.pm-panel--plain { --panel-p: 0; background: none; box-shadow: none; border-radius: 0; }
+.pm-panel--callout { background: var(--color-bg-surface); box-shadow: inset 3px 0 0 var(--color-selected-indicator); }
+.pm-panel--accent { background: var(--color-action-selected-bg); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--color-selected-indicator) 22%, transparent); }
+@media (prefers-contrast: more) { .pm-panel--tonal, .pm-panel--callout, .pm-panel--accent { box-shadow: inset 0 0 0 1px var(--color-border-default); } .pm-panel--callout { box-shadow: inset 3px 0 0 var(--color-selected-indicator), inset 0 0 0 1px var(--color-border-default); } }
 .pm-panel--outlined, .pm-panel--elevated { }
 .pm-panel--error { box-shadow: inset 0 0 0 1px var(--color-state-error), var(--shadow-xs); }
 .pm-panel--error .pm-panel__title { color: var(--color-state-error); }
