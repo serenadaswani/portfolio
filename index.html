@@ -1534,10 +1534,20 @@ body { margin: 0; font-family: var(--font-sans); background: var(--color-bg-canv
 @keyframes oh-k3 { 0%, 63% { opacity: 0; transform: translateY(.4cqw); } 67%, 100% { opacity: 1; transform: none; } }
 
 
-.oh.oh--card { position: relative; width: calc(52 * 1.48cqw); aspect-ratio: 52 / 39.55; border-radius: calc(1.2 * 1.48cqw);
-  box-shadow: 0 1px 2px rgb(0 0 0 / 6%), 0 var(--space-5) var(--space-10) calc(-1 * var(--space-2)) rgb(0 0 0 / 30%), inset 0 0 0 1px rgb(255 255 255 / 14%); }
+/* No container: the frames float on the card's own gradient, like Procense's tablet. The box only sets the area (the
+   tablet's size and place); the zoomed title bar is clipped to it with soft side fades instead of a hard edge. */
+.oh.oh--card { position: relative; width: calc(52 * 1.48cqw); aspect-ratio: 52 / 39.55; background: none; overflow: visible; }
+/* While the camera zooms, the title bar dissolves into the card at both sides. The mask sits on the whole area (so the
+   zoomed bar keeps its full height) and is stretched wide except during the zoom, so everything else stays crisp. */
+.oh.oh--card { -webkit-mask: linear-gradient(90deg, transparent, #000 15%, #000 85%, transparent) center / 400% 100% no-repeat;
+  mask: linear-gradient(90deg, transparent, #000 15%, #000 85%, transparent) center / 400% 100% no-repeat; }
+.oh--card.oh--anim { animation: oh-cm 12s cubic-bezier(.45, 0, .2, 1) 1 both paused; }
+.oh--card.oh--anim.is-play { animation-play-state: running; }
+@keyframes oh-cm { 0%, 4% { -webkit-mask-size: 400% 100%; mask-size: 400% 100%; } 9%, 28% { -webkit-mask-size: 100% 100%; mask-size: 100% 100%; } 31%, 100% { -webkit-mask-size: 400% 100%; mask-size: 400% 100%; } }
 .oh.oh--card .oh-f1 { width: 92cqw; } .oh.oh--card .oh-f2 { width: 64cqw; } .oh.oh--card .oh-f3 { width: 90cqw; }
-.oh.oh--card::after { content: ""; position: absolute; inset: 0; z-index: 2; border-radius: inherit; background: var(--cx-tint); opacity: var(--dim, 0); pointer-events: none; }
+.oh--card .oh-scrim { display: none; }
+/* Side cards rest on frame 4: tint the stack itself (not the whole box) */
+.oh--card .oh-f3::after { content: ""; position: absolute; inset: 0; border-radius: .8cqw; background: var(--cx-tint); opacity: var(--dim, 0); pointer-events: none; }
 .oh--card.oh--anim * { animation-iteration-count: 1; }
 .oh--card.oh--anim .oh-sk { animation-iteration-count: infinite; }
 .oh--card.oh--anim .oh-f3 { animation-name: oh-f3c; }
