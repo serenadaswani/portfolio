@@ -108,16 +108,15 @@ def findings():
 
 # Discover -> Conceptualize -> Design, for my part
 PHASES = [
-    ('Discover', 'Where can AI help?', ['Past research', 'AI limits', 'Competitors']),
-    ('Conceptualize', 'What should it do?', ['User flows', 'Triggers', 'Feedback loop']),
-    ('Design', 'How does it fit?', ['Placement', 'Clarity', 'Control']),
+    ('Discover', 'Where can AI help?', 'I pulled past research, mapped the AI’s limits with engineering, and studied how Shopify and Trustana use AI.'),
+    ('Conceptualize', 'What should it do?', 'I mapped the flow for new and returning sellers, starting from the two fields AI needs, with feedback built in.'),
+    ('Design', 'How does it fit?', 'I designed where autofill lives, how AI content is marked, and how sellers steer it.'),
 ]
 def process():
     arrow = f'<span class="om-proc__arrow" aria-hidden="true">{_l("arrow-right")}</span>'
     return ('<ol class="om-proc">' + arrow.join(
-        f'<li class="om-proc__step"><p class="om-proc__k">{name}</p><h4>{q}</h4>'
-        '<ul class="om-proc__tags">' + ''.join(f'<li class="pm-badge">{o}</li>' for o in outs) + '</ul></li>'
-        for name, q, outs in PHASES) + '</ol>')
+        f'<li class="om-proc__step"><p class="om-proc__k">{name}</p><h4>{q}</h4><p class="om-proc__d">{d}</p></li>'
+        for name, q, d in PHASES) + '</ol>')
 
 # The final autofill flow, from the prototype
 FLOW = [('Add a title and category', 'The two required fields'), ('Autofill', 'One click on the sparkle'), ('Review', 'AI content highlighted'),
@@ -358,7 +357,7 @@ CSS = r"""
 .om-ver__me { position: absolute; top: 0; right: var(--space-3); transform: translateY(-50%); margin: 0; background: var(--color-bg-elevated); box-shadow: inset 0 0 0 1px var(--color-action-primary), var(--shadow-xs); }
 .om-stage:has(.om-ver) { padding-top: var(--space-6); }
 /* Phases: short question and tags, with arrows between from 640px */
-.om-proc__tags { list-style: none; margin: 0; padding: 0 !important; display: flex !important; flex-wrap: wrap; gap: var(--space-2) !important; }
+.om-proc__d { margin: 0; font-size: var(--type-body-sm); line-height: var(--line-body-sm); color: var(--color-text-secondary); }
 .om-proc__arrow { display: none; color: var(--color-text-tertiary); align-self: center; justify-self: center; }
 .om-proc__arrow .pm-icon { width: 20px; height: 20px; }
 @container (min-width: 640px) { .om-proc { grid-template-columns: minmax(0, 1fr) 24px minmax(0, 1fr) 24px minmax(0, 1fr); gap: var(--space-2); } .om-proc__arrow { display: block; } }
